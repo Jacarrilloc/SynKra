@@ -12,7 +12,7 @@ Hoy en día, en la banca multinacional, adaptarse a las regulaciones legislativa
 
 Actualmente, adaptarse a este cambio implica traducir controles auditables a nivel de infraestructura, lo que exige a los equipos de operaciones y de la plataforma realizar de forma manual un cruce entre la información contenida en la normativa legal y las configuraciones técnicas. Es en este proceso donde, no por falta de conocimiento sino por la fricción propia de los flujos de trabajo del desarrollo de software corporativo, el cumplimiento de dicha normativa se convierte en un cuello de botella que frena la evolución y el despliegue de arquitecturas transaccionales de Big Data. Esto provoca que un error humano en esta capa pueda exponer a la organización bancaria a sanciones o multas millonarias, e incluso a brechas de seguridad.
 
-**Problema que resuelvo:**
+### **Problema que se resuelve:**
 
 Al integrar una plataforma que audite estas normas locales y que se encargue de proponer las correcciones respectivas, se está resolviendo un problema de raíz sin sacrificar aspectos importantes para las entidades bancarias, como lo son la seguridad y el control, permitiendo que la plataforma tenga la capacidad de:
 
@@ -24,7 +24,7 @@ Al integrar una plataforma que audite estas normas locales y que se encargue de 
 
 4. Realizar el escalado automático, manteniendo la paridad regulatoria en múltiples instancias; es decir, la plataforma escala el esfuerzo de auditoría y remediación a través de múltiples países simultáneamente, estandarizando el cumplimiento normativo en toda la rama tecnológica de la institución bancaria sin inflar los costos operativos.
 
-**¿Este problema sobrevive a las próximas 2-3 generaciones de modelos foundation?**
+### **¿Este problema sobrevive a las próximas 2-3 generaciones de modelos foundation?**
 
 [X] Sí, porque es un problema de WORKFLOW/INTEGRACIÓN, no de OUTPUt
 
@@ -36,15 +36,13 @@ Al integrar una plataforma que audite estas normas locales y que se encargue de 
 
 ## 2. SEGMENTO TARGET
 
-**¿Para quién es este producto?**
-_______________________________________
-_______________________________________
+### **¿Para quién es este producto?**
 
-**¿Quién controla el veto de confianza?** (La persona que puede matar la adopción
-aunque el usuario final ame el producto: CISO, SRE lead, compliance, CFO, jefe directo)
-_______________________________________
+Pensado para equipos de operaciones de desarrollo de software en las divisiones tecnologicas de las instituciones bancarias multinacionales que ya poseen arquitecturas transaccionales o de Big Data en Kubernetes. Esta planteado para equipos que operan multiples clusters distribuidos y que tienen el reto de alinear los despligues con las normativas vigentes.
 
----
+### **¿Quién controla el veto de confianza?** 
+
+El departamento interno de la organización encargado del cumplimiento de la normativa, es especial el El CISO y el Oficial de Cumplimiento Normativo (Compliance Lead) donde, siempre conservando como princial objetivo el cumplimiento de la regulación y solo dado el caso en donde se perciba que la IA tiene la capacidad de alterar un entorno financiero. Es decir, los encargados aplicatian el veto en el dado caso que se vea comprometida la trazabilidad absoluta, por lo tanto, el producto solo sobrevive a su veto si demuestra técnicamente que el agente opera con permisos de solo lectura y que toda acción requiere la aprobación humana mediante un Pull Request auditable.
 
 ## 3. VENTAJA COMPETITIVA PRIMARIA
 
