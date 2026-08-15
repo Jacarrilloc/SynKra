@@ -1,4 +1,4 @@
-# Product Vision Board — Ramal
+# Product Vision Board — SynKra
 
 **Módulo 2 — AI & Agentic Engineering · Tópicos Especiales en Informática**
 
@@ -15,7 +15,7 @@
 
 ## PRODUCTO
 
-**Nombre del producto:** Ramal
+**Nombre del producto:** SynKra
 
 **Descripción en una línea (qué hace y para quién):**
 Conector auto-hospedado que, ante un cambio de requerimiento **ya interpretado por un humano**,
