@@ -1,9 +1,11 @@
 # Product Vision Board — Ramal
 
 **Módulo 2 — AI & Agentic Engineering · Tópicos Especiales en Informática**
-**Autor:** David · **Fecha:** 15 de agosto de 2026 (sesión 3)
+
+**Fecha:** 15 de agosto de 2026
 
 > **Convención de evidencia usada en este documento:**
+>
 > - **[INTERNO]** — proyección, supuesto o estimación propia. Defendible, no verificada externamente.
 > - **[VERIFICAR]** — afirmación sobre el mundo exterior que no logré confirmar con fuente primaria.
 > - Toda cifra sin etiqueta lleva fuente y fecha en línea. Los enlaces completos están en
@@ -17,12 +19,12 @@
 
 **Descripción en una línea (qué hace y para quién):**
 Conector auto-hospedado que, ante un cambio de requerimiento **ya interpretado por un humano**,
-localiza qué servicios y qué ramas *downstream* del producto quedan afectados, y entrega
+localiza qué servicios y qué ramas _downstream_ del producto quedan afectados, y entrega
 borradores de historias de usuario y de pull requests de propagación — con aprobación humana
 obligatoria en cada salida. Para equipos de plataforma que mantienen **un core y N variantes
 obligatorias** sobre Kubernetes.
 
-**Tagline interno:** *"El humano decide qué cambia; el agente encuentra dónde."*
+**Tagline interno:** _"El humano decide qué cambia; el agente encuentra dónde."_
 
 **Alcance de la primera iteración (adición a la plantilla, para sustentar viabilidad):**
 Un producto core de ejemplo en Java/Spring Boot, dos ramas downstream simuladas (dos
@@ -50,7 +52,7 @@ parche de seguridad en el core— aparecen tres costos que hoy nadie cubre:
 
 - **Nadie sabe con certeza a qué variantes aplica.** La respuesta vive en la cabeza de dos o
   tres personas, y esas personas rotan. El error caro no es el falso positivo: es la variante
-  que *nadie recordó* y que se quedó sin el cambio.
+  que _nadie recordó_ y que se quedó sin el cambio.
 - **Escribir el ticket cuesta más que hacerlo.** El Product Owner necesita saber qué servicio,
   qué repositorio y qué rama toca antes de poder redactar una historia útil. Sin eso escribe
   una historia genérica que el desarrollador tiene que volver a investigar.
@@ -71,7 +73,7 @@ desplegar en Kubernetes: eso lo resuelven Argo CD, Kustomize y Kyverno, gratis y
 está exactamente en medio, y a agosto de 2026 sigue abierto: ningún producto público cierra el
 bucle **obligación → repositorio/servicio → rama de despliegue** (`docs/critica.md`, sección 4).
 El precedente más cercano, Regnology "Ticket-to-Code Writer" sobre Vertex AI (blog de Google
-Cloud, 10-sep-2024), va de *ticket* a código, no de *cambio* a ticket, y no toca ramas de
+Cloud, 10-sep-2024), va de _ticket_ a código, no de _cambio_ a ticket, y no toca ramas de
 despliegue.
 
 **¿Este problema sobrevive a las próximas 2-3 generaciones de modelos foundation?**
@@ -122,13 +124,13 @@ y no por código.
 
 Dos personas, en este orden:
 
-1. **El arquitecto de seguridad / CISO.** Su pregunta es una sola: *"¿el código fuente sale de
-   mi perímetro?"* Si la respuesta no es **"no: el modelo corre en tu clúster y no hay egress
+1. **El arquitecto de seguridad / CISO.** Su pregunta es una sola: _"¿el código fuente sale de
+   mi perímetro?"_ Si la respuesta no es **"no: el modelo corre en tu clúster y no hay egress
    hacia proveedores de inferencia"**, en banca y en salud la conversación se acabó. Esta
    pregunta es la razón principal de la decisión de modelos locales, y no una preferencia
    técnica.
-2. **El tech lead o release manager dueño de las ramas protegidas.** Su pregunta es: *"¿qué
-   puede escribir este agente en mi repositorio?"* La respuesta tiene que ser verificable en
+2. **El tech lead o release manager dueño de las ramas protegidas.** Su pregunta es: _"¿qué
+   puede escribir este agente en mi repositorio?"_ La respuesta tiene que ser verificable en
    la configuración del servidor Git, no prometida en una diapositiva.
 
 El Product Owner es el **usuario**, no el veto. Ama recibir el borrador; no puede autorizar la
@@ -145,7 +147,7 @@ Tres capas, en orden de qué tan pronto existen:
 1. **El código nunca sale del perímetro (existe desde el día 1).** Inferencia con modelos
    abiertos servidos dentro del clúster del cliente, con NetworkPolicies de egress en allowlist.
    No es una cláusula contractual: es una propiedad observable con `kubectl describe
-   networkpolicy`. Los competidores RegTech y las herramientas de generación de tickets son SaaS;
+networkpolicy`. Los competidores RegTech y las herramientas de generación de tickets son SaaS;
    este es el único eje donde un proyecto pequeño gana estructuralmente a uno de USD 1.200
    millones.
 2. **El agente no puede mergear, aprobar ni desplegar (existe desde el día 1).** Escribe solo
@@ -154,7 +156,7 @@ Tres capas, en orden de qué tan pronto existen:
    resultado posible de un fallo —incluido un fallo por manipulación— es **un borrador malo que
    un humano tiene que aprobar**.
 3. **El mapa de localización validado (se acumula operando).** Cada borrador aprobado, editado o
-   rechazado enseña qué obligaciones caen sobre qué servicios y qué variantes en *esa* empresa.
+   rechazado enseña qué obligaciones caen sobre qué servicios y qué variantes en _esa_ empresa.
    Ese conjunto de datos no se compra ni se descarga: es el subproducto de haber operado meses
    dentro del cliente.
 
@@ -162,7 +164,7 @@ Tres capas, en orden de qué tan pronto existen:
 para correr dentro del perímetro más el historial de aciertos acumulado ahí adentro.
 
 **Por qué no elegí Data:** al día 1 no tengo ningún dato propio. La capa 3 es una ventaja
-*futura* y condicional, y presentarla como primaria sería exactamente el humo que este PVB
+_futura_ y condicional, y presentarla como primaria sería exactamente el humo que este PVB
 debe evitar.
 **Por qué no elegí Distribution:** no controlo ningún canal. Me cuelgo de Git y del tracker que
 ya usa el cliente, que son canales de otros.
@@ -226,7 +228,7 @@ disclaimer al pie: **es el producto**, y por eso está en la sección 3 y no aqu
 
 **Costo honesto de esta decisión:** con humano en el bucle, buena parte del ROI que prometería
 una automatización total desaparece. Lo asumo. El valor que queda no es "no hacer el trabajo",
-es "no *buscar* dónde hacerlo".
+es "no _buscar_ dónde hacerlo".
 
 ---
 
@@ -244,15 +246,15 @@ es "no *buscar* dónde hacerlo".
   del tamaño que cabe en un clúster de cliente rinden por debajo de los frontera. La evidencia
   disponible es dura: en preguntas verificables sobre casos judiciales federales de EE.UU., las
   tasas de alucinación medidas fueron de 58% para GPT-4 y 88% para Llama 2 (Dahl, Magesh,
-  Suzgun & Ho, "Large Legal Fictions", *Journal of Legal Analysis* 16(1), 2024), y aun con RAG
-  las herramientas legales comerciales fallaron entre 17% y 33% (Magesh et al., *Journal of
-  Empirical Legal Studies* 22, 2025).
+  Suzgun & Ho, "Large Legal Fictions", _Journal of Legal Analysis_ 16(1), 2024), y aun con RAG
+  las herramientas legales comerciales fallaron entre 17% y 33% (Magesh et al., _Journal of
+  Empirical Legal Studies_ 22, 2025).
   **Mi respuesta a esa evidencia, y es toda la tesis del producto:** el modelo local **no hace
   esa tarea**. No interpreta derecho ni decide si una norma aplica — eso entra ya resuelto por
   un humano. Hace localización en código y redacción de borradores, con retrieval anclado al
   repositorio real del cliente, que es donde el grounding funciona y donde el error es
   verificable en segundos por quien lo recibe.
-  *Salvedad:* esos benchmarks son de derecho federal estadounidense en inglés y con modelos de
+  _Salvedad:_ esos benchmarks son de derecho federal estadounidense en inglés y con modelos de
   2023-2024; no son un veredicto sobre modelos abiertos actuales en tareas de código.
   **[VERIFICAR: benchmark propio de localización servicio↔obligación con el modelo elegido]**
 - **Sacrifico cobertura.** Prefiero acertar en un tipo de cambio y una familia de servicios que
@@ -291,16 +293,16 @@ semanas; hasta que eso exista, el modelo no escala y decir lo contrario sería m
 
 **Economía por cuenta (tier Business) [INTERNO]:**
 
-| Concepto | Mensual |
-|---|---|
-| Soporte y onboarding prorrateado | $350 |
-| Mantenimiento del conector y suite de evaluaciones | $180 |
-| Infraestructura propia (CI de releases, telemetría opt-in) | $70 |
-| **Costo total** | **$600** |
-| **Revenue** | **$2.000** |
-| **Gross margin** | **70%** |
+| Concepto                                                   | Mensual    |
+| ---------------------------------------------------------- | ---------- |
+| Soporte y onboarding prorrateado                           | $350       |
+| Mantenimiento del conector y suite de evaluaciones         | $180       |
+| Infraestructura propia (CI de releases, telemetría opt-in) | $70        |
+| **Costo total**                                            | **$600**   |
+| **Revenue**                                                | **$2.000** |
+| **Gross margin**                                           | **70%**    |
 
-*Nota:* la casilla "costo por usuario/mes" de la plantilla no aplica a este modelo y prefiero
+_Nota:_ la casilla "costo por usuario/mes" de la plantilla no aplica a este modelo y prefiero
 declararlo antes que rellenarla con un número inventado. El costo de GPU vive del lado del
 cliente y es su decisión de dimensionamiento. **[VERIFICAR: costo real de servir un modelo
 abierto de 7-14B cuantizado para un equipo de este tamaño]**
@@ -313,20 +315,20 @@ abierto de 7-14B cuantizado para un equipo de este tamaño]**
 
 1. **Tasa de borradores de historia aprobados por el PO sin reescritura sustancial**, medida por
    distancia de edición sobre el texto original. Es la métrica que dice si el producto sirve.
-   *Target: >50% al mes 6.* **[INTERNO]**
+   _Target: >50% al mes 6._ **[INTERNO]**
 2. **Lead time de "cambio registrado" → "PR de propagación abierto en todas las variantes
    afectadas"**, contra la línea base del propio cliente en sus 3 meses previos.
-   *Target: -50%.* **[INTERNO]** Este dato no existe públicamente y hay que medirlo con
+   _Target: -50%._ **[INTERNO]** Este dato no existe públicamente y hay que medirlo con
    entrevistas antes del piloto (`docs/mercado.md`, huecos de evidencia #1).
 
 **Métricas específicas de IA:**
 
 1. **Recall de variantes afectadas**, validado contra un experto humano. Reporto recall y
    precisión por separado y optimizo **recall**, porque el error caro es la variante olvidada,
-   no la sugerida de más. *Target: recall >90%, precisión >70%.* **[INTERNO]**
+   no la sugerida de más. _Target: recall >90%, precisión >70%._ **[INTERNO]**
 2. **Tasa de borradores aprobados por un humano que después se revierten o causan defecto.** Es
    la métrica de seguridad: mide cuántas veces el producto convenció a alguien de algo
-   equivocado. *Target: <2%. Por encima de 5% el agente se apaga hasta corregirlo.* **[INTERNO]**
+   equivocado. _Target: <2%. Por encima de 5% el agente se apaga hasta corregirlo._ **[INTERNO]**
 
 **Métrica de salud secundaria:** **tasa de abstención** — con qué frecuencia el agente responde
 "no tengo evidencia suficiente para localizar esto". Una abstención de 0% no es excelencia, es
@@ -345,10 +347,10 @@ gratuito y se replica en semanas (`docs/critica.md`, sección 2). El flanco más
 una RegTech: es **Harness**, que ya tiene la mitad de despliegue construida y solo necesitaría
 añadir el front de entrada.
 
-*Mitigación:* no apostar a la generación —apostar a la **localización multi-variante on-premise**,
+_Mitigación:_ no apostar a la generación —apostar a la **localización multi-variante on-premise**,
 que exige estar dentro del perímetro y acumular historial. Y montarme sobre las piezas
 comoditizadas en vez de contra ellas: si Argo CD mejora, Ramal mejora.
-*Umbral que cambia la decisión:* si antes de la sustentación Harness o Norm Ai anuncian este
+_Umbral que cambia la decisión:_ si antes de la sustentación Harness o Norm Ai anuncian este
 conector, el argumento pivota a "por qué mi implementación es más barata, localizada y
 auto-hospedada" — o la idea muere y hay que decirlo.
 
@@ -360,7 +362,7 @@ semanas:
 
 - La autorización del CISO para correr dentro del perímetro con acceso de lectura a todo el
   código fuente. Ese es el activo, y se gana una vez por cliente.
-- El mapa de localización obligación↔servicio↔variante validado por humanos de *esa* empresa.
+- El mapa de localización obligación↔servicio↔variante validado por humanos de _esa_ empresa.
 - La suite de evaluaciones que demuestra el recall, que es lo único que convierte "confía en mí"
   en un número.
 
@@ -369,18 +371,18 @@ semanas:
 En orden de probabilidad:
 
 1. **Falso negativo silencioso: el agente no reporta una variante afectada y nadie lo nota hasta
-   la auditoría.** Es el más probable y el más grave, porque el fallo es *invisible* — no hay un
-   borrador malo que revisar, hay un borrador que nunca existió. *Mitigación:* optimizar recall
+   la auditoría.** Es el más probable y el más grave, porque el fallo es _invisible_ — no hay un
+   borrador malo que revisar, hay un borrador que nunca existió. _Mitigación:_ optimizar recall
    sobre precisión, listar siempre el inventario completo de variantes marcando cuáles descartó
    **y por qué**, y bloquear la ejecución silenciosa cuando el índice del repositorio está
    desactualizado.
 2. **Fatiga de aprobación: el PO aprueba en bloque a las 5 p.m. de un viernes.** Si el producto
    funciona, el volumen de borradores sube y la revisión se vuelve un trámite — y ahí el
-   "humano en el bucle" se convierte en una ficción de cumplimiento. *Mitigación:* límite duro
+   "humano en el bucle" se convierte en una ficción de cumplimiento. _Mitigación:_ límite duro
    de borradores por lote, nivel de confianza explícito por ítem, y medir la distancia de
    edición: si cae a cero, es señal de sello de goma, no de calidad.
 3. **Manipulación del agente por el contenido que él mismo lee.** Mensajes de commit, issues y
-   documentos de entrada son texto que alguien puede influir. *Mitigación:* todo insumo se trata
+   documentos de entrada son texto que alguien puede influir. _Mitigación:_ todo insumo se trata
    como dato no confiable, allowlist explícito de herramientas por MCP, y el límite estructural
    de la sección 3: sin permiso de merge, el peor caso sigue siendo un borrador que un humano
    debe aprobar.
@@ -390,9 +392,9 @@ En orden de probabilidad:
 
 **4. Riesgo de arquitectura: estoy construyendo sobre un anti-patrón, y lo sé.**
 
-*(Riesgo adicional a la plantilla. Es el que más me van a atacar y prefiero traerlo yo.)*
+_(Riesgo adicional a la plantilla. Es el que más me van a atacar y prefiero traerlo yo.)_
 
-Las ramas *downstream* de larga vida son **clone-and-own**, un anti-patrón explícitamente
+Las ramas _downstream_ de larga vida son **clone-and-own**, un anti-patrón explícitamente
 desaconsejado por la literatura: Thoughtworks mantiene trunk-based development en "Adopt" y las
 long-lived branches aparecen en "Hold"; DORA lo lista como capacidad de entrega (dora.dev); y
 el SEI/CMU usa justamente el ejemplo bancario —una ley estatal que afecta 25 líneas de un
@@ -406,7 +408,8 @@ es lo que los equipos objetivo hacen **hoy**, y un producto que exige migrar pri
 variabilidad gestionada no se adopta nunca. La forma correcta de decirlo es que Ramal **no
 promueve** las ramas largas: **mide su costo y financia la salida**.
 
-*Compromisos que acepto por escrito:*
+_Compromisos que acepto por escrito:_
+
 - Instrumentar el costo de divergencia (distancia entre core y cada variante, tiempo de merge,
   conflictos por propagación) y **mostrárselo al cliente aunque lo incomode**.
 - Diseñar la salida desde el día 1: cuando una variante muestra que su divergencia es puramente
@@ -424,7 +427,7 @@ allowlist de red no se relajan nunca, ni siquiera cuando el cliente lo pida para
 
 ## Kubernetes e IA: por qué no son decorativos
 
-*(Adición a la plantilla, para el criterio de coherencia técnica.)*
+_(Adición a la plantilla, para el criterio de coherencia técnica.)_
 
 **Si quito la IA, ¿el producto sigue funcionando igual?** No: queda una plantilla de ticket
 vacía. Todo el valor está en inferir **a qué de mis N variantes aplica este cambio** a partir de
@@ -488,7 +491,7 @@ Analyst y Corlytics sobre CUBE y cobertura de jurisdicciones · Google Cloud blo
 con IA.
 
 **Riesgo de IA y marco regulatorio:** Dahl, Magesh, Suzgun & Ho, "Large Legal Fictions",
-*Journal of Legal Analysis* 16(1) (2024) · Magesh et al., *Journal of Empirical Legal Studies*
+_Journal of Legal Analysis_ 16(1) (2024) · Magesh et al., _Journal of Empirical Legal Studies_
 22 (2025) · Reglamento (UE) 2024/1689 (EU AI Act), obligaciones de alto riesgo desde el
 2-ago-2026 · SR 11-7 (Fed/OCC) · superfinanciera.gov.co sobre uso de IA en supervisión
 (3-oct-2025) · AI Incident Database #1152 (incidente Replit, jul. 2025) · cobertura AP / Fortune
