@@ -1,323 +1,234 @@
-# Product Vision Board
+# Product Vision Board — Ramal
+
+**Módulo 2 — AI & Agentic Engineering · Tópicos Especiales en Informática**
+**Autor:** David · **Fecha:** 15 de agosto de 2026 (sesión 3)
+
+> **Convención de evidencia usada en este documento:**
+> - **[INTERNO]** — proyección, supuesto o estimación propia. Defendible, no verificada externamente.
+> - **[VERIFICAR]** — afirmación sobre el mundo exterior que no logré confirmar con fuente primaria.
+> - Toda cifra sin etiqueta lleva fuente y fecha en línea. Los enlaces completos están en
+>   `docs/mercado.md` (validación) y `docs/critica.md` (crítica adversarial).
+
+---
 
 ## PRODUCTO
 
-### **k8s-regtech-agent**
+**Nombre del producto:** Ramal
 
-Plataforma de agentes de IA que audita normativas locales y propone correcciones de infraestructura en Kubernetes vía GitOps para equipos de plataforma y compliance en instituciones financieras multinacionales.
+**Descripción en una línea (qué hace y para quién):**
+Conector auto-hospedado que, ante un cambio de requerimiento **ya interpretado por un humano**,
+localiza qué servicios y qué ramas *downstream* del producto quedan afectados, y entrega
+borradores de historias de usuario y de pull requests de propagación — con aprobación humana
+obligatoria en cada salida. Para equipos de plataforma que mantienen **un core y N variantes
+obligatorias** sobre Kubernetes.
+
+**Tagline interno:** *"El humano decide qué cambia; el agente encuentra dónde."*
+
+**Alcance de la primera iteración (adición a la plantilla, para sustentar viabilidad):**
+Un producto core de ejemplo en Java/Spring Boot, dos ramas downstream simuladas (dos
+jurisdicciones), un cambio de requerimiento estructurado como entrada, salida en borradores de
+tickets + PRs de propagación. Sin interpretación normativa, sin operación del clúster, sin
+resolución automática de merges. Todo lo demás es backlog explícito.
+
+---
 
 ## 1. PROBLEMA
 
-Hoy en día, en la banca multinacional, adaptarse a las regulaciones legislativas de cada país en el que se opera constituye un tema complejo, de solución lenta y que puede representar un alto riesgo para la continuidad del negocio. Por esta razón, una institución que opera en distintos territorios debe ajustar sus políticas de infraestructura a las regulaciones legales vigentes en cada uno de ellos.
+Una empresa que despliega el mismo producto a varios clientes o países no mantiene un
+repositorio: mantiene **un core más N variantes que deben seguir vivas y sincronizadas**.
+Ese patrón está documentado como práctica real de industria, no como hipótesis: Santander
+declara que más del 80% de sus soluciones globales se extrapolan a mercados locales (Santander
+Digital Services, "Software Engineering"; nota de prensa de mayo de 2022, ~16.500
+desarrolladores); BBVA agrupó más de 16.000 desarrolladores para reutilizar componentes entre
+países (BBVA, "BBVA creates a Software area to drive global scalable solutions"); Nubank opera
+plataformas compartidas con marcos regulatorios específicos por país (Umbrex, "Nubank Strategy
+and Business Model"). Los vendors de core bancario venden esto como producto: Oracle FLEXCUBE
+ofrece clústeres localizados por país y Temenos "Country Model Banks" para 150+ mercados.
 
-Actualmente, adaptarse a este cambio implica traducir controles auditables a nivel de infraestructura, lo que exige a los equipos de operaciones y de la plataforma realizar de forma manual un cruce entre la información contenida en la normativa legal y las configuraciones técnicas. Es en este proceso donde, no por falta de conocimiento sino por la fricción propia de los flujos de trabajo del desarrollo de software corporativo, el cumplimiento de dicha normativa se convierte en un cuello de botella que frena la evolución y el despliegue de arquitecturas transaccionales de Big Data. Esto provoca que un error humano en esta capa pueda exponer a la organización bancaria a sanciones o multas millonarias, e incluso a brechas de seguridad.
+Cuando llega un cambio obligatorio —una circular nueva, un requisito de un cliente grande, un
+parche de seguridad en el core— aparecen tres costos que hoy nadie cubre:
 
-### **Problema que se resuelve:**
+- **Nadie sabe con certeza a qué variantes aplica.** La respuesta vive en la cabeza de dos o
+  tres personas, y esas personas rotan. El error caro no es el falso positivo: es la variante
+  que *nadie recordó* y que se quedó sin el cambio.
+- **Escribir el ticket cuesta más que hacerlo.** El Product Owner necesita saber qué servicio,
+  qué repositorio y qué rama toca antes de poder redactar una historia útil. Sin eso escribe
+  una historia genérica que el desarrollador tiene que volver a investigar.
+- **La propagación upstream→downstream se hace a mano, tarde y bajo presión.** Es donde el
+  cambio se pierde o se aplica mal.
 
-Al integrar una plataforma que audite estas normas locales y que se encargue de proponer las correcciones respectivas, se está resolviendo un problema de raíz sin sacrificar aspectos importantes para las entidades bancarias, como lo son la seguridad y el control, permitiendo que la plataforma tenga la capacidad de:
+Es un dolor caro y creciente en el segmento regulado: el Bank Policy Institute reportó que los
+bancos pasaron de gastar 9,6% de su presupuesto de IT en compliance en 2016 a 13,4% en 2023,
+con un aumento de 61% en horas-empleado dedicadas a cumplir regulaciones ("Survey Finds
+Compliance is a Growing Demand on Bank Resources", oct. 2024). El costo total de cumplimiento
+de delitos financieros en EE.UU. y Canadá se estimó en USD 61.000 millones, con incrementos
+para el 99% de las instituciones (LexisNexis Risk Solutions / Forrester Consulting, "True Cost
+of Financial Crime Compliance Study – U.S. and Canada", feb. 2024).
 
-1. Automatizar la traducción legal a técnica, eliminando el componente manual de leer, interpretar y adaptar la normativa a las necesidades del sistema: el agente de IA procesa el lenguaje natural de la regulación y realiza el cruce de forma continua contra el estado actual de la infraestructura, identificando brechas de manera instantánea.
+**Lo que NO es el problema.** No es interpretar la norma: eso ya lo hacen Norm Ai, CUBE,
+Corlytics y AscentAI, con equipos de analistas humanos y financiación de nueve cifras. No es
+desplegar en Kubernetes: eso lo resuelven Argo CD, Kustomize y Kyverno, gratis y bien. El hueco
+está exactamente en medio, y a agosto de 2026 sigue abierto: ningún producto público cierra el
+bucle **obligación → repositorio/servicio → rama de despliegue** (`docs/critica.md`, sección 4).
+El precedente más cercano, Regnology "Ticket-to-Code Writer" sobre Vertex AI (blog de Google
+Cloud, 10-sep-2024), va de *ticket* a código, no de *cambio* a ticket, y no toca ramas de
+despliegue.
 
-2. Integrarse de forma nativa en las operaciones del desarrollo del sistema, complementando al equipo de desarrollo, redactando la corrección al desfase de la normativa y subiendo el respectivo cambio como un pull request, convirtiendo el problema de auditoría legal en un flujo de desarrollo estándar dentro de la revisión del código.
+**¿Este problema sobrevive a las próximas 2-3 generaciones de modelos foundation?**
 
-3. Mantener siempre el control sobre el sistema, por medio de operar la plataforma con permisos de solo lectura, de forma que sus propuestas sean siempre analizadas y revisadas por el componente humano —ya sea ingeniero o analista— mediante la aprobación del pull request.
+**[X] Sí, porque es un problema de WORKFLOW/INTEGRACIÓN, no de OUTPUT**
 
-4. Realizar el escalado automático, manteniendo la paridad regulatoria en múltiples instancias; es decir, la plataforma escala el esfuerzo de auditoría y remediación a través de múltiples países simultáneamente, estandarizando el cumplimiento normativo en toda la rama tecnológica de la institución bancaria sin inflar los costos operativos.
+Un modelo mejor redacta mejor la historia de usuario, pero no sabe cuáles de mis catorce
+variantes existen, quién las aprueba, qué rama es protegida ni qué pasó la última vez que
+propagamos este tipo de cambio. Ese conocimiento es organizacional y vive en el repositorio y
+en el historial de aprobaciones del cliente, no en los pesos del modelo. Cuanto más capaces son
+los modelos, **más urgente** se vuelve el problema de acotar dónde pueden escribir.
 
-### **¿Este problema sobrevive a las próximas 2-3 generaciones de modelos foundation?**
+**Durability Score: 4/5**
 
-[X] Sí, porque es un problema de WORKFLOW/INTEGRACIÓN, no de OUTPUt
+No se toma 5 y por la siguiente justificación: la mitad "redactar el borrador" **ya se está
+comoditizando** —Atlassian Rovo crea work items desde documentos, GitHub Copilot y Cursor hacen
+ticket→PR—. Lo que no se comoditiza es el mapa de localización construido sobre el historial
+del cliente. Si mi tesis fuera "genero tickets con IA", el score sería 2.
 
-[ ] No estoy seguro — necesito investigar más
-
-[ ] No — mi problema es de generación/resumen y se commoditiza
-
-**Durability Score (1-5):** 4
+---
 
 ## 2. SEGMENTO TARGET
 
-### **¿Para quién es este producto?**
+**¿Para quién es este producto?**
 
-Pensado para equipos de operaciones de desarrollo de software en las divisiones tecnologicas de las instituciones bancarias multinacionales que ya poseen arquitecturas transaccionales o de Big Data en Kubernetes. Esta planteado para equipos que operan multiples clusters distribuidos y que tienen el reto de alinear los despligues con las normativas vigentes.
+**Beachhead:** equipos de plataforma o de entrega de **5 a 20 ingenieros** en empresas de
+software que mantienen **un producto core desplegado como 3 o más variantes obligatorias**
+(por país, por regulador o por cliente grande), y que **ya operan Kubernetes con GitOps en
+producción**. Vertical inicial: vendors de software financiero, de salud y govtech en Colombia
+y LatAm, más fintechs multi-país. Banca corporativa es un cliente posible, no el mercado: el
+patrón de variantes obligatorias es el mismo en cualquier industria regulada, y entrar por un
+vendor de software es un ciclo de venta mucho más corto que entrar por un banco.
 
-### **¿Quién controla el veto de confianza?** 
+Cuatro señales de que una empresa está en el beachhead:
 
-El departamento interno de la organización encargado del cumplimiento de la normativa, es especial el El CISO y el Oficial de Cumplimiento Normativo (Compliance Lead) donde, siempre conservando como princial objetivo el cumplimiento de la regulación y solo dado el caso en donde se perciba que la IA tiene la capacidad de alterar un entorno financiero. Es decir, los encargados aplicatian el veto en el dado caso que se vea comprometida la trazabilidad absoluta, por lo tanto, el producto solo sobrevive a su veto si demuestra técnicamente que el agente opera con permisos de solo lectura y que toda acción requiere la aprobación humana mediante un Pull Request auditable.
+1. Tienen Argo CD o Flux andando, aunque sea a medias.
+2. Tienen más variantes desplegadas que personas que sepan explicar en qué se diferencian.
+3. Alguien mantiene, a mano, una hoja de cálculo de "qué cliente tiene qué".
+4. Su política de seguridad les impide mandar el código fuente a un SaaS externo.
 
-## 3. VENTAJA COMPETITIVA PRIMARIA
-
-Solo puedes elegir UNA como primaria. Es tu ventaja defensible principal.
-
-**Ventaja competitiva primaria:**
-[ ] Data — Generamos data única que competidores no pueden comprar ni copiar
-[ ] Distribution — Estamos embebidos en un canal/workflow difícil de replicar
-[ ] Trust — Ofrecemos reliability/safety/compliance que otros no pueden igualar
-
-**¿Qué data, distribución o trust única poseemos o podemos construir?**
-_______________________________________
-_______________________________________
-_______________________________________
-
----
-
-## 4. ARENA COMPETITIVA
-
-**¿En qué arena compites?**
-[ ] Pioneer (AI-Native) — Creo un mercado nuevo que no podría existir sin IA
-[ ] Disruptor (AI-Disrupted) — Reimagino un workflow existente haciéndolo 10x mejor
-[ ] Enhancer (AI-Enhanced) — Uso IA para fortalecer un producto/proceso existente
-
-**¿Cómo sobrevives o complementas a los gigantes (hyperscalers, vendors de plataforma,
-proyectos open source del ecosistema CNCF)?**
-_______________________________________
-_______________________________________
-
----
-
-## 5. UX PARADIGM
-
-**¿Cómo interactúa el usuario con tu producto?**
-[ ] Assistant — El usuario está en control, la IA sugiere
-[ ] Agent — La IA ejecuta tareas autónomamente dentro de límites
-[ ] Autonomous — La IA corre sin supervisión humana
-[ ] Embedded Intelligence — La IA mejora el producto de forma invisible
-
-**¿Por qué este paradigma para tu caso de uso?**
-_______________________________________
-_______________________________________
-
----
-
-## 6. AI DECISION TRIANGLE
-
-No puedes maximizar las tres. Elige la prioridad de tu producto.
-
-**Optimizo primariamente para:**
-[ ] Cost — Lo más barato posible (tareas de alto volumen)
-[ ] Capability — Lo más inteligente/preciso (decisiones de alto riesgo)
-[ ] Speed — Lo más rápido posible (experiencias en tiempo real)
-
-**Trade-offs que acepto:**
-_______________________________________
-_______________________________________
-
----
-
-## 7. MODELO ECONÓMICO
-
-**Modelo de pricing:**
-[ ] Hybrid Tiered (tiers con límites crecientes)
-[ ] Usage-Based / Per-Token (pago por uso)
-[ ] Credit Pools (suscripción + créditos)
-[ ] Outcome-Based (pago por resultado)
-[ ] Seat-Based + AI Add-On (por usuario + IA premium)
-[ ] Freemium / Reverse Trial (gratis → conversión)
-
-**¿El pricing escala si tienes 10x usuarios?**
-[ ] Sí   [ ] No   [ ] Necesita ajuste
-
-**Costo estimado por usuario/mes:** $________
-**Revenue por usuario/mes:** $________
-**Gross margin proyectado:** ________%
-
----
-
-## 8. MÉTRICAS DE ÉXITO
-
-**Métricas de usuario:**
-1. _______________________________________
-2. _______________________________________
-
-**Métricas específicas de IA:**
-1. _______________________________________
-2. _______________________________________
-
----
-
-## 9. RIESGOS CRÍTICOS
-
-Esta es la sección más valiosa del documento. Un PVB sin riesgos reales es un PVB
-que no se investigó.
-
-**1. ¿Qué pasa si el problema desaparece en 12 meses por comoditización?**
-_______________________________________
-_______________________________________
-
-**2. ¿Puede un competidor replicar tu producto con la misma API en menos de 6 semanas?**
-_______________________________________
-_______________________________________
-
-**3. Si tienes éxito a escala, ¿cuál es la primera forma en que se rompe la confianza?**
-_______________________________________
-_______________________________________
-
----
-
-## Checklist de entrega
-
-- [ ] Producto seleccionado (corre sobre Kubernetes, usa IA de forma defendible)
-- [ ] Deep research de validación completado y estudiado
-- [ ] Deep research de crítica completado y estudiado
-- [ ] Investigación documentada en archivos Markdown, con fuentes
-- [ ] Product Vision Board completado (este documento)
-- [ ] `prd.md` co-creado a partir de este PVB (ver `../modulo3/prompts-para-especificacion.md`)
-- [ ] Listo para presentar en la sesión 3 (sábado 15 de agosto de 2026)
-
----
----
-
-# Ejemplo de referencia: Timonel
-
-> Product Vision Board completado. Úsalo como guía de **profundidad, formato y
-> honestidad** — tu PVB debe tener este nivel de detalle.
->
-> **Timonel es una empresa ficticia**, creada para este curso. El nombre viene del
-> griego *κυβερνήτης* (kybernḗtēs, "timonel"), la misma raíz de Kubernetes.
->
-> **Convención de evidencia usada en este ejemplo:**
-> - **[INTERNO]** — proyección o supuesto del propio equipo. Inventado por
->   construcción; en tu PVB real serían tus estimaciones, y deben ser defendibles.
-> - **[VERIFICAR]** — afirmación sobre el mundo exterior (mercado, competencia,
->   adopción) que **en un PVB real va con enlace y fecha**. Aquí queda marcada a
->   propósito para que veas exactamente dónde debe ir tu evidencia.
->
-> Esa convención no es decorativa: si entregas un PVB con cifras de mercado sin
-> fuente, te las voy a preguntar una por una en la sustentación.
-
-## PRODUCTO
-
-**Nombre del producto:** Timonel
-
-**Descripción en una línea:** Plataforma que lleva una aplicación de cero a producción
-en Kubernetes —infraestructura, despliegue, políticas y observabilidad— y luego la
-mantiene ahí con agentes de IA que diagnostican incidentes y **proponen la corrección
-como pull request con evidencia**, nunca aplicándola por su cuenta.
-
-**Tagline interno:** *"El agente propone, el humano aprueba, GitOps reconcilia."*
-
-## 1. PROBLEMA
-
-Montar una aplicación en Kubernetes "bien hecha" no es un problema de conocimiento
-suelto, es un problema de **integración de doce piezas que nadie integra por ti**:
-provisión de infraestructura, construcción de imágenes, manifiestos, GitOps, políticas
-de admisión, gestión de secretos, NetworkPolicies, métricas, logs, trazas, alertas y
-runbooks. Cada pieza tiene un proyecto excelente y gratuito detrás. Ninguna sabe de
-las otras.
-
-El resultado es el patrón que se repite en todo equipo de plataforma:
-
-- La primera aplicación llega a producción en semanas, no en días, y el 80% de ese
-  tiempo es plomería, no producto. **[VERIFICAR]**
-- Cuando algo se rompe a las 2 a.m., el diagnóstico exige correlacionar eventos del
-  clúster, logs y métricas a mano. El tiempo se va en *entender*, no en *arreglar*.
-  **[VERIFICAR: MTTR reportado en encuestas de SRE/CNCF]**
-- El conocimiento de "por qué esto está configurado así" vive en la cabeza de dos
-  personas y se pierde cuando rotan.
-
-Ya existen agentes de IA que diagnostican clústeres. El hueco no es el diagnóstico:
-es que **nadie confía en dejarlos actuar**. Un agente con permiso de `kubectl apply`
-en producción es un incidente esperando a ocurrir, y ningún SRE serio lo autoriza.
-
-**¿Sobrevive al próximo salto de modelos?**
-
-**[X] Sí — es un problema de WORKFLOW/INTEGRACIÓN, no de OUTPUT.**
-
-Un modelo más inteligente diagnostica mejor, pero no resuelve quién aprueba el cambio,
-cómo queda auditado, con qué permisos actúa el agente, ni cómo se revierte. Eso es
-gobernanza y plomería, no inteligencia. Cuanto mejores sean los modelos, **más urgente**
-se vuelve el problema de ponerles límites verificables.
-
-**Durability Score: 5/5**
-
-## 2. SEGMENTO TARGET
-
-**Beachhead:** equipos de plataforma / SRE de **3 a 15 ingenieros**, en empresas que
-**ya operan Kubernetes en producción** (no en evaluación) y que sirven a entre 20 y
-200 desarrolladores internos. Sector: fintech, retail digital y SaaS B2B en Colombia,
-México y Brasil.
-
-Tres señales de que una empresa está en el beachhead:
-1. Ya tienen GitOps (Argo CD o Flux) andando, aunque sea a medias.
-2. Tienen más clústeres que personas dedicadas a cuidarlos.
-3. Alguien en el equipo ya probó un agente de IA contra el clúster **en un entorno
-   de pruebas** y no se atrevió a llevarlo a producción.
-
-**NO es para:** equipos que aún no tienen Kubernetes en producción (el producto no
-tiene dónde engancharse), grandes empresas con plataforma interna propia y madura, ni
-startups de menos de 5 ingenieros (el dolor no justifica el costo).
+**NO es para:** productos de una sola variante (no hay nada que propagar), equipos sin
+Kubernetes ni GitOps (el producto no tiene dónde engancharse), organizaciones donde nadie tiene
+que aprobar nada (ahí el valor de un borrador es cero), ni empresas que ya resolvieron la
+variabilidad con parametrización pura tipo Temenos, donde el cambio se activa por configuración
+y no por código.
 
 **¿Quién controla el veto de confianza?**
 
-El **SRE lead / Head of Platform**, y en empresas reguladas el **CISO**. Ambos matan
-la adopción con la misma pregunta: *"¿qué puede hacer este agente contra mi clúster
-si se equivoca o si alguien lo manipula?"*
+Dos personas, en este orden:
 
-Si la respuesta no es **"nada: solo lee, y su única salida es un pull request"**, la
-conversación se acaba ahí. Por eso la arquitectura de permisos no es un detalle de
-implementación — **es el argumento de venta**.
+1. **El arquitecto de seguridad / CISO.** Su pregunta es una sola: *"¿el código fuente sale de
+   mi perímetro?"* Si la respuesta no es **"no: el modelo corre en tu clúster y no hay egress
+   hacia proveedores de inferencia"**, en banca y en salud la conversación se acabó. Esta
+   pregunta es la razón principal de la decisión de modelos locales, y no una preferencia
+   técnica.
+2. **El tech lead o release manager dueño de las ramas protegidas.** Su pregunta es: *"¿qué
+   puede escribir este agente en mi repositorio?"* La respuesta tiene que ser verificable en
+   la configuración del servidor Git, no prometida en una diapositiva.
+
+El Product Owner es el **usuario**, no el veto. Ama recibir el borrador; no puede autorizar la
+instalación.
+
+---
 
 ## 3. VENTAJA COMPETITIVA PRIMARIA
 
-**[X] Trust**
+**[X] Trust** — Ofrecemos reliability/safety/compliance que otros no pueden igualar
 
-Tres capas acumulables:
+Tres capas, en orden de qué tan pronto existen:
 
-1. **El agente no tiene permiso de escritura, por diseño.** Su ServiceAccount es de
-   solo lectura y su lista de herramientas es un allowlist explícito. La única forma
-   en que un cambio llega al clúster es un pull request aprobado por un humano y
-   reconciliado por GitOps. No es una promesa de producto: es una propiedad
-   verificable con `kubectl auth can-i`.
-2. **Evidencia adjunta a cada propuesta.** Cada PR que abre el agente incluye qué
-   observó, de qué recursos, en qué momento y por qué concluye lo que concluye. Un
-   diagnóstico sin evidencia es una opinión; el registro de esas evidencias es lo que
-   convierte al agente en algo auditable.
-3. **Historial de aciertos medido en producción.** Cada propuesta aprobada, rechazada
-   o revertida alimenta una tasa de acierto por tipo de incidente. Ese historial no se
-   compra ni se replica con una API: se acumula operando.
+1. **El código nunca sale del perímetro (existe desde el día 1).** Inferencia con modelos
+   abiertos servidos dentro del clúster del cliente, con NetworkPolicies de egress en allowlist.
+   No es una cláusula contractual: es una propiedad observable con `kubectl describe
+   networkpolicy`. Los competidores RegTech y las herramientas de generación de tickets son SaaS;
+   este es el único eje donde un proyecto pequeño gana estructuralmente a uno de USD 1.200
+   millones.
+2. **El agente no puede mergear, aprobar ni desplegar (existe desde el día 1).** Escribe solo
+   en ramas con prefijo reservado (`ramal/*`) y abre PRs en borrador. Nunca toca ramas
+   protegidas, nunca aprueba su propio PR, nunca mueve un ticket más allá del backlog. El peor
+   resultado posible de un fallo —incluido un fallo por manipulación— es **un borrador malo que
+   un humano tiene que aprobar**.
+3. **El mapa de localización validado (se acumula operando).** Cada borrador aprobado, editado o
+   rechazado enseña qué obligaciones caen sobre qué servicios y qué variantes en *esa* empresa.
+   Ese conjunto de datos no se compra ni se descarga: es el subproducto de haber operado meses
+   dentro del cliente.
 
-**El moat real no es el agente** (replicable). **Es el registro de evidencia y la tasa
-de acierto medida**, más la confianza que el SRE lead ya te dio.
+**El foso real no es el agente.** El agente es replicable. Lo que no se replica es el permiso
+para correr dentro del perímetro más el historial de aciertos acumulado ahí adentro.
+
+**Por qué no elegí Data:** al día 1 no tengo ningún dato propio. La capa 3 es una ventaja
+*futura* y condicional, y presentarla como primaria sería exactamente el humo que este PVB
+debe evitar.
+**Por qué no elegí Distribution:** no controlo ningún canal. Me cuelgo de Git y del tracker que
+ya usa el cliente, que son canales de otros.
+
+---
 
 ## 4. ARENA COMPETITIVA
 
-**[X] Disruptor (AI-Disrupted)** — El workflow (operar Kubernetes) existe hace una
-década. Lo estamos reimaginando, no inventando.
+**[X] Disruptor (AI-Disrupted)** — El workflow (propagar un cambio obligatorio a N variantes y
+convertirlo en trabajo) existe desde que existe el software multi-cliente. Lo estoy
+reimaginando, no inventando.
 
-**Cómo sobrevivimos a los gigantes y al open source:**
+**Cómo sobrevivo o complemento a los gigantes:**
 
-- **Los hyperscalers** (AWS, GCP, Azure) optimizan para que te quedes en su nube. Su
-  tooling de operación asistida no cruza nubes. Timonel es agnóstico y funciona igual
-  en un clúster on-premise. **[VERIFICAR: productos concretos de cada hyperscaler]**
-- **Los proyectos open source del ecosistema** (K8sGPT, HolmesGPT, kagent) resuelven
-  el diagnóstico y lo resuelven bien — y son gratis. **Timonel no compite con ellos:
-  los orquesta.** El valor no está en diagnosticar; está en el bucle completo
-  detectar → diagnosticar → proponer PR con evidencia → aprobar → reconciliar, y en
-  el registro auditable que queda.
-- **Las plataformas de developer portal** (Backstage, Humanitec, Port) resuelven el
-  *self-service* del desarrollador, no la *operación* del clúster. Son adyacentes:
-  candidatos a integración, no a competencia frontal. **[VERIFICAR]**
+- **Contra el ecosistema CNCF: no compito, me monto encima.** Argo CD corre en cerca del 60% de
+  los clústeres de Kubernetes, el 97% de los encuestados lo usa en producción y tiene un NPS de
+  79 (CNCF, "2025 Argo CD End User Survey", 24-jul-2025). Kyverno y OPA (graduados) cubren
+  policy-as-code. Reimplementar cualquiera de esas piezas sería una derrota. Ramal consume Argo
+  CD y escribe a Git; el clúster converge solo.
+- **Contra las RegTech (Norm Ai, CUBE, Corlytics, AscentAI): soy su downstream, no su rival.**
+  Norm Ai levantó una Serie C de USD 120 millones a valuación de ~USD 1.200 millones el
+  7-jul-2026, liderada por Khosla Ventures, con más de USD 260 millones totales (PR Newswire y
+  TechCrunch, 7-jul-2026). CUBE cubre 750+ jurisdicciones con más de 250 analistas humanos. No
+  hay ninguna versión de esta historia en la que yo gane interpretando normas mejor que ellos.
+  Todos terminan en obligaciones, políticas y controles; **ninguno toca repositorios ni
+  Kubernetes**. Su salida es mi entrada.
+- **Contra las plataformas de entrega (Harness Worker Agents, Atlassian Rovo, GitHub Copilot):
+  tienen la mitad de despliegue, no la de localización multi-variante.** Harness es el flanco
+  peligroso, no las RegTech.
 
-**Riesgo honesto de esta arena:** si uno de los proyectos open source añade el bucle
-GitOps completo con evidencia, buena parte de la diferenciación se evapora. Está
-contemplado en la sección 9.
+**Riesgo honesto de esta arena:** estoy exactamente entre dos frentes bien financiados y el
+hueco está abierto porque es difícil y arriesgado, no porque nadie lo haya visto. Si Harness
+añade un front regulatorio o una RegTech añade integración con repositorios, mi diferenciación
+se reduce a "on-premise, más barato y localizado". Está en la sección 9 y es el riesgo #1.
+
+---
 
 ## 5. UX PARADIGM
 
-**[X] Agent** — La IA ejecuta autónomamente **dentro de límites duros**.
+**[X] Agent** — La IA ejecuta tareas autónomamente **dentro de límites duros**
 
-**Por qué no Autonomous:** porque la autonomía total es exactamente lo que el
-comprador no va a firmar. En operación de infraestructura, "la IA corre sin supervisión"
-no es una feature, es el motivo del rechazo. El límite es el producto.
+**Por qué este paradigma:** el agente sí trabaja sin que un humano lo guíe paso a paso —se
+dispara por un webhook o por un cambio registrado, recorre repositorios, correlaciona y
+redacta—. Eso es un agente, no un asistente. Pero cada una de sus salidas es un **borrador
+dirigido a un aprobador con nombre**.
 
-**Qué hace el agente sin preguntar:** observar, correlacionar, diagnosticar, redactar
-la corrección, abrir el pull request con su evidencia.
+**Qué hace sin preguntar:** leer los repositorios conectados, indexarlos, correlacionar el
+cambio de entrada con servicios y variantes, redactar historias de usuario con criterios de
+aceptación, crear ramas `ramal/*`, abrir pull requests en borrador y adjuntar su evidencia.
 
-**Qué no hace nunca:** aplicar cambios al clúster, aprobar su propio PR, tocar secretos,
-escalar sus propios permisos.
+**Qué no hace nunca:** mergear, aprobar, tocar ramas protegidas, resolver conflictos de merge
+por su cuenta, aplicar nada al clúster, mover un ticket más allá del backlog, ni decidir si una
+norma aplica.
 
-Ese reparto también es la línea de defensa contra manipulación: si un atacante logra
-influir en lo que el agente concluye, el peor resultado posible sigue siendo **un pull
-request malo que un humano tiene que aprobar**.
+**Por qué no Autonomous:** porque es ilegal en mi mercado objetivo y porque nadie lo firmaría.
+Las obligaciones plenas de alto riesgo del EU AI Act (Reg. UE 2024/1689) aplican desde el
+**2 de agosto de 2026**, con exigencia de trazabilidad y **supervisión humana**, y multas de
+hasta €35M o 7% de la facturación. En EE.UU. SR 11-7 exige monitoreo humano continuo de
+modelos. En Colombia la SFC empuja en la misma dirección. La supervisión humana no es un
+disclaimer al pie: **es el producto**, y por eso está en la sección 3 y no aquí.
+
+**Costo honesto de esta decisión:** con humano en el bucle, buena parte del ROI que prometería
+una automatización total desaparece. Lo asumo. El valor que queda no es "no hacer el trabajo",
+es "no *buscar* dónde hacerlo".
+
+---
 
 ## 6. AI DECISION TRIANGLE
 
@@ -325,112 +236,265 @@ request malo que un humano tiene que aprobar**.
 
 **Trade-offs que acepto:**
 
-- **Sacrifico velocidad.** Un diagnóstico correcto en 4 minutos vale más que uno
-  dudoso en 20 segundos. El humano que revisa el PR no está esperando con cronómetro;
-  está esperando poder confiar.
-- **Sacrifico costo.** Uso modelos grandes para el diagnóstico y la redacción del
-  cambio. Modelos pequeños solo para clasificar y filtrar ruido de alertas.
-- **Sacrifico cobertura al inicio.** Prefiero acertar en 6 tipos de incidente que
-  opinar mal sobre 60. La cobertura se gana con historial, no con prompts.
+- **Sacrifico costo y velocidad al elegir inferencia local.** Un modelo abierto servido en el
+  clúster del cliente es más lento y, a baja escala, más caro por token que una API comercial.
+  Lo pago porque la confidencialidad es la ventaja competitiva (sección 3): si el código sale
+  del perímetro, no tengo producto.
+- **Sacrifico capacidad bruta, y esta es la contradicción real de mi diseño.** Modelos abiertos
+  del tamaño que cabe en un clúster de cliente rinden por debajo de los frontera. La evidencia
+  disponible es dura: en preguntas verificables sobre casos judiciales federales de EE.UU., las
+  tasas de alucinación medidas fueron de 58% para GPT-4 y 88% para Llama 2 (Dahl, Magesh,
+  Suzgun & Ho, "Large Legal Fictions", *Journal of Legal Analysis* 16(1), 2024), y aun con RAG
+  las herramientas legales comerciales fallaron entre 17% y 33% (Magesh et al., *Journal of
+  Empirical Legal Studies* 22, 2025).
+  **Mi respuesta a esa evidencia, y es toda la tesis del producto:** el modelo local **no hace
+  esa tarea**. No interpreta derecho ni decide si una norma aplica — eso entra ya resuelto por
+  un humano. Hace localización en código y redacción de borradores, con retrieval anclado al
+  repositorio real del cliente, que es donde el grounding funciona y donde el error es
+  verificable en segundos por quien lo recibe.
+  *Salvedad:* esos benchmarks son de derecho federal estadounidense en inglés y con modelos de
+  2023-2024; no son un veredicto sobre modelos abiertos actuales en tareas de código.
+  **[VERIFICAR: benchmark propio de localización servicio↔obligación con el modelo elegido]**
+- **Sacrifico cobertura.** Prefiero acertar en un tipo de cambio y una familia de servicios que
+  opinar mal sobre todo el portafolio.
+- **Uso modelos pequeños donde se puede.** Clasificación, filtrado y detección de duplicados con
+  modelos baratos; el modelo grande solo para localización y redacción.
 
-**Razón de fondo:** el costo de un diagnóstico equivocado no es el token desperdiciado
-— es la confianza del SRE lead, y esa se pierde una sola vez.
+**Razón de fondo:** el costo de un borrador equivocado no es el token. Es que un PO apruebe una
+historia que manda a un desarrollador a modificar el servicio que no era — y esa confianza se
+pierde una sola vez.
+
+---
 
 ## 7. MODELO ECONÓMICO
 
-**Modelo de pricing:** Hybrid Tiered — suscripción por clúster conectado, con límites
-crecientes de incidentes analizados por mes. **[INTERNO]**
+**Modelo de pricing:** **[X] Hybrid Tiered** — licencia auto-hospedada por **producto core
+conectado**, con límites crecientes de variantes y repositorios. **[INTERNO]**
 
-- **Team:** $400/mes hasta 3 clústeres y 150 incidentes analizados/mes.
-- **Business:** $1.500/mes hasta 15 clústeres, políticas personalizadas, SSO.
-- **Enterprise:** a convenir, despliegue self-hosted (el agente corre dentro de la
-  infraestructura del cliente; requisito frecuente en banca).
+La unidad de cobro **no es el asiento**: el valor no crece con cuánta gente mira el tablero,
+crece con cuántas variantes hay que mantener sincronizadas.
 
-**¿Escala a 10x usuarios?** **[X] Sí, con un ajuste.** El costo marginal principal es
-inferencia, que escala con **incidentes**, no con usuarios. Un cliente con un clúster
-inestable puede consumir 10x la media: por eso el límite del tier se define en
-incidentes analizados y no en asientos.
+- **Starter — USD 600/mes:** 1 producto core, hasta 5 variantes, hasta 20 repositorios.
+- **Business — USD 2.000/mes:** hasta 20 variantes, SSO, políticas de aprobación
+  personalizadas, soporte para el hosting del modelo.
+- **Enterprise — a convenir:** despliegue air-gapped, evaluaciones a medida, acuerdo de
+  auditoría.
+
+**¿El pricing escala si tienes 10x usuarios?** **[X] Necesita ajuste**
+
+Y quiero ser preciso sobre por qué, porque es el número que más me preocupa: el costo marginal
+dominante **no es la inferencia** —la paga el cliente en su propia GPU—, es el **onboarding y
+el soporte de una instalación on-premise**. Ese costo escala casi lineal con el número de
+clientes. 10x clientes con este modelo es 10x equipo de soporte. La única salida real es un
+instalador reproducible (Helm chart + operador) que convierta el onboarding en horas y no en
+semanas; hasta que eso exista, el modelo no escala y decir lo contrario sería mentir.
 
 **Economía por cuenta (tier Business) [INTERNO]:**
 
 | Concepto | Mensual |
 |---|---|
-| Inferencia (diagnóstico + redacción de PR) | $180 |
-| Infraestructura y almacenamiento de evidencia | $45 |
-| Soporte prorrateado | $120 |
-| **Costo total** | **$345** |
-| **Revenue** | **$1.500** |
-| **Gross margin** | **77%** |
+| Soporte y onboarding prorrateado | $350 |
+| Mantenimiento del conector y suite de evaluaciones | $180 |
+| Infraestructura propia (CI de releases, telemetría opt-in) | $70 |
+| **Costo total** | **$600** |
+| **Revenue** | **$2.000** |
+| **Gross margin** | **70%** |
 
-El margen se sostiene si el filtrado de ruido funciona. Si el 60% de las alertas que
-llegan al agente son basura, el costo de inferencia se dispara y el margen se cae —
-por eso la clasificación previa con modelos baratos es una decisión económica, no
-técnica.
+*Nota:* la casilla "costo por usuario/mes" de la plantilla no aplica a este modelo y prefiero
+declararlo antes que rellenarla con un número inventado. El costo de GPU vive del lado del
+cliente y es su decisión de dimensionamiento. **[VERIFICAR: costo real de servir un modelo
+abierto de 7-14B cuantizado para un equipo de este tamaño]**
+
+---
 
 ## 8. MÉTRICAS DE ÉXITO
 
 **Métricas de usuario:**
-1. **Tasa de PRs propuestos por el agente que se aprueban y mergean sin modificación.**
-   Es la métrica que mide si el producto sirve. *Target: >60% al mes 6.* **[INTERNO]**
-2. **Reducción de MTTR** en los tipos de incidente cubiertos, medida contra la línea
-   base del propio cliente en sus 3 meses previos. *Target: -40%.* **[INTERNO]**
+
+1. **Tasa de borradores de historia aprobados por el PO sin reescritura sustancial**, medida por
+   distancia de edición sobre el texto original. Es la métrica que dice si el producto sirve.
+   *Target: >50% al mes 6.* **[INTERNO]**
+2. **Lead time de "cambio registrado" → "PR de propagación abierto en todas las variantes
+   afectadas"**, contra la línea base del propio cliente en sus 3 meses previos.
+   *Target: -50%.* **[INTERNO]** Este dato no existe públicamente y hay que medirlo con
+   entrevistas antes del piloto (`docs/mercado.md`, huecos de evidencia #1).
 
 **Métricas específicas de IA:**
-1. **Precisión del diagnóstico de causa raíz**, validada contra el post-mortem humano.
-   *Target: >85% en los tipos de incidente cubiertos.* **[INTERNO]**
-2. **Tasa de propuestas revertidas después de mergear.** Es la métrica de seguridad:
-   mide las veces que el agente convenció a un humano de algo equivocado.
-   *Target: <2%. Por encima de 5%, el producto se apaga hasta corregirlo.* **[INTERNO]**
 
-**Métrica de salud secundaria:** proporción de alertas descartadas como ruido antes
-de llegar al diagnóstico costoso. Sostiene el margen bruto.
+1. **Recall de variantes afectadas**, validado contra un experto humano. Reporto recall y
+   precisión por separado y optimizo **recall**, porque el error caro es la variante olvidada,
+   no la sugerida de más. *Target: recall >90%, precisión >70%.* **[INTERNO]**
+2. **Tasa de borradores aprobados por un humano que después se revierten o causan defecto.** Es
+   la métrica de seguridad: mide cuántas veces el producto convenció a alguien de algo
+   equivocado. *Target: <2%. Por encima de 5% el agente se apaga hasta corregirlo.* **[INTERNO]**
+
+**Métrica de salud secundaria:** **tasa de abstención** — con qué frecuencia el agente responde
+"no tengo evidencia suficiente para localizar esto". Una abstención de 0% no es excelencia, es
+la señal de que el sistema está inventando. Se premia, no se penaliza.
+
+---
 
 ## 9. RIESGOS CRÍTICOS
 
 **1. ¿Qué pasa si el problema desaparece en 12 meses por comoditización?**
 
-**Riesgo alto, y es el riesgo principal.** El diagnóstico asistido por IA en Kubernetes
-ya es gratis y open source. Si esos proyectos incorporan el bucle GitOps completo con
-evidencia auditable, el producto pierde su diferenciador central. **[VERIFICAR: estado
-y roadmap actual de esos proyectos]**
+**Riesgo alto, y es el principal.** La mitad genérica ya está comoditizada: Atlassian Rovo crea
+work items desde documentos, GitHub Copilot y Cursor hacen ticket→PR, y el ensamblaje GitOps
+multi-región con Argo CD ApplicationSets + Kustomize + Kyverno está publicado como blueprint
+gratuito y se replica en semanas (`docs/critica.md`, sección 2). El flanco más peligroso no es
+una RegTech: es **Harness**, que ya tiene la mitad de despliegue construida y solo necesitaría
+añadir el front de entrada.
 
-*Mitigación:* no apostar al diagnóstico. Apostar al **registro de evidencia y a la
-tasa de acierto medida en producción**, que son acumulativos y no se replican con
-código. Y construir sobre los proyectos open source en vez de contra ellos: si mejoran,
-Timonel mejora.
+*Mitigación:* no apostar a la generación —apostar a la **localización multi-variante on-premise**,
+que exige estar dentro del perímetro y acumular historial. Y montarme sobre las piezas
+comoditizadas en vez de contra ellas: si Argo CD mejora, Ramal mejora.
+*Umbral que cambia la decisión:* si antes de la sustentación Harness o Norm Ai anuncian este
+conector, el argumento pivota a "por qué mi implementación es más barata, localizada y
+auto-hospedada" — o la idea muere y hay que decirlo.
 
-**2. ¿Puede un competidor replicarlo en menos de 6 semanas?**
+**2. ¿Puede un competidor replicar tu producto con la misma API en menos de 6 semanas?**
 
-**El software sí; la confianza no.** Un equipo competente conecta un LLM al API server
-de Kubernetes y abre pull requests en un mes. Lo que no se replica en seis semanas:
+**El software sí. El permiso no.** Un equipo competente conecta un LLM a Bitbucket y a Jira y
+abre PRs en borrador en un mes; no me voy a engañar con eso. Lo que no se replica en seis
+semanas:
 
-- El historial de aciertos por tipo de incidente, que se construye operando meses.
-- La biblioteca de correcciones validadas contra clústeres reales, no de laboratorio.
-- El ciclo de venta con un SRE lead que ya te dejó entrar a su producción.
+- La autorización del CISO para correr dentro del perímetro con acceso de lectura a todo el
+  código fuente. Ese es el activo, y se gana una vez por cliente.
+- El mapa de localización obligación↔servicio↔variante validado por humanos de *esa* empresa.
+- La suite de evaluaciones que demuestra el recall, que es lo único que convierte "confía en mí"
+  en un número.
 
 **3. Si tienes éxito a escala, ¿cuál es la primera forma en que se rompe la confianza?**
 
-Tres vectores, en orden de probabilidad:
+En orden de probabilidad:
 
-1. **El agente propone un cambio plausible pero equivocado y un humano cansado lo
-   aprueba a las 3 a.m.** Es el escenario más probable y el más dañino, porque el
-   producto convenció a alguien de romper su propio sistema.
-   *Mitigación:* nivel de confianza explícito en cada PR, negativa a proponer cuando
-   la evidencia es insuficiente ("no sé" es una respuesta válida y hay que premiarla),
-   y bloqueo automático de propuestas sobre recursos marcados como críticos.
-2. **Manipulación del agente por contenido que él mismo lee.** Los logs y los eventos
-   del clúster son texto que un atacante puede influir. Un agente que lee logs es un
-   agente que puede ser instruido por ellos. **[VERIFICAR: literatura de inyección de
-   prompts vía datos operativos]**
-   *Mitigación:* el agente jamás tiene permiso de escritura, así que el peor caso es
-   un PR malicioso que un humano debe aprobar; más el allowlist de herramientas y el
-   tratamiento de todo log como dato no confiable.
-3. **Fuga de información sensible a través de la evidencia.** Los logs traen datos de
-   clientes; la evidencia adjunta al PR los expondría en el repositorio.
-   *Mitigación:* redacción automática de datos sensibles antes de adjuntar, y opción
-   self-hosted donde nada sale de la infraestructura del cliente.
+1. **Falso negativo silencioso: el agente no reporta una variante afectada y nadie lo nota hasta
+   la auditoría.** Es el más probable y el más grave, porque el fallo es *invisible* — no hay un
+   borrador malo que revisar, hay un borrador que nunca existió. *Mitigación:* optimizar recall
+   sobre precisión, listar siempre el inventario completo de variantes marcando cuáles descartó
+   **y por qué**, y bloquear la ejecución silenciosa cuando el índice del repositorio está
+   desactualizado.
+2. **Fatiga de aprobación: el PO aprueba en bloque a las 5 p.m. de un viernes.** Si el producto
+   funciona, el volumen de borradores sube y la revisión se vuelve un trámite — y ahí el
+   "humano en el bucle" se convierte en una ficción de cumplimiento. *Mitigación:* límite duro
+   de borradores por lote, nivel de confianza explícito por ítem, y medir la distancia de
+   edición: si cae a cero, es señal de sello de goma, no de calidad.
+3. **Manipulación del agente por el contenido que él mismo lee.** Mensajes de commit, issues y
+   documentos de entrada son texto que alguien puede influir. *Mitigación:* todo insumo se trata
+   como dato no confiable, allowlist explícito de herramientas por MCP, y el límite estructural
+   de la sección 3: sin permiso de merge, el peor caso sigue siendo un borrador que un humano
+   debe aprobar.
+4. **Fuga de código o de datos sensibles.** Mitigado por diseño con inferencia local y egress en
+   allowlist, pero **un solo despliegue mal configurado destruye el único argumento de venta que
+   tengo**. La configuración de red debe ser verificable por el cliente, no prometida.
 
-**Verdad incómoda:** este producto vive o muere por la confianza de una sola persona
-por cuenta —el SRE lead— y esa confianza se pierde con un solo incidente atribuible
-al agente. Por eso el límite de permisos no se relaja nunca, ni siquiera cuando el
-cliente lo pida.
+**4. Riesgo de arquitectura: estoy construyendo sobre un anti-patrón, y lo sé.**
+
+*(Riesgo adicional a la plantilla. Es el que más me van a atacar y prefiero traerlo yo.)*
+
+Las ramas *downstream* de larga vida son **clone-and-own**, un anti-patrón explícitamente
+desaconsejado por la literatura: Thoughtworks mantiene trunk-based development en "Adopt" y las
+long-lived branches aparecen en "Hold"; DORA lo lista como capacidad de entrega (dora.dev); y
+el SEI/CMU usa justamente el ejemplo bancario —una ley estatal que afecta 25 líneas de un
+componente de 8.000— para explicar que la estrategia de clonar "quickly gets out of hand"
+(Bachmann & Clements, "Variability in Software Product Lines", sei.cmu.edu). Un paper de 2025
+atribuye ~55,2% de la deuda técnica del ecosistema Apache a migración de features en backports
+entre ramas (arXiv 2511.09000) — exactamente el mecanismo que estoy automatizando.
+
+**No lo voy a negar y tampoco lo voy a vender como virtud.** Lo asumo por una razón concreta:
+es lo que los equipos objetivo hacen **hoy**, y un producto que exige migrar primero a
+variabilidad gestionada no se adopta nunca. La forma correcta de decirlo es que Ramal **no
+promueve** las ramas largas: **mide su costo y financia la salida**.
+
+*Compromisos que acepto por escrito:*
+- Instrumentar el costo de divergencia (distancia entre core y cada variante, tiempo de merge,
+  conflictos por propagación) y **mostrárselo al cliente aunque lo incomode**.
+- Diseñar la salida desde el día 1: cuando una variante muestra que su divergencia es puramente
+  de configuración, el producto propone convertirla en overlay de Kustomize o feature flag —
+  es decir, **propone eliminar su propia razón de existir en ese caso**.
+- Si en el piloto el costo de merge sube en vez de bajar, es evidencia en contra de la tesis y
+  se reporta, no se esconde.
+
+**Verdad incómoda final:** este producto vive de una autorización que da una sola persona por
+cuenta —el arquitecto de seguridad— para correr dentro de su perímetro leyendo todo el código.
+Esa autorización se pierde con un solo incidente de egress. Por eso la inferencia local y el
+allowlist de red no se relajan nunca, ni siquiera cuando el cliente lo pida para "ir más rápido".
+
+---
+
+## Kubernetes e IA: por qué no son decorativos
+
+*(Adición a la plantilla, para el criterio de coherencia técnica.)*
+
+**Si quito la IA, ¿el producto sigue funcionando igual?** No: queda una plantilla de ticket
+vacía. Todo el valor está en inferir **a qué de mis N variantes aplica este cambio** a partir de
+texto no estructurado y de código, y eso no tiene solución determinista.
+
+**¿Por qué Kubernetes y no un contenedor suelto?**
+
+- Los agentes son **controladores con reconcile loop** sobre CRDs propios (`ChangeRequest`,
+  `PropagationPlan`, `DraftStory`). El estado deseado en el clúster es la arquitectura, no un
+  detalle de despliegue.
+- La **inferencia local vive en el clúster** sobre un node pool con GPU, escalada por profundidad
+  de cola. El modelo no sale de ahí: ese es el argumento de venta.
+- Los **servidores MCP son Services en el clúster**, cada agente con su propia ServiceAccount,
+  su RBAC y su NetworkPolicy de egress hacia el servidor Git y el tracker, y nada más.
+  **La frontera de permisos del agente está implementada con primitivas de Kubernetes**, así que
+  es auditable con las herramientas que el cliente ya tiene.
+- **Multi-tenancy y residencia de datos** por namespace (Capsule, Sandbox) o por clúster virtual
+  (vCluster) cuando el regulador exige aislamiento duro.
+- La trazabilidad exigida por el EU AI Act sale como Events de Kubernetes y trazas
+  OpenTelemetry (graduado) hacia el stack de observabilidad del propio cliente.
+
+**Dependencias que acepto y su madurez** (`docs/mercado.md`, sección 3): construyo sobre
+proyectos **graduados** —Argo CD, Kyverno, OPA, OpenTelemetry, Falco—. Trato **kagent**
+(Sandbox desde el 22-may-2025) y KAITO (Sandbox) como exploratorios: **no dependo de un proyecto
+Sandbox para funcionalidad core.** Contexto de adopción: según datos CNCF de 2025, el 66% de las
+organizaciones que usan GenAI corren inferencia sobre Kubernetes y el 57% ya corre agentes de IA
+en producción.
+
+---
+
+## Checklist de entrega
+
+- [x] Producto seleccionado (corre sobre Kubernetes, usa IA de forma defendible)
+- [x] Deep research de validación completado y estudiado → `docs/mercado.md`
+- [x] Deep research de crítica completado y estudiado → `docs/critica.md`
+- [x] Investigación documentada en archivos Markdown, con fuentes
+- [x] Product Vision Board completado (este documento)
+- [ ] `prd.md` co-creado a partir de este PVB (ver `../modulo3/prompts-para-especificacion.md`)
+- [ ] Listo para presentar en la sesión 3 (sábado 15 de agosto de 2026)
+
+---
+
+## Fuentes principales
+
+Enlaces completos y fechas de consulta en `docs/mercado.md` y `docs/critica.md`.
+
+**Existencia y costo del problema:** LexisNexis Risk Solutions / Forrester Consulting, "True
+Cost of Financial Crime Compliance Study – U.S. and Canada" (feb. 2024) · Bank Policy Institute,
+"Survey Finds Compliance is a Growing Demand on Bank Resources" (oct. 2024) · Santander Digital
+Services, "Software Engineering" y nota de prensa de core banking en la nube (may. 2022) · BBVA,
+"BBVA creates a Software area to drive global scalable solutions" · Umbrex, "Nubank Strategy and
+Business Model" · páginas de producto de Temenos y Oracle FLEXCUBE.
+
+**Ecosistema y madurez:** CNCF, "2025 Argo CD End User Survey" (24-jul-2025) · fichas de
+proyecto CNCF de Argo, Flux, Kyverno, OPA, OpenTelemetry, Falco, Karmada, Capsule y kagent
+(cncf.io/projects) · datos de adopción CNCF 2025 sobre inferencia y agentes en Kubernetes.
+
+**Competencia:** PR Newswire y TechCrunch sobre la Serie C de Norm Ai (7-jul-2026) · RegTech
+Analyst y Corlytics sobre CUBE y cobertura de jurisdicciones · Google Cloud blog, Regnology
+"Ticket-to-Code Writer" (10-sep-2024) · community.atlassian.com sobre creación de work items
+con IA.
+
+**Riesgo de IA y marco regulatorio:** Dahl, Magesh, Suzgun & Ho, "Large Legal Fictions",
+*Journal of Legal Analysis* 16(1) (2024) · Magesh et al., *Journal of Empirical Legal Studies*
+22 (2025) · Reglamento (UE) 2024/1689 (EU AI Act), obligaciones de alto riesgo desde el
+2-ago-2026 · SR 11-7 (Fed/OCC) · superfinanciera.gov.co sobre uso de IA en supervisión
+(3-oct-2025) · AI Incident Database #1152 (incidente Replit, jul. 2025) · cobertura AP / Fortune
+/ CFO Dive sobre el reembolso de Deloitte Australia (oct. 2025).
+
+**Anti-patrón de branching:** Thoughtworks, "Enabling Trunk Based Development with Deployment
+Pipelines" y Technology Radar · dora.dev, "Capabilities: Trunk-based development" · Bachmann &
+Clements, "Variability in Software Product Lines", sei.cmu.edu · arXiv 2511.09000 (2025) sobre
+deuda técnica en backports entre ramas.
