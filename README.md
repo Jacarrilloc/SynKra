@@ -1,4 +1,4 @@
-# k8s-regtech-agent
+# SynKra
 
 ⚖️ **Agente Autónomo de Compliance (RegTech) vía GitOps sobre Kubernetes.**
 
