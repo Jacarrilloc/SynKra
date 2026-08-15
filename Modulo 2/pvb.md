@@ -151,7 +151,7 @@ networkpolicy`. Los competidores RegTech y las herramientas de generación de ti
    este es el único eje donde un proyecto pequeño gana estructuralmente a uno de USD 1.200
    millones.
 2. **El agente no puede mergear, aprobar ni desplegar (existe desde el día 1).** Escribe solo
-   en ramas con prefijo reservado (`ramal/*`) y abre PRs en borrador. Nunca toca ramas
+   en ramas con prefijo reservado (`SynKra/*`) y abre PRs en borrador. Nunca toca ramas
    protegidas, nunca aprueba su propio PR, nunca mueve un ticket más allá del backlog. El peor
    resultado posible de un fallo —incluido un fallo por manipulación— es **un borrador malo que
    un humano tiene que aprobar**.
@@ -182,7 +182,7 @@ reimaginando, no inventando.
 - **Contra el ecosistema CNCF: no compito, me monto encima.** Argo CD corre en cerca del 60% de
   los clústeres de Kubernetes, el 97% de los encuestados lo usa en producción y tiene un NPS de
   79 (CNCF, "2025 Argo CD End User Survey", 24-jul-2025). Kyverno y OPA (graduados) cubren
-  policy-as-code. Reimplementar cualquiera de esas piezas sería una derrota. Ramal consume Argo
+  policy-as-code. Reimplementar cualquiera de esas piezas sería una derrota. SynKra consume Argo
   CD y escribe a Git; el clúster converge solo.
 - **Contra las RegTech (Norm Ai, CUBE, Corlytics, AscentAI): soy su downstream, no su rival.**
   Norm Ai levantó una Serie C de USD 120 millones a valuación de ~USD 1.200 millones el
@@ -213,7 +213,7 @@ dirigido a un aprobador con nombre**.
 
 **Qué hace sin preguntar:** leer los repositorios conectados, indexarlos, correlacionar el
 cambio de entrada con servicios y variantes, redactar historias de usuario con criterios de
-aceptación, crear ramas `ramal/*`, abrir pull requests en borrador y adjuntar su evidencia.
+aceptación, crear ramas `SynKra/*`, abrir pull requests en borrador y adjuntar su evidencia.
 
 **Qué no hace nunca:** mergear, aprobar, tocar ramas protegidas, resolver conflictos de merge
 por su cuenta, aplicar nada al clúster, mover un ticket más allá del backlog, ni decidir si una
@@ -349,7 +349,7 @@ añadir el front de entrada.
 
 _Mitigación:_ no apostar a la generación —apostar a la **localización multi-variante on-premise**,
 que exige estar dentro del perímetro y acumular historial. Y montarme sobre las piezas
-comoditizadas en vez de contra ellas: si Argo CD mejora, Ramal mejora.
+comoditizadas en vez de contra ellas: si Argo CD mejora, SynKra mejora.
 _Umbral que cambia la decisión:_ si antes de la sustentación Harness o Norm Ai anuncian este
 conector, el argumento pivota a "por qué mi implementación es más barata, localizada y
 auto-hospedada" — o la idea muere y hay que decirlo.
@@ -405,7 +405,7 @@ entre ramas (arXiv 2511.09000) — exactamente el mecanismo que estoy automatiza
 
 **No lo voy a negar y tampoco lo voy a vender como virtud.** Lo asumo por una razón concreta:
 es lo que los equipos objetivo hacen **hoy**, y un producto que exige migrar primero a
-variabilidad gestionada no se adopta nunca. La forma correcta de decirlo es que Ramal **no
+variabilidad gestionada no se adopta nunca. La forma correcta de decirlo es que SynKra **no
 promueve** las ramas largas: **mide su costo y financia la salida**.
 
 _Compromisos que acepto por escrito:_
