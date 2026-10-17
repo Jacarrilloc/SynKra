@@ -14,7 +14,8 @@ doctor: ## Verifica herramientas y Docker
 	./scripts/doctor.sh
 
 cluster: ## Crea el clúster kind local
-	@kind get clusters | grep -qx $(CLUSTER) || kind create cluster --name $(CLUSTER)
+	@kind get clusters 2>/dev/null | grep -qx $(CLUSTER) || kind create cluster --name $(CLUSTER) --wait 180s
+	kubectl wait --for=condition=Ready nodes --all --timeout=180s --context kind-$(CLUSTER)
 	kubectl cluster-info --context kind-$(CLUSTER)
 
 cluster-delete: ## Borra el clúster kind local
