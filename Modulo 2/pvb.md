@@ -51,9 +51,9 @@ resolución automática de merges. Todo lo demás es backlog explícito.
 Una empresa que despliega el mismo producto a varios clientes o países no mantiene un
 repositorio: mantiene **un core más N variantes que deben seguir vivas y sincronizadas**.
 Ese patrón está documentado como práctica real de industria, no como hipótesis: Santander
-declara que más del 80% de sus soluciones globales se extrapolan a mercados locales (Santander
-Digital Services, "Software Engineering"; nota de prensa de mayo de 2022, ~16.500
-desarrolladores); BBVA agrupó más de 16.000 desarrolladores para reutilizar componentes entre
+migró su core bancario a una plataforma propia (Gravity) para todos sus mercados (nota de
+prensa de mayo de 2022; la cifra de "80% de soluciones globales extrapoladas a mercados
+locales" no se pudo confirmar y queda **[VERIFICAR]**); BBVA agrupó más de 16.000 desarrolladores para reutilizar componentes entre
 países (BBVA, "BBVA creates a Software area to drive global scalable solutions"); Nubank opera
 plataformas compartidas con marcos regulatorios específicos por país (Umbrex, "Nubank Strategy
 and Business Model"). Los vendors de core bancario venden esto como producto: Oracle FLEXCUBE
@@ -232,9 +232,11 @@ por su cuenta, aplicar nada al clúster, mover un ticket más allá del backlog,
 norma aplica.
 
 **Por qué no Autonomous:** porque es ilegal en mi mercado objetivo y porque nadie lo firmaría.
-Las obligaciones plenas de alto riesgo del EU AI Act (Reg. UE 2024/1689) aplican desde el
-**2 de agosto de 2026**, con exigencia de trazabilidad y **supervisión humana**, y multas de
-hasta €35M o 7% de la facturación. En EE.UU. SR 11-7 exige monitoreo humano continuo de
+Las obligaciones de alto riesgo del EU AI Act (Reg. UE 2024/1689) exigen trazabilidad y
+**supervisión humana**; el Digital Omnibus (Reg. UE 2026/1744, vigente desde el 27-jul-2026)
+movió su aplicación del 2-ago-2026 al **2 de diciembre de 2027**, y las multas por incumplir
+obligaciones de alto riesgo llegan hasta €15M o 3% de la facturación (el tope de €35M o 7% es
+para prácticas prohibidas). En EE.UU. SR 11-7 exige monitoreo humano continuo de
 modelos. En Colombia la SFC empuja en la misma dirección. La supervisión humana no es un
 disclaimer al pie: **es el producto**, y por eso está en la sección 3 y no aquí.
 
@@ -257,7 +259,8 @@ es "no _buscar_ dónde hacerlo".
 - **Sacrifico capacidad bruta, y esta es la contradicción real de mi diseño.** Modelos abiertos
   del tamaño que cabe en un clúster de cliente rinden por debajo de los frontera. La evidencia
   disponible es dura: en preguntas verificables sobre casos judiciales federales de EE.UU., las
-  tasas de alucinación medidas fueron de 58% para GPT-4 y 88% para Llama 2 (Dahl, Magesh,
+  tasas de alucinación medidas fueron de al menos 58% (versión publicada) y hasta 88% con
+  Llama 2 (preprint arXiv 2401.01301) (Dahl, Magesh,
   Suzgun & Ho, "Large Legal Fictions", _Journal of Legal Analysis_ 16(1), 2024), y aun con RAG
   las herramientas legales comerciales fallaron entre 17% y 33% (Magesh et al., _Journal of
   Empirical Legal Studies_ 22, 2025).
@@ -407,8 +410,8 @@ En orden de probabilidad:
 _(Riesgo adicional a la plantilla. Es el que más me van a atacar y prefiero traerlo yo.)_
 
 Las ramas _downstream_ de larga vida son **clone-and-own**, un anti-patrón explícitamente
-desaconsejado por la literatura: Thoughtworks mantiene trunk-based development en "Adopt" y las
-long-lived branches aparecen en "Hold"; DORA lo lista como capacidad de entrega (dora.dev); y
+desaconsejado por la literatura: Thoughtworks pone Gitflow, por su flujo de ramas largas, en "Hold"
+(Technology Radar, 2015) y desaconseja las ramas de larga vida; DORA lo lista como capacidad de entrega (dora.dev); y
 el SEI/CMU usa justamente el ejemplo bancario —una ley estatal que afecta 25 líneas de un
 componente de 8.000— para explicar que la estrategia de clonar "quickly gets out of hand"
 (Bachmann & Clements, "Variability in Software Product Lines", sei.cmu.edu). Un paper de 2025
@@ -466,7 +469,7 @@ proyectos **graduados** —Argo CD, Kyverno, OPA, OpenTelemetry, Falco—. Trato
 (Sandbox desde el 22-may-2025) y KAITO (Sandbox) como exploratorios: **no dependo de un proyecto
 Sandbox para funcionalidad core.** Contexto de adopción: según datos CNCF de 2025, el 66% de las
 organizaciones que usan GenAI corren inferencia sobre Kubernetes y el 57% ya corre agentes de IA
-en producción.
+en producción **[VERIFICAR: no aparece en el reporte CNCF de 2025]**.
 
 ---
 
@@ -504,8 +507,8 @@ con IA.
 
 **Riesgo de IA y marco regulatorio:** Dahl, Magesh, Suzgun & Ho, "Large Legal Fictions",
 _Journal of Legal Analysis_ 16(1) (2024) · Magesh et al., _Journal of Empirical Legal Studies_
-22 (2025) · Reglamento (UE) 2024/1689 (EU AI Act), obligaciones de alto riesgo desde el
-2-ago-2026 · SR 11-7 (Fed/OCC) · superfinanciera.gov.co sobre uso de IA en supervisión
+22 (2025) · Reglamento (UE) 2024/1689 (EU AI Act) y Reglamento (UE) 2026/1744 (Digital
+Omnibus), obligaciones de alto riesgo desde el 2-dic-2027 · SR 11-7 (Fed/OCC) · superfinanciera.gov.co sobre uso de IA en supervisión
 (3-oct-2025) · AI Incident Database #1152 (incidente Replit, jul. 2025) · cobertura AP / Fortune
 / CFO Dive sobre el reembolso de Deloitte Australia (oct. 2025).
 

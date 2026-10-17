@@ -22,10 +22,17 @@ con límite de autonomía verificable. Es poco, y hay que decirlo.
 
 ## 3. La IA se equivoca y alguien lo aprueba
 
-- Alucinación medida en preguntas legales: 58% GPT-4, 88% Llama 2 (Dahl et al., "Large Legal
-  Fictions", Journal of Legal Analysis 16(1), 2024); herramientas legales con RAG fallan entre
-  17% y 33% (Magesh et al., JELS 22, 2025). **[VERIFICAR: enlace]** Son benchmarks de derecho
-  de EE.UU., no de código.
+- Alucinación medida en preguntas sobre casos judiciales federales de EE.UU.: los modelos
+  públicos alucinan al menos 58% de las veces según la versión publicada (Dahl, Magesh, Suzgun &
+  Ho, "Large Legal Fictions", Journal of Legal Analysis, 2024,
+  [Stanford Law](https://law.stanford.edu/publications/large-legal-fictions-profiling-legal-hallucinations-in-large-language-models));
+  el preprint reporta un rango de 69% (GPT-3.5) a 88% (Llama 2)
+  ([arXiv 2401.01301](https://arxiv.org/abs/2401.01301v1)).
+- Herramientas legales comerciales con RAG (Lexis+ AI, Westlaw) alucinan entre 17% y 33%
+  (Magesh et al., "Hallucination-Free?", Journal of Empirical Legal Studies 22:216-242, 2025,
+  doi 10.1111/jels.12413,
+  [Stanford Law](https://law.stanford.edu/publications/hallucination-free-assessing-the-reliability-of-leading-ai-legal-research-tools)).
+- Ambos son benchmarks de derecho de EE.UU. con modelos de 2023-2024, no de código.
 - Fatiga de aprobación: el revisor aprueba en bloque y el "humano en el bucle" se vuelve ficción.
 - Falso negativo silencioso: el agente no reporta un plugin afectado y nadie lo nota.
 

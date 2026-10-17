@@ -40,17 +40,18 @@ Tagline (del PVB, se mantiene): *"El humano decide qué cambia; el agente encuen
 **Dolores** (fuentes en `docs/mercado.md`):
 
 - El gasto en compliance crece: de 9,6% a 13,4% del presupuesto de IT bancario entre 2016 y
-  2023 (Bank Policy Institute, oct-2024) **[VERIFICAR: enlace]**. Dato de EE.UU.; no hay
+  2023 ([Bank Policy Institute, 29-oct-2024](https://bpi.com/survey-finds-compliance-is-growing-demand-on-bank-resources/)). Dato de EE.UU.; no hay
   equivalente para Colombia o Perú.
-- El patrón "un core, N países" es real en la industria (Santander, BBVA, Temenos, FLEXCUBE;
-  `docs/overview.md`) **[VERIFICAR: enlace]**.
-- Mantener un país por rama o por repo es un anti-patrón documentado (Thoughtworks "Hold",
-  SEI/CMU) **[VERIFICAR: enlace]**.
+- El patrón "un core, N países" es real en la industria (BBVA, Temenos, Oracle FLEXCUBE, que
+  separa explícitamente "kernel" y "clusters" por país; enlaces en `docs/overview.md`).
+- Mantener un país por rama o por repo es un anti-patrón documentado (Thoughtworks pone Gitflow
+  en "Hold"; SEI/CMU, CMU/SEI-2005-TR-012; enlaces en `docs/overview.md`).
 - Nadie sabe con certeza a qué países aplica un cambio; el conocimiento vive en dos o tres
   personas que rotan (PVB, sección 1) **[INTERNO]**.
 
-**¿Por qué ahora?** El EU AI Act exige supervisión humana para sistemas de alto riesgo desde el
-2-ago-2026 (Reg. UE 2024/1689), y los agentes de código ya son capaces de abrir PRs útiles. La
+**¿Por qué ahora?** El EU AI Act (Reg. UE 2024/1689) exige supervisión humana para sistemas de
+alto riesgo; el Digital Omnibus (Reg. UE 2026/1744) movió esa obligación al 2-dic-2027, lo que
+da una ventana para prepararse. Además, los agentes de código ya son capaces de abrir PRs útiles. La
 pregunta dejó de ser "¿puede la IA hacerlo?" y pasó a ser "¿qué le dejo hacer?".
 
 **Alternativas actuales y por qué no alcanzan:**
