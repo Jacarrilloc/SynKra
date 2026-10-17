@@ -13,6 +13,18 @@
 
 ---
 
+> **Ajuste de dirección (17 de octubre de 2026).** Las variantes por país dejan de ser ramas
+> de larga vida y pasan a ser **plugins de un micro-kernel**, cada país desplegado como un
+> overlay de Kustomize con solo los plugins que necesita. Es la salida que este mismo PVB
+> proponía en el riesgo #4. El agente ya no propaga cambios entre ramas: **localiza qué plugin
+> y qué punto de extensión** toca un cambio regulatorio y abre un PR en borrador. Para el MVP
+> del curso la IA es Claude con tope de gasto, detrás de un adaptador intercambiable por un
+> modelo local; en modo Claude la promesa de la sección 3 ("el código nunca sale del
+> perímetro") **no se cumple**, y así se declara. El resto del documento se conserva como la
+> visión original; el detalle está en `../Modulo 3/specs/prd.md`.
+
+---
+
 ## PRODUCTO
 
 **Nombre del producto:** SynKra
