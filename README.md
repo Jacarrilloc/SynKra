@@ -13,3 +13,21 @@ Plataforma de agentes de IA diseñada para auditar y actualizar continuamente la
 - `pvb.md` — Product Vision Board: Definición del problema, ventaja competitiva basada en auditoría y control de permisos (Trust), riesgos críticos y modelo económico.
 - `docs/` — Insumos de investigación profunda, incluyendo el *deep research* de validación, análisis de mercado y la investigación adversarial.
 - `specs/prd.md` — Product Requirements Document (PRD) consolidado, co-creado segmento por segmento a partir de la visión del producto.
+
+## Entorno de desarrollo (Linux y Windows)
+
+Todo se construye y prueba en Linux. En Windows se usa WSL2 con Ubuntu, así los dos sistemas corren los mismos scripts.
+
+**Linux (Ubuntu/Debian):**
+
+```bash
+git clone https://github.com/Jacarrilloc/SynKra.git ~/proyectos/SynKra
+cd ~/proyectos/SynKra
+make setup      # instala Docker, kubectl, kind, Helm, Java 21, Maven, Node y Claude Code
+make doctor     # verifica que todo esté
+make cluster    # crea el clúster kind local
+```
+
+**Windows:** en PowerShell, desde esta carpeta, ejecuta `.\scripts\setup-windows.ps1`. Clona el repo en `~/proyectos/SynKra` dentro de Ubuntu y corre `make setup` allí. Después trabaja con `wsl -d Ubuntu` y `cd ~/proyectos/SynKra`.
+
+> Clona el repo en el disco de Linux (`~/`), no en `/mnt/c/...`: el disco de Windows hace lentos a Docker y a `git worktree`.

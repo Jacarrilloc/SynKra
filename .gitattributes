@@ -1,0 +1,4 @@
+# Los scripts de shell y el Makefile siempre con LF, aunque se editen en Windows.
+*.sh     text eol=lf
+Makefile text eol=lf
+*.ps1    text eol=crlf
