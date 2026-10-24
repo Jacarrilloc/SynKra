@@ -1,8 +1,5 @@
 # Decisiones del módulo 5 — SynKra
 
-> BORRADOR para revisión de Julian. Reescríbelo con tus palabras antes de entregarlo; la guía pide
-> que sea "de tu puño y letra".
-
 ## 1. Dos cosas que el marco me obligó a decidir y que el PRD no había decidido
 
 - **Cómo localiza el agente el plugin.** El PRD decía que el agente "localiza" el plugin, pero no
@@ -17,8 +14,16 @@
 
 ## 2. Una vez que pedí cambios
 
-PENDIENTE: completar después de pedir el cambio sobre `unidades-y-tareas.md` en la sesión de
-AI-DLC. Copiar aquí el texto exacto que se pidió y por qué.
+El 24 de octubre pedí en la sesión de AI-DLC (queda en `aidlc-docs/audit.md`):
+
+> "Request Changes: en unidades-y-tareas.md agrega al final una sección "Tareas para la primera
+> ola del módulo 6" con las 2 primeras tareas de U03 y de U04. Registra esta petición en audit.md."
+
+**Por qué:** el consolidado listaba 91 tareas sin decir por dónde empezar el loop de agentes del
+módulo 6. Pedí dejar explícita la primera ola en paralelo (plugins y agente) para que el
+orquestador no tenga que deducirla. Al hacerlo se vio algo que no esperaba: las dos primeras
+tareas de U04 son **[PERSONA]** (proteger `main` y crear la identidad del agente en GitHub), así
+que el loop no las puede despachar a un codificador: las tengo que hacer yo.
 
 ## 3. Cómo quedó el grafo de dependencias
 

@@ -182,3 +182,22 @@ flowchart LR
 
 - **Terminada cuando:** [PERSONA] `make doctor && make images && make scan && time make deploy COUNTRY=co && time make deploy COUNTRY=pe && scripts/verify-countries.sh && scripts/verify-hardening.sh && git status --porcelain \| grep -vE "^( M\|\?\?) (images/\|deploy/\|scripts/\|Makefile\|aidlc-docs/)"` termina con la última parte sin imprimir nada.
 
+## Tareas para la primera ola del módulo 6
+
+Las dos primeras tareas de U03 y de U04, copiadas tal cual de las tablas de arriba. U03 y U04 son
+la ola 3 y se ejecutan en paralelo. Las dos primeras tareas de U04 son **[PERSONA]**: las ejecuta
+un humano, no el agente.
+
+### U03 — U-plugins
+
+| # | Tarea | Criterio de aceptación (comando) | Historia |
+|---|---|---|---|
+| U03-T01 | POM del agregador y de los plugins | `$PL -pl plugins/co,plugins/pe package -DskipTests` termina en `0` y `unzip -l plugins/pe/target/pe-*.jar \| grep -c "com/synkra/core/"` imprime `0` (y lo mismo con `co`). | US-2.10 |
+| U03-T02 | Catálogo de reglas de Colombia | `$PL -pl plugins/co test -Dtest=ColombiaRuleSourceTest` termina en `0` y `grep -c "verificar=true" plugins/co/target/rules-report.txt` imprime `7`. | US-2.9 |
+
+### U04 — U-agent
+
+| # | Tarea | Criterio de aceptación (comando) | Historia |
+|---|---|---|---|
+| U04-T01 | `scripts/configure-github.sh` [PERSONA] | `bash -n scripts/configure-github.sh && scripts/configure-github.sh --dry-run \| grep -c "branches/main/protection"` imprime al menos `1`; ejecutado por la persona, `gh api repos/Jacarrilloc/SynKra/branches/main/protection --jq '.required_pull_request_reviews.required_approving_review_count'` imprime al menos `1` y `gh api repos/Jacarrilloc/SynKra/rulesets --jq '[.[]\|select(.name=="synkra-agent-boundary")]\|length'` imprime `1`. | US-1.9, US-1.10 |
+| U04-T02 | Identidad del agente en GitHub [PERSONA] | `grep -c "AGENT_TOKEN_FILE" agent/README.md` imprime al menos `1` y, ejecutado por la persona, `gh api repos/Jacarrilloc/SynKra/collaborators/$AGENT_GH_USER/permission --jq .permission` imprime `write` (no `admin`). | US-1.10 |

@@ -384,3 +384,11 @@
 **Context**: CONSTRUCTION - fin del alcance pedido. `aidlc-state.md` actualizado.
 
 ---
+
+## Change Request - Sección de la primera ola del módulo 6 en unidades-y-tareas.md
+**Timestamp**: 2026-10-24T14:55:43Z
+**User Input**: "Request Changes: en unidades-y-tareas.md agrega al final una sección \"Tareas para la primera ola del módulo 6\" con las 2 primeras tareas de U03 y de U04. Registra esta petición en audit.md."
+**AI Response**: Añadida al final de `unidades-y-tareas.md` la sección «Tareas para la primera ola del módulo 6» con U03-T01 y U03-T02 (U-plugins) y U04-T01 y U04-T02 (U-agent), copiadas tal cual de las tablas de cada unidad, sin cambiar criterios ni agregar trabajo. Se indica que U03 y U04 forman la ola 3 y que las dos tareas de U04 son [PERSONA]. No se tocó ningún otro archivo salvo esta entrada de auditoría.
+**Context**: Cambio solicitado sobre el documento consolidado de unidades y tareas, fuera de las etapas del flujo AI-DLC (que quedó cerrado en Code Generation Part 1).
+
+---
