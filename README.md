@@ -7,10 +7,6 @@ Kubernetes.**
 Proyecto de la asignatura **Tópicos Especiales en Informática** · Maestría en Ingeniería de
 Sistemas · Pontificia Universidad Javeriana (Bogotá), 2026-3.
 
-> **Estado actual:** especificación terminada (módulos 2, 3 y 5). El código se construye en el
-> módulo 6 con el loop de agentes, siguiendo `unidades-y-tareas.md`. Más abajo se indica qué se
-> puede probar hoy y qué se podrá probar cuando el código exista.
-
 ---
 
 ## 1. La idea
