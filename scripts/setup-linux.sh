@@ -7,6 +7,7 @@ set -euo pipefail
 KUBECTL_VERSION="${KUBECTL_VERSION:-v1.37.0}"
 KIND_VERSION="${KIND_VERSION:-v0.33.0}"
 NODE_MAJOR="${NODE_MAJOR:-22}"
+MAVEN_VERSION="${MAVEN_VERSION:-3.9.16}"
 
 case "$(uname -m)" in
   x86_64)        ARCH=amd64 ;;
@@ -24,7 +25,23 @@ have() { command -v "$1" >/dev/null 2>&1; }
 
 log "Paquetes base"
 sudo apt-get update -y
-sudo apt-get install -y git curl jq unzip make ca-certificates openjdk-21-jdk maven
+sudo apt-get install -y git curl jq unzip make ca-certificates openjdk-21-jdk
+
+# Maven desde Apache: el de apt (3.8) es más viejo que el 3.9 que exige el pom.xml del proyecto.
+if have mvn && mvn -v 2>/dev/null | grep -q "Apache Maven $MAVEN_VERSION"; then
+  log "Maven $MAVEN_VERSION ya instalado"
+else
+  log "Maven $MAVEN_VERSION"
+  tmp="$(mktemp -d)"
+  url="https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz"
+  curl -fsSLo "$tmp/maven.tar.gz" "$url"
+  curl -fsSLo "$tmp/maven.tar.gz.sha512" "$url.sha512"
+  echo "$(cut -d' ' -f1 "$tmp/maven.tar.gz.sha512")  $tmp/maven.tar.gz" | sha512sum -c -
+  sudo rm -rf "/opt/apache-maven-${MAVEN_VERSION}"
+  sudo tar -xzf "$tmp/maven.tar.gz" -C /opt
+  sudo ln -sfn "/opt/apache-maven-${MAVEN_VERSION}/bin/mvn" /usr/local/bin/mvn
+  rm -rf "$tmp"
+fi
 
 if have docker; then
   log "Docker ya instalado: $(docker --version)"
