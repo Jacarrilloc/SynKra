@@ -169,11 +169,11 @@ La protección de `main` y la identidad del agente en GitHub las configura una p
 
 | Comando | Qué hace | Disponible |
 |---|---|---|
-| `make help` | Lista los comandos | Ya |
-| `make doctor` | Verifica herramientas y Docker | Ya |
-| `make cluster` | Crea un clúster Kubernetes local con kind y espera a que esté `Ready` | Ya |
-| `make status` | Muestra nodos y pods | Ya |
-| `make cluster-delete` | Borra el clúster | Ya |
+| `make help` | Lista los comandos | OK |
+| `make doctor` | Verifica herramientas y Docker | OK |
+| `make cluster` | Crea un clúster Kubernetes local con kind y espera a que esté `Ready` | OK |
+| `make status` | Muestra nodos y pods | OK |
+| `make cluster-delete` | Borra el clúster | OK |
 | `make build` / `make test` | Compila y corre las pruebas (con `LLM_PROVIDER=fake`) | Tras U01 |
 | `make images` | Construye las imágenes del kernel y de los plugins | Tras U05 |
 | `make deploy COUNTRY=co` | Despliega Colombia en el clúster | Tras U05 |
