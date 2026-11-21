@@ -39,7 +39,8 @@ mantienen un mismo producto en varios países.
 clúster."_
 
 **Alcance de la primera iteración (adición a la plantilla, para sustentar viabilidad):**
-un core en Java 21 / Spring Boot con las funciones básicas, un contrato de plugins versionado,
+un core en Java 21 / Spring Boot con las funciones básicas, plugins con dos etiquetas de versión
+(la del plugin y la del core compatible),
 dos plugins de país (Colombia y Perú), un motor que valida la selección y la despliega, y un
 front de acceso en Blazor. Corre en un clúster local de `kind`. **SynKra no compila ni usa Git:
 parte de artefactos ya compilados.** Sin IA, sin multi-tenant y sin marketplace de plugins.
@@ -81,7 +82,7 @@ vista por país que alguien que no sea experto pueda usar**.
 
 **[X] Sí, porque es un problema de WORKFLOW/INTEGRACIÓN, no de OUTPUT**
 
-Ningún modelo sabe qué plugins compiló esta empresa, qué versión del contrato implementa cada
+Ningún modelo sabe qué plugins compiló esta empresa, con qué versión del core es compatible cada
 uno ni qué pidió cada país. Esa información vive en el compilado y en el clúster, y la verificación de
 compatibilidad es una regla determinista, no una generación.
 
@@ -120,8 +121,8 @@ Backstage o KubeVela y están contentas.
    cuenta de servicio de SynKra solo puede crear y cambiar recursos en sus namespaces
    (`synkra-*`), y eso se comprueba con `kubectl auth can-i`.
 2. **El arquitecto de software dueño del core.** Su pregunta: _"¿un plugin puede romper el
-   core?"_ La respuesta es el contrato versionado y el rechazo al arrancar si un plugin no
-   cumple.
+   core?"_ La respuesta es la etiqueta de versión del core compatible de cada plugin y el
+   rechazo al arrancar si un plugin no cumple.
 
 El Product Owner de país es el **usuario**, no el veto.
 
@@ -134,8 +135,8 @@ El Product Owner de país es el **usuario**, no el veto.
 Concretamente: **ninguna combinación de plugins incompatible llega al clúster**, y eso se puede
 comprobar.
 
-1. **Doble verificación del contrato (desde el día 1).** Cada plugin es un **contenedor lógico**:
-   un artefacto compilado que viaja con el core y declara qué versión del contrato implementa.
+1. **Doble verificación de compatibilidad (desde el día 1).** Cada plugin es un **contenedor
+   lógico**: un artefacto compilado con dos etiquetas de versión, la suya y la del core compatible.
    El motor verifica la selección **antes** de desplegar, y el core la vuelve a verificar
    **al arrancar**: detecta qué plugins trae el compilado, los compara con la lista que pide el
    despliegue y no arranca si falta uno o si es incompatible.
@@ -184,7 +185,7 @@ propone**.
 
 **Por qué este paradigma:** quien arma la variante decide qué plugins lleva su país. SynKra no
 decide nada: verifica que la combinación sea válida, explica por qué una no lo es ("el plugin
-`kyc-pe` 2.x requiere el contrato 3, y el core implementa el 2") y, cuando el usuario confirma,
+`kyc-pe 2.0` es compatible con el core `3.x`, y el core es el `2.1`") y, cuando el usuario confirma,
 despliega.
 
 **Qué hace sin preguntar:** descubrir los plugins disponibles para cada core y sus versiones,
@@ -259,7 +260,7 @@ incompatible llegó al clúster.** _Target: 100%._ **[INTERNO]**
 **Métricas de verificación** (sustituyen a las "métricas específicas de IA"):
 
 1. **Combinaciones inválidas detectadas antes de desplegar**, sobre una suite de casos conocidos
-   (plugin ausente, versión del contrato incompatible, dependencia entre plugins rota).
+   (plugin ausente, versión del core incompatible, plugin en la carpeta de otro core).
    _Target: 100%._
 2. **Concordancia entre el motor y el core:** toda combinación que el motor aprueba, el core la
    acepta al arrancar, y viceversa. _Target: 0 discrepancias._
@@ -281,7 +282,8 @@ encima de Kubernetes y Kustomize en lugar de reemplazarlos.
 **2. ¿Puede un competidor replicar tu producto con la misma API en menos de 6 semanas?**
 
 **Sí, casi todo.** Un front que despliega un `kustomization.yaml` se hace en semanas. Lo que cuesta
-más replicar es un contrato de plugins bien versionado, con la doble verificación probada, y
+más replicar es una verificación de compatibilidad entre core y plugins con la doble
+verificación probada, y
 ni siquiera eso es un foso fuerte. Aceptarlo es parte de la honestidad que pide esta sección.
 
 **3. Si tienes éxito a escala, ¿cuál es la primera forma en que se rompe la confianza?**

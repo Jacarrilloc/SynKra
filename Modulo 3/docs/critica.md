@@ -61,7 +61,8 @@ adopta, es costo puro. El PRD tiene que medir la adopción, no solo si la plataf
 
 **Decisión del 21-nov-2026:** un plugin es un **contenedor lógico**, no un contenedor de Docker.
 Es un artefacto compilado que viaja con el core. Al arrancar, el core detecta qué plugins trae,
-verifica su contrato y su versión, y activa solo los que pide el despliegue de ese país.
+verifica que la versión del core compatible de cada uno coincida con la del core, y activa solo
+los que pide el despliegue de ese país.
 
 Eso resuelve el dilema anterior (si fuera librería habría que reconstruir por despliegue; si
 fuera contenedor de Docker serían microservicios con otro nombre), pero abre riesgos propios:
@@ -69,7 +70,7 @@ fuera contenedor de Docker serían microservicios con otro nombre), pero abre ri
 | Riesgo | Por qué importa | Qué debe exigir el PRD |
 |---|---|---|
 | **El compilado lleva el código de todos los países** | La imagen de Perú contiene el plugin de Colombia aunque no lo active. Un fallo de aislamiento lo puede ejecutar, y la imagen crece con cada país | Probar que un plugin no activado no carga ninguna clase ni expone ninguna ruta |
-| **El contrato se tiene que versionar** | Un cambio incompatible en el core rompe todos los plugins de todos los países a la vez **[INTERNO]** | Versión del contrato en cada plugin y rechazo al arrancar si no coincide |
+| **La compatibilidad se tiene que versionar** | Un cambio incompatible en el core rompe todos los plugins de todos los países a la vez **[INTERNO]** | Dos etiquetas de versión en cada plugin (la suya y la del core compatible) y rechazo al arrancar si no coincide |
 | **La validación solo ocurre al arrancar** | El error de "plugin pedido que no está" aparece en el pod, no antes | Que el motor de despliegue haga la misma verificación **antes** de desplegar |
 | **Aislamiento dentro de un solo proceso** | Un plugin con un bug o una dependencia en conflicto puede tumbar el core | Cargador de clases separado por plugin (como hace PF4J) y límites de recursos por pod |
 

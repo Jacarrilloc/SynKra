@@ -552,3 +552,11 @@
 **Context**: Prompt 1, cierre y consolidación.
 
 ---
+
+## Paso 6 - Repo ordenado para el alcance nuevo
+**Timestamp**: 2026-11-21T23:30:33Z
+**User Input**: "si, hazlo"
+**AI Response**: Movidos a `archivo/alcance-2026-10/` (con su README): `entradas/`, `DECISIONES.md`, `unidades-y-tareas.md`, `aidlc-docs/inception/`, `aidlc-docs/construction/` y el `aidlc-state.md` anterior. Nuevo `aidlc-docs/aidlc-state.md`, que reinicia INCEPTION a partir del PRD v2. `CLAUDE.md` (WHAT, WHY, HOW) y `README.md` reescritos para el alcance nuevo. El PVB y los docs alineados con las dos etiquetas de versión. Esta bitácora (`audit.md`) se conserva en su lugar.
+**Context**: Paso 6 del plan de módulos 2 y 3. Queda pendiente decidir en el módulo 5 qué pasa con la extensión de autonomía, escrita para el agente de IA.
+
+---

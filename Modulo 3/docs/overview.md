@@ -55,8 +55,8 @@ por Netflix Spinnaker y Apache Tika ([GitHub pf4j/pf4j](https://github.com/pf4j/
 
 > **Decisión tomada (21-nov-2026): el plugin es un contenedor lógico, no un contenedor de
 > Docker.** Cada plugin es un artefacto compilado (un módulo empaquetado) que viaja junto al
-> core. Al arrancar, el core **detecta** qué plugins trae el compilado, **verifica** su contrato
-> y su versión, y los compara con la lista de plugins que el despliegue pide activar. Si el
+> core. Al arrancar, el core **detecta** qué plugins trae el compilado, **verifica** que la versión
+> del core compatible de cada plugin coincida con la del core, y los compara con la lista de plugins que el despliegue pide activar. Si el
 > despliegue pide un plugin que no está, o uno incompatible, el core no arranca y dice por qué.
 > El overlay de Kustomize solo lleva esa lista, así que cambiar los plugins de un país no obliga
 > a reconstruir la imagen.

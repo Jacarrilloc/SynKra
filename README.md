@@ -1,113 +1,74 @@
 # SynKra
 
-**Plataforma micro-kernel que despliega el mismo producto en cada país con solo los plugins que
-ese país necesita, y un agente de IA que encuentra dónde aplicar cada cambio regulatorio, sobre
-Kubernetes.**
+**Herramienta de despliegue para aplicaciones micro-kernel ya compiladas sobre Kubernetes: eliges
+el core y los plugins de cada país, y SynKra verifica que sean compatibles antes de desplegarlos.**
 
 Proyecto de la asignatura **Tópicos Especiales en Informática** · Maestría en Ingeniería de
-Sistemas · Pontificia Universidad Javeriana (Bogotá), 2026-3.
+Sistemas · Pontificia Universidad Javeriana (Bogotá), 2026-3. Es un **ejercicio académico**.
+
+> **Cambio de alcance (21-nov-2026).** La versión anterior incluía un agente de IA regulatorio.
+> Ese alcance se reemplazó y quedó archivado en [`archivo/alcance-2026-10/`](archivo/alcance-2026-10/).
 
 ---
 
 ## 1. La idea
 
-Una empresa que vende el mismo producto en varios países tiene que respetar reglas distintas en
-cada uno: qué documento de identidad se valida, qué pide la ley de protección de datos, cuánto
-tiempo se guardan los datos. Lo habitual es copiar el código por país, y cada cambio de ley hay
-que aplicarlo a mano en cada copia; tarde o temprano un país se queda sin el cambio.
+Un mismo producto desplegado en varios países se compone de un **core** común más **plugins**
+con lo que cambia en cada país. SynKra parte de ese producto **ya compilado**:
 
-SynKra lo resuelve en dos partes:
-
-1. **Un kernel común con plugins por país.** El kernel no sabe nada de países: define tres
-   "enchufes" (puntos de extensión) y cada país aporta un plugin que los llena. Cada país se
-   despliega en Kubernetes con su propio plugin.
-2. **Un agente de IA que propone, pero no decide.** Cuando una persona registra un cambio
-   regulatorio ya interpretado, el agente encuentra qué plugin hay que modificar y abre un
-   *pull request* en borrador. Nunca fusiona ni despliega: eso lo aprueba siempre un humano.
+1. Se suben a SynKra los compilados: un core, que estrena **su propia carpeta de plugins**, y los
+   plugins de esa carpeta. Cada plugin lleva etiquetas de país, región o cliente, y **dos
+   etiquetas de versión**: la del plugin y la del core compatible.
+2. Desde un front de acceso se elige, para cada país, el core y sus plugins.
+3. SynKra **verifica la compatibilidad antes de desplegar** y explica por qué una combinación no
+   sirve.
+4. Si pasa, la **despliega directo** en el namespace del país, sin Git de por medio. El core
+   vuelve a verificar sus plugins al arrancar.
+5. Cada despliegue queda registrado y se puede volver al anterior.
 
 ```mermaid
 flowchart LR
-    H["Analista registra el cambio<br/>cambios/2026-001.yaml"] --> A["Agente SynKra<br/>analyze + propose"]
-    A -->|"PR en borrador en synkra/*"| G[("GitHub")]
-    G --> R(["Un humano revisa y fusiona"])
-    R --> D["make deploy / Argo CD"]
-    D --> CO["Despliegue Colombia<br/>kernel + plugin CO"]
-    D --> PE["Despliegue Perú<br/>kernel + plugin PE"]
+    U["Usuario: front Blazor o API"] --> API["Backend SynKra"]
+    API --> CAT[("Catalogo: cores y carpetas de plugins")]
+    API --> VER["Verificacion de compatibilidad"]
+    VER -->|"compatible"| DEP["Despliegue directo"]
+    DEP --> CO["synkra-co: core + plugins CO"]
+    DEP --> PE["synkra-pe: core + plugins PE"]
 ```
 
 | Pieza | Qué hace |
 |---|---|
-| **Kernel** (`core/`) | Carga los plugins, expone la API KYC y no contiene lógica de ningún país |
-| **Plugins** (`plugins/co`, `plugins/pe`) | Reglas de Colombia y Perú: validar documento, consentimiento de datos y retención |
-| **Agente** (`agent/`) | CLI `synkra`: `analyze` encuentra el plugin y escribe un informe; `propose` abre el PR en borrador |
-| **IA** | Claude (modelo Haiku) con tope de gasto, o modo `fake` sin llamadas a la API |
-| **Despliegue** (`deploy/`) | Imágenes de contenedor, un overlay de Kustomize por país, seguridad del clúster y Argo CD |
+| **Backend** (Java 21 / Spring Boot) | API REST: catálogo, verificación, despliegue, registro y vuelta atrás. A futuro, también una CLI para pipelines |
+| **Front** (Blazor) | Acceso visual, solo para uso académico y demostrativo. Consume la API |
+| **Core y plugins** | El producto que se despliega. El core lee `/plugins` al arrancar y verifica cada plugin |
+| **Persistencia** | SQLite, en el mismo volumen que los artefactos |
+| **SynKra mismo** | Se instala con GitOps (módulo 8 del curso) |
+
+No hay IA (desviación declarada frente al curso) ni Git en el flujo de despliegue.
 
 ---
 
 ## 2. Requerimientos
 
-El detalle está en [`aidlc-docs/inception/requirements/requirements.md`](aidlc-docs/inception/requirements/requirements.md)
-(39 requisitos funcionales y 12 no funcionales) y en 37 historias de usuario
-([`stories.md`](aidlc-docs/inception/user-stories/stories.md)). Lo esencial:
+El PRD completo está en [`Modulo 3/specs/prd.md`](Modulo%203/specs/prd.md): 13 segmentos
+aprobados uno por uno. La visión está en [`Modulo 2/pvb.md`](Modulo%202/pvb.md) y la
+investigación en [`Modulo 3/docs/`](Modulo%203/docs/). Lo esencial:
 
-**Funcionales**
-- El kernel define tres puntos de extensión: validación de documento, política de consentimiento
-  y política de retención.
-- Cada despliegue atiende un solo país. La API responde por `/kyc/{país}/...` y devuelve 404 si
-  el país no es el del despliegue.
-- Plugins de Colombia (cédula) y Perú (DNI). Las reglas son simuladas y van marcadas `verificar`
-  hasta contrastarlas con la ley.
-- `synkra analyze <cambio>` decide con reglas fijas qué plugin se ve afectado; la IA solo redacta
-  el texto del informe.
-- `synkra propose <id>` crea la rama `synkra/<id>` y abre un PR en borrador con una solicitud de
-  cambio dentro del plugin. No modifica código.
-- Evaluación con 20 cambios de prueba y pruebas de inyección de instrucciones.
-
-**No funcionales y límites del agente** (reglas bloqueantes en
-`.aidlc-rule-details/extensions/autonomia/limite/`)
-- **AUTONOMIA-01:** el agente nunca fusiona, aprueba, escribe en `main` ni aplica nada al clúster.
-- **AUTONOMIA-02:** gasto de IA acotado: 5.000 tokens al día y 300 por llamada; las pruebas usan
-  siempre `LLM_PROVIDER=fake`.
-- **AUTONOMIA-03:** cada tarea se verifica con un comando, no con una opinión.
-- Todo corre en Linux; en Windows, dentro de WSL2.
+- **Nada incompatible llega al clúster:** doble verificación, en el backend antes de desplegar y
+  en el core al arrancar, con la misma librería.
+- **Límite de autonomía verificable:** SynKra solo despliega con confirmación y solo en
+  `synkra-*`.
+- **Cada core tiene su carpeta de plugins independiente.**
+- **Backend primero:** todo lo que hace el front se puede hacer por la API.
+- **Despliegue, no código:** SynKra no compila ni versiona código.
+- **Todo despliegue es trazable y reversible.**
 
 ---
 
 ## 3. Unidades y tareas
 
-La especificación se hizo con el marco **AI-DLC v1.0.1** de AWS: requisitos → historias →
-diseño → unidades → plan de tareas por unidad, con aprobación humana en cada etapa (bitácora en
-[`aidlc-docs/audit.md`](aidlc-docs/audit.md)). El resultado son **5 unidades y 91 tareas**,
-consolidadas en [`unidades-y-tareas.md`](unidades-y-tareas.md).
-
-| Unidad | Tareas | Qué construye |
-|---|---|---|
-| **U01 Scaffold** | 10 | Estructura del proyecto: `pom.xml` raíz (Java 21, `com.synkra`), módulos, `make build` y `make test`, `.gitignore` y README |
-| **U02 Core** | 16 | El kernel: los tres puntos de extensión, el lector del manifiesto `plugin.yaml`, la carga de plugins, la API KYC, `/plugins` y health |
-| **U03 Plugins** | 16 | Plugins de Colombia y Perú: validación de formato de cédula y DNI, campos de consentimiento, retención de 5 años |
-| **U04 Agente** | 28 | CLI `synkra` (`analyze`, `propose`), conector a Claude con tope de gasto y modo `fake`, lista blanca de comandos `git`/`gh`, evaluación y red-teaming, protección de `main` |
-| **U05 Despliegue** | 21 | Imagen distroless del kernel, imagen con los plugins, overlays `co` y `pe`, `make deploy`, Pod Security, NetworkPolicy, Argo CD y el Job del agente |
-
-**Cómo están definidas.** Cada tarea tiene un identificador (`U02-T05`), la historia que
-implementa y un comando de aceptación; por ejemplo, la tarea termina cuando
-`mvn -q -pl core compile` sale en `0`. Las tareas marcadas **[PERSONA]** las hace un humano porque
-tocan GitHub o el clúster.
-
-**Orden de construcción:**
-
-```mermaid
-flowchart LR
-    U01["U01 Scaffold"] --> U02["U02 Core"]
-    U02 --> U03["U03 Plugins"]
-    U02 --> U04["U04 Agente"]
-    U03 -.->|"datos"| U04
-    U03 --> U05["U05 Despliegue"]
-    U04 --> U05
-```
-
-U03 y U04 se construyen **en paralelo**. Las decisiones de diseño están en
-[`DECISIONES.md`](DECISIONES.md).
+Se definen en el módulo 5 con AI-DLC, a partir del PRD v2. Las 5 unidades y 91 tareas del alcance
+anterior quedaron archivadas en [`archivo/alcance-2026-10/`](archivo/alcance-2026-10/).
 
 ---
 
@@ -152,16 +113,8 @@ Si el script te agrega al grupo `docker`, cierra la sesión y vuelve a entrar.
 
 ## 5. Configuración
 
-| Qué | Cómo | Para qué |
-|---|---|---|
-| Proveedor de IA | `export LLM_PROVIDER=fake` (por defecto) o `claude` | `fake` no llama a la API y no cuesta nada |
-| Clave de Claude | Guarda la clave en un archivo y `export ANTHROPIC_API_KEY_FILE=~/.synkra/anthropic.key` | Solo si usas `claude`. Nunca la pongas en el repositorio |
-| Tope de gasto | Por defecto 5.000 tokens al día y 300 por llamada | Además, fija un límite mensual en la consola de Anthropic (*Settings → Limits*) |
-| Token del agente en GitHub | `export AGENT_TOKEN_FILE=~/.synkra/github.token` | Para `propose`. Tarea U04-T02 |
-| País del despliegue | `make deploy COUNTRY=co` o `COUNTRY=pe` | Elige qué overlay y qué plugin se despliegan |
-
-La protección de `main` y la identidad del agente en GitHub las configura una persona con
-`scripts/configure-github.sh` (tareas U04-T01 y U04-T02).
+Se define durante la construcción. Lo previsto: la cuenta de servicio `synkra:deployer` con
+permisos solo en `synkra-*`, el registro de imágenes permitido y el volumen del backend.
 
 ---
 
@@ -174,10 +127,7 @@ La protección de `main` y la identidad del agente en GitHub las configura una p
 | `make cluster` | Crea un clúster Kubernetes local con kind y espera a que esté `Ready` | OK |
 | `make status` | Muestra nodos y pods | OK |
 | `make cluster-delete` | Borra el clúster | OK |
-| `make build` / `make test` | Compila y corre las pruebas (con `LLM_PROVIDER=fake`) | Tras U01 |
-| `make images` | Construye las imágenes del kernel y de los plugins | Tras U05 |
-| `make deploy COUNTRY=co` | Despliega Colombia en el clúster | Tras U05 |
-| `synkra analyze` / `synkra propose` | El agente | Tras U04 |
+| Build, pruebas, instalación de SynKra | Se definen por unidad en la construcción | Pendiente |
 
 ---
 
@@ -195,65 +145,19 @@ make cluster-delete
 Resultado esperado de `make doctor`: git, docker, kubectl v1.37.0, kind v0.33.0, helm, jq, make,
 java 21, mvn, node y claude en `[ok]`, y "Docker daemon: responde".
 
-### 7.2 Cómo debería funcionar: demostración completa
+### 7.2 Cómo debería funcionar: la demo de la sustentación
 
-Esta es la prueba de punta a punta que define el PRD. Cada paso queda disponible cuando su unidad
-esté construida.
+Es el guion del segmento 13 del PRD. Cada paso queda disponible cuando su parte esté construida.
 
-**1. Desplegar dos países** (U05)
-```bash
-make cluster
-make images
-make deploy COUNTRY=co
-make deploy COUNTRY=pe
-kubectl get pods -n synkra-co                   # un pod Running
-kubectl get pods -n synkra-pe                   # un pod Running
-scripts/verify-countries.sh                     # comprueba los dos países de una vez
-```
-
-**2. Usar la API de un país** (U02 y U03)
-```bash
-kubectl port-forward -n synkra-pe deploy/<nombre-del-kernel> 8080:8080 &   # el nombre lo fija U05
-curl localhost:8080/plugins                     # lista solo el plugin pe
-curl -X POST localhost:8080/kyc/pe/document/validate \
-     -H 'Content-Type: application/json' -d '{"type":"DNI","number":"12345678"}'   # 200, válido
-curl -X POST localhost:8080/kyc/co/document/validate \
-     -H 'Content-Type: application/json' -d '{"type":"CC","number":"123"}'         # 404: este despliegue es de Perú
-curl localhost:8080/kyc/pe/consent              # campos de consentimiento exigidos
-curl localhost:8080/kyc/pe/retention            # 5 años por categoría (valor provisional)
-```
-
-**3. Registrar un cambio regulatorio y que el agente lo ubique** (U04)
-```bash
-cat > cambios/2026-001.yaml <<'EOF'
-country: pe
-topic: consent
-text: El consentimiento debe incluir la finalidad del tratamiento.
-reference: Circular de ejemplo 1 de 2026
-EOF
-LLM_PROVIDER=fake synkra analyze cambios/2026-001.yaml
-cat informes/2026-001.md        # afectado: plugins/pe (ConsentPolicy); descartado: plugins/co, con el motivo
-```
-
-**4. Que el agente proponga, y que un humano decida** (U04)
-```bash
-synkra propose 2026-001         # crea synkra/2026-001 y abre un PR en borrador
-gh pr view synkra/2026-001      # el PR solo agrega plugins/pe/changes/2026-001.md
-```
-
-**5. Comprobar los límites del agente** (U04 y U05)
-```bash
-gh api repos/Jacarrilloc/SynKra/branches/main/protection \
-   --jq .required_pull_request_reviews.required_approving_review_count   # >= 1
-kubectl auth can-i create deployments \
-   --as=system:serviceaccount:synkra:agent -n synkra                     # no
-```
-
-**6. Comprobar el tope de gasto sin costo** (U04)
-```bash
-make test                       # toda la suite corre con LLM_PROVIDER=fake
-```
-Con el presupuesto en 0, `synkra analyze` responde "presupuesto agotado" y no llama a la API.
+1. Instalar SynKra en `kind` y comprobar el límite de la cuenta de servicio:
+   `kubectl auth can-i create deployments -n default --as=system:serviceaccount:synkra:deployer`
+   debe responder `no`.
+2. Subir un core (estrena su carpeta de plugins) y los plugins `kyc-co` y `kyc-pe`, con sus
+   etiquetas.
+3. Desplegar Colombia y Perú desde el front, cada uno con su core y solo sus plugins.
+4. Intentar desplegar un plugin compatible con el core `3.x` sobre el core `2.1`, y ver el rechazo.
+5. Ver qué corre en cada país, provocar un despliegue fallido y volver al anterior.
+6. Repetir un despliegue por la API con `curl`, sin el front.
 
 ---
 
@@ -262,12 +166,11 @@ Con el presupuesto en 0, `synkra analyze` responde "presupuesto agotado" y no ll
 ```
 Modulo 2/pvb.md                 Product Vision Board
 Modulo 3/docs/                  Investigación: dominio, mercado, ICP y crítica
-Modulo 3/specs/prd.md           PRD
-entradas/                       Copia de los insumos que leyó AI-DLC
-aidlc-docs/                     Requisitos, historias, diseño, unidades, planes y bitácora
-.aidlc-rule-details/            Reglas de AI-DLC y la regla de autonomía del agente
+Modulo 3/specs/prd.md           PRD v2
+Modulo 3/specs/paso-0-conflictos.md   Decisiones del Paso 0 del PRD
+aidlc-docs/                     Estado y bitácora de AI-DLC (audit.md)
+.aidlc-rule-details/            Reglas de AI-DLC
 CLAUDE.md                       Despachador de AI-DLC (se carga en cada sesión de Claude Code)
-unidades-y-tareas.md            Las 5 unidades y sus 91 tareas
-DECISIONES.md                   Decisiones del módulo 5
+archivo/alcance-2026-10/        Especificación del alcance anterior (agente de IA), archivada
 scripts/, Makefile              Instalación y comandos para Linux y WSL2
 ```
