@@ -3,7 +3,7 @@
 ## Project Information
 - **Project Type**: Greenfield
 - **Start Date**: 2026-11-21 (reinicio por cambio de alcance)
-- **Current Stage**: INCEPTION - Requirements Analysis (esperando respuestas en `inception/requirements/requirement-verification-questions.md`)
+- **Current Stage**: INCEPTION - Requirements Analysis (esperando aprobación de `inception/requirements/requirements.md`)
 - **Módulo 5 iniciado**: 2026-11-21T23:35:26Z. Se detiene al terminar Code Generation Parte 1 de cada unidad.
 - **Alcance anterior**: archivado en `archivo/alcance-2026-10/` (agente de IA regulatorio, 5 unidades, 91 tareas).
 
@@ -20,10 +20,10 @@
 ## Extension Configuration
 | Extension | Enabled | Decided At |
 |---|---|---|
-| Autonomía / Límite de autonomía | Por decidir (pregunta 1) | Requirements Analysis |
-| Security Baseline | Por decidir (pregunta 2) | Requirements Analysis |
-| Resiliency Baseline | Por decidir (pregunta 3) | Requirements Analysis |
-| Property-Based Testing | Por decidir (pregunta 4) | Requirements Analysis |
+| Autonomía / Límite de autonomía | Sí, adaptada a P2 (AUTONOMIA-01 y 02), sin opt-in | Requirements Analysis (Q1) |
+| Security Baseline | No | Requirements Analysis |
+| Resiliency Baseline | No | Requirements Analysis |
+| Property-Based Testing | Parcial (PBT-02, 03, 07, 08, 09 bloqueantes) | Requirements Analysis |
 
 ## Stage Progress
 ### 🔵 INCEPTION PHASE

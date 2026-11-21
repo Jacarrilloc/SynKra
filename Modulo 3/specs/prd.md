@@ -58,7 +58,7 @@ clúster. Y, a futuro, que esos despliegues se automaticen.
 
 > [!IMPORTANT]
 > **Generar y aplicar los manifiestos de cada país ya lo resuelven Kustomize y Helm**, y SynKra
-> puede usar Kustomize por debajo. El aporte de este ejercicio es otro:
+> no las reemplaza (ver la nota de M3 en §9.1: los manifiestos se construyen con Fabric8). El aporte de este ejercicio es otro:
 >
 > 1. verificar, **antes de desplegar**, que los plugins elegidos son compatibles con la versión
 >    del core, y
@@ -125,7 +125,7 @@ nada incompatible llega al clúster."_
 
 | Herramienta | Relación con SynKra |
 |---|---|
-| Kustomize | SynKra la usa por debajo para generar los manifiestos de cada país |
+| Kustomize | Resuelve la generación de manifiestos por país. SynKra no la usa por debajo: construye los objetos con el cliente Fabric8 (decisión del 21-nov-2026, módulo 5) |
 | Helm, Argo CD, KubeVela | Resuelven despliegues por componentes o con GitOps. SynKra no los reemplaza; se diferencia en que verifica la compatibilidad entre el core y sus plugins y no usa Git |
 
 > Se omiten la comparación competitiva y la matriz de posicionamiento del Prompt 1, por ser
@@ -157,7 +157,7 @@ nada incompatible llega al clúster."_
 
 ### CU2. Desplegar un país nuevo
 
-- **Actor:** Product Owner de país.
+- **Actor:** responsable de país.
 - **Trigger:** se abre un país y hay que montar su variante.
 - **Flujo:**
   1. Entra al front y crea el despliegue del país (por ejemplo, `pe`).
@@ -171,7 +171,7 @@ nada incompatible llega al clúster."_
 
 ### CU3. Cambiar los plugins de un país que ya existe
 
-- **Actor:** Product Owner de país.
+- **Actor:** responsable de país.
 - **Trigger:** el país necesita una función nueva o retirar una.
 - **Flujo:**
   1. Abre el despliegue del país y ve qué core y qué plugins corre hoy.
@@ -179,11 +179,11 @@ nada incompatible llega al clúster."_
   3. SynKra verifica la nueva combinación y muestra qué cambia frente a la actual.
   4. Confirma, y SynKra despliega el cambio.
 - **Resultado:** el país corre con la combinación nueva, y la anterior queda en el registro.
-- **KPI:** North Star; adopción (% de cambios hechos desde SynKra).
+- **KPI:** North Star.
 
 ### CU4. Rechazar una combinación incompatible
 
-- **Actor:** Product Owner de país o desarrollador de plugins.
+- **Actor:** responsable de país o desarrollador de plugins.
 - **Trigger:** se elige un plugin que no es compatible con la versión del core (por ejemplo,
   `kyc-pe 2.0` está etiquetado como compatible con el core `3.x`, y el core desplegado es el
   `2.1`).
@@ -196,7 +196,7 @@ nada incompatible llega al clúster."_
 
 ### CU5. Ver qué corre en cada país y volver al despliegue anterior
 
-- **Actor:** Head of Platform o SRE.
+- **Actor:** operador de la plataforma o SRE.
 - **Trigger:** un despliegue nuevo falla, o alguien pregunta qué tiene un país.
 - **Flujo:**
   1. Abre la vista general: cada país con su core, sus plugins y su estado, leídos del clúster.
@@ -233,7 +233,7 @@ nada incompatible llega al clúster."_
 
 ## 7. User journeys
 
-### 7.1 Happy path del usuario final: Lucía, PO de Perú, despliega su país
+### 7.1 Happy path del usuario final: Lucía, responsable de país de Perú, despliega su país
 
 1. Lucía entra al front de SynKra con su usuario.
 2. En la vista general ve los países que ya corren. Perú todavía no está.
@@ -248,7 +248,7 @@ nada incompatible llega al clúster."_
 9. En la vista general, Perú aparece con su core y sus dos plugins. El registro anota quién,
    cuándo y qué se desplegó.
 
-### 7.2 Happy path del operador: Andrés, Head of Platform, prepara SynKra
+### 7.2 Happy path del operador: Andrés, operador de la plataforma, prepara SynKra
 
 1. Andrés instala SynKra en el clúster (`kind` en el demo) con un solo comando.
 2. La instalación crea la cuenta de servicio `synkra:deployer`, con permisos solo en `synkra-*`,
@@ -338,7 +338,7 @@ compatibilidad no detecta.
 |---|---|---|---|
 | M1 | **Catálogo de compilados** | Registrar cores (imagen en el registro permitido) y subir plugins a la **carpeta de un core concreto**; leer el descriptor; verificar el hash; etiquetas de país, región o cliente, y las dos de versión (versión del plugin y versión del core compatible); buscar y filtrar por etiqueta | API `/cores`, `/cores/{id}/plugins`; pantalla "Catálogo" |
 | M2 | **Motor de verificación** | Comprobar que la versión del core compatible de cada plugin elegido corresponde a la versión del core; explicar el motivo de un rechazo y qué versión sí sirve. Es una librería compartida con el core (P1) | API `/verificaciones`; usado por M3 y por el core |
-| M3 | **Motor de despliegue** | Generar los manifiestos del país (Kustomize por debajo); aplicarlos en `synkra-<país>` con la cuenta de servicio `synkra:deployer`; esperar a que los pods estén listos; marcar el despliegue como listo o fallido | API `/despliegues`; pantalla "Desplegar" |
+| M3 | **Motor de despliegue** | Construir los objetos del país en Java con el cliente Fabric8 (sin Kustomize, decisión del 21-nov-2026 en el módulo 5) y aplicarlos con *server-side apply*; en `synkra-<país>`, con la cuenta de servicio `synkra:deployer`; esperar a que los pods estén listos; marcar el despliegue como listo o fallido | API `/despliegues`; pantalla "Desplegar" |
 | M4 | **Registro y reversión** | Guardar quién, cuándo, qué core, qué plugins y versiones, y el resultado; leer del clúster qué corre en cada país; volver a un despliegue anterior con confirmación | API `/despliegues/{id}`, `/paises`; pantallas "Vista general" y "Detalle" |
 | M5 | **API REST** | Toda la funcionalidad de M1 a M4, documentada con OpenAPI y protegida con autenticación (Should). Es la base de la CLI futura | `https://synkra.local/api` |
 | M6 | **Front en Blazor** (demo) | Las 4 pantallas de §9.4. Solo consume la API y no tiene lógica propia (P5) | Navegador |
@@ -365,9 +365,9 @@ compatibilidad no detecta.
 
 | Rol | Puede | No puede |
 |---|---|---|
-| **Operador** (Head of Platform) | Instalar SynKra, registrar cores, configurar el registro de imágenes permitido, gestionar usuarios | Desplegar fuera de `synkra-*` (ni siquiera él, por RBAC) |
+| **Operador** (operador de la plataforma) | Instalar SynKra, registrar cores, configurar el registro de imágenes permitido, gestionar usuarios | Desplegar fuera de `synkra-*` (ni siquiera él, por RBAC) |
 | **Publicador** (desarrollador de plugins) | Subir plugins a la carpeta de un core y etiquetarlos | Desplegar |
-| **Desplegador** (PO de país) | Crear y cambiar despliegues, confirmar, volver al anterior | Subir compilados |
+| **Desplegador** (responsable de país) | Crear y cambiar despliegues, confirmar, volver al anterior | Subir compilados |
 | **Lector** (SRE, auditor) | Ver la vista general, el catálogo y el registro | Cambiar nada |
 
 En el MVP los roles se asignan en una tabla de usuarios simple; un proveedor de identidad
@@ -400,7 +400,7 @@ externo queda fuera de alcance.
 
 ```mermaid
 flowchart LR
-    PO["PO de pais (navegador)"]
+    PO["Responsable de pais (navegador)"]
     OPS["Operador o SRE"]
     CLI["CLI futura en pipelines"]
     IMG[("Registro de imagenes permitido")]
@@ -440,7 +440,7 @@ flowchart LR
     CORE -.->|"imagen del core"| IMG
 ```
 
-_Texto alternativo:_ el PO usa el front en Blazor, y el operador y la CLI futura usan la API
+_Texto alternativo:_ el responsable de país usa el front en Blazor, y el operador y la CLI futura usan la API
 directamente. La API reúne el catálogo, el motor de verificación, el motor de despliegue y el
 registro, todos en el namespace `synkra`, con SQLite y los artefactos en un mismo volumen. El
 motor de despliegue aplica en el namespace del país con su cuenta de servicio limitada. En ese
@@ -628,3 +628,4 @@ SynKra lee datos que un tercero controla: los **descriptores y los artefactos** 
 | Segmentos 10 y 11 | Sin contenido de negocio | Todo el PRD |
 | Segmento 9 | Un init container descarga solo los plugins elegidos; backend en Java 21 | Segmento 9 |
 | Segmento 13 | SynKra mismo se instala con GitOps; dos etiquetas de versión (plugin y core compatible); SQLite | Segmentos 9 y 13 |
+| Módulo 5 (Requirements Analysis) | "Responsable de país" en todo el PRD y fuera la adopción del KPI de CU3; los manifiestos se construyen con Fabric8, sin Kustomize | Segmentos 2, 4, 5, 7 y 9 |

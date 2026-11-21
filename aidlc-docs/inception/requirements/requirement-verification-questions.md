@@ -5,6 +5,8 @@ que el PRD deja abierto, lo que se contradice dentro del PRD y las decisiones qu
 AI-DLC exige tomar aquí (extensiones). El PRD v2 es la fuente autoritativa; el PVB solo aporta
 la visión.
 
+> **Respondidas el 21-nov-2026.** Julian aceptó todas las recomendaciones ("aprobado, sigamos", 23:41:57Z); se transcriben abajo.
+
 **Cómo responder.** Escribe la letra después de cada `[Answer]:`. Si ninguna opción encaja,
 elige X y describe tu respuesta. Cada pregunta trae una **Recomendación** con su porqué; si
 estás de acuerdo con todas, basta con decirlo y se transcriben tal cual.
@@ -31,7 +33,7 @@ X) Other (please describe after [Answer]: tag below)
 PRD v2 sí tiene un límite de autonomía real: P2. B quita evidencia de la sustentación y C
 bloquearía cada etapa con reglas que no se pueden cumplir.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 2: Security Extensions
 Should security extension rules be enforced for this project?
@@ -46,7 +48,7 @@ X) Other (please describe after [Answer]: tag below)
 PRD sí pide de seguridad (RBAC limitado, hash, path traversal, no root, registro permitido) ya
 entra como requisitos propios desde los segmentos 6, 8 y 11, sin la carga de toda la línea base.
 
-[Answer]: 
+[Answer]: B
 
 ## Question 3: Resiliency Extensions
 Should the resiliency baseline be applied to this project?
@@ -59,7 +61,7 @@ X) Other (please describe after [Answer]: tag below)
 
 **Recomendación: B.** Demo con una sola réplica y SQLite; la línea base de AWS no aplica.
 
-[Answer]: 
+[Answer]: B
 
 ## Question 4: Property-Based Testing Extension
 Should property-based testing (PBT) rules be enforced for this project?
@@ -75,7 +77,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: B.** El motor de verificación (M2) es una función pura (core + plugins →
 veredicto) y es el corazón del P1: es justo donde PBT aporta. El resto es CRUD e integración.
 
-[Answer]: 
+[Answer]: B
 
 ---
 
@@ -95,7 +97,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: B.** Cubre el ejemplo del PRD y permite decir "desde la 2.1", que es lo que
 hace falta para explicar "qué versión sí sirve" (métrica de utilidad, segmento 10).
 
-[Answer]: 
+[Answer]: A
 
 ## Question 6
 ¿Cuál es el formato del compilado de un plugin y dónde va su descriptor?
@@ -111,7 +113,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** Un solo archivo que no se puede separar de su descriptor, y el core lee el
 mismo descriptor al arrancar (doble verificación con la misma fuente).
 
-[Answer]: 
+[Answer]: A
 
 ## Question 7
 Un core es una imagen en el registro permitido. ¿Cómo se registra en SynKra?
@@ -125,7 +127,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** No obliga a SynKra a hablar con la API del registro, y el digest fija la
 imagen exacta que se despliega.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 8
 P2 exige confirmación humana antes de desplegar. ¿Cómo se expresa en la API?
@@ -140,7 +142,7 @@ X) Other (please describe after [Answer]: tag below)
 "despliegue sin confirmación" del red-teaming se prueba con un `curl`, y la misma API sirve a la
 CLI futura. Nota: un plan pendiente no es un despliegue en el registro (journey 7.3).
 
-[Answer]: 
+[Answer]: A
 
 ## Question 9
 ¿Cómo genera y aplica el motor de despliegue (M3) los manifiestos del país?
@@ -157,7 +159,7 @@ X) Other (please describe after [Answer]: tag below)
 evita meter binarios en la imagen del backend y es más fácil de probar. Si eliges A, el PRD se
 anota con esta desviación.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 10
 La autenticación es Should. ¿Qué entra en la especificación?
@@ -173,7 +175,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A**, como Should. Es poco código con Spring Security y sostiene la respuesta a
 R3 en la sustentación. Si falta tiempo, se cae sin romper nada más.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 11
 El PRD tiene dos restos del enfoque anterior: el actor de CU2 y CU3 se llama "Product Owner de
@@ -188,7 +190,7 @@ X) Other (please describe after [Answer]: tag below)
 
 **Recomendación: A**, para que la trazabilidad PRD → requisito no tenga saltos.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 12
 ¿Cuánto espera SynKra a que los pods estén listos antes de marcar un despliegue como fallido
@@ -203,7 +205,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** En `kind` un core de Spring Boot arranca en menos de un minuto; 3 minutos
 deja margen y mantiene el KPI de 5 minutos.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 13
 ¿Cómo funciona la vuelta atrás (CU5)?
@@ -216,7 +218,7 @@ X) Other (please describe after [Answer]: tag below)
 
 **Recomendación: A.** Una sola ruta de despliegue que siempre verifica (P1) y siempre registra (P7).
 
-[Answer]: 
+[Answer]: A
 
 ## Question 14
 La sustentación es la semana siguiente. ¿Qué entra en los requisitos y, después, en las
@@ -233,4 +235,4 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** Respeta el MoSCoW aprobado sin ampliarlo y deja claro qué se cae primero
 si no hay tiempo (riesgo R9).
 
-[Answer]: 
+[Answer]: A
