@@ -9,7 +9,7 @@
 >
 > Reemplaza la versión 1.0 del 17-oct-2026, que especificaba un agente de IA regulatorio (queda
 > en el historial de Git). **Este PRD se escribe segmento por segmento y cada uno lo aprueba
-> Julian.** Estado de los segmentos: 1 a 4 aprobados; 5 en revisión; 6 a 13 pendientes.
+> Julian.** Estado de los segmentos: 1 a 5 aprobados; 6 en revisión; 7 a 13 pendientes.
 
 > [!IMPORTANT]
 > **Desviación declarada:** SynKra no usa IA (PVB §6). El segmento 11 evalúa la verificación,
@@ -169,15 +169,26 @@ de sus namespaces, la conversación se acaba.
   micro-kernel ya compilado, y ver en un solo lugar qué corre en cada país.
 - **Para quién:** el ICP del segmento 3. Lo usa el PO de país y lo aprueba el Head of Platform.
 - **Cómo:**
-  1. El equipo **agrega los compilados a SynKra** desde el front: la imagen del core y los
-     artefactos de cada plugin. SynKra los registra en su catálogo, con su versión y el
-     contrato que declara cada uno.
-  2. SynKra arma, para cada core, la carpeta de plugins disponibles y compatibles.
+  1. El equipo **agrega los compilados a SynKra**: la imagen del core y los artefactos de cada
+     plugin. SynKra los registra en su catálogo, con su versión y el contrato que declara cada
+     uno.
+  2. **Cada core tiene su propia carpeta de plugins, independiente de las demás.** Un plugin se
+     sube a la carpeta de un core concreto y se etiqueta por país, región o cliente, y por
+     versión.
   3. Desde el front de acceso (Blazor), el usuario elige el core y los plugins de su país.
   4. El motor verifica la combinación **antes** de desplegar y explica por qué una no sirve.
   5. Si pasa, la despliega directo en el namespace del país; el core la vuelve a verificar al
      arrancar.
   6. Cada despliegue queda registrado y se puede volver al anterior.
+
+> [!NOTE]
+> **El backend es el producto; el front es demostrativo.** Todo lo que hace el front se puede
+> hacer por la API del backend, que en el futuro se usará como mínimo desde una CLI dentro de
+> pipelines de automatización. El front en Blazor existe para usos académicos y para demostrar
+> la solución.
+>
+> **SynKra despliega, no versiona código.** Las etiquetas de versión son metadatos para elegir
+> qué desplegar, no un control de versiones.
 
 **Propuesta de valor en una línea:** _"Eliges el core y los plugins de tu país en una pantalla, y
 nada incompatible llega al clúster."_
@@ -235,18 +246,23 @@ quedan abajo a la izquierda.
 
 ## 5. Casos de uso (top 5)
 
-> Los targets de los KPI son **[INTERNO]** y se definen en el segmento 10.
+> Los targets de los KPI son **[INTERNO]** y se definen en el segmento 10. Cada caso se puede
+> ejecutar desde el front (uso demostrativo) o por la API del backend (uso real y, a futuro,
+> CLI en pipelines).
 
 ### CU1. Agregar compilados al catálogo
 
 - **Actor:** desarrollador de plugins o responsable de release.
 - **Trigger:** hay una versión nueva compilada del core o de un plugin.
 - **Flujo:**
-  1. Sube el artefacto desde el front (la imagen del core o el paquete del plugin).
+  1. Sube el artefacto: un core nuevo (que estrena su propia carpeta de plugins, vacía) o un
+     plugin **dentro de la carpeta de un core concreto**.
   2. SynKra lee su descriptor: nombre, versión y versión del contrato que implementa o exige.
-  3. Verifica la integridad del artefacto (hash) y que el descriptor esté completo.
-  4. Lo agrega al catálogo y recalcula con qué cores es compatible.
-- **Resultado:** el compilado aparece como disponible, o se rechaza con un motivo legible.
+  3. Le asigna etiquetas: país, región o cliente que lo usa, y la etiqueta de versión.
+  4. Verifica la integridad del artefacto (hash), que el descriptor esté completo y que el
+     plugin sea compatible con el contrato de **su** core.
+- **Resultado:** el compilado aparece como disponible en la carpeta de su core, o se rechaza
+  con un motivo legible. Un plugin de la carpeta del core A no aparece para el core B.
 - **KPI:** % de compilados con descriptor inválido rechazados al subirlos.
 
 ### CU2. Desplegar un país nuevo
@@ -255,7 +271,8 @@ quedan abajo a la izquierda.
 - **Trigger:** se abre un país y hay que montar su variante.
 - **Flujo:**
   1. Entra al front y crea el despliegue del país (por ejemplo, `pe`).
-  2. Elige la versión del core y los plugins de la lista de compatibles.
+  2. Elige la versión del core y, de la carpeta de ese core, los plugins compatibles,
+     filtrando por etiqueta (por ejemplo, `pais=pe`).
   3. SynKra verifica la combinación y muestra un resumen de lo que va a desplegar.
   4. Confirma, y SynKra despliega en `synkra-pe`.
   5. Ve el estado en el front hasta que los pods están listos.
@@ -301,5 +318,28 @@ quedan abajo a la izquierda.
 ---
 
 ## 6. Principios de diseño no negociables
+
+> SynKra no tiene un agente de IA, pero **sí actúa sobre infraestructura**: despliega en el
+> clúster. Por eso el principio P2 es su límite de autonomía, expresado de forma verificable.
+
+| Principio | (a) Operativamente | (b) En el producto | (c) Prohibido, y cómo se verifica |
+|---|---|---|---|
+| **P1. Nada incompatible llega al clúster** | Doble verificación del contrato: el motor antes de desplegar y el core al arrancar, con la misma regla | Una sola librería de verificación, compartida por el backend y el core | Desplegar una combinación que el motor no aprobó. **Verificación:** la suite del segmento 11 pasa al 100%, y un core con un plugin incompatible en su carpeta no arranca |
+| **P2. Límite de autonomía verificable** | SynKra solo despliega cuando un humano lo confirma (en el front o con un comando explícito de la API o la CLI), y solo en sus namespaces | Cuenta de servicio `synkra:deployer` con RBAC limitado a `synkra-*`; solo imágenes de un registro permitido | Desplegar sin confirmación o fuera de `synkra-*`. **Verificación:** `kubectl auth can-i create deployments -n default --as=system:serviceaccount:synkra:deployer` responde `no` |
+| **P3. El core no conoce países** | La variación vive en los plugins y en sus etiquetas; el core solo define puntos de extensión | Etiquetas de país, región o cliente en los plugins, no en el core | Lógica del tipo "si país == CO" en el core. **Verificación:** `grep -rniE "colombia\|peru" core/src` sin resultados |
+| **P4. Cada core tiene su carpeta de plugins, independiente** | Un plugin pertenece a la carpeta de un solo core | El catálogo agrupa plugins por core | Que un plugin del core A aparezca o se despliegue con el core B. **Verificación:** prueba de API que lo intenta y recibe un rechazo |
+| **P5. El backend primero** | Toda acción del front existe en la API; el front no tiene lógica propia | API documentada (OpenAPI); el front en Blazor solo la consume; la CLI futura usará la misma API | Lógica de negocio en el front. **Verificación:** los 5 casos de uso se ejecutan de punta a punta con `curl`, sin el front |
+| **P6. Despliegue, no código** | SynKra parte de artefactos ya compilados; las versiones son etiquetas | Catálogo de compilados con etiquetas | Compilar, guardar código fuente, integrarse con Git o hacer control de versiones de código |
+| **P7. Todo despliegue es trazable y reversible** | Cada despliegue queda registrado (quién, cuándo, core, plugins y versiones) y se puede revertir | Registro de despliegues y botón o comando de volver al anterior | Un despliegue sin registro. **Verificación:** el registro coincide con lo que corre en el clúster (métrica de concordancia, segmento 10) |
+| **P8. Sin IA** | Ninguna función depende de un modelo (desviación declarada, PVB §6) | Verificación determinista | Añadir una IA decorativa para cumplir el requisito del curso |
+
+> [!CAUTION]
+> **Trade-off aceptado (P2 + P6).** Al no pasar por Git, ningún humano revisa un despliegue
+> antes de que se aplique, más allá de quien lo confirma. P1, P2 y P7 son la compensación, y por
+> eso son Must y no extras.
+
+---
+
+## 7. User journeys
 
 _Pendiente._

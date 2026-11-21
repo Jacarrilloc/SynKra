@@ -472,3 +472,11 @@
 **Context**: Prompt 1, segmento 5.
 
 ---
+
+## PRD v2 - Segmento 5 aprobado con ajustes; segmento 6 en revisión
+**Timestamp**: 2026-11-21T22:59:58Z
+**User Input**: "Cada core que se suba, tiene su carpeta propia e i ndependiente de plugins, además el backend deberia y debe poder usarse como minumi en un futuro con CLI para pipelines de automatizacion, la aplicacion front es para usos academicos y demostrativos de la solucion propuesta, además, los pulings se le pueden taggear segun el pais, region o cliente que lo utilicé, tambien debe tener taggeo de versiones, su objetivo no es un control de versiones, es una herramienta para despliegue, no de codigo, por lo demás, queda aprobado"
+**AI Response**: Segmentos 4 y 5 ajustados: cada core tiene su carpeta de plugins independiente; los plugins llevan etiquetas de país, región o cliente y de versión; el backend es el producto (API, y a futuro CLI para pipelines) y el front es demostrativo; SynKra despliega, no versiona código. Segmento 5 aprobado. Redactado el segmento 6 con 8 principios verificables.
+**Context**: Prompt 1, segmento 6.
+
+---
