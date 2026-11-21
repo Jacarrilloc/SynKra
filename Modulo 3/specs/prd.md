@@ -9,7 +9,7 @@
 >
 > Reemplaza la versión 1.0 del 17-oct-2026, que especificaba un agente de IA regulatorio (queda
 > en el historial de Git). **Este PRD se escribe segmento por segmento y cada uno lo aprueba
-> Julian.** Estado de los segmentos: 1 a 6 aprobados; 7 en revisión; 8 a 13 pendientes.
+> Julian.** Estado de los segmentos: 1 a 7 aprobados; 8 en revisión; 9 a 13 pendientes.
 
 > [!IMPORTANT]
 > **Desviación declarada:** SynKra no usa IA (PVB §6). El segmento 11 evalúa la verificación,
@@ -403,5 +403,43 @@ plugin `kyc-pe 1.3` falla en su inicialización por un error propio que el contr
 ---
 
 ## 8. Alcance del MVP (MoSCoW)
+
+> **Restricción real.** La sustentación es la semana siguiente al 21-nov-2026 **[VERIFICAR
+> fecha exacta]**. El MVP tiene que correr de punta a punta en `kind`; todo lo que no sea
+> indispensable para la demo queda en Should o más abajo (`docs/critica.md` §6).
+
+| Prioridad | Ítem | Por qué |
+|---|---|---|
+| **Must** | **Core** en Java 21 / Spring Boot con un contrato de plugins versionado, que al arrancar lee su carpeta de plugins, los verifica y activa los que pide el despliegue | Es el micro-kernel (PVB §3) |
+| **Must** | **Dos plugins de país**, `kyc-co` y `kyc-pe`, con reglas simuladas | Demuestran la variación por país (`docs/overview.md` §6) |
+| **Must** | **Backend de SynKra** con API REST: catálogo de compilados, una carpeta de plugins independiente por core, etiquetas (país, región o cliente, y versión), verificación, despliegue, registro y vuelta atrás | El backend es el producto (P5) |
+| **Must** | **Motor de verificación** en una librería compartida por el backend y el core | P1: nada incompatible llega al clúster |
+| **Must** | **Despliegue directo** en `kind`, un namespace por país, con la cuenta de servicio `synkra:deployer` limitada a `synkra-*` | P2: límite de autonomía verificable |
+| **Must** | **Registro de despliegues y vuelta al anterior** | P7: compensa la falta de Git |
+| **Must** | **Front en Blazor**, demostrativo, que cubre los 5 casos de uso consumiendo solo la API | Uso académico y demo (segmento 4) |
+| **Must** | Imágenes multi-stage, mínimas y con usuario no root | Módulo 3 del curso |
+| **Should** | Autenticación sencilla en el front y en la API | Riesgo 3 del PVB: SynKra tiene permisos de escritura |
+| **Should** | Solo imágenes de un registro permitido (política de admisión o validación en el backend) | Riesgo 3 del PVB |
+| **Should** | NetworkPolicy *deny-by-default*, Pod Security `restricted` y límites de recursos por pod | Módulos 1 y 7 del curso |
+| **Should** | `compose.yaml` de desarrollo con las 6 prácticas del módulo 3 y escaneo con Trivy | Módulo 3 del curso |
+| **Should** | API documentada con OpenAPI | Base para la CLI futura |
+| **Could** | **CLI mínima** sobre la API (`synkra deploy`, `synkra status`) | Visión de automatización en pipelines |
+| **Could** | Guardar borradores de una selección | Journey 7.3 |
+| **Could** | Dependencias entre plugins | Paso 0, conflicto 5 |
+| **Could** | Métricas en Prometheus | Módulo 8 |
+| **Won't** | Git, GitOps, PRs o Argo CD en el flujo | Decisión del 21-nov: SynKra solo despliega |
+| **Won't** | Compilar, guardar código fuente o versionar código | P6: despliegue, no código |
+| **Won't** | IA | Desviación declarada (P8) |
+| **Won't** | Multi-tenant, varios clústeres o marketplace de plugins | Fuera de tiempo (Paso 0, conflicto 8) |
+| **Won't** | Automatizar despliegues sin un humano | Visión a futuro; en el MVP todo despliegue requiere confirmación (P2) |
+
+> [!WARNING]
+> **Decisión abierta para el segmento 9:** cómo llega la carpeta de plugins de un core al pod
+> (un volumen que SynKra llena antes del arranque, un init container que la descarga del
+> catálogo, u otra vía). Afecta al motor de despliegue, pero no al alcance.
+
+---
+
+## 9. Especificación funcional: módulos y features
 
 _Pendiente._

@@ -488,3 +488,11 @@
 **Context**: Prompt 1, segmento 7.
 
 ---
+
+## PRD v2 - Segmento 7 aprobado; segmento 8 en revisión
+**Timestamp**: 2026-11-21T23:05:22Z
+**User Input**: "aprobado"
+**AI Response**: Segmento 7 marcado como aprobado. Redactado el segmento 8 (MoSCoW): 8 Must, 5 Should, 4 Could, 5 Won't. Queda una decisión abierta para el segmento 9: cómo llega la carpeta de plugins al pod.
+**Context**: Prompt 1, segmento 8.
+
+---
