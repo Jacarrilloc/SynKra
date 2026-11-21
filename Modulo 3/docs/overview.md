@@ -53,9 +53,13 @@ En Java existe soporte maduro para plugins dentro de un proceso: **PF4J**, "an o
 (Apache license) lightweight (around 100 KB) plugin framework for java", usado entre otros
 por Netflix Spinnaker y Apache Tika ([GitHub pf4j/pf4j](https://github.com/pf4j/pf4j)).
 
-> **Decisión abierta que este documento no resuelve:** ¿un plugin es una **librería** que se
-> carga en el proceso del core (por ejemplo, PF4J) o un **contenedor** aparte? De esa respuesta
-> depende qué hace el motor de despliegue (ver `critica.md`, §3).
+> **Decisión tomada (21-nov-2026): el plugin es un contenedor lógico, no un contenedor de
+> Docker.** Cada plugin es un artefacto compilado (un módulo empaquetado) que viaja junto al
+> core. Al arrancar, el core **detecta** qué plugins trae el compilado, **verifica** su contrato
+> y su versión, y los compara con la lista de plugins que el despliegue pide activar. Si el
+> despliegue pide un plugin que no está, o uno incompatible, el core no arranca y dice por qué.
+> El overlay de Kustomize solo lleva esa lista, así que cambiar los plugins de un país no obliga
+> a reconstruir la imagen.
 
 ## 4. Dónde se monta: Kubernetes y GitOps
 

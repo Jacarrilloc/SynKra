@@ -400,3 +400,11 @@
 **Context**: Fuera de las etapas AI-DLC. Es el insumo del Prompt 1 del módulo 3.
 
 ---
+
+## Decisión - Qué es un plugin
+**Timestamp**: 2026-11-21T15:07:35Z
+**User Input**: "es un contenedor, no de docker, el enfoque es que el compilado y lo que esté ahi sea capaz de detectarlo y verificar que plugins tiene y que plugins se van a desplegar"
+**AI Response**: Actualizados `Modulo 3/docs/overview.md` (§3) y `critica.md` (TL;DR y §3). El plugin es un contenedor lógico: un artefacto compilado que viaja con el core, que el core detecta y verifica al arrancar contra la lista de plugins que pide el despliegue. Quedan registrados los riesgos de este modelo.
+**Context**: Insumo del PRD. Resuelve la decisión abierta entre librería y contenedor.
+
+---

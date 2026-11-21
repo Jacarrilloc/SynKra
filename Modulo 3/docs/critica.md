@@ -14,8 +14,9 @@
    variante, sin SynKra. Lo único nuevo es el front, y un front es fácil de copiar.
 2. **El problema principal no es de herramientas.** La CNCF reporta que el reto n.º 1 es
    cultural (46%). Una herramienta más puede empeorar la complejidad que dice reducir.
-3. **"Micro-kernel" puede ser una etiqueta.** Si los plugins son contenedores, SynKra es otro
-   gestor de microservicios. Si son librerías, el despliegue implica reconstruir la imagen.
+3. **El micro-kernel en un solo compilado tiene costos.** El core detecta y activa los plugins
+   al arrancar, sin reconstruir la imagen, pero cada imagen lleva el código de todos los países
+   y un plugin defectuoso comparte proceso con el core.
 4. **Sin IA, no cumple una condición del curso.** Se declaró como desviación, pero pesa en el
    criterio de coherencia técnica.
 5. **El alcance no cabe en el tiempo.** Cuatro fases de construcción: core, motor, front y
@@ -55,16 +56,19 @@ adopta, es costo puro. El PRD tiene que medir la adopción, no solo si la plataf
 
 ## 3. El micro-kernel, examinado en frío
 
-La decisión de si un plugin es una librería o un contenedor sigue abierta, y las dos salidas
-tienen un costo:
+**Decisión del 21-nov-2026:** un plugin es un **contenedor lógico**, no un contenedor de Docker.
+Es un artefacto compilado que viaja con el core. Al arrancar, el core detecta qué plugins trae,
+verifica su contrato y su versión, y activa solo los que pide el despliegue de ese país.
 
-| Si el plugin es... | Qué pasa | Riesgo |
+Eso resuelve el dilema anterior (si fuera librería habría que reconstruir por despliegue; si
+fuera contenedor de Docker serían microservicios con otro nombre), pero abre riesgos propios:
+
+| Riesgo | Por qué importa | Qué debe exigir el PRD |
 |---|---|---|
-| **Librería** en el proceso del core (por ejemplo, PF4J) | Elegir plugins implica construir o montar una imagen por variante | El "despliegue por arrastrar y soltar" se vuelve un *build*. Más lento y más frágil |
-| **Contenedor** aparte | Cada plugin es un Deployment que habla con el core por red | Es una arquitectura de microservicios con otro nombre. El "micro-kernel" es decorativo |
-
-Además, el contrato de plugins se tiene que versionar. Un cambio incompatible en el core rompe
-todos los plugins de todos los países a la vez **[INTERNO]**.
+| **El compilado lleva el código de todos los países** | La imagen de Perú contiene el plugin de Colombia aunque no lo active. Un fallo de aislamiento lo puede ejecutar, y la imagen crece con cada país | Probar que un plugin no activado no carga ninguna clase ni expone ninguna ruta |
+| **El contrato se tiene que versionar** | Un cambio incompatible en el core rompe todos los plugins de todos los países a la vez **[INTERNO]** | Versión del contrato en cada plugin y rechazo al arrancar si no coincide |
+| **La validación solo ocurre al arrancar** | El error de "plugin pedido que no está" aparece en el pod, no antes | Que el motor de despliegue haga la misma verificación **antes** de abrir el PR |
+| **Aislamiento dentro de un solo proceso** | Un plugin con un bug o una dependencia en conflicto puede tumbar el core | Cargador de clases separado por plugin (como hace PF4J) y límites de recursos por pod |
 
 ## 4. Sin IA: la desviación tiene un costo
 
