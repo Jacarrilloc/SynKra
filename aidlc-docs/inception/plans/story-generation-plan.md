@@ -5,14 +5,14 @@ PRD v2 §3, §5 y §7. **Salidas:** `aidlc-docs/inception/user-stories/personas.
 
 ## Pasos de ejecución
 
-- [ ] 1. Generar `personas.md`: una persona por usuario del PRD §3, con su rol del §9.2, lo que necesita y lo que no puede hacer
-- [ ] 2. Organizar las historias según el enfoque elegido en la pregunta 1
-- [ ] 3. Escribir cada historia con el formato de la pregunta 2 y criterios de aceptación con el formato de la pregunta 3
-- [ ] 4. Incluir los *edge cases* del PRD §7.3 (abandono) y §7.4 (fallo y traspaso al humano) como historias propias
-- [ ] 5. Trazar cada historia a sus RF y a su caso de uso o journey; comprobar que todo RF Must y Should está cubierto por al menos una historia
-- [ ] 6. Mapear personas a historias (tabla al final de `stories.md`)
-- [ ] 7. Revisar INVEST: independientes, negociables, valiosas, estimables, pequeñas y comprobables
-- [ ] 8. Revisar cumplimiento de extensiones: AUTONOMIA-01 (ninguna historia despliega sin confirmación) y AUTONOMIA-02 (todo criterio con comando)
+- [x] 1. Generar `personas.md`: una persona por usuario del PRD §3, con su rol del §9.2, lo que necesita y lo que no puede hacer
+- [x] 2. Organizar las historias según el enfoque elegido en la pregunta 1
+- [x] 3. Escribir cada historia con el formato de la pregunta 2 y criterios de aceptación con el formato de la pregunta 3
+- [x] 4. Incluir los *edge cases* del PRD §7.3 (abandono) y §7.4 (fallo y traspaso al humano) como historias propias
+- [x] 5. Trazar cada historia a sus RF y a su caso de uso o journey; comprobar que todo RF Must y Should está cubierto por al menos una historia
+- [x] 6. Mapear personas a historias (tabla al final de `stories.md`)
+- [x] 7. Revisar INVEST: independientes, negociables, valiosas, estimables, pequeñas y comprobables
+- [x] 8. Revisar cumplimiento de extensiones: AUTONOMIA-01 (ninguna historia despliega sin confirmación) y AUTONOMIA-02 (todo criterio con comando)
 
 ## Enfoques posibles para descomponer las historias
 
@@ -46,7 +46,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: D.** Las épicas por capacidad se recortan casi solas en unidades; la etiqueta
 de caso de uso mantiene la trazabilidad con el PRD.
 
-[Answer]: 
+[Answer]: D
 
 ## Question 2
 ¿Qué tamaño tiene una historia?
@@ -62,7 +62,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: B.** A da historias que son tareas técnicas; C da historias que no caben en
 una unidad ni se prueban solas.
 
-[Answer]: 
+[Answer]: B
 
 ## Question 3
 ¿En qué formato van los criterios de aceptación?
@@ -76,7 +76,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** Deja explícito el estado previo, que es lo que cambia en los escenarios de
 rechazo y de fallo, y cumple AUTONOMIA-02.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 4
 ¿Las capacidades técnicas sin un usuario directo (librería de verificación, suite que bloquea el
@@ -91,7 +91,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** La guía exige que toda historia tenga unidad y que toda tarea trace a una
 historia; una tarea que solo traza a un RF rompe esa cadena.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 5
 ¿Cómo se tratan los requisitos Should en las historias?
@@ -104,7 +104,7 @@ X) Other (please describe after [Answer]: tag below)
 
 **Recomendación: A**, por el riesgo R9 (alcance que no cabe antes de la sustentación).
 
-[Answer]: 
+[Answer]: A
 
 ## Question 6
 ¿Cuántas personas se definen?
