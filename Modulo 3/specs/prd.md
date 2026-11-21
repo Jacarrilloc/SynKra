@@ -9,7 +9,7 @@
 >
 > Reemplaza la versión 1.0 del 17-oct-2026, que especificaba un agente de IA regulatorio (queda
 > en el historial de Git). **Este PRD se escribe segmento por segmento y cada uno lo aprueba
-> Julian.** Estado de los segmentos: 1 a 3 aprobados; 4 en revisión; 5 a 13 pendientes.
+> Julian.** Estado de los segmentos: 1 a 4 aprobados; 5 en revisión; 6 a 13 pendientes.
 
 > [!IMPORTANT]
 > **Desviación declarada:** SynKra no usa IA (PVB §6). El segmento 11 evalúa la verificación,
@@ -169,12 +169,15 @@ de sus namespaces, la conversación se acaba.
   micro-kernel ya compilado, y ver en un solo lugar qué corre en cada país.
 - **Para quién:** el ICP del segmento 3. Lo usa el PO de país y lo aprueba el Head of Platform.
 - **Cómo:**
-  1. SynKra lee la carpeta de plugins disponibles del core y el contrato que declara cada uno.
-  2. Desde el front de acceso (Blazor), el usuario elige el core y los plugins de su país.
-  3. El motor verifica la combinación **antes** de desplegar y explica por qué una no sirve.
-  4. Si pasa, la despliega directo en el namespace del país; el core la vuelve a verificar al
+  1. El equipo **agrega los compilados a SynKra** desde el front: la imagen del core y los
+     artefactos de cada plugin. SynKra los registra en su catálogo, con su versión y el
+     contrato que declara cada uno.
+  2. SynKra arma, para cada core, la carpeta de plugins disponibles y compatibles.
+  3. Desde el front de acceso (Blazor), el usuario elige el core y los plugins de su país.
+  4. El motor verifica la combinación **antes** de desplegar y explica por qué una no sirve.
+  5. Si pasa, la despliega directo en el namespace del país; el core la vuelve a verificar al
      arrancar.
-  5. Cada despliegue queda registrado y se puede volver al anterior.
+  6. Cada despliegue queda registrado y se puede volver al anterior.
 
 **Propuesta de valor en una línea:** _"Eliges el core y los plugins de tu país en una pantalla, y
 nada incompatible llega al clúster."_
@@ -231,5 +234,72 @@ quedan abajo a la izquierda.
 ---
 
 ## 5. Casos de uso (top 5)
+
+> Los targets de los KPI son **[INTERNO]** y se definen en el segmento 10.
+
+### CU1. Agregar compilados al catálogo
+
+- **Actor:** desarrollador de plugins o responsable de release.
+- **Trigger:** hay una versión nueva compilada del core o de un plugin.
+- **Flujo:**
+  1. Sube el artefacto desde el front (la imagen del core o el paquete del plugin).
+  2. SynKra lee su descriptor: nombre, versión y versión del contrato que implementa o exige.
+  3. Verifica la integridad del artefacto (hash) y que el descriptor esté completo.
+  4. Lo agrega al catálogo y recalcula con qué cores es compatible.
+- **Resultado:** el compilado aparece como disponible, o se rechaza con un motivo legible.
+- **KPI:** % de compilados con descriptor inválido rechazados al subirlos.
+
+### CU2. Desplegar un país nuevo
+
+- **Actor:** Product Owner de país.
+- **Trigger:** se abre un país y hay que montar su variante.
+- **Flujo:**
+  1. Entra al front y crea el despliegue del país (por ejemplo, `pe`).
+  2. Elige la versión del core y los plugins de la lista de compatibles.
+  3. SynKra verifica la combinación y muestra un resumen de lo que va a desplegar.
+  4. Confirma, y SynKra despliega en `synkra-pe`.
+  5. Ve el estado en el front hasta que los pods están listos.
+- **Resultado:** el país corre con su core y sus plugins.
+- **KPI:** tiempo para desplegar un país nuevo; North Star.
+
+### CU3. Cambiar los plugins de un país que ya existe
+
+- **Actor:** Product Owner de país.
+- **Trigger:** el país necesita una función nueva o retirar una.
+- **Flujo:**
+  1. Abre el despliegue del país y ve qué core y qué plugins corre hoy.
+  2. Añade o quita plugins.
+  3. SynKra verifica la nueva combinación y muestra qué cambia frente a la actual.
+  4. Confirma, y SynKra despliega el cambio.
+- **Resultado:** el país corre con la combinación nueva, y la anterior queda en el registro.
+- **KPI:** North Star; adopción (% de cambios hechos desde SynKra).
+
+### CU4. Rechazar una combinación incompatible
+
+- **Actor:** Product Owner de país o desarrollador de plugins.
+- **Trigger:** se elige un plugin que no cumple el contrato del core (por ejemplo, `kyc-pe` 2.x
+  exige el contrato 3 y el core implementa el 2).
+- **Flujo:**
+  1. El usuario elige el plugin.
+  2. El motor marca la incompatibilidad **antes** de desplegar.
+  3. El front explica el motivo y qué versión del core o del plugin sí sirve.
+- **Resultado:** nada se despliega; el usuario sabe qué corregir.
+- **KPI:** % de combinaciones inválidas detectadas antes de desplegar (meta: 100%).
+
+### CU5. Ver qué corre en cada país y volver al despliegue anterior
+
+- **Actor:** Head of Platform o SRE.
+- **Trigger:** un despliegue nuevo falla, o alguien pregunta qué tiene un país.
+- **Flujo:**
+  1. Abre la vista general: cada país con su core, sus plugins y su estado, leídos del clúster.
+  2. Abre el registro del país: quién desplegó qué y cuándo.
+  3. Elige el despliegue anterior y confirma la vuelta atrás.
+  4. SynKra lo vuelve a desplegar y registra la reversión.
+- **Resultado:** el país vuelve a una combinación conocida y queda la traza.
+- **KPI:** tiempo para volver al despliegue anterior; concordancia entre el registro y el clúster.
+
+---
+
+## 6. Principios de diseño no negociables
 
 _Pendiente._

@@ -464,3 +464,11 @@
 **Context**: Prompt 1, segmento 4.
 
 ---
+
+## PRD v2 - Segmento 4 aprobado con ajuste; segmento 5 en revisión
+**Timestamp**: 2026-11-21T22:54:46Z
+**User Input**: "muy bien pero agregar a el como de synkra que se puedan aagregar los compilados,, por lo demás, aprobado"
+**AI Response**: Añadido al "cómo" del segmento 4 el paso 1: agregar los compilados (core y plugins) al catálogo de SynKra desde el front. Segmento 4 aprobado. Redactado el segmento 5 con 5 casos de uso; el CU1 es agregar compilados.
+**Context**: Prompt 1, segmento 5.
+
+---
