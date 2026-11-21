@@ -9,7 +9,7 @@
 >
 > Reemplaza la versión 1.0 del 17-oct-2026, que especificaba un agente de IA regulatorio (queda
 > en el historial de Git). **Este PRD se escribe segmento por segmento y cada uno lo aprueba
-> Julian.** Estado de los segmentos: 1 a 7 aprobados; 8 en revisión; 9 a 13 pendientes.
+> Julian.** Estado de los segmentos: 1 a 8 aprobados; 9 en revisión; 10 a 13 pendientes.
 
 > [!IMPORTANT]
 > **Desviación declarada:** SynKra no usa IA (PVB §6). El segmento 11 evalúa la verificación,
@@ -433,13 +433,129 @@ plugin `kyc-pe 1.3` falla en su inicialización por un error propio que el contr
 | **Won't** | Multi-tenant, varios clústeres o marketplace de plugins | Fuera de tiempo (Paso 0, conflicto 8) |
 | **Won't** | Automatizar despliegues sin un humano | Visión a futuro; en el MVP todo despliegue requiere confirmación (P2) |
 
-> [!WARNING]
-> **Decisión abierta para el segmento 9:** cómo llega la carpeta de plugins de un core al pod
-> (un volumen que SynKra llena antes del arranque, un init container que la descarga del
-> catálogo, u otra vía). Afecta al motor de despliegue, pero no al alcance.
+> [!NOTE]
+> La forma en que la carpeta de plugins llega al pod se resuelve en el segmento 9 (§9.3).
 
 ---
 
 ## 9. Especificación funcional: módulos y features
+
+### 9.1 Módulos
+
+| # | Módulo | Features principales | Expuesto en |
+|---|---|---|---|
+| M1 | **Catálogo de compilados** | Registrar cores (imagen en el registro permitido) y subir plugins a la **carpeta de un core concreto**; leer el descriptor (nombre, versión, contrato); verificar el hash; etiquetas de país, región o cliente y de versión; buscar y filtrar por etiqueta | API `/cores`, `/cores/{id}/plugins`; pantalla "Catálogo" |
+| M2 | **Motor de verificación** | Comprobar que cada plugin elegido es compatible con el contrato de su core; explicar el motivo de un rechazo y qué versión sí sirve. Es una librería compartida con el core (P1) | API `/verificaciones`; usado por M3 y por el core |
+| M3 | **Motor de despliegue** | Generar los manifiestos del país (Kustomize por debajo); aplicarlos en `synkra-<país>` con la cuenta de servicio `synkra:deployer`; esperar a que los pods estén listos; marcar el despliegue como listo o fallido | API `/despliegues`; pantalla "Desplegar" |
+| M4 | **Registro y reversión** | Guardar quién, cuándo, qué core, qué plugins y versiones, y el resultado; leer del clúster qué corre en cada país; volver a un despliegue anterior con confirmación | API `/despliegues/{id}`, `/paises`; pantallas "Vista general" y "Detalle" |
+| M5 | **API REST** | Toda la funcionalidad de M1 a M4, documentada con OpenAPI y protegida con autenticación (Should). Es la base de la CLI futura | `https://synkra.local/api` |
+| M6 | **Front en Blazor** (demo) | Las 4 pantallas de §9.4. Solo consume la API y no tiene lógica propia (P5) | Navegador |
+| M7 | **Core** (runtime) | Al arrancar, lee `/plugins`, verifica cada plugin con M2, activa los que pide el despliegue y no arranca si falta uno o es incompatible; expone `/plugins` y la salud | Pod del país |
+| M8 | **Plugins de país** | `kyc-co` y `kyc-pe`, con reglas simuladas, etiquetados `pais=co` y `pais=pe` | Dentro del core |
+
+### 9.2 Roles y permisos
+
+| Rol | Puede | No puede |
+|---|---|---|
+| **Operador** (Head of Platform) | Instalar SynKra, registrar cores, configurar el registro de imágenes permitido, gestionar usuarios | Desplegar fuera de `synkra-*` (ni siquiera él, por RBAC) |
+| **Publicador** (desarrollador de plugins) | Subir plugins a la carpeta de un core y etiquetarlos | Desplegar |
+| **Desplegador** (PO de país) | Crear y cambiar despliegues, confirmar, volver al anterior | Subir compilados |
+| **Lector** (SRE, auditor) | Ver la vista general, el catálogo y el registro | Cambiar nada |
+
+En el MVP los roles se asignan en una tabla de usuarios simple; un proveedor de identidad
+externo queda fuera de alcance.
+
+### 9.3 Cómo llega la carpeta de plugins al pod
+
+> [!IMPORTANT]
+> **Decisión propuesta (por confirmar al aprobar este segmento).** Un **init container** del pod
+> del país descarga del catálogo (M1) **solo los plugins elegidos** para ese despliegue y los
+> deja en un volumen compartido `/plugins`. El core arranca, detecta lo que hay en `/plugins`,
+> lo compara con la lista de plugins activos (un ConfigMap) y verifica cada uno.
+>
+> - **A favor:** el core no se reconstruye por país, y cada pod solo lleva el código de su país,
+>   lo que mitiga el riesgo 2 del PVB.
+> - **En contra:** el pod depende de que el catálogo responda al arrancar.
+> - **Alternativa:** montar la carpeta completa del core y que el core active solo los
+>   plugins listados. Es más simple, pero cada pod lleva el código de todos los países.
+
+### 9.4 Pantallas del front (demo)
+
+1. **Vista general:** cada país con su core, sus plugins, versiones y estado, leídos del clúster.
+2. **Catálogo:** cores y, para cada uno, su carpeta de plugins con etiquetas; subir un compilado.
+3. **Desplegar:** elegir país, core y plugins (filtrando por etiqueta), ver la verificación en
+   vivo, revisar el resumen y confirmar.
+4. **Detalle del despliegue:** registro, estado, contexto de un fallo (journey 7.4) y botón para
+   volver al anterior.
+
+### 9.5 Arquitectura funcional
+
+```mermaid
+flowchart LR
+    PO["PO de pais (navegador)"]
+    OPS["Operador o SRE"]
+    CLI["CLI futura en pipelines"]
+    IMG[("Registro de imagenes permitido")]
+
+    subgraph K8S["Cluster Kubernetes (kind)"]
+        subgraph NSS["namespace synkra"]
+            FE["M6 Front Blazor"]
+            API["M5 API REST"]
+            CAT["M1 Catalogo de compilados"]
+            VER["M2 Motor de verificacion"]
+            DEP["M3 Motor de despliegue"]
+            LOG["M4 Registro y reversion"]
+            DB[("PostgreSQL: catalogo y registro")]
+            PVC[("Volumen: artefactos de plugins")]
+        end
+        subgraph NSP["namespace synkra-pe"]
+            INIT["init container: descarga plugins elegidos"]
+            CORE["M7 Core con M8 plugins en /plugins"]
+        end
+    end
+
+    PO --> FE --> API
+    OPS --> API
+    CLI -.-> API
+    API --> CAT
+    API --> VER
+    API --> DEP
+    API --> LOG
+    CAT --> DB
+    CAT --> PVC
+    LOG --> DB
+    DEP --> VER
+    DEP -->|"cuenta de servicio synkra:deployer"| NSP
+    INIT -->|"descarga del catalogo"| CAT
+    INIT --> CORE
+    CORE -->|"verifica al arrancar"| VER
+    CORE -.->|"imagen del core"| IMG
+```
+
+_Texto alternativo:_ el PO usa el front en Blazor, y el operador y la CLI futura usan la API
+directamente. La API reúne el catálogo, el motor de verificación, el motor de despliegue y el
+registro, todos en el namespace `synkra`, con PostgreSQL y un volumen para los artefactos. El
+motor de despliegue aplica en el namespace del país con su cuenta de servicio limitada. En ese
+namespace, un init container descarga los plugins elegidos y el core los verifica al arrancar.
+La imagen del core viene del registro de imágenes permitido.
+
+### 9.6 Qué corre en Kubernetes y qué es externo
+
+| Componente | Dónde |
+|---|---|
+| Front Blazor, API y motores (M1 a M6) | **Kubernetes**, namespace `synkra` |
+| PostgreSQL y volumen de artefactos | **Kubernetes**, namespace `synkra` (StatefulSet y PVC) |
+| Core y plugins de cada país (M7, M8) | **Kubernetes**, namespace `synkra-<país>` |
+| Registro de imágenes | **Externo** al clúster (en el demo, un registro local junto a `kind`) |
+| Navegador del usuario y CLI futura | **Externos** |
+
+> [!NOTE]
+> **Stack propuesto (por confirmar):** backend en Java 21 / Spring Boot, como el core, para
+> compartir la librería de verificación (M2) sin duplicarla. El front en Blazor es un servicio
+> .NET aparte que solo habla con la API.
+
+---
+
+## 10. Métricas de éxito
 
 _Pendiente._

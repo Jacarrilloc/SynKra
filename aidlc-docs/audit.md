@@ -496,3 +496,11 @@
 **Context**: Prompt 1, segmento 8.
 
 ---
+
+## PRD v2 - Segmento 8 aprobado; segmento 9 en revisión
+**Timestamp**: 2026-11-21T23:08:09Z
+**User Input**: "aprobado"
+**AI Response**: Segmento 8 marcado como aprobado. Redactado el segmento 9: 8 módulos, 4 roles, mecanismo propuesto para la carpeta de plugins (un init container descarga solo los plugins elegidos), 4 pantallas, diagrama Mermaid con texto alternativo, ubicación de cada componente y stack propuesto para el backend (Java 21).
+**Context**: Prompt 1, segmento 9.
+
+---
