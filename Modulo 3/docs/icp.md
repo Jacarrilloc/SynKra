@@ -1,48 +1,57 @@
-# Ideal Customer Profile — SynKra
+# Ideal Customer Profile: SynKra
 
-> Hipótesis explícita y falsable, derivada de la sección 2 del PVB. No es un hallazgo de
-> investigación.
+> Hipótesis explícita y falsable para el alcance vigente desde el 21-nov-2026. No es un
+> hallazgo de investigación: se valida con entrevistas **[INTERNO]**.
 
 ## Beachhead
 
-Equipos de plataforma o de entrega de **5 a 20 ingenieros**, en empresas de software que
-despliegan **un producto en 3 o más países o reguladores** y que **ya operan Kubernetes con
-GitOps** en producción. Vertical inicial: vendors de software financiero, salud y govtech en
-Colombia y LatAm, y fintechs multi-país.
+Equipos de plataforma o de entrega de **3 a 15 ingenieros**, en empresas de software que
+despliegan **un mismo producto en 2 o más países** (o en variantes de cliente). Ya operan
+Kubernetes y quieren dejar de mantener una rama o un repo por variante. Vertical inicial:
+vendors de software financiero y fintechs con presencia en Colombia y Perú.
 
 ### Señales de calificación
 
-1. Tienen Argo CD o Flux funcionando, aunque sea a medias.
-2. Tienen más variantes por país que personas capaces de explicar en qué se diferencian.
-3. Alguien mantiene a mano una hoja de "qué país tiene qué".
-4. Su política de seguridad limita enviar código a un SaaS externo.
+1. Tienen Kubernetes en producción y algo de GitOps (Argo CD o Flux), aunque sea a medias.
+2. Hoy cada país es una rama, un repo o un fork con su propio pipeline.
+3. Cuando alguien pregunta "qué tiene activado el país X", la respuesta está en la cabeza de
+   una persona o en una hoja de cálculo.
+4. Hay gente de producto o de soporte que necesita armar o revisar un despliegue sin escribir
+   YAML.
 
 ### Fuera del ICP
 
-- Productos de un solo país (no hay nada que variar).
-- Equipos sin Kubernetes ni GitOps.
-- Empresas que ya resolvieron la variación solo con parametrización (tipo Temenos).
+- Productos de un solo país y una sola variante: no hay nada que componer.
+- Equipos sin Kubernetes.
+- Equipos que ya resolvieron la variación con Helm o Kustomize y no quieren otra capa.
+- Organizaciones que ya invirtieron en Backstage o KubeVela y están contentas.
 
 ## Buyer personas
 
 | Persona | Rol | Qué le importa | Poder |
 |---|---|---|---|
-| Arquitecto de seguridad / CISO | Veto de confianza | "¿El código sale de mi perímetro?" | **Veto** |
-| Tech lead / release manager | Dueño de las ramas protegidas | "¿Qué puede escribir el agente en mi repo?" | **Veto** |
-| Analista de compliance | Registra el cambio regulatorio ya interpretado | Saber a qué países y módulos aplica | Usuario |
-| Product Owner | Recibe historias en borrador | No tener que investigar dónde va el cambio | Usuario |
-| Desarrollador | Implementa sobre el PR en borrador | Que el borrador apunte al plugin correcto | Usuario |
+| Head of Platform / SRE Lead | Dueño del clúster y de GitOps | "¿Esto añade una capa que tengo que operar?" | **Decisor y veto** |
+| Arquitecto de software | Dueño del core y del contrato de plugins | Que un plugin no pueda romper el core | **Veto técnico** |
+| Product Owner de país | Decide qué funciones tiene su país | Ver y armar su variante sin depender de un ingeniero | Usuario |
+| Desarrollador de plugins | Construye un plugin | Un contrato claro, un entorno local que levanta en minutos | Usuario |
+
+## Pains
+
+- Un cambio en el core hay que replicarlo a mano en cada rama de país.
+- Nadie tiene una vista única de qué plugin y qué versión corre en cada país.
+- Armar una variante nueva toma días de YAML y de revisiones.
 
 ## Triggers de compra
 
-- Llega una norma nueva con fecha límite que afecta a varios países.
-- Una auditoría encuentra un país que se quedó sin un cambio obligatorio.
-- Rota la persona que sabía qué país tenía qué.
+- Se abre un país nuevo y hay que montar su variante.
+- Un país se quedó con una versión vieja del core por un merge olvidado.
+- Rota la persona que sabía cómo estaba armado cada país.
 
-## Objeciones
+## Objeciones probables
 
 | Objeción | Respuesta |
 |---|---|
-| "No mando mi código a una API externa" | Adaptador de modelo local; el modo Claude es solo para el piloto |
-| "Copilot ya hace PRs" | Copilot no sabe qué plugin de qué país toca una norma; SynKra parte del cambio regulatorio |
-| "¿Y si el agente se equivoca?" | Solo abre PRs en borrador en `synkra/*` y no puede fusionar, verificable en la protección de ramas |
+| "Eso ya lo hago con Kustomize components o con Helm" | Cierto: SynKra los usa por debajo. Añade el contrato de plugins, la validación de compatibilidad y la vista por país. Si eso no vale la pena para el equipo, no es ICP |
+| "¿Por qué no KubeVela?" | KubeVela modela servicios con OAM. SynKra modela un core y sus plugins, con un contrato de versiones. Diferencia por validar en entrevistas **[VERIFICAR]** |
+| "Un front visual es un juguete; yo reviso PRs" | El lienzo **no despliega directo**: genera un PR con el overlay. La revisión sigue siendo en Git |
+| "Es otra pieza con permisos de escritura en mi repo y mi clúster" | Escribe solo en ramas de propuesta; despliega Argo CD, no SynKra. Los permisos son verificables (ver `critica.md`, §5) |

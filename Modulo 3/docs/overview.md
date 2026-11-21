@@ -1,77 +1,115 @@
-# Overview — panorama del dominio de SynKra
+# Overview: panorama del dominio de SynKra
 
-> Insumo del PRD (módulo 3). Resume el dominio a partir del PVB (`../../Modulo 2/pvb.md`) y
-> de la nueva dirección del producto (micro-kernel con plugins por país). Fuentes consultadas
-> el 17-oct-2026. **[VERIFICAR]** = afirmación que no se pudo confirmar con fuente primaria.
-> **[INTERNO]** = proyección propia.
+> Insumo del PRD (módulo 3). Describe el dominio del **alcance vigente desde el
+> 21-nov-2026**: una plataforma de despliegue de aplicaciones micro-kernel sobre Kubernetes.
+> Sustituye el overview del 17-oct-2026, que se centraba en un agente de IA regulatorio. Ese
+> alcance quedó **fuera** del producto.
+>
+> Convenciones: toda cifra lleva fuente y fecha. **[INTERNO]** marca una proyección o un
+> supuesto propio. **[VERIFICAR]** marca lo que no se pudo confirmar con una fuente primaria.
+> Las fuentes se consultaron el 21-nov-2026, salvo las que indican "contrastada el 17-oct-2026".
 
-## 1. El dominio: un producto, varios países
+## 1. Qué es SynKra, en una frase
 
-Una empresa que despliega el mismo producto en varios países no mantiene un sistema: mantiene
-un núcleo común más las diferencias que exige cada jurisdicción (regulador, protección de
-datos, documentos de identidad, retención de información).
+Un **core** con las funciones básicas, y **plugins** (micro-kernels) que se eligen en un
+front de arrastrar y soltar. La plataforma valida la combinación, genera la configuración de
+despliegue y la aplica en un clúster de Kubernetes. El caso de uso de partida es un mismo
+producto desplegado en varios países (Colombia y Perú), cada uno con solo los plugins que
+necesita.
 
-Evidencia de que el patrón es real:
+## 2. El dominio: un producto, varias variantes
 
-- **BBVA** creó un área global de software con más de 16.000 personas para que sus soluciones
-  se puedan escalar y compartir entre los países donde opera
-  ([BBVA](https://www.bbva.com/es/innovacion/bbva-crea-un-area-de-desarrollo-de-software-para-impulsar-las-soluciones-globales-y-escalables/);
-  [Finextra](https://www.finextra.com/newsarticle/39537/bbva-creates-global-software-development-unit)).
-- **Oracle FLEXCUBE** ofrece "localized clusters" por país o región sobre un núcleo común; su
-  documentación de instalación separa explícitamente los objetos del **kernel** y los del
-  **cluster** de cada país (México, Italia)
+Una empresa que despliega el mismo producto en varios mercados no mantiene un solo sistema:
+mantiene un núcleo común más las diferencias de cada variante. Evidencia de que el patrón es
+real (contrastada el 17-oct-2026):
+
+- **Oracle FLEXCUBE** ofrece "localized clusters" por país sobre un núcleo común, y su guía de
+  instalación separa los objetos del **kernel** de los del **cluster** de cada país
   ([Oracle](https://www.oracle.com/financial-services/banking/flexcube/core-banking-software);
   [guía de instalación FCUBS](https://docs.oracle.com/cd/F20443_01/PDF/Installation/FLEXCUBE_UBS_Installation/FCUBS%20Components/FCUBS/FCUBS_DB_Setup.pdf)).
-  Es, en la práctica, el patrón micro-kernel que adopta SynKra.
-- **Temenos** vende "Country Model Banks" con funcionalidad regional para más de 150 países
-  ([Temenos](https://www.temenos.com/?p=6398)). Es material de marketing del vendor.
-- **Santander** migró su core bancario a una plataforma propia (Gravity) para todos sus
-  mercados ([nota de prensa, mayo de 2022](https://santander.com/en/press-room/press-releases/2022/05/santander-digitalizes-its-core-banking-with-cloud-technology-to-improve-service-and-efficiency)).
-  La cifra del PVB "más del 80% de sus soluciones globales se extrapolan a mercados locales"
-  **no se pudo confirmar**: el 80% de esa nota se refiere a infraestructura en la nube.
-  **[VERIFICAR]**
+  En la práctica es el patrón micro-kernel.
+- **Temenos** vende "Country Model Banks" con funcionalidad regional
+  ([Temenos](https://www.temenos.com/?p=6398)). Es material de marketing del propio vendor.
+- **BBVA** creó un área global de software para que sus soluciones se escalen y compartan entre
+  países
+  ([BBVA](https://www.bbva.com/es/innovacion/bbva-crea-un-area-de-desarrollo-de-software-para-impulsar-las-soluciones-globales-y-escalables/)).
 
-## 2. Dos formas de resolver la variación por país
+## 3. El patrón de arquitectura: micro-kernel
 
-| Enfoque | Cómo funciona | Problema |
-|---|---|---|
-| **Clone-and-own** (ramas o repos por país) | Se copia el core y cada país diverge | Anti-patrón documentado: Thoughtworks pone Gitflow, por su flujo de ramas largas, en "Hold" ([Radar, 2015](https://www.thoughtworks.com/radar/techniques/gitflow)) y explica los riesgos de las ramas de larga vida ([Thoughtworks](https://www.thoughtworks.com/insights/blog/enabling-trunk-based-development-deployment-pipelines)); el SEI/CMU lo analiza en Bachmann & Clements, "Variability in Software Product Lines", CMU/SEI-2005-TR-012 ([SEI](https://www.sei.cmu.edu/library/variability-in-software-product-lines)) |
-| **Micro-kernel + plugins** (dirección elegida) | Un kernel común define puntos de extensión; cada país aporta un plugin que se carga en su despliegue | Hay que diseñar bien los puntos de extensión; un cambio regulatorio todavía exige saber qué plugin tocar |
+Mark Richards lo describe como "a flexible and extensible architecture that allows a developer
+or end user to easily add additional functionality", formada por "a core system and plug-in
+modules"
+([Software Architecture Patterns, 2.ª ed., cap. 4, O'Reilly, jul-2022](https://www.oreilly.com/library/view/software-architecture-patterns/9781098134280/ch04.html)).
 
-SynKra adopta el segundo enfoque. Es la "salida" que el propio PVB proponía en su riesgo #4.
+Frente a la alternativa *clone-and-own* (una rama o un repo por variante), que Thoughtworks
+desaconseja por los riesgos de las ramas de larga vida
+([Thoughtworks Radar, Gitflow en "Hold"](https://www.thoughtworks.com/radar/techniques/gitflow)),
+el micro-kernel concentra lo común en un solo lugar. Su costo es que hay que diseñar y
+versionar bien el **contrato** entre el core y los plugins. Las desventajas que Richards
+detalla en la sección "Considerations and Analysis" no se pudieron leer porque están tras un
+muro de pago **[VERIFICAR]**.
 
-## 3. Dónde se monta: Kubernetes y GitOps
+En Java existe soporte maduro para plugins dentro de un proceso: **PF4J**, "an open source
+(Apache license) lightweight (around 100 KB) plugin framework for java", usado entre otros
+por Netflix Spinnaker y Apache Tika ([GitHub pf4j/pf4j](https://github.com/pf4j/pf4j)).
 
-- Kustomize (overlays), Helm y Argo CD/Flux ya resuelven el empaquetado y el despliegue por
-  entorno, gratis. Argo CD corre en cerca del 60% de los clústeres de Kubernetes encuestados
-  ([CNCF, 24-jul-2025](https://cncf.io/announcements/2025/07/24/cncf-end-user-survey-finds-argo-cd-as-majority-adopted-gitops-solution-for-kubernetes)).
-- Un despliegue por país = un overlay de Kustomize que elige qué plugins monta el kernel.
+> **Decisión abierta que este documento no resuelve:** ¿un plugin es una **librería** que se
+> carga en el proceso del core (por ejemplo, PF4J) o un **contenedor** aparte? De esa respuesta
+> depende qué hace el motor de despliegue (ver `critica.md`, §3).
 
-## 4. Dónde entra la IA
+## 4. Dónde se monta: Kubernetes y GitOps
 
-La interpretación de normas la hacen RegTech especializadas (Norm Ai, CUBE, Corlytics). Lo que
-nadie cierra, según el PVB, es el paso **obligación ya interpretada → qué parte del código
-tocar**. En el micro-kernel eso se traduce en: **qué plugin y qué punto de extensión** debe
-cambiar, con un borrador de historia y de PR para que un humano apruebe. Precedente cercano:
-Regnology "Ticket-to-Code Writer", que va de un ticket a cambios de código
-([Google Cloud blog, 10-sep-2024](https://cloud.google.com/blog/products/ai-machine-learning/regnology-automates-ticket-to-code-with-genai-on-vertex-ai)).
+Las piezas de bajo nivel ya existen y son gratuitas:
 
-## 5. Marco regulatorio de ejemplo (dominio KYC del MVP)
+- **Kustomize con components.** Argo CD soporta components de Kustomize directamente en la
+  Application desde la v2.10.0 (`spec.source.kustomize.components`)
+  ([docs de Argo CD](https://argo-cd.readthedocs.io/en/stable/user-guide/kustomize/)). Un
+  plugin puede ser un component que se activa o no por variante.
+- **Helm con condiciones.** La guía oficial indica que "Conditions or tags should be added to
+  any dependencies that *are optional*"
+  ([Helm, buenas prácticas de dependencias](https://helm.sh/docs/chart_best_practices/dependencies)).
+- **Argo CD** corre en cerca del 60% de los clústeres de Kubernetes encuestados
+  ([CNCF, 24-jul-2025](https://cncf.io/announcements/2025/07/24/cncf-end-user-survey-finds-argo-cd-as-majority-adopted-gitops-solution-for-kubernetes);
+  contrastada el 17-oct-2026).
+
+SynKra no reemplaza esas piezas. Se monta **encima**: traduce "estos plugins para este país"
+en un overlay de Kustomize versionado en Git, y deja que Argo CD lo reconcilie.
+
+## 5. Dónde se ubica en la categoría: platform engineering
+
+- Gartner predice que "By 2026, 80% of large software engineering organizations will establish
+  platform engineering teams", frente al 45% de 2022
+  ([Gartner](https://www.gartner.com/en/articles/what-is-platform-engineering); la página no
+  muestra fecha de publicación). La predicción habla de organizaciones **grandes**.
+- El portal de referencia es **Backstage**, en la incubadora de la CNCF desde el 15-mar-2022,
+  con "Software Templates for quickly spinning up new projects"
+  ([CNCF](https://cncf.io/blog/2022/03/15/backstage-project-joins-the-cncf-incubator)).
+- El caso más cercano a SynKra es **KubeVela**, "an application delivery engine built with the
+  Kubernetes control plane", basado en el Open Application Model, con una interfaz web
+  (VelaUX) pensada para "non-k8s-expert users"
+  ([CNCF, 27-feb-2023](https://www.cncf.io/blog/2023/02/27/kubevela-brings-software-delivery-control-plane-capabilities-to-cncf-incubator/)).
+  Sigue en estado Incubating ([CNCF](https://www.cncf.io/projects/KubeVela)).
+
+## 6. Marco de ejemplo para los plugins (CO y PE)
+
+Los plugins de país del MVP (Fase 4) usan reglas de ejemplo:
 
 | País | Protección de datos | Documento de identidad |
 |---|---|---|
 | Colombia | Ley 1581 de 2012 (Habeas Data) | Cédula de ciudadanía |
 | Perú | Ley 29733 de 2011 (Protección de Datos Personales) | DNI |
 
-Las reglas concretas de cada plugin (formato de documento, texto de consentimiento, plazos de
-retención) se tratan como **[VERIFICAR]** hasta contrastarlas con la norma primaria; para el MVP
-son reglas simuladas y así se declara.
+Las reglas concretas son **simuladas** en el MVP, y así se declara **[VERIFICAR]**.
 
-## 6. Contexto regulatorio de la IA
+## 7. IA: fuera del producto (desviación declarada)
 
-El EU AI Act (Reg. UE 2024/1689) exige supervisión humana para sistemas de alto riesgo. El
-Digital Omnibus (Reg. UE 2026/1744, vigente desde el 27-jul-2026) aplazó esas obligaciones del
-2-ago-2026 al **2-dic-2027**; las obligaciones de transparencia del artículo 50 sí aplican desde
-el 2-ago-2026 ([Gibson Dunn](https://www.gibsondunn.com/eu-ai-act-omnibus-agreement-postponed-high-risk-deadlines-and-other-key-changes/);
-[Cuatrecasas](https://www.cuatrecasas.com/en/global/intellectual-property/art/digital-omnibus-ai-has-been-published)).
-El PVB citaba el 2-ago-2026; queda corregido.
+El curso pide que el producto use IA de forma defendible. **SynKra no la usa**: así se decidió
+el 21-nov-2026. Ninguna función del producto depende de un modelo, y el PVB (§6) y el PRD
+(segmento 11) lo declaran de forma explícita, en lugar de añadir una IA decorativa.
+
+## 8. Qué no se pudo verificar
+
+1. Las desventajas del micro-kernel según Richards (contenido tras muro de pago).
+2. Si VelaUX permite componer aplicaciones arrastrando componentes: la fuente solo dice que es
+   una interfaz web para usuarios que no son expertos en Kubernetes.
+3. Cuántas empresas del segmento usan micro-kernel frente a ramas por país (sin dato público).

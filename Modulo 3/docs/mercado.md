@@ -1,52 +1,65 @@
-# Mercado y competencia — SynKra
+# Mercado y competencia: SynKra
 
-> Validación del mercado. Las cifras vienen del PVB y se contrastaron con la fuente el
-> 17-oct-2026. **[VERIFICAR]** = no confirmado con fuente primaria. **[INTERNO]** = proyección
-> propia.
+> Investigación de **validación** para el alcance vigente desde el 21-nov-2026: una plataforma
+> de despliegue micro-kernel sobre Kubernetes, con un front de arrastrar y soltar. Sustituye
+> el análisis del 17-oct-2026, que trataba del mercado RegTech y de los agentes de IA.
+>
+> **[INTERNO]** marca una proyección propia. **[VERIFICAR]** marca lo que no se pudo confirmar.
+> Las fuentes se consultaron el 21-nov-2026.
 
-## 1. Costo del problema
+## 1. El dolor existe, y está documentado
 
 | Dato | Fuente |
 |---|---|
-| Los bancos pasaron de gastar 9,6% del presupuesto de IT en compliance (2016) a 13,4% (2023); las horas dedicadas a cumplir regulación subieron 61% mientras las horas totales subieron 20% | Joshua Smith y Benjamin Gross, [Bank Policy Institute, 29-oct-2024](https://bpi.com/survey-finds-compliance-is-growing-demand-on-bank-resources/). Encuesta a miembros de BPI, en general bancos de más de USD 100.000 millones en activos |
-| Costo de cumplimiento de delitos financieros en EE.UU. y Canadá: USD 61.000 millones; subió para el 99% de las instituciones | [LexisNexis Risk Solutions / Forrester Consulting, 21-feb-2024](https://risk.lexisnexis.com/about-us/press-room/press-release/20240221-true-cost-of-compliance-us-ca) |
+| "Too complex to understand or run" es el reto n.º 1 al usar proyectos CNCF en producción (46%, empatado con "proyectos inactivos"), y subió 13% interanual | [CNCF Annual Survey 2024, fig. 15 (n=552), mar-2025](https://www.cncf.io/wp-content/uploads/2025/04/cncf_annual_survey24_031225a.pdf) |
+| El reto n.º 1 con contenedores son los cambios culturales con el equipo de desarrollo (46%), por delante de CI/CD (40%), la falta de formación (38%) y la seguridad (37%) | Misma encuesta, fig. 8 (n=373) |
+| "By 2026, 80% of large software engineering organizations will establish platform engineering teams", frente al 45% de 2022 | [Gartner](https://www.gartner.com/en/articles/what-is-platform-engineering) |
 
-Ojo: ambas cifras son de EE.UU. y Canadá, y de bancos grandes. No hay un dato equivalente para
-Colombia o Perú (vacío de evidencia #2).
+Lectura honesta: la complejidad es un dolor real, pero **el primer problema es cultural, no de
+herramientas**. Una herramienta más no lo resuelve sola (ver `critica.md`, §2).
 
-## 2. Competencia
+## 2. Competencia y sustitutos
+
+### Capa gratuita (la que fija el precio de todo lo demás)
 
 | Actor | Qué cubre | Relación con SynKra |
 |---|---|---|
-| Norm Ai, CUBE, Corlytics, AscentAI | Interpretación de normas → obligaciones | **Upstream**: su salida es la entrada de SynKra. No compite |
-| Atlassian Rovo, GitHub Copilot, Cursor | Documento → ticket, ticket → PR | Cubren la mitad generativa. **Comoditizado** |
-| Harness (agentes de entrega) | Pipeline y despliegue con agentes | **Flanco más peligroso** (PVB riesgo #1) |
-| Regnology "Ticket-to-Code Writer" ([Google Cloud blog, 10-sep-2024](https://cloud.google.com/blog/products/ai-machine-learning/regnology-automates-ticket-to-code-with-genai-on-vertex-ai)) | Ticket → código | Precedente más cercano; no va de cambio regulatorio a plugin |
-| Kustomize, Helm, Argo CD, Flux, PF4J, OpenFeature | Empaquetado, overlays, GitOps, plugins, feature flags | **Gratis**. SynKra se monta encima, no compite |
+| Kustomize components + Argo CD (≥ v2.10) | Activar o desactivar componentes por overlay, reconciliado por GitOps ([docs](https://argo-cd.readthedocs.io/en/stable/user-guide/kustomize/)) | **Es el motor que SynKra usa.** Sin front, ya hace la selección de plugins en YAML |
+| Helm (subcharts con `condition` y `tags`) | Encender o apagar partes opcionales de una aplicación ([Helm](https://helm.sh/docs/chart_best_practices/dependencies)) | Sustituto directo del contrato de despliegue |
+| KubeVela + VelaUX (CNCF Incubating) | Entrega de aplicaciones con componentes y traits (OAM), con una interfaz web para "non-k8s-expert users" ([CNCF](https://www.cncf.io/blog/2023/02/27/kubevela-brings-software-delivery-control-plane-capabilities-to-cncf-incubator/)) | **El competidor más cercano.** Usado en producción por Alibaba, Bytedance y China Merchants Bank (misma fuente) |
+| Backstage (CNCF Incubating) | Portal con Software Templates para crear proyectos ([CNCF](https://cncf.io/blog/2022/03/15/backstage-project-joins-the-cncf-incubator)) | Cubre el "elijo y despliego" con formularios, no con un lienzo |
+| Kratix (Apache-2.0) | "An open-source framework for building platforms" ([GitHub](https://github.com/syntasso/kratix)) | Alternativa para equipos de plataforma que construyen su propia oferta |
+| PF4J (Apache-2.0) | Plugins dentro de un proceso Java ([GitHub](https://github.com/pf4j/pf4j)) | Pieza que SynKra puede usar, no competidor |
 
-Financiamiento: Norm Ai levantó una Serie C de USD 120 millones a una valuación de USD 1.200
-millones, liderada por Khosla Ventures, en julio de 2026
-([LawNext](https://www.lawnext.com/2026/07/norm-ai-hits-unicorn-status-with-120m-series-c-at-1-2-billion-valuation.html)).
-El total levantado varía según la fuente (más de USD 256-260 millones).
+### Capa comercial
 
-## 3. Adopción del ecosistema
+| Actor | Precio publicado | Relación |
+|---|---|---|
+| Port | Plan gratis hasta 5 usuarios; Basic desde USD 30 y Standard desde USD 48 por usuario al mes; Enterprise a medida ([Port, pricing](https://port.io/pricing)) | Portal con acciones de autoservicio. Su plan gratis fija el piso de precio |
+| Humanitec | No verificado en esta investigación **[VERIFICAR]** | Orquestador de plataforma |
 
-- Argo CD: cerca del 60% de los clústeres de Kubernetes, 97% de los encuestados lo usa en
-  producción, NPS 79
-  ([CNCF, "2025 Argo CD End User Survey", 24-jul-2025](https://cncf.io/announcements/2025/07/24/cncf-end-user-survey-finds-argo-cd-as-majority-adopted-gitops-solution-for-kubernetes)).
-- 66% de las organizaciones que alojan modelos de IA generativa usan Kubernetes para parte o
-  toda su inferencia ([CNCF Annual Cloud Native Survey, publicado el 15-ene-2026](https://www.linuxfoundation.org/hubfs/Research%20Reports/CNCF_Annual_Survey_Report_1.15.26.pdf)).
-- El dato del PVB "57% ya corre agentes de IA en producción" **no aparece** en ese reporte y no
-  se encontró otra fuente. **[VERIFICAR]**: no usarlo en la sustentación hasta confirmarlo.
+## 3. Dónde queda el espacio
+
+Ninguno de los actores verificados ofrece, como foco principal, **la combinación de tres
+cosas**:
+
+1. un **contrato de plugins** para una aplicación micro-kernel (no solo para servicios
+   sueltos),
+2. **validación de compatibilidad** entre el core y los plugins antes de desplegar, y
+3. un **lienzo visual** que produce un overlay versionado en Git, revisable como PR.
+
+Es un espacio estrecho. KubeVela cubre buena parte de los puntos 1 y 3 con otro modelo (OAM),
+y la diferencia puede no bastar a un comprador (ver `critica.md`, §1).
 
 ## 4. Pricing
 
-Hybrid Tiered por producto core conectado (Starter USD 600/mes, Business USD 2.000/mes,
-Enterprise a convenir). Todo **[INTERNO]**.
+Para el curso, SynKra es un proyecto académico sin modelo de cobro validado. Cualquier precio
+sería **[INTERNO]** y tendría que competir con un piso de USD 0 (Port Free, KubeVela, Backstage).
 
 ## 5. Vacíos de evidencia
 
-1. Lead time real de llevar un cambio regulatorio a N países (no hay dato público; medir con
-   entrevistas).
-2. Costo de cumplimiento en Colombia y Perú.
-3. Cuántas empresas del beachhead ya usan plugins o micro-kernel frente a ramas por país.
+1. Cuántos equipos despliegan un producto micro-kernel con variantes por país (no hay dato
+   público).
+2. Si un front visual acelera de verdad la configuración frente a editar YAML (no se encontró
+   ningún estudio): se mide en el piloto **[INTERNO]**.
+3. El precio de Humanitec y su encaje con este caso.

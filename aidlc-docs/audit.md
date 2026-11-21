@@ -392,3 +392,11 @@
 **Context**: Cambio solicitado sobre el documento consolidado de unidades y tareas, fuera de las etapas del flujo AI-DLC (que quedó cerrado en Code Generation Part 1).
 
 ---
+
+## Re-scope - Investigaciones de docs/ para el alcance sin IA (paso 1 del plan de módulos 2 y 3)
+**Timestamp**: 2026-11-21T14:57:09Z
+**User Input**: "este es el contexto, empecemos" / "listo, entonces vamos con el modulo 2 y 3" / Decisión: "Sin IA, desviación declarada" / "apruebalo"
+**AI Response**: Reescritos `Modulo 3/docs/overview.md`, `mercado.md`, `icp.md` y `critica.md` para el alcance nuevo: plataforma de despliegue micro-kernel sobre Kubernetes, con front de arrastrar y soltar y sin IA (desviación declarada). Fuentes consultadas el 21-nov-2026, con las marcas [INTERNO] y [VERIFICAR]. No se tocó el PVB ni el PRD: el Paso 0 y los segmentos esperan la aprobación del usuario.
+**Context**: Fuera de las etapas AI-DLC. Es el insumo del Prompt 1 del módulo 3.
+
+---
