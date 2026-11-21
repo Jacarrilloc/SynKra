@@ -109,7 +109,7 @@ X) Other (please describe after [Answer]: tag below)
 ## Question 6
 ¿Cuántas personas se definen?
 
-A) Las 4 del PRD §3 (operador, desarrollador de plugins, responsable de país, SRE o lector), con los nombres de los journeys (Andrés, Lucía) donde existan
+A) Las 4 del PRD §3 (operador, desarrollador de plugins, responsable de país, SRE o lector), con nombres propios
 
 B) Las 4 más un "sistema" (el core y el init container) como actor técnico
 
@@ -118,4 +118,4 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** El core no es un usuario; sus historias se escriben desde el operador o el
 responsable de país, que son quienes ven el efecto.
 
-[Answer]: 
+[Answer]: X. Las 4 personas del PRD §3, identificadas solo por su rol, sin nombres propios (Julian, 21-nov-2026: "saque esos nombres, solo dejalo general, no queremos nombres propios, sin nombres"). También se quitan los nombres de los journeys del PRD.

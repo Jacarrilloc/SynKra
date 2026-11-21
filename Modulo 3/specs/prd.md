@@ -233,9 +233,9 @@ nada incompatible llega al clúster."_
 
 ## 7. User journeys
 
-### 7.1 Happy path del usuario final: Lucía, responsable de país de Perú, despliega su país
+### 7.1 Happy path del usuario final: el responsable de país de Perú despliega su país
 
-1. Lucía entra al front de SynKra con su usuario.
+1. El responsable de país entra al front de SynKra con su usuario.
 2. En la vista general ve los países que ya corren. Perú todavía no está.
 3. Crea el despliegue `pe` y elige el core `synkra-core 2.1`. El front le muestra **solo** la
    carpeta de plugins de ese core.
@@ -248,9 +248,9 @@ nada incompatible llega al clúster."_
 9. En la vista general, Perú aparece con su core y sus dos plugins. El registro anota quién,
    cuándo y qué se desplegó.
 
-### 7.2 Happy path del operador: Andrés, operador de la plataforma, prepara SynKra
+### 7.2 Happy path del operador: el operador de la plataforma prepara SynKra
 
-1. Andrés instala SynKra en el clúster (`kind` en el demo) con un solo comando.
+1. El operador instala SynKra en el clúster (`kind` en el demo) con un solo comando.
 2. La instalación crea la cuenta de servicio `synkra:deployer`, con permisos solo en `synkra-*`,
    y configura el registro de imágenes permitido.
 3. Verifica el límite: `kubectl auth can-i create deployments -n default
@@ -262,12 +262,12 @@ nada incompatible llega al clúster."_
 6. Consulta el catálogo por la API y confirma que los tres plugins quedaron en la carpeta
    correcta y como compatibles.
 
-### 7.3 Edge case: Lucía abandona a mitad del flujo
+### 7.3 Edge case: el responsable de país abandona a mitad del flujo
 
-1. Lucía elige el core y un plugin, pero cierra el navegador antes de confirmar.
+1. El responsable de país elige el core y un plugin, pero cierra el navegador antes de confirmar.
 2. **No se despliega nada**: SynKra solo despliega con una confirmación explícita (P2).
 3. La selección a medias no queda en el registro de despliegues, porque no hubo despliegue.
-4. Cuando Lucía vuelve, la vista general muestra a Perú sin desplegar y ella empieza de nuevo.
+4. Cuando vuelve, la vista general muestra a Perú sin desplegar y empieza de nuevo.
    Guardar borradores de selección queda como Could (segmento 8).
 
 ### 7.4 Edge case: SynKra no puede resolver y escala a un humano
@@ -629,3 +629,4 @@ SynKra lee datos que un tercero controla: los **descriptores y los artefactos** 
 | Segmento 9 | Un init container descarga solo los plugins elegidos; backend en Java 21 | Segmento 9 |
 | Segmento 13 | SynKra mismo se instala con GitOps; dos etiquetas de versión (plugin y core compatible); SQLite | Segmentos 9 y 13 |
 | Módulo 5 (Requirements Analysis) | "Responsable de país" en todo el PRD y fuera la adopción del KPI de CU3; los manifiestos se construyen con Fabric8, sin Kustomize | Segmentos 2, 4, 5, 7 y 9 |
+| Módulo 5 (User Stories) | Sin nombres propios: los journeys hablan de roles (responsable de país, operador), no de personas | Segmento 7 |

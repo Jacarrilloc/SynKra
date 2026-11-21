@@ -616,3 +616,19 @@
 **Context**: INCEPTION - User Stories, Parte 1 (Planning), compuerta de respuestas.
 
 ---
+
+## User Stories - Pregunta sobre los nombres de las personas
+**Timestamp**: 2026-11-21T23:48:58Z
+**User Input**: "porque Andres y Lucia?"
+**AI Response**: Se explicó que los nombres venían de los journeys del PRD §7 (módulo 3) y se ofreció mantenerlos o quitarlos, recomendando quitarlos.
+**Context**: INCEPTION - User Stories, Parte 1, pregunta 6.
+
+---
+
+## User Stories - Request Changes: sin nombres propios
+**Timestamp**: 2026-11-21T23:49:37Z
+**User Input**: "saque esos nombres, solo dejalo general, no queremos nombres propios, sin nombres"
+**AI Response**: Pregunta 6 respondida con X: las 4 personas se identifican solo por su rol. Quitados los nombres de los journeys 7.1, 7.2 y 7.3 del PRD (anotado en su anexo) y de la opción A del plan. Quedan pendientes las preguntas 1 a 5.
+**Context**: INCEPTION - User Stories, Parte 1 (cambio pedido por el usuario).
+
+---
