@@ -512,3 +512,11 @@
 **Context**: Prompt 1, segmento 10.
 
 ---
+
+## PRD v2 - Segmento 10 aprobado sin métricas de negocio; segmento 11 en revisión
+**Timestamp**: 2026-11-21T23:15:37Z
+**User Input**: "retira las cosas de negocio, ya que es un ejerccio academico que no satisface problematicas reales, además , por ejemplo la metrica de ruido o la adopcion, por lo demás, aprobado"
+**AI Response**: Segmento 10 sin métricas de negocio: se quitaron la adopción, la métrica de ruido y la comparación con hacerlo a mano. Quedan la North Star, los KPIs técnicos y las métricas de la verificación, con la omisión de la métrica de ruido declarada frente al Prompt 1. Segmento 10 aprobado. Redactado el segmento 11: suite de combinaciones, criterios, revisión y red-teaming sobre descriptores y artefactos.
+**Context**: Prompt 1, segmento 11.
+
+---

@@ -9,7 +9,7 @@
 >
 > Reemplaza la versión 1.0 del 17-oct-2026, que especificaba un agente de IA regulatorio (queda
 > en el historial de Git). **Este PRD se escribe segmento por segmento y cada uno lo aprueba
-> Julian.** Estado de los segmentos: 1 a 9 aprobados; 10 en revisión; 11 a 13 pendientes.
+> Julian.** Estado de los segmentos: 1 a 10 aprobados; 11 en revisión; 12 y 13 pendientes.
 
 > [!IMPORTANT]
 > **Desviación declarada:** SynKra no usa IA (PVB §6). El segmento 11 evalúa la verificación,
@@ -558,28 +558,27 @@ La imagen del core viene del registro de imágenes permitido.
 
 ## 10. Métricas de éxito
 
-> No hay líneas base públicas para este dominio (`docs/mercado.md` §5). Toda meta es
-> **[INTERNO]** y las líneas base se miden en el piloto: el demo en `kind` con los plugins CO y PE.
+> SynKra es un **ejercicio académico**: no se miden métricas de negocio ni de mercado (adopción,
+> ruido, retención). Decisión de Julian del 21-nov-2026. Las métricas son técnicas y se miden
+> en el demo en `kind` con los plugins CO y PE. Toda meta es **[INTERNO]**.
+>
+> **Desviación frente al Prompt 1:** el curso pide al menos una métrica que detecte el fallo por
+> ruido. Se omite por esa misma decisión.
 
 ### North Star
 
 **% de despliegues por país hechos desde SynKra en los que ningún plugin incompatible llegó al
-clúster.**
+clúster.** _Meta: 100%._ Se mide con los despliegues "listos" y sin rechazos del core al
+arrancar, sobre el total de despliegues del registro (M4).
 
-- **Línea base:** no existe (hoy no se mide).
-- **Meta:** 100% **[INTERNO]**.
-- **Cómo se mide:** despliegues con estado "listo" y sin rechazos del core al arrancar, sobre el
-  total de despliegues del registro (M4).
+### KPIs técnicos
 
-### KPIs
-
-| Tipo | KPI | Línea base | Meta |
-|---|---|---|---|
-| **Activación** | Tiempo desde que se instala SynKra hasta el primer país desplegado | Se mide en el piloto | < 30 min en `kind` **[INTERNO]** |
-| **Activación** | Tiempo para desplegar un país nuevo (CU2), frente a hacerlo a mano con YAML | Se mide a mano en el piloto | -50% **[INTERNO]** |
-| **Retención (adopción)** | % de despliegues por país hechos desde SynKra frente a hacerlos a mano | 0% | > 70% al final del piloto **[INTERNO]** |
-| **Calidad** | % de despliegues que terminan "listos" al primer intento | Se mide en el piloto | > 90% **[INTERNO]** |
-| **Calidad** | Tiempo para volver al despliegue anterior (CU5) | Se mide en el piloto | < 5 min **[INTERNO]** |
+| KPI | Meta |
+|---|---|
+| Tiempo desde que se instala SynKra hasta el primer país desplegado | < 30 min en `kind` **[INTERNO]** |
+| Tiempo para desplegar un país nuevo (CU2), desde la confirmación hasta los pods listos | < 5 min **[INTERNO]** |
+| % de despliegues que terminan "listos" al primer intento | > 90% **[INTERNO]** |
+| Tiempo para volver al despliegue anterior (CU5) | < 5 min **[INTERNO]** |
 
 ### Métricas de la verificación (sustituyen a las "métricas específicas de la IA")
 
@@ -591,21 +590,62 @@ clúster.**
 | **Seguridad** | **Concordancia motor-core:** combinaciones que el motor aprueba y el core rechaza al arrancar, o al revés | 0 discrepancias |
 | **Seguridad** | Intentos de desplegar fuera de `synkra-*` que el RBAC deja pasar | 0 |
 
-### Métrica que detecta el fallo por ruido
-
-**Deriva entre el registro y el clúster:** % de países cuyo estado real en el clúster no coincide
-con el último despliegue registrado por SynKra.
-
-Detecta el escenario en que SynKra produce rechazos, fallos o avisos que el equipo deja de
-atender y termina **desplegando a mano por fuera de la herramienta**. Si la deriva sube, la vista
-general deja de ser confiable y la adopción cae aunque las demás métricas se vean bien.
-
-- **Meta:** 0% **[INTERNO]**. Por encima del 10%, se revisa la utilidad de los rechazos antes
-  de añadir funciones.
-- **Señal complementaria:** despliegues "fallidos" que nadie revierte ni atiende en 24 horas.
-
 ---
 
 ## 11. Plan de evaluación de la verificación
+
+> **Desviación declarada:** SynKra no usa IA (P8), así que este segmento evalúa la **verificación
+> determinista** del contrato y los límites del despliegue, no un modelo. Se mantiene la
+> estructura que pide el Prompt 1.
+
+### 11.1 Dataset inicial: suite de combinaciones
+
+Una suite de casos versionada junto al código, que se ejecuta en cada build del motor (M2) y del
+core (M7). Cada caso define el core, los plugins, sus descriptores y el resultado esperado.
+
+| Grupo | Casos | Resultado esperado |
+|---|---|---|
+| **Válidas** | Core contrato 2 + `kyc-co 1.x`; core contrato 2 + `kyc-pe 1.x`; core sin plugins | Aprobada; el core arranca |
+| **Versión incompatible** | Plugin que exige el contrato 3 sobre un core con el contrato 2 | Rechazada, con la versión que sí sirve |
+| **Plugin ausente** | El despliegue pide un plugin que no está en la carpeta del core | Rechazada por el motor; si llegara al pod, el core no arranca |
+| **Carpeta equivocada** | Plugin de la carpeta del core A pedido para el core B (P4) | Rechazada |
+| **Descriptor incompleto** | Falta el nombre, la versión o el contrato | Rechazada al subirlo (CU1) |
+| **Integridad** | El hash del artefacto no coincide con el registrado | Rechazada al subirlo y al descargarlo en el init container |
+| **Plugin no activado** | Plugin presente en el catálogo pero no elegido | No se descarga al pod, no carga clases ni expone rutas |
+
+### 11.2 Criterios de calidad
+
+| Criterio del Prompt 1 | Equivalente en SynKra |
+|---|---|
+| **Factualidad** | El veredicto del motor coincide con el resultado esperado de cada caso, y con lo que hace el core al arrancar (concordancia, segmento 10) |
+| **Adherencia a instrucciones** | El despliegue aplicado es exactamente la combinación confirmada: mismo core, plugins y versiones, y en el namespace correcto |
+| **Relevancia** | Cada rechazo explica el motivo y qué versión sí sirve |
+
+### 11.3 Cómo se revisan los resultados
+
+- La suite corre en cada build y **bloquea** el build si un caso falla.
+- Cada fallo real del demo (journey 7.4) se convierte en un caso nuevo de la suite.
+- Antes de la sustentación, Julian revisa a mano los resultados de la suite y un despliegue de
+  punta a punta en `kind`.
+
+### 11.4 Red-teaming: escenarios adversariales
+
+El Prompt 1 pide incluir la inyección indirecta de prompts cuando el sistema lee datos que un
+tercero puede influir. Como **no hay modelo, no hay prompts que inyectar**. El equivalente es que
+SynKra lee datos que un tercero controla: los **descriptores y los artefactos** que se suben.
+
+| Escenario | Qué intenta el atacante | Qué debe pasar |
+|---|---|---|
+| **Descriptor mentiroso** | Un plugin declara el contrato 2 pero llama a funciones del contrato 3 | El core lo detecta al cargarlo y no arranca; el caso entra a la suite |
+| **Path traversal** | Un artefacto con rutas como `../../` para escribir fuera de `/plugins` | Se rechaza al subirlo; el init container solo escribe en `/plugins` |
+| **Etiqueta suplantada** | Subir un plugin etiquetado `pais=pe` a la carpeta de otro core | Rechazado por P4; solo el rol publicador puede subir |
+| **Imagen no permitida** | Registrar un core con una imagen de un registro no autorizado | Rechazado (Should: registro permitido) |
+| **Escalar el despliegue** | Pedir un despliegue en `default` o en `kube-system` | El backend lo rechaza, y el RBAC lo impide aunque el backend fallara |
+| **Artefacto gigante** | Subir un archivo enorme para llenar el volumen | Límite de tamaño por artefacto; rechazo con un mensaje claro |
+| **Despliegue sin confirmación** | Llamar a la API sin el paso de confirmación | Rechazado (P2) |
+
+---
+
+## 12. Riesgos y mitigaciones
 
 _Pendiente._
