@@ -520,3 +520,11 @@
 **Context**: Prompt 1, segmento 11.
 
 ---
+
+## PRD v2 - Sin contenido de negocio; segmento 11 aprobado; segmento 12 en revisión
+**Timestamp**: 2026-11-21T23:19:29Z
+**User Input**: "elimina los contenidos de negocio, ya que esto está como un ejercicio academico, dadas limitaciones y alcance no es posible de momento aplicarlo al trabajo, lo demás apruebalo"
+**AI Response**: Quitado el contenido de negocio del PRD: el segmento 2 queda como problema técnico, sin el "por qué ahora" ni la tabla de alternativas; el 3 pasa a "Usuarios y roles del ejercicio"; el 4 pierde la diferenciación competitiva y la matriz de posicionamiento. Añadida una nota de ejercicio académico al inicio. Segmento 11 aprobado. Redactado el segmento 12 con 10 riesgos técnicos, de seguridad y del proyecto.
+**Context**: Prompt 1, segmento 12.
+
+---

@@ -9,9 +9,13 @@
 >
 > Reemplaza la versión 1.0 del 17-oct-2026, que especificaba un agente de IA regulatorio (queda
 > en el historial de Git). **Este PRD se escribe segmento por segmento y cada uno lo aprueba
-> Julian.** Estado de los segmentos: 1 a 10 aprobados; 11 en revisión; 12 y 13 pendientes.
+> Julian.** Estado de los segmentos: 1 a 11 aprobados; 12 en revisión; 13 pendiente.
 
 > [!IMPORTANT]
+> **Ejercicio académico.** Por sus limitaciones y su alcance, SynKra no se plantea para un uso
+> real en el trabajo, así que este PRD no tiene contenido de negocio: ni mercado, ni compradores,
+> ni competencia, ni métricas de adopción (decisión de Julian del 21-nov-2026).
+>
 > **Desviación declarada:** SynKra no usa IA (PVB §6). El segmento 11 evalúa la verificación,
 > no un modelo.
 
@@ -41,133 +45,57 @@ clúster. Y, a futuro, que esos despliegues se automaticen.
 
 ## 2. Contexto y problema
 
-### Dolores del mercado
+### El problema técnico
 
-| Dolor | Evidencia | Fuente |
+| Problema | Evidencia | Fuente |
 |---|---|---|
-| **Un mismo producto en varios países se mantiene como un núcleo común más diferencias por país** | Oracle FLEXCUBE separa en su instalación los objetos del *kernel* de los del *cluster* de cada país, y Temenos vende "Country Model Banks" | `docs/overview.md` §2 |
-| **Mantener cada país como rama o repo propio replica a mano cada cambio del core** | Thoughtworks pone Gitflow en "Hold" por los riesgos de las ramas de larga vida | `docs/overview.md` §3 |
-| **Operar el ecosistema de Kubernetes es complejo** | "Too complex to understand or run" es el reto n.º 1 al usar proyectos CNCF en producción (46%, y subió 13% interanual) | CNCF Annual Survey 2024, fig. 15 (`docs/mercado.md` §1) |
-| **El freno principal es cultural, no de herramientas** | El reto n.º 1 con contenedores son los cambios culturales con el equipo de desarrollo (46%) | CNCF Annual Survey 2024, fig. 8 |
-| **Nadie tiene una vista única de qué corre en cada país** | Hipótesis del ICP: la respuesta vive en la cabeza de una persona o en una hoja de cálculo | `docs/icp.md` **[INTERNO]**, por validar en entrevistas |
-| **Desplegar una variante a mano exige YAML y `kubectl` expertos** | Hipótesis del ICP | `docs/icp.md` **[INTERNO]** |
+| **Un mismo producto en varios países se compone de un núcleo común más las diferencias de cada país** | Oracle FLEXCUBE separa en su instalación los objetos del *kernel* de los del *cluster* de cada país | `docs/overview.md` §2 |
+| **Mantener cada país como rama o repo propio obliga a replicar a mano cada cambio del core** | Thoughtworks pone Gitflow en "Hold" por los riesgos de las ramas de larga vida | `docs/overview.md` §3 |
+| **El patrón micro-kernel resuelve lo común, pero exige un contrato entre el core y los plugins** | Richards describe el estilo como "a core system and plug-in modules" | `docs/overview.md` §3 |
+| **Desplegar una combinación de core y plugins incompatible solo se descubre cuando el pod falla** | Sin una verificación previa, el error aparece al arrancar | `docs/critica.md` §3 |
 
-### ¿Por qué ahora?
-
-- **La plataforma interna se volvió un rol estándar.** Gartner predice que "By 2026, 80% of
-  large software engineering organizations will establish platform engineering teams", frente al
-  45% de 2022 (`docs/overview.md` §5). Ojo: habla de organizaciones **grandes**, no del segmento
-  mediano de LatAm.
-- **Kubernetes ya es el sustrato común.** Argo CD corre en cerca del 60% de los clústeres
-  encuestados (CNCF, 24-jul-2025), lo que indica que desplegar en Kubernetes ya es práctica
-  general y no un nicho.
-- **Por qué ahora para este proyecto:** la Fase 4 del plan migra los plugins de Colombia y
-  Perú al modelo micro-kernel. Sin una herramienta que verifique y despliegue cada combinación,
-  esa migración se haría a mano.
-
-> [!WARNING]
-> **No hay un evento externo que haga urgente este producto en particular.** La urgencia es
-> del segmento (complejidad creciente, equipos de plataforma) y del proyecto (Fase 4). Decirlo
-> evita vender una urgencia que los documentos no sostienen.
-
-### Alternativas actuales y por qué no le alcanzan al ICP
-
-| Alternativa | Qué resuelve | Qué le falta para este caso |
-|---|---|---|
-| **A mano** (YAML + `kubectl`) | Todo, si hay un experto | Depende de una persona; nada impide desplegar una combinación incompatible |
-| **Helm** con subcharts opcionales (`condition`, `tags`) | Encender o apagar partes de una aplicación | Los plugins del micro-kernel no son subcharts: viven dentro del compilado. Helm no sabe qué versión del contrato implementa cada plugin |
-| **Kustomize components + Argo CD** (GitOps) | Activar componentes por overlay y reconciliarlos desde Git | Exige un flujo de Git que este caso no usa (se parte de artefactos ya compilados). Tampoco verifica el contrato |
-| **KubeVela + VelaUX** (CNCF Incubating) | Entrega de aplicaciones por componentes, con una interfaz web para quien no es experto | Modela servicios con OAM, no un core con plugins y un contrato de versiones. Es la alternativa más fuerte |
-| **Backstage / Port** | Portal con plantillas o acciones de autoservicio (Port es gratis hasta 5 usuarios) | Hay que construir encima toda la lógica del micro-kernel. Backstage tiene problemas conocidos de adopción (10% de adopción media según Spotify, vía TechTarget) |
+### Qué ya resuelven las herramientas existentes
 
 > [!IMPORTANT]
-> **Qué parte del problema ya está resuelta gratis.** Generar y aplicar los manifiestos de cada
-> país ya lo resuelven Kustomize y Helm. Una interfaz web de despliegue para no expertos ya
-> existe en parte (VelaUX). **SynKra compite con herramientas gratuitas.** Lo que ninguna
-> resuelve como foco es:
+> **Generar y aplicar los manifiestos de cada país ya lo resuelven Kustomize y Helm**, y SynKra
+> puede usar Kustomize por debajo. El aporte de este ejercicio es otro:
 >
 > 1. verificar, **antes de desplegar**, que los plugins elegidos son compatibles con el contrato
 >    del core, y
 > 2. mostrar en un solo lugar qué core y qué plugins corren en cada país.
->
-> Si ese aporte no le vale a un equipo, la respuesta honesta es que use Kustomize o KubeVela
-> (`docs/critica.md` §1 y §8).
 
 ---
 
-## 3. ICP detallado
+## 3. Usuarios y roles del ejercicio
 
-> Hipótesis explícita y falsable (`docs/icp.md`). Nada de este segmento sale de entrevistas
-> todavía: todo es **[INTERNO]** hasta validarlo.
+> Se reemplaza el "ICP detallado" del Prompt 1: al ser un ejercicio académico, no hay un cliente
+> ni compradores. Lo que sí importa son los **usuarios** que aparecen en los casos de uso.
 
-### Perfil y firmographics
+### Contexto del ejercicio
 
-| Dimensión | Valor |
-|---|---|
-| **Tamaño del equipo** | Plataforma o entrega de **3 a 15 ingenieros** |
-| **Sector** | Vendors de software financiero y fintechs (vertical inicial) |
-| **Geografía** | Producto desplegado en **2 o más países**; empieza por Colombia y Perú |
-| **Madurez en Kubernetes** | Ya corre Kubernetes en producción. **No se exige GitOps**: SynKra despliega directo |
-| **Arquitectura** | Producto **micro-kernel ya compilado**: un core más una carpeta de plugins, o la intención de migrar a ese modelo |
+Un producto micro-kernel ya compilado (un core en Java 21 con su carpeta de plugins), desplegado
+en dos países de ejemplo, **Colombia y Perú**, sobre un clúster local de `kind`.
 
-**Señales de calificación:**
+### Usuarios
 
-1. Hoy cada país es una rama, un repo o un fork, o se despliega a mano con YAML distinto.
-2. "Qué tiene activado el país X" se responde preguntándole a una persona.
-3. Hay gente de producto o de soporte que necesita desplegar o revisar una variante sin escribir
-   YAML.
-4. El equipo quiere, a futuro, automatizar esos despliegues.
+| Usuario | Qué hace en SynKra | Rol (segmento 9) |
+|---|---|---|
+| **Operador de la plataforma** | Instala SynKra, registra los cores y configura el registro de imágenes permitido | Operador |
+| **Desarrollador de plugins** | Sube plugins a la carpeta de un core y los etiqueta | Publicador |
+| **Responsable de país** | Despliega y cambia la combinación de core y plugins de su país | Desplegador |
+| **SRE o revisor** | Consulta qué corre en cada país y vuelve a un despliegue anterior | Lector (más reversión con confirmación) |
 
-**Fuera del ICP:** productos de un solo país; equipos sin Kubernetes; equipos que **exigen** que
-todo despliegue pase por un PR y GitOps (SynKra no usa Git); y equipos contentos con Helm,
-Kustomize, KubeVela o Backstage.
-
-> [!WARNING]
-> **Cambio frente a `docs/icp.md`.** La señal "tiene algo de GitOps" se quitó: desde el ajuste
-> sin Git del 21-nov, un equipo que exige GitOps queda **fuera** del ICP, no dentro.
-
-### Buyer personas y veto de confianza
-
-| Persona | Rol | Qué le importa | Poder |
-|---|---|---|---|
-| **Head of Platform / SRE Lead** | Dueño del clúster | "¿Qué permisos de escritura tiene esto en mi clúster?" | **Decisor y veto** |
-| **Arquitecto de software** | Dueño del core y del contrato de plugins | Que un plugin no pueda romper el core | **Veto técnico** |
-| **Product Owner de país** | Decide qué funciones lleva su país | Desplegar y ver su variante sin depender de un ingeniero | Usuario |
-| **Desarrollador de plugins** | Construye y empaqueta un plugin | Un contrato claro y un error legible cuando no cumple | Usuario |
-
-El veto lo tiene el **Head of Platform**: si la cuenta de servicio de SynKra puede escribir fuera
-de sus namespaces, la conversación se acaba.
-
-### Pains (de `docs/icp.md`)
-
-- Un cambio del core hay que replicarlo a mano en cada país.
-- Nadie tiene una vista única de qué plugin y qué versión corre en cada país.
-- Desplegar una variante nueva toma días de YAML y revisiones.
-
-### Triggers de compra
-
-- Se abre un país nuevo y hay que montar su variante.
-- Un país se quedó con una versión vieja del core o con un plugin incompatible.
-- Rota la persona que sabía cómo estaba armado cada país.
-
-### Objeciones probables y respuesta
-
-| Objeción | Respuesta |
-|---|---|
-| "Eso ya lo hago con Kustomize o con Helm" | Cierto, y SynKra puede usar Kustomize por debajo. Añade la verificación del contrato antes de desplegar y la vista por país. Si eso no le vale al equipo, no es ICP |
-| "¿Por qué no KubeVela?" | KubeVela modela servicios con OAM; SynKra modela un core y sus plugins con un contrato de versiones. La diferencia está por validar en entrevistas **[VERIFICAR]** |
-| "Yo despliego con GitOps y reviso PRs" | SynKra no pasa por Git. Para un equipo que exige PRs, hoy no es la herramienta, y se dice así |
-| "Es otra pieza con permisos de escritura en mi clúster" | Permisos limitados a `synkra-*`, solo imágenes de un registro permitido y registro de cada despliegue. Se verifica con `kubectl auth can-i` (`docs/critica.md` §5) |
+La pregunta clave del operador es **qué permisos de escritura tiene SynKra en el clúster**. La
+respuesta tiene que ser verificable: solo en `synkra-*`, comprobable con `kubectl auth can-i`.
 
 ---
 
-## 4. Propuesta de valor única y diferenciadores
+## 4. Propuesta de valor y aporte del ejercicio
 
-### Qué resuelve, para quién y cómo
+### Qué resuelve y cómo
 
 - **Qué:** desplegar, sin errores de compatibilidad, la variante por país de un producto
   micro-kernel ya compilado, y ver en un solo lugar qué corre en cada país.
-- **Para quién:** el ICP del segmento 3. Lo usa el PO de país y lo aprueba el Head of Platform.
 - **Cómo:**
   1. El equipo **agrega los compilados a SynKra**: la imagen del core y los artefactos de cada
      plugin. SynKra los registra en su catálogo, con su versión y el contrato que declara cada
@@ -193,54 +121,15 @@ de sus namespaces, la conversación se acaba.
 **Propuesta de valor en una línea:** _"Eliges el core y los plugins de tu país en una pantalla, y
 nada incompatible llega al clúster."_
 
-### Diferenciación frente a los competidores, incluidos los gratuitos
+### Relación con las herramientas existentes
 
-| Frente a... | Ellos tienen | SynKra añade | Dónde pierde SynKra |
-|---|---|---|---|
-| Hacerlo a mano | Control total | Verificación del contrato y una vista por país | Flexibilidad: solo despliega lo que cumple el contrato |
-| Helm / Kustomize (gratis) | Generar manifiestos por variante | Sabe qué versión del contrato implementa cada plugin | Madurez y ecosistema; de hecho, SynKra puede usar Kustomize por debajo |
-| Argo CD (gratis) | GitOps: revisión e historial en Git | Despliega artefactos compilados sin un flujo de Git | **Revisión e historial:** SynKra tiene que construir su propio registro |
-| KubeVela + VelaUX (gratis, CNCF) | Componentes, interfaz web para no expertos y adopción en producción | Un modelo de core + plugins con contrato versionado | Casi todo lo demás: comunidad, funciones, madurez |
-| Backstage / Port | Portal y autoservicio (Port gratis hasta 5 usuarios) | La lógica del micro-kernel ya hecha | Catálogo, plugins y ecosistema del portal |
+| Herramienta | Relación con SynKra |
+|---|---|
+| Kustomize | SynKra la usa por debajo para generar los manifiestos de cada país |
+| Helm, Argo CD, KubeVela | Resuelven despliegues por componentes o con GitOps. SynKra no los reemplaza; se diferencia en que verifica el contrato core-plugin y no usa Git |
 
-### Qué brecha real llena
-
-Ninguna de las alternativas verificadas tiene como foco **verificar el contrato entre un core y
-sus plugins antes de desplegar**. Es una brecha **estrecha**: la crítica la considera defendible
-como proyecto académico y como capa delgada, no como producto comercial (`docs/critica.md` §8).
-
-### Matriz de posicionamiento
-
-Ubicación de cada actor según juicio propio **[INTERNO]**, a partir de `docs/mercado.md`.
-
-```mermaid
-quadrantChart
-    title Posicionamiento de SynKra frente a las alternativas
-    x-axis No verifica el contrato --> Verifica el contrato core-plugin
-    y-axis Pensado para expertos --> Usable por no expertos
-    quadrant-1 Objetivo de SynKra
-    quadrant-2 Portales y UIs genericas
-    quadrant-3 Herramientas de bajo nivel
-    quadrant-4 Verificacion sin interfaz
-    Kubectl a mano: [0.10, 0.10]
-    Helm: [0.25, 0.25]
-    Kustomize y Argo CD: [0.30, 0.35]
-    Backstage: [0.20, 0.60]
-    Port: [0.20, 0.75]
-    KubeVela: [0.35, 0.70]
-    SynKra: [0.85, 0.70]
-```
-
-_Texto alternativo:_ en el eje horizontal, cuánto verifica cada herramienta el contrato entre
-el core y los plugins; en el vertical, qué tan usable es para quien no es experto. SynKra queda
-arriba a la derecha (verifica y es usable). KubeVela, Port y Backstage están arriba a la
-izquierda (usables, pero sin verificación del contrato). Helm, Kustomize con Argo CD y `kubectl`
-quedan abajo a la izquierda.
-
-> [!WARNING]
-> **Trade-off de este posicionamiento.** El eje horizontal lo elegí yo y favorece a SynKra por
-> construcción. Con otros ejes (madurez, comunidad, integración con GitOps), KubeVela y Argo CD
-> quedan por delante. La matriz muestra **dónde** apunta SynKra, no que gane.
+> Se omiten la comparación competitiva y la matriz de posicionamiento del Prompt 1, por ser
+> contenido de negocio (decisión del 21-nov-2026).
 
 ---
 
@@ -647,5 +536,29 @@ SynKra lee datos que un tercero controla: los **descriptores y los artefactos** 
 ---
 
 ## 12. Riesgos y mitigaciones
+
+> Riesgos **técnicos, de seguridad y del proyecto académico**. Sin riesgos de mercado, por la
+> decisión del 21-nov-2026. La probabilidad y el impacto son juicio propio **[INTERNO]**.
+
+| # | Riesgo | Tipo | Prob. | Impacto | Mitigación |
+|---|---|---|---|---|---|
+| R1 | **El motor y el core no coinciden**: el motor aprueba una combinación que el core rechaza al arrancar, o al revés | Técnico | Media | Alto | Una sola librería de verificación (M2) compartida por los dos; métrica de concordancia; cada discrepancia se vuelve un caso de la suite |
+| R2 | **Un plugin pasa la verificación y aun así rompe el core** (error propio, dependencia en conflicto). Es el equivalente a "un output equivocado que alguien aprueba por confianza" | Técnico | Media | Alto | El core no arranca si un plugin falla al iniciar; un cargador de clases por plugin; el despliegue se marca fallido y se ofrece volver al anterior (journey 7.4) |
+| R3 | **SynKra tiene permisos de escritura en el clúster** y es un punto único de falla | Seguridad | Media | Alto | Cuenta de servicio limitada a `synkra-*` (P2), autenticación, registro de imágenes permitido; verificación con `kubectl auth can-i` |
+| R4 | **Sin Git, nadie revisa el despliegue y se pierde el historial** | Seguridad | Alta | Medio | Confirmación explícita (P2), registro de cada despliegue y reversión (P7) como Must |
+| R5 | **Artefactos maliciosos o corruptos** (descriptor mentiroso, path traversal, hash alterado) | Seguridad | Baja | Alto | Red-teaming del segmento 11; hash verificado al subir y al descargar; límite de tamaño |
+| R6 | **El init container no puede descargar los plugins** porque el catálogo no responde | Técnico | Media | Medio | Reintentos acotados en el init container; el pod no arranca a medias; mensaje claro en el detalle del despliegue |
+| R7 | **El pod de un país termina con código de otro país** por un error en la selección | Técnico | Baja | Medio | El init container descarga solo los plugins elegidos (§9.3); prueba de que un plugin no elegido no llega al pod |
+| R8 | **Dos stacks (Java y .NET) para un equipo pequeño** | Proyecto | Media | Medio | El front en Blazor solo consume la API y no tiene lógica (P5); si falta tiempo, la demo se hace por la API |
+| R9 | **El alcance no cabe antes de la sustentación** (semana siguiente al 21-nov-2026) | Proyecto | Alta | Alto | MoSCoW estricto (segmento 8): solo los Must para la demo; la CLI y lo demás quedan en Could |
+| R10 | **Ya existen herramientas abiertas que hacen casi lo mismo** (Kustomize, Helm, KubeVela) | Proyecto | Alta | Bajo | En un ejercicio académico no es un riesgo de mercado: se declara de frente (segmento 2) y el aporte se centra en la verificación del contrato |
+
+> [!NOTE]
+> El Prompt 1 exige incluir el riesgo de comoditización por proyectos open source (R10) y el de
+> un output equivocado que alguien aprueba por confianza (R2, adaptado: no hay IA). Los dos están.
+
+---
+
+## 13. Plan de entrega alineado al curso
 
 _Pendiente._
