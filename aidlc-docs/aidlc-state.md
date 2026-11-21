@@ -3,7 +3,7 @@
 ## Project Information
 - **Project Type**: Greenfield
 - **Start Date**: 2026-11-21 (reinicio por cambio de alcance)
-- **Current Stage**: INCEPTION - User Stories, Parte 2 (esperando aprobación de `stories.md` y `personas.md`)
+- **Current Stage**: INCEPTION - Workflow Planning (esperando aprobación de `inception/plans/execution-plan.md`)
 - **Módulo 5 iniciado**: 2026-11-21T23:35:26Z. Se detiene al terminar Code Generation Parte 1 de cada unidad.
 - **Alcance anterior**: archivado en `archivo/alcance-2026-10/` (agente de IA regulatorio, 5 unidades, 91 tareas).
 
@@ -30,10 +30,15 @@
 - [x] Workspace Detection (greenfield)
 - [x] Reverse Engineering: omitida (greenfield)
 - [x] Requirements Analysis (aprobada 2026-11-21T23:47:13Z)
-- [ ] User Stories (en curso)
-- [ ] Workflow Planning
-- [ ] Application Design
-- [ ] Units Generation
+- [x] User Stories (aprobada 2026-11-21T23:53:33Z)
+- [ ] Workflow Planning (en curso)
+- [ ] Application Design - EXECUTE
+- [ ] Units Generation - EXECUTE
 
 ### 🟢 CONSTRUCTION PHASE
-- [ ] Code Generation Parte 1 (planes de tareas) de cada unidad. La Parte 2 NO se ejecuta en el módulo 5
+- [ ] Functional Design - EXECUTE solo en unidades con lógica
+- [ ] NFR Requirements - SKIP
+- [ ] NFR Design - SKIP
+- [ ] Infrastructure Design - EXECUTE solo en la unidad de instalación y límite
+- [ ] Code Generation Parte 1 (planes de tareas) de cada unidad - EXECUTE. La Parte 2 NO se ejecuta en el módulo 5
+- [ ] Build and Test - módulos 6 a 8

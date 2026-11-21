@@ -648,3 +648,20 @@
 **Context**: INCEPTION - User Stories, Parte 2, esperando aprobación.
 
 ---
+
+## User Stories - Aprobado
+**Timestamp**: 2026-11-21T23:53:33Z
+**User Input**: "aprobado"
+**AI Response**: User Stories marcada como completada (34 historias, 4 personas, la regla de reversión del §9.2 aceptada). Siguiente etapa: Workflow Planning.
+**Context**: INCEPTION - User Stories aprobada.
+
+---
+
+## Workflow Planning - Plan generado; aprobación solicitada
+**Timestamp**: 2026-11-22T00:02:00Z
+**User Input**: (n/a)
+**AI Prompt**: "¿Apruebas el plan de ejecución, o quieres añadir o quitar etapas?"
+**AI Response**: Creado `aidlc-docs/inception/plans/execution-plan.md`. EXECUTE: Application Design, Units Generation, Functional Design (solo unidades con lógica), Infrastructure Design (solo la unidad de instalación y límite) y Code Generation Parte 1 en todas las unidades. SKIP: NFR Requirements y NFR Design (NFR ya enunciados y stack decidido). Code Generation Parte 2 y Build and Test no se ejecutan en el módulo 5. Riesgos R1, R3, R8 y R9 fijan el orden de unidades.
+**Context**: INCEPTION - Workflow Planning, esperando aprobación.
+
+---
