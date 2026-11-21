@@ -536,3 +536,11 @@
 **Context**: Prompt 1, segmento 13.
 
 ---
+
+## PRD v2 - Segmento 13: GitOps para SynKra mismo; pregunta sobre PostgreSQL
+**Timestamp**: 2026-11-21T23:24:50Z
+**User Input**: "esta bien que el proyecto synkra esté con gitops, la duda es para que postgresql?"
+**AI Response**: Se acepta que SynKra mismo se instale con GitOps (módulo 8). Se explicó para qué sirve la base de datos (catálogo, registro de despliegues, usuarios) y se ofrecieron tres alternativas: SQLite o H2 en el volumen (recomendada para el demo), estado en objetos de Kubernetes, o PostgreSQL. Se espera la elección antes de ajustar los segmentos 9 y 13 y consolidar.
+**Context**: Prompt 1, segmento 13.
+
+---
