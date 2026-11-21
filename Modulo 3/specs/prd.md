@@ -9,7 +9,7 @@
 >
 > Reemplaza la versión 1.0 del 17-oct-2026, que especificaba un agente de IA regulatorio (queda
 > en el historial de Git). **Este PRD se escribe segmento por segmento y cada uno lo aprueba
-> Julian.** Estado de los segmentos: 1 a 11 aprobados; 12 en revisión; 13 pendiente.
+> Julian.** Estado de los segmentos: 1 a 12 aprobados; 13 en revisión.
 
 > [!IMPORTANT]
 > **Ejercicio académico.** Por sus limitaciones y su alcance, SynKra no se plantea para un uso
@@ -561,4 +561,43 @@ SynKra lee datos que un tercero controla: los **descriptores y los artefactos** 
 
 ## 13. Plan de entrega alineado al curso
 
-_Pendiente._
+> Las fases del proyecto (0 especificación, 1 core y contrato, 2 motor de despliegue, 3 front y
+> API, 4 plugins CO y PE) se reparten sobre los módulos del curso. La sustentación es la semana
+> siguiente al 21-nov-2026 **[VERIFICAR fecha exacta]**, así que la columna "Para la demo" marca
+> lo indispensable.
+
+| Módulo del curso | Fase | Qué se construye | Qué se valida | Para la demo |
+|---|---|---|---|---|
+| **Módulos 4 y 5** (Kubernetes, CKA) | 1 y 4 | Core en Java 21 con el contrato versionado y la carga de `/plugins`; librería de verificación (M2); plugins `kyc-co` y `kyc-pe`; clúster `kind` | El core arranca con los plugins válidos y **no arranca** con uno incompatible; la suite del segmento 11 pasa | Sí |
+| **Módulo 6** (CKAD) | 2 y 3 | Backend (M1, M3, M4, M5) y front en Blazor (M6) como Deployments; PostgreSQL y el volumen de artefactos; el init container que descarga los plugins elegidos; ConfigMap con los plugins activos; probes y límites de recursos | Los 5 casos de uso de punta a punta, primero con `curl` (P5) y después desde el front | Sí |
+| **Módulo 7** (CKS) | 2 | Cuenta de servicio `synkra:deployer` con RBAC limitado a `synkra-*`; Pod Security `restricted`; NetworkPolicy *deny-by-default*; imágenes no root escaneadas con Trivy; registro de imágenes permitido | `kubectl auth can-i create deployments -n default --as=system:serviceaccount:synkra:deployer` responde `no`; el red-teaming del segmento 11 | El RBAC sí; lo demás es Should |
+| **Módulo 8** (producción) | 2 y 3 | La instalación de **SynKra mismo** con GitOps y CI (ver la nota abajo); registro de despliegues y reversión | La instalación en un comando; el registro coincide con el clúster; la reversión en menos de 5 minutos | Registro y reversión sí; GitOps de SynKra es Should |
+
+> [!IMPORTANT]
+> **Tensión con el módulo 8.** El módulo 8 trata de GitOps, y SynKra **no usa Git** para
+> desplegar los productos. Para no contradecir esa decisión, se propone separar las dos cosas:
+> **los productos (cores y plugins) los despliega SynKra, sin Git**, mientras que **SynKra mismo
+> (su backend, su front y su base de datos) se instala con GitOps y CI**, como cualquier otra
+> aplicación del curso. Si se prefiere, el módulo 8 se puede cubrir solo con CI y quedar
+> declarado como desviación.
+
+### Sesión 16: qué se demuestra en la sustentación
+
+1. **Instalación:** SynKra se instala en `kind` y se comprueba el límite de la cuenta de servicio
+   con `kubectl auth can-i`.
+2. **Agregar compilados (CU1):** se sube un core, que estrena su carpeta de plugins, y los plugins
+   `kyc-co` y `kyc-pe` con sus etiquetas.
+3. **Desplegar dos países (CU2):** Colombia y Perú, cada uno con su core y solo sus plugins,
+   desde el front.
+4. **Rechazar una combinación incompatible (CU4):** un plugin que exige el contrato 3 sobre un
+   core con el contrato 2; el front explica el motivo.
+5. **Vista general y reversión (CU5):** qué corre en cada país, un despliegue fallido y la vuelta
+   al anterior.
+6. **Backend primero (P5):** el mismo despliegue hecho por la API con `curl`, sin el front.
+7. **Evidencia:** los resultados de la suite del segmento 11 y la North Star del segmento 10.
+
+---
+
+## Consolidación
+
+_Pendiente: se consolida cuando el segmento 13 esté aprobado._
