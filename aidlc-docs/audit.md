@@ -448,3 +448,11 @@
 **Context**: Prompt 1, segmento 2.
 
 ---
+
+## PRD v2 - Segmento 2 aprobado; segmento 3 en revisión
+**Timestamp**: 2026-11-21T22:48:55Z
+**User Input**: "aprobado, sigamos"
+**AI Response**: Segmento 2 marcado como aprobado. Redactado el segmento 3 (ICP detallado). Se quitó la señal "tiene GitOps" del ICP, porque contradice el ajuste sin Git; quedó corregido también en `docs/icp.md`.
+**Context**: Prompt 1, segmento 3.
+
+---

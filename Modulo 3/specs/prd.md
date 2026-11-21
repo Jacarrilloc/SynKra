@@ -9,7 +9,7 @@
 >
 > Reemplaza la versión 1.0 del 17-oct-2026, que especificaba un agente de IA regulatorio (queda
 > en el historial de Git). **Este PRD se escribe segmento por segmento y cada uno lo aprueba
-> Julian.** Estado de los segmentos: 1 aprobado; 2 en revisión; 3 a 13 pendientes.
+> Julian.** Estado de los segmentos: 1 y 2 aprobados; 3 en revisión; 4 a 13 pendientes.
 
 > [!IMPORTANT]
 > **Desviación declarada:** SynKra no usa IA (PVB §6). El segmento 11 evalúa la verificación,
@@ -96,5 +96,71 @@ clúster. Y, a futuro, que esos despliegues se automaticen.
 ---
 
 ## 3. ICP detallado
+
+> Hipótesis explícita y falsable (`docs/icp.md`). Nada de este segmento sale de entrevistas
+> todavía: todo es **[INTERNO]** hasta validarlo.
+
+### Perfil y firmographics
+
+| Dimensión | Valor |
+|---|---|
+| **Tamaño del equipo** | Plataforma o entrega de **3 a 15 ingenieros** |
+| **Sector** | Vendors de software financiero y fintechs (vertical inicial) |
+| **Geografía** | Producto desplegado en **2 o más países**; empieza por Colombia y Perú |
+| **Madurez en Kubernetes** | Ya corre Kubernetes en producción. **No se exige GitOps**: SynKra despliega directo |
+| **Arquitectura** | Producto **micro-kernel ya compilado**: un core más una carpeta de plugins, o la intención de migrar a ese modelo |
+
+**Señales de calificación:**
+
+1. Hoy cada país es una rama, un repo o un fork, o se despliega a mano con YAML distinto.
+2. "Qué tiene activado el país X" se responde preguntándole a una persona.
+3. Hay gente de producto o de soporte que necesita desplegar o revisar una variante sin escribir
+   YAML.
+4. El equipo quiere, a futuro, automatizar esos despliegues.
+
+**Fuera del ICP:** productos de un solo país; equipos sin Kubernetes; equipos que **exigen** que
+todo despliegue pase por un PR y GitOps (SynKra no usa Git); y equipos contentos con Helm,
+Kustomize, KubeVela o Backstage.
+
+> [!WARNING]
+> **Cambio frente a `docs/icp.md`.** La señal "tiene algo de GitOps" se quitó: desde el ajuste
+> sin Git del 21-nov, un equipo que exige GitOps queda **fuera** del ICP, no dentro.
+
+### Buyer personas y veto de confianza
+
+| Persona | Rol | Qué le importa | Poder |
+|---|---|---|---|
+| **Head of Platform / SRE Lead** | Dueño del clúster | "¿Qué permisos de escritura tiene esto en mi clúster?" | **Decisor y veto** |
+| **Arquitecto de software** | Dueño del core y del contrato de plugins | Que un plugin no pueda romper el core | **Veto técnico** |
+| **Product Owner de país** | Decide qué funciones lleva su país | Desplegar y ver su variante sin depender de un ingeniero | Usuario |
+| **Desarrollador de plugins** | Construye y empaqueta un plugin | Un contrato claro y un error legible cuando no cumple | Usuario |
+
+El veto lo tiene el **Head of Platform**: si la cuenta de servicio de SynKra puede escribir fuera
+de sus namespaces, la conversación se acaba.
+
+### Pains (de `docs/icp.md`)
+
+- Un cambio del core hay que replicarlo a mano en cada país.
+- Nadie tiene una vista única de qué plugin y qué versión corre en cada país.
+- Desplegar una variante nueva toma días de YAML y revisiones.
+
+### Triggers de compra
+
+- Se abre un país nuevo y hay que montar su variante.
+- Un país se quedó con una versión vieja del core o con un plugin incompatible.
+- Rota la persona que sabía cómo estaba armado cada país.
+
+### Objeciones probables y respuesta
+
+| Objeción | Respuesta |
+|---|---|
+| "Eso ya lo hago con Kustomize o con Helm" | Cierto, y SynKra puede usar Kustomize por debajo. Añade la verificación del contrato antes de desplegar y la vista por país. Si eso no le vale al equipo, no es ICP |
+| "¿Por qué no KubeVela?" | KubeVela modela servicios con OAM; SynKra modela un core y sus plugins con un contrato de versiones. La diferencia está por validar en entrevistas **[VERIFICAR]** |
+| "Yo despliego con GitOps y reviso PRs" | SynKra no pasa por Git. Para un equipo que exige PRs, hoy no es la herramienta, y se dice así |
+| "Es otra pieza con permisos de escritura en mi clúster" | Permisos limitados a `synkra-*`, solo imágenes de un registro permitido y registro de cada despliegue. Se verifica con `kubectl auth can-i` (`docs/critica.md` §5) |
+
+---
+
+## 4. Propuesta de valor única y diferenciadores
 
 _Pendiente._

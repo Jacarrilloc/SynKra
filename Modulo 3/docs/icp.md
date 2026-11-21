@@ -12,7 +12,7 @@ vendors de software financiero y fintechs con presencia en Colombia y Perú.
 
 ### Señales de calificación
 
-1. Tienen Kubernetes en producción y algo de GitOps (Argo CD o Flux), aunque sea a medias.
+1. Tienen Kubernetes en producción. No hace falta GitOps: SynKra despliega directo (ajuste del 21-nov-2026).
 2. Hoy cada país es una rama, un repo o un fork con su propio pipeline.
 3. Cuando alguien pregunta "qué tiene activado el país X", la respuesta está en la cabeza de
    una persona o en una hoja de cálculo.
