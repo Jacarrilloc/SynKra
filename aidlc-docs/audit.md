@@ -416,3 +416,11 @@
 **Context**: Paso 2 del plan de módulos 2 y 3. El PRD no se tocó.
 
 ---
+
+## Re-scope - Paso 0 del PRD: análisis de conflictos (paso 3)
+**Timestamp**: 2026-11-21T15:13:58Z
+**User Input**: "listo, continuemos con el proyecto"
+**AI Response**: Se da el PVB por aprobado. Creado `Modulo 3/specs/paso-0-conflictos.md` con 10 conflictos (tabla resumen más preguntas de opción múltiple con [Answer]:) y una recomendación para cada uno. Se espera la decisión del usuario antes del segmento 1.
+**Context**: Paso 3 del plan de módulos 2 y 3. Prompt 1, Paso 0.
+
+---
