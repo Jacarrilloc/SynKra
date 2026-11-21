@@ -456,3 +456,11 @@
 **Context**: Prompt 1, segmento 3.
 
 ---
+
+## PRD v2 - Segmento 3 aprobado; segmento 4 en revisión
+**Timestamp**: 2026-11-21T22:51:21Z
+**User Input**: "Aprobado, sigamos"
+**AI Response**: Segmento 3 marcado como aprobado. Redactado el segmento 4 (propuesta de valor, diferenciación frente a las alternativas gratuitas, brecha y matriz de posicionamiento en Mermaid con texto alternativo).
+**Context**: Prompt 1, segmento 4.
+
+---

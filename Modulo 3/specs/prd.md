@@ -9,7 +9,7 @@
 >
 > Reemplaza la versión 1.0 del 17-oct-2026, que especificaba un agente de IA regulatorio (queda
 > en el historial de Git). **Este PRD se escribe segmento por segmento y cada uno lo aprueba
-> Julian.** Estado de los segmentos: 1 y 2 aprobados; 3 en revisión; 4 a 13 pendientes.
+> Julian.** Estado de los segmentos: 1 a 3 aprobados; 4 en revisión; 5 a 13 pendientes.
 
 > [!IMPORTANT]
 > **Desviación declarada:** SynKra no usa IA (PVB §6). El segmento 11 evalúa la verificación,
@@ -162,5 +162,74 @@ de sus namespaces, la conversación se acaba.
 ---
 
 ## 4. Propuesta de valor única y diferenciadores
+
+### Qué resuelve, para quién y cómo
+
+- **Qué:** desplegar, sin errores de compatibilidad, la variante por país de un producto
+  micro-kernel ya compilado, y ver en un solo lugar qué corre en cada país.
+- **Para quién:** el ICP del segmento 3. Lo usa el PO de país y lo aprueba el Head of Platform.
+- **Cómo:**
+  1. SynKra lee la carpeta de plugins disponibles del core y el contrato que declara cada uno.
+  2. Desde el front de acceso (Blazor), el usuario elige el core y los plugins de su país.
+  3. El motor verifica la combinación **antes** de desplegar y explica por qué una no sirve.
+  4. Si pasa, la despliega directo en el namespace del país; el core la vuelve a verificar al
+     arrancar.
+  5. Cada despliegue queda registrado y se puede volver al anterior.
+
+**Propuesta de valor en una línea:** _"Eliges el core y los plugins de tu país en una pantalla, y
+nada incompatible llega al clúster."_
+
+### Diferenciación frente a los competidores, incluidos los gratuitos
+
+| Frente a... | Ellos tienen | SynKra añade | Dónde pierde SynKra |
+|---|---|---|---|
+| Hacerlo a mano | Control total | Verificación del contrato y una vista por país | Flexibilidad: solo despliega lo que cumple el contrato |
+| Helm / Kustomize (gratis) | Generar manifiestos por variante | Sabe qué versión del contrato implementa cada plugin | Madurez y ecosistema; de hecho, SynKra puede usar Kustomize por debajo |
+| Argo CD (gratis) | GitOps: revisión e historial en Git | Despliega artefactos compilados sin un flujo de Git | **Revisión e historial:** SynKra tiene que construir su propio registro |
+| KubeVela + VelaUX (gratis, CNCF) | Componentes, interfaz web para no expertos y adopción en producción | Un modelo de core + plugins con contrato versionado | Casi todo lo demás: comunidad, funciones, madurez |
+| Backstage / Port | Portal y autoservicio (Port gratis hasta 5 usuarios) | La lógica del micro-kernel ya hecha | Catálogo, plugins y ecosistema del portal |
+
+### Qué brecha real llena
+
+Ninguna de las alternativas verificadas tiene como foco **verificar el contrato entre un core y
+sus plugins antes de desplegar**. Es una brecha **estrecha**: la crítica la considera defendible
+como proyecto académico y como capa delgada, no como producto comercial (`docs/critica.md` §8).
+
+### Matriz de posicionamiento
+
+Ubicación de cada actor según juicio propio **[INTERNO]**, a partir de `docs/mercado.md`.
+
+```mermaid
+quadrantChart
+    title Posicionamiento de SynKra frente a las alternativas
+    x-axis No verifica el contrato --> Verifica el contrato core-plugin
+    y-axis Pensado para expertos --> Usable por no expertos
+    quadrant-1 Objetivo de SynKra
+    quadrant-2 Portales y UIs genericas
+    quadrant-3 Herramientas de bajo nivel
+    quadrant-4 Verificacion sin interfaz
+    Kubectl a mano: [0.10, 0.10]
+    Helm: [0.25, 0.25]
+    Kustomize y Argo CD: [0.30, 0.35]
+    Backstage: [0.20, 0.60]
+    Port: [0.20, 0.75]
+    KubeVela: [0.35, 0.70]
+    SynKra: [0.85, 0.70]
+```
+
+_Texto alternativo:_ en el eje horizontal, cuánto verifica cada herramienta el contrato entre
+el core y los plugins; en el vertical, qué tan usable es para quien no es experto. SynKra queda
+arriba a la derecha (verifica y es usable). KubeVela, Port y Backstage están arriba a la
+izquierda (usables, pero sin verificación del contrato). Helm, Kustomize con Argo CD y `kubectl`
+quedan abajo a la izquierda.
+
+> [!WARNING]
+> **Trade-off de este posicionamiento.** El eje horizontal lo elegí yo y favorece a SynKra por
+> construcción. Con otros ejes (madurez, comunidad, integración con GitOps), KubeVela y Argo CD
+> quedan por delante. La matriz muestra **dónde** apunta SynKra, no que gane.
+
+---
+
+## 5. Casos de uso (top 5)
 
 _Pendiente._
