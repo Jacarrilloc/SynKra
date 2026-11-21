@@ -9,7 +9,7 @@
 >
 > Reemplaza la versión 1.0 del 17-oct-2026, que especificaba un agente de IA regulatorio (queda
 > en el historial de Git). **Este PRD se escribe segmento por segmento y cada uno lo aprueba
-> Julian.** Estado de los segmentos: 1 a 5 aprobados; 6 en revisión; 7 a 13 pendientes.
+> Julian.** Estado de los segmentos: 1 a 6 aprobados; 7 en revisión; 8 a 13 pendientes.
 
 > [!IMPORTANT]
 > **Desviación declarada:** SynKra no usa IA (PVB §6). El segmento 11 evalúa la verificación,
@@ -341,5 +341,67 @@ quedan abajo a la izquierda.
 ---
 
 ## 7. User journeys
+
+### 7.1 Happy path del usuario final: Lucía, PO de Perú, despliega su país
+
+1. Lucía entra al front de SynKra con su usuario.
+2. En la vista general ve los países que ya corren. Perú todavía no está.
+3. Crea el despliegue `pe` y elige el core `synkra-core 2.1`. El front le muestra **solo** la
+   carpeta de plugins de ese core.
+4. Filtra por la etiqueta `pais=pe` y elige `kyc-pe 1.3` y `consentimiento-pe 1.0`.
+5. Mientras elige, el motor verifica: los dos plugins implementan el contrato 2, igual que el
+   core. Todo en verde.
+6. El front le muestra el resumen: core, plugins, versiones y namespace `synkra-pe`.
+7. Confirma. SynKra despliega y muestra el avance hasta que los pods están listos.
+8. Al arrancar, el core detecta los dos plugins en su carpeta, los verifica y los activa.
+9. En la vista general, Perú aparece con su core y sus dos plugins. El registro anota quién,
+   cuándo y qué se desplegó.
+
+### 7.2 Happy path del operador: Andrés, Head of Platform, prepara SynKra
+
+1. Andrés instala SynKra en el clúster (`kind` en el demo) con un solo comando.
+2. La instalación crea la cuenta de servicio `synkra:deployer`, con permisos solo en `synkra-*`,
+   y configura el registro de imágenes permitido.
+3. Verifica el límite: `kubectl auth can-i create deployments -n default
+   --as=system:serviceaccount:synkra:deployer` responde `no`.
+4. Por la API (sin el front), sube el core `synkra-core 2.1`. SynKra crea su carpeta de plugins
+   vacía.
+5. Sube los plugins `kyc-co`, `kyc-pe` y `consentimiento-pe` a esa carpeta, con sus etiquetas
+   de país y versión.
+6. Consulta el catálogo por la API y confirma que los tres plugins quedaron en la carpeta
+   correcta y como compatibles.
+
+### 7.3 Edge case: Lucía abandona a mitad del flujo
+
+1. Lucía elige el core y un plugin, pero cierra el navegador antes de confirmar.
+2. **No se despliega nada**: SynKra solo despliega con una confirmación explícita (P2).
+3. La selección a medias no queda en el registro de despliegues, porque no hubo despliegue.
+4. Cuando Lucía vuelve, la vista general muestra a Perú sin desplegar y ella empieza de nuevo.
+   Guardar borradores de selección queda como Could (segmento 8).
+
+### 7.4 Edge case: SynKra no puede resolver y escala a un humano
+
+**Situación:** el motor aprobó la combinación, pero el pod del core no arranca. Por ejemplo, el
+plugin `kyc-pe 1.3` falla en su inicialización por un error propio que el contrato no detecta.
+
+1. SynKra despliega y espera a que los pods estén listos.
+2. El core arranca, carga `kyc-pe` y el plugin lanza un error. El pod entra en reinicios.
+3. Al vencer el tiempo de espera, SynKra marca el despliegue como **fallido**.
+   **No reintenta ni revierte por su cuenta**: cambiar el clúster requiere confirmación (P2).
+4. El front y la API muestran el estado "fallido" y la opción de volver al despliegue anterior.
+5. **Traspaso al humano.** SynKra deja en el registro de ese despliegue el contexto para el SRE:
+   - la combinación desplegada (core, plugins, versiones y etiquetas);
+   - el resultado de la verificación del motor (aprobada, y con qué regla);
+   - el log de arranque del core y el motivo del error del plugin;
+   - los eventos de Kubernetes del pod;
+   - quién confirmó el despliegue y cuándo.
+6. El SRE revisa el contexto, confirma la vuelta al despliegue anterior y avisa al dueño del
+   plugin.
+7. Si se trató de una discrepancia entre el motor y el core, se cuenta en la métrica de
+   concordancia (segmento 10) y se añade el caso a la suite del segmento 11.
+
+---
+
+## 8. Alcance del MVP (MoSCoW)
 
 _Pendiente._
