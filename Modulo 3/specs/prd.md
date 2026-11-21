@@ -1,6 +1,6 @@
 # PRD: SynKra
 
-**Módulo 3 · Tópicos Especiales en Informática · versión 2.0 (en co-creación) · 21 de noviembre de 2026**
+**Módulo 3 · Tópicos Especiales en Informática · versión 2.0 · 21 de noviembre de 2026**
 
 > **Insumos:** `../../Modulo 2/pvb.md`, `../docs/overview.md`, `../docs/mercado.md`,
 > `../docs/icp.md`, `../docs/critica.md` y las decisiones de `paso-0-conflictos.md`.
@@ -8,8 +8,8 @@
 > confirmada. Ningún [VERIFICAR] se usa aquí como hecho.
 >
 > Reemplaza la versión 1.0 del 17-oct-2026, que especificaba un agente de IA regulatorio (queda
-> en el historial de Git). **Este PRD se escribe segmento por segmento y cada uno lo aprueba
-> Julian.** Estado de los segmentos: 1 a 12 aprobados; 13 en revisión.
+> en el historial de Git). **Este PRD se escribió segmento por segmento y Julian aprobó cada
+> uno.** Estado: **los 13 segmentos están aprobados** (21-nov-2026).
 
 > [!IMPORTANT]
 > **Ejercicio académico.** Por sus limitaciones y su alcance, SynKra no se plantea para un uso
@@ -60,7 +60,7 @@ clúster. Y, a futuro, que esos despliegues se automaticen.
 > **Generar y aplicar los manifiestos de cada país ya lo resuelven Kustomize y Helm**, y SynKra
 > puede usar Kustomize por debajo. El aporte de este ejercicio es otro:
 >
-> 1. verificar, **antes de desplegar**, que los plugins elegidos son compatibles con el contrato
+> 1. verificar, **antes de desplegar**, que los plugins elegidos son compatibles con la versión
 >    del core, y
 > 2. mostrar en un solo lugar qué core y qué plugins corren en cada país.
 
@@ -98,11 +98,11 @@ respuesta tiene que ser verificable: solo en `synkra-*`, comprobable con `kubect
   micro-kernel ya compilado, y ver en un solo lugar qué corre en cada país.
 - **Cómo:**
   1. El equipo **agrega los compilados a SynKra**: la imagen del core y los artefactos de cada
-     plugin. SynKra los registra en su catálogo, con su versión y el contrato que declara cada
-     uno.
+     plugin. SynKra los registra en su catálogo con sus etiquetas de versión.
   2. **Cada core tiene su propia carpeta de plugins, independiente de las demás.** Un plugin se
-     sube a la carpeta de un core concreto y se etiqueta por país, región o cliente, y por
-     versión.
+     sube a la carpeta de un core concreto y se etiqueta por país, región o cliente, y con
+     **dos etiquetas de versión**: la versión del plugin en sí y la versión del core compatible
+     con ese plugin.
   3. Desde el front de acceso (Blazor), el usuario elige el core y los plugins de su país.
   4. El motor verifica la combinación **antes** de desplegar y explica por qué una no sirve.
   5. Si pasa, la despliega directo en el namespace del país; el core la vuelve a verificar al
@@ -126,7 +126,7 @@ nada incompatible llega al clúster."_
 | Herramienta | Relación con SynKra |
 |---|---|
 | Kustomize | SynKra la usa por debajo para generar los manifiestos de cada país |
-| Helm, Argo CD, KubeVela | Resuelven despliegues por componentes o con GitOps. SynKra no los reemplaza; se diferencia en que verifica el contrato core-plugin y no usa Git |
+| Helm, Argo CD, KubeVela | Resuelven despliegues por componentes o con GitOps. SynKra no los reemplaza; se diferencia en que verifica la compatibilidad entre el core y sus plugins y no usa Git |
 
 > Se omiten la comparación competitiva y la matriz de posicionamiento del Prompt 1, por ser
 > contenido de negocio (decisión del 21-nov-2026).
@@ -146,10 +146,11 @@ nada incompatible llega al clúster."_
 - **Flujo:**
   1. Sube el artefacto: un core nuevo (que estrena su propia carpeta de plugins, vacía) o un
      plugin **dentro de la carpeta de un core concreto**.
-  2. SynKra lee su descriptor: nombre, versión y versión del contrato que implementa o exige.
-  3. Le asigna etiquetas: país, región o cliente que lo usa, y la etiqueta de versión.
+  2. SynKra lee su descriptor: nombre, versión del plugin y versión del core compatible.
+  3. Le asigna etiquetas: país, región o cliente que lo usa, y las dos de versión (la del plugin
+     y la del core compatible).
   4. Verifica la integridad del artefacto (hash), que el descriptor esté completo y que el
-     plugin sea compatible con el contrato de **su** core.
+     versión del core compatible corresponda a **su** core.
 - **Resultado:** el compilado aparece como disponible en la carpeta de su core, o se rechaza
   con un motivo legible. Un plugin de la carpeta del core A no aparece para el core B.
 - **KPI:** % de compilados con descriptor inválido rechazados al subirlos.
@@ -183,8 +184,9 @@ nada incompatible llega al clúster."_
 ### CU4. Rechazar una combinación incompatible
 
 - **Actor:** Product Owner de país o desarrollador de plugins.
-- **Trigger:** se elige un plugin que no cumple el contrato del core (por ejemplo, `kyc-pe` 2.x
-  exige el contrato 3 y el core implementa el 2).
+- **Trigger:** se elige un plugin que no es compatible con la versión del core (por ejemplo,
+  `kyc-pe 2.0` está etiquetado como compatible con el core `3.x`, y el core desplegado es el
+  `2.1`).
 - **Flujo:**
   1. El usuario elige el plugin.
   2. El motor marca la incompatibilidad **antes** de desplegar.
@@ -213,7 +215,7 @@ nada incompatible llega al clúster."_
 
 | Principio | (a) Operativamente | (b) En el producto | (c) Prohibido, y cómo se verifica |
 |---|---|---|---|
-| **P1. Nada incompatible llega al clúster** | Doble verificación del contrato: el motor antes de desplegar y el core al arrancar, con la misma regla | Una sola librería de verificación, compartida por el backend y el core | Desplegar una combinación que el motor no aprobó. **Verificación:** la suite del segmento 11 pasa al 100%, y un core con un plugin incompatible en su carpeta no arranca |
+| **P1. Nada incompatible llega al clúster** | Doble verificación de la compatibilidad (la versión del core compatible de cada plugin frente a la versión del core): el motor antes de desplegar y el core al arrancar, con la misma regla | Una sola librería de verificación, compartida por el backend y el core | Desplegar una combinación que el motor no aprobó. **Verificación:** la suite del segmento 11 pasa al 100%, y un core con un plugin incompatible en su carpeta no arranca |
 | **P2. Límite de autonomía verificable** | SynKra solo despliega cuando un humano lo confirma (en el front o con un comando explícito de la API o la CLI), y solo en sus namespaces | Cuenta de servicio `synkra:deployer` con RBAC limitado a `synkra-*`; solo imágenes de un registro permitido | Desplegar sin confirmación o fuera de `synkra-*`. **Verificación:** `kubectl auth can-i create deployments -n default --as=system:serviceaccount:synkra:deployer` responde `no` |
 | **P3. El core no conoce países** | La variación vive en los plugins y en sus etiquetas; el core solo define puntos de extensión | Etiquetas de país, región o cliente en los plugins, no en el core | Lógica del tipo "si país == CO" en el core. **Verificación:** `grep -rniE "colombia\|peru" core/src` sin resultados |
 | **P4. Cada core tiene su carpeta de plugins, independiente** | Un plugin pertenece a la carpeta de un solo core | El catálogo agrupa plugins por core | Que un plugin del core A aparezca o se despliegue con el core B. **Verificación:** prueba de API que lo intenta y recibe un rechazo |
@@ -238,8 +240,8 @@ nada incompatible llega al clúster."_
 3. Crea el despliegue `pe` y elige el core `synkra-core 2.1`. El front le muestra **solo** la
    carpeta de plugins de ese core.
 4. Filtra por la etiqueta `pais=pe` y elige `kyc-pe 1.3` y `consentimiento-pe 1.0`.
-5. Mientras elige, el motor verifica: los dos plugins implementan el contrato 2, igual que el
-   core. Todo en verde.
+5. Mientras elige, el motor verifica: los dos plugins están etiquetados como compatibles con el
+   core `2.x`, y el core es el `2.1`. Todo en verde.
 6. El front le muestra el resumen: core, plugins, versiones y namespace `synkra-pe`.
 7. Confirma. SynKra despliega y muestra el avance hasta que los pods están listos.
 8. Al arrancar, el core detecta los dos plugins en su carpeta, los verifica y los activa.
@@ -271,7 +273,8 @@ nada incompatible llega al clúster."_
 ### 7.4 Edge case: SynKra no puede resolver y escala a un humano
 
 **Situación:** el motor aprobó la combinación, pero el pod del core no arranca. Por ejemplo, el
-plugin `kyc-pe 1.3` falla en su inicialización por un error propio que el contrato no detecta.
+plugin `kyc-pe 1.3` falla en su inicialización por un error propio que la etiqueta de
+compatibilidad no detecta.
 
 1. SynKra despliega y espera a que los pods estén listos.
 2. El core arranca, carga `kyc-pe` y el plugin lanza un error. El pod entra en reinicios.
@@ -299,7 +302,7 @@ plugin `kyc-pe 1.3` falla en su inicialización por un error propio que el contr
 
 | Prioridad | Ítem | Por qué |
 |---|---|---|
-| **Must** | **Core** en Java 21 / Spring Boot con un contrato de plugins versionado, que al arrancar lee su carpeta de plugins, los verifica y activa los que pide el despliegue | Es el micro-kernel (PVB §3) |
+| **Must** | **Core** en Java 21 / Spring Boot con puntos de extensión para plugins, que al arrancar lee su carpeta de plugins, los verifica y activa los que pide el despliegue | Es el micro-kernel (PVB §3) |
 | **Must** | **Dos plugins de país**, `kyc-co` y `kyc-pe`, con reglas simuladas | Demuestran la variación por país (`docs/overview.md` §6) |
 | **Must** | **Backend de SynKra** con API REST: catálogo de compilados, una carpeta de plugins independiente por core, etiquetas (país, región o cliente, y versión), verificación, despliegue, registro y vuelta atrás | El backend es el producto (P5) |
 | **Must** | **Motor de verificación** en una librería compartida por el backend y el core | P1: nada incompatible llega al clúster |
@@ -333,14 +336,30 @@ plugin `kyc-pe 1.3` falla en su inicialización por un error propio que el contr
 
 | # | Módulo | Features principales | Expuesto en |
 |---|---|---|---|
-| M1 | **Catálogo de compilados** | Registrar cores (imagen en el registro permitido) y subir plugins a la **carpeta de un core concreto**; leer el descriptor (nombre, versión, contrato); verificar el hash; etiquetas de país, región o cliente y de versión; buscar y filtrar por etiqueta | API `/cores`, `/cores/{id}/plugins`; pantalla "Catálogo" |
-| M2 | **Motor de verificación** | Comprobar que cada plugin elegido es compatible con el contrato de su core; explicar el motivo de un rechazo y qué versión sí sirve. Es una librería compartida con el core (P1) | API `/verificaciones`; usado por M3 y por el core |
+| M1 | **Catálogo de compilados** | Registrar cores (imagen en el registro permitido) y subir plugins a la **carpeta de un core concreto**; leer el descriptor; verificar el hash; etiquetas de país, región o cliente, y las dos de versión (versión del plugin y versión del core compatible); buscar y filtrar por etiqueta | API `/cores`, `/cores/{id}/plugins`; pantalla "Catálogo" |
+| M2 | **Motor de verificación** | Comprobar que la versión del core compatible de cada plugin elegido corresponde a la versión del core; explicar el motivo de un rechazo y qué versión sí sirve. Es una librería compartida con el core (P1) | API `/verificaciones`; usado por M3 y por el core |
 | M3 | **Motor de despliegue** | Generar los manifiestos del país (Kustomize por debajo); aplicarlos en `synkra-<país>` con la cuenta de servicio `synkra:deployer`; esperar a que los pods estén listos; marcar el despliegue como listo o fallido | API `/despliegues`; pantalla "Desplegar" |
 | M4 | **Registro y reversión** | Guardar quién, cuándo, qué core, qué plugins y versiones, y el resultado; leer del clúster qué corre en cada país; volver a un despliegue anterior con confirmación | API `/despliegues/{id}`, `/paises`; pantallas "Vista general" y "Detalle" |
 | M5 | **API REST** | Toda la funcionalidad de M1 a M4, documentada con OpenAPI y protegida con autenticación (Should). Es la base de la CLI futura | `https://synkra.local/api` |
 | M6 | **Front en Blazor** (demo) | Las 4 pantallas de §9.4. Solo consume la API y no tiene lógica propia (P5) | Navegador |
 | M7 | **Core** (runtime) | Al arrancar, lee `/plugins`, verifica cada plugin con M2, activa los que pide el despliegue y no arranca si falta uno o es incompatible; expone `/plugins` y la salud | Pod del país |
 | M8 | **Plugins de país** | `kyc-co` y `kyc-pe`, con reglas simuladas, etiquetados `pais=co` y `pais=pe` | Dentro del core |
+
+> [!NOTE]
+> **Etiquetas de un plugin (decisión de Julian del 21-nov-2026):**
+>
+> | Etiqueta | Ejemplo | Para qué |
+> |---|---|---|
+> | País, región o cliente | `pais=pe` | Filtrar qué plugins usa cada despliegue |
+> | **Versión del plugin** | `version=1.3.0` | Identificar el artefacto exacto |
+> | **Versión del core compatible** | `core=2.x` | La regla que aplica el motor de verificación (M2) |
+>
+> La verificación compara la etiqueta "versión del core compatible" de cada plugin con la versión
+> del core. Las etiquetas son metadatos de despliegue, no un control de versiones.
+>
+> **Persistencia (decisión de Julian del 21-nov-2026):** el catálogo, el registro de despliegues
+> y los usuarios se guardan en **SQLite**, en el mismo volumen que los artefactos. Basta para un
+> demo con una sola réplica del backend.
 
 ### 9.2 Roles y permisos
 
@@ -394,7 +413,7 @@ flowchart LR
             VER["M2 Motor de verificacion"]
             DEP["M3 Motor de despliegue"]
             LOG["M4 Registro y reversion"]
-            DB[("PostgreSQL: catalogo y registro")]
+            DB[("SQLite en el volumen: catalogo y registro")]
             PVC[("Volumen: artefactos de plugins")]
         end
         subgraph NSP["namespace synkra-pe"]
@@ -423,7 +442,7 @@ flowchart LR
 
 _Texto alternativo:_ el PO usa el front en Blazor, y el operador y la CLI futura usan la API
 directamente. La API reúne el catálogo, el motor de verificación, el motor de despliegue y el
-registro, todos en el namespace `synkra`, con PostgreSQL y un volumen para los artefactos. El
+registro, todos en el namespace `synkra`, con SQLite y los artefactos en un mismo volumen. El
 motor de despliegue aplica en el namespace del país con su cuenta de servicio limitada. En ese
 namespace, un init container descarga los plugins elegidos y el core los verifica al arrancar.
 La imagen del core viene del registro de imágenes permitido.
@@ -433,7 +452,7 @@ La imagen del core viene del registro de imágenes permitido.
 | Componente | Dónde |
 |---|---|
 | Front Blazor, API y motores (M1 a M6) | **Kubernetes**, namespace `synkra` |
-| PostgreSQL y volumen de artefactos | **Kubernetes**, namespace `synkra` (StatefulSet y PVC) |
+| Base SQLite y artefactos | **Kubernetes**, namespace `synkra`, en un mismo volumen (PVC) montado por el backend |
 | Core y plugins de cada país (M7, M8) | **Kubernetes**, namespace `synkra-<país>` |
 | Registro de imágenes | **Externo** al clúster (en el demo, un registro local junto a `kind`) |
 | Navegador del usuario y CLI futura | **Externos** |
@@ -484,7 +503,7 @@ arrancar, sobre el total de despliegues del registro (M4).
 ## 11. Plan de evaluación de la verificación
 
 > **Desviación declarada:** SynKra no usa IA (P8), así que este segmento evalúa la **verificación
-> determinista** del contrato y los límites del despliegue, no un modelo. Se mantiene la
+> determinista** de la compatibilidad y los límites del despliegue, no un modelo. Se mantiene la
 > estructura que pide el Prompt 1.
 
 ### 11.1 Dataset inicial: suite de combinaciones
@@ -494,11 +513,11 @@ core (M7). Cada caso define el core, los plugins, sus descriptores y el resultad
 
 | Grupo | Casos | Resultado esperado |
 |---|---|---|
-| **Válidas** | Core contrato 2 + `kyc-co 1.x`; core contrato 2 + `kyc-pe 1.x`; core sin plugins | Aprobada; el core arranca |
-| **Versión incompatible** | Plugin que exige el contrato 3 sobre un core con el contrato 2 | Rechazada, con la versión que sí sirve |
+| **Válidas** | Core `2.1` + `kyc-co 1.x` (core compatible `2.x`); core `2.1` + `kyc-pe 1.x` (core compatible `2.x`); core sin plugins | Aprobada; el core arranca |
+| **Versión incompatible** | Plugin con core compatible `3.x` sobre el core `2.1` | Rechazada, con la versión que sí sirve |
 | **Plugin ausente** | El despliegue pide un plugin que no está en la carpeta del core | Rechazada por el motor; si llegara al pod, el core no arranca |
 | **Carpeta equivocada** | Plugin de la carpeta del core A pedido para el core B (P4) | Rechazada |
-| **Descriptor incompleto** | Falta el nombre, la versión o el contrato | Rechazada al subirlo (CU1) |
+| **Descriptor incompleto** | Falta el nombre, la versión del plugin o la versión del core compatible | Rechazada al subirlo (CU1) |
 | **Integridad** | El hash del artefacto no coincide con el registrado | Rechazada al subirlo y al descargarlo en el init container |
 | **Plugin no activado** | Plugin presente en el catálogo pero no elegido | No se descarga al pod, no carga clases ni expone rutas |
 
@@ -525,7 +544,7 @@ SynKra lee datos que un tercero controla: los **descriptores y los artefactos** 
 
 | Escenario | Qué intenta el atacante | Qué debe pasar |
 |---|---|---|
-| **Descriptor mentiroso** | Un plugin declara el contrato 2 pero llama a funciones del contrato 3 | El core lo detecta al cargarlo y no arranca; el caso entra a la suite |
+| **Descriptor mentiroso** | Un plugin se etiqueta como compatible con el core `2.x`, pero usa funciones que solo existen en el `3.x` | El core lo detecta al cargarlo y no arranca; el caso entra a la suite |
 | **Path traversal** | Un artefacto con rutas como `../../` para escribir fuera de `/plugins` | Se rechaza al subirlo; el init container solo escribe en `/plugins` |
 | **Etiqueta suplantada** | Subir un plugin etiquetado `pais=pe` a la carpeta de otro core | Rechazado por P4; solo el rol publicador puede subir |
 | **Imagen no permitida** | Registrar un core con una imagen de un registro no autorizado | Rechazado (Should: registro permitido) |
@@ -551,7 +570,7 @@ SynKra lee datos que un tercero controla: los **descriptores y los artefactos** 
 | R7 | **El pod de un país termina con código de otro país** por un error en la selección | Técnico | Baja | Medio | El init container descarga solo los plugins elegidos (§9.3); prueba de que un plugin no elegido no llega al pod |
 | R8 | **Dos stacks (Java y .NET) para un equipo pequeño** | Proyecto | Media | Medio | El front en Blazor solo consume la API y no tiene lógica (P5); si falta tiempo, la demo se hace por la API |
 | R9 | **El alcance no cabe antes de la sustentación** (semana siguiente al 21-nov-2026) | Proyecto | Alta | Alto | MoSCoW estricto (segmento 8): solo los Must para la demo; la CLI y lo demás quedan en Could |
-| R10 | **Ya existen herramientas abiertas que hacen casi lo mismo** (Kustomize, Helm, KubeVela) | Proyecto | Alta | Bajo | En un ejercicio académico no es un riesgo de mercado: se declara de frente (segmento 2) y el aporte se centra en la verificación del contrato |
+| R10 | **Ya existen herramientas abiertas que hacen casi lo mismo** (Kustomize, Helm, KubeVela) | Proyecto | Alta | Bajo | En un ejercicio académico no es un riesgo de mercado: se declara de frente (segmento 2) y el aporte se centra en la verificación de compatibilidad |
 
 > [!NOTE]
 > El Prompt 1 exige incluir el riesgo de comoditización por proyectos open source (R10) y el de
@@ -561,15 +580,15 @@ SynKra lee datos que un tercero controla: los **descriptores y los artefactos** 
 
 ## 13. Plan de entrega alineado al curso
 
-> Las fases del proyecto (0 especificación, 1 core y contrato, 2 motor de despliegue, 3 front y
+> Las fases del proyecto (0 especificación, 1 core y plugins, 2 motor de despliegue, 3 front y
 > API, 4 plugins CO y PE) se reparten sobre los módulos del curso. La sustentación es la semana
 > siguiente al 21-nov-2026 **[VERIFICAR fecha exacta]**, así que la columna "Para la demo" marca
 > lo indispensable.
 
 | Módulo del curso | Fase | Qué se construye | Qué se valida | Para la demo |
 |---|---|---|---|---|
-| **Módulos 4 y 5** (Kubernetes, CKA) | 1 y 4 | Core en Java 21 con el contrato versionado y la carga de `/plugins`; librería de verificación (M2); plugins `kyc-co` y `kyc-pe`; clúster `kind` | El core arranca con los plugins válidos y **no arranca** con uno incompatible; la suite del segmento 11 pasa | Sí |
-| **Módulo 6** (CKAD) | 2 y 3 | Backend (M1, M3, M4, M5) y front en Blazor (M6) como Deployments; PostgreSQL y el volumen de artefactos; el init container que descarga los plugins elegidos; ConfigMap con los plugins activos; probes y límites de recursos | Los 5 casos de uso de punta a punta, primero con `curl` (P5) y después desde el front | Sí |
+| **Módulos 4 y 5** (Kubernetes, CKA) | 1 y 4 | Core en Java 21 con sus puntos de extensión y la carga de `/plugins`; librería de verificación (M2); plugins `kyc-co` y `kyc-pe`; clúster `kind` | El core arranca con los plugins válidos y **no arranca** con uno incompatible; la suite del segmento 11 pasa | Sí |
+| **Módulo 6** (CKAD) | 2 y 3 | Backend (M1, M3, M4, M5) y front en Blazor (M6) como Deployments; SQLite y los artefactos en un mismo volumen; el init container que descarga los plugins elegidos; ConfigMap con los plugins activos; probes y límites de recursos | Los 5 casos de uso de punta a punta, primero con `curl` (P5) y después desde el front | Sí |
 | **Módulo 7** (CKS) | 2 | Cuenta de servicio `synkra:deployer` con RBAC limitado a `synkra-*`; Pod Security `restricted`; NetworkPolicy *deny-by-default*; imágenes no root escaneadas con Trivy; registro de imágenes permitido | `kubectl auth can-i create deployments -n default --as=system:serviceaccount:synkra:deployer` responde `no`; el red-teaming del segmento 11 | El RBAC sí; lo demás es Should |
 | **Módulo 8** (producción) | 2 y 3 | La instalación de **SynKra mismo** con GitOps y CI (ver la nota abajo); registro de despliegues y reversión | La instalación en un comando; el registro coincide con el clúster; la reversión en menos de 5 minutos | Registro y reversión sí; GitOps de SynKra es Should |
 
@@ -589,8 +608,8 @@ SynKra lee datos que un tercero controla: los **descriptores y los artefactos** 
    `kyc-co` y `kyc-pe` con sus etiquetas.
 3. **Desplegar dos países (CU2):** Colombia y Perú, cada uno con su core y solo sus plugins,
    desde el front.
-4. **Rechazar una combinación incompatible (CU4):** un plugin que exige el contrato 3 sobre un
-   core con el contrato 2; el front explica el motivo.
+4. **Rechazar una combinación incompatible (CU4):** un plugin compatible con el core `3.x` sobre
+   el core `2.1`; el front explica el motivo.
 5. **Vista general y reversión (CU5):** qué corre en cada país, un despliegue fallido y la vuelta
    al anterior.
 6. **Backend primero (P5):** el mismo despliegue hecho por la API con `curl`, sin el front.
@@ -598,6 +617,14 @@ SynKra lee datos que un tercero controla: los **descriptores y los artefactos** 
 
 ---
 
-## Consolidación
+## Anexo: decisiones que moldearon este PRD
 
-_Pendiente: se consolida cuando el segmento 13 esté aprobado._
+| Fecha (21-nov-2026) | Decisión | Dónde |
+|---|---|---|
+| Paso 0 | Reescribir el PRD; posicionarlo como capa delgada y ejercicio académico; front en Blazor; sin multi-tenant; el segmento 11 evalúa la verificación | `paso-0-conflictos.md` |
+| Ajuste | SynKra solo despliega: parte de artefactos ya compilados, sin Git, PRs ni Argo CD | Segmento 1 |
+| Segmento 4 | Se pueden agregar compilados; cada core tiene su carpeta de plugins independiente | Segmentos 4 y 5 |
+| Segmento 5 | El backend es el producto (API y, a futuro, CLI); el front es demostrativo; etiquetas de país, región o cliente | Segmentos 4, 5 y 6 |
+| Segmentos 10 y 11 | Sin contenido de negocio | Todo el PRD |
+| Segmento 9 | Un init container descarga solo los plugins elegidos; backend en Java 21 | Segmento 9 |
+| Segmento 13 | SynKra mismo se instala con GitOps; dos etiquetas de versión (plugin y core compatible); SQLite | Segmentos 9 y 13 |

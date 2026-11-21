@@ -544,3 +544,11 @@
 **Context**: Prompt 1, segmento 13.
 
 ---
+
+## PRD v2 - Dos etiquetas de versión, SQLite; segmento 13 aprobado; PRD consolidado
+**Timestamp**: 2026-11-21T23:27:53Z
+**User Input**: "debe haber dos etiquetas de version, la primera es la version del plugin en si, y la segunda la version del core compatible con ese plugin, para esto \"Lo que hace falta es que todo eso sobreviva a un reinicio del pod y que se pueda consultar, por ejemplo \"último despliegue de Perú\" o \"plugins con pais=pe\". Pero no tiene que ser PostgreSQL. Para un demo con una sola réplica del backend hay opciones más simples:\" la desicion es usar sqlite"
+**AI Response**: En todo el PRD, la compatibilidad pasa de "versión del contrato" a dos etiquetas de versión (la del plugin y la del core compatible). PostgreSQL se reemplaza por SQLite en el mismo volumen que los artefactos. Segmento 13 aprobado, con SynKra mismo instalado por GitOps. El PRD v2 queda consolidado: los 13 segmentos aprobados y un anexo de decisiones.
+**Context**: Prompt 1, cierre y consolidación.
+
+---
