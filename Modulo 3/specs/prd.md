@@ -9,7 +9,7 @@
 >
 > Reemplaza la versión 1.0 del 17-oct-2026, que especificaba un agente de IA regulatorio (queda
 > en el historial de Git). **Este PRD se escribe segmento por segmento y cada uno lo aprueba
-> Julian.** Estado de los segmentos: 1 a 8 aprobados; 9 en revisión; 10 a 13 pendientes.
+> Julian.** Estado de los segmentos: 1 a 9 aprobados; 10 en revisión; 11 a 13 pendientes.
 
 > [!IMPORTANT]
 > **Desviación declarada:** SynKra no usa IA (PVB §6). El segmento 11 evalúa la verificación,
@@ -434,7 +434,7 @@ plugin `kyc-pe 1.3` falla en su inicialización por un error propio que el contr
 | **Won't** | Automatizar despliegues sin un humano | Visión a futuro; en el MVP todo despliegue requiere confirmación (P2) |
 
 > [!NOTE]
-> La forma en que la carpeta de plugins llega al pod se resuelve en el segmento 9 (§9.3).
+> La forma en que la carpeta de plugins llega al pod quedó resuelta en el segmento 9 (§9.3).
 
 ---
 
@@ -468,7 +468,7 @@ externo queda fuera de alcance.
 ### 9.3 Cómo llega la carpeta de plugins al pod
 
 > [!IMPORTANT]
-> **Decisión propuesta (por confirmar al aprobar este segmento).** Un **init container** del pod
+> **Decisión (aprobada por Julian el 21-nov-2026).** Un **init container** del pod
 > del país descarga del catálogo (M1) **solo los plugins elegidos** para ese despliegue y los
 > deja en un volumen compartido `/plugins`. El core arranca, detecta lo que hay en `/plugins`,
 > lo compara con la lista de plugins activos (un ConfigMap) y verifica cada uno.
@@ -550,12 +550,62 @@ La imagen del core viene del registro de imágenes permitido.
 | Navegador del usuario y CLI futura | **Externos** |
 
 > [!NOTE]
-> **Stack propuesto (por confirmar):** backend en Java 21 / Spring Boot, como el core, para
+> **Stack (aprobado por Julian el 21-nov-2026):** backend en Java 21 / Spring Boot, como el core, para
 > compartir la librería de verificación (M2) sin duplicarla. El front en Blazor es un servicio
 > .NET aparte que solo habla con la API.
 
 ---
 
 ## 10. Métricas de éxito
+
+> No hay líneas base públicas para este dominio (`docs/mercado.md` §5). Toda meta es
+> **[INTERNO]** y las líneas base se miden en el piloto: el demo en `kind` con los plugins CO y PE.
+
+### North Star
+
+**% de despliegues por país hechos desde SynKra en los que ningún plugin incompatible llegó al
+clúster.**
+
+- **Línea base:** no existe (hoy no se mide).
+- **Meta:** 100% **[INTERNO]**.
+- **Cómo se mide:** despliegues con estado "listo" y sin rechazos del core al arrancar, sobre el
+  total de despliegues del registro (M4).
+
+### KPIs
+
+| Tipo | KPI | Línea base | Meta |
+|---|---|---|---|
+| **Activación** | Tiempo desde que se instala SynKra hasta el primer país desplegado | Se mide en el piloto | < 30 min en `kind` **[INTERNO]** |
+| **Activación** | Tiempo para desplegar un país nuevo (CU2), frente a hacerlo a mano con YAML | Se mide a mano en el piloto | -50% **[INTERNO]** |
+| **Retención (adopción)** | % de despliegues por país hechos desde SynKra frente a hacerlos a mano | 0% | > 70% al final del piloto **[INTERNO]** |
+| **Calidad** | % de despliegues que terminan "listos" al primer intento | Se mide en el piloto | > 90% **[INTERNO]** |
+| **Calidad** | Tiempo para volver al despliegue anterior (CU5) | Se mide en el piloto | < 5 min **[INTERNO]** |
+
+### Métricas de la verificación (sustituyen a las "métricas específicas de la IA")
+
+| Dimensión | Métrica | Meta |
+|---|---|---|
+| **Precisión** | % de combinaciones inválidas de la suite (segmento 11) detectadas antes de desplegar | 100% |
+| **Precisión** | **Falsos rechazos:** % de combinaciones válidas que el motor rechaza | 0% |
+| **Utilidad** | % de rechazos que dicen qué versión del core o del plugin sí sirve | 100% |
+| **Seguridad** | **Concordancia motor-core:** combinaciones que el motor aprueba y el core rechaza al arrancar, o al revés | 0 discrepancias |
+| **Seguridad** | Intentos de desplegar fuera de `synkra-*` que el RBAC deja pasar | 0 |
+
+### Métrica que detecta el fallo por ruido
+
+**Deriva entre el registro y el clúster:** % de países cuyo estado real en el clúster no coincide
+con el último despliegue registrado por SynKra.
+
+Detecta el escenario en que SynKra produce rechazos, fallos o avisos que el equipo deja de
+atender y termina **desplegando a mano por fuera de la herramienta**. Si la deriva sube, la vista
+general deja de ser confiable y la adopción cae aunque las demás métricas se vean bien.
+
+- **Meta:** 0% **[INTERNO]**. Por encima del 10%, se revisa la utilidad de los rechazos antes
+  de añadir funciones.
+- **Señal complementaria:** despliegues "fallidos" que nadie revierte ni atiende en 24 horas.
+
+---
+
+## 11. Plan de evaluación de la verificación
 
 _Pendiente._

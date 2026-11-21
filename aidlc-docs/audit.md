@@ -504,3 +504,11 @@
 **Context**: Prompt 1, segmento 9.
 
 ---
+
+## PRD v2 - Segmento 9 aprobado con sus decisiones; segmento 10 en revisión
+**Timestamp**: 2026-11-21T23:11:46Z
+**User Input**: "aprobado"
+**AI Response**: Segmento 9 aprobado, con dos decisiones: un init container descarga solo los plugins elegidos a /plugins, y el backend va en Java 21 / Spring Boot. Redactado el segmento 10: North Star, KPIs de activación, retención y calidad, métricas de la verificación y una métrica de ruido (deriva entre el registro y el clúster).
+**Context**: Prompt 1, segmento 10.
+
+---
