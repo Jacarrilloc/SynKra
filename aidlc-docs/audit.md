@@ -665,3 +665,19 @@
 **Context**: INCEPTION - Workflow Planning, esperando aprobación.
 
 ---
+
+## Workflow Planning - Aprobado
+**Timestamp**: 2026-11-21T23:56:13Z
+**User Input**: "aprobado"
+**AI Response**: Plan de ejecución aprobado sin cambios. Siguiente etapa: Application Design.
+**Context**: INCEPTION - Workflow Planning aprobada.
+
+---
+
+## Application Design - Plan con preguntas
+**Timestamp**: 2026-11-22T00:05:00Z
+**User Input**: (n/a)
+**AI Response**: Creado `aidlc-docs/inception/plans/application-design-plan.md` con 8 pasos y 10 preguntas (forma del backend, repositorio, carga de plugins, versión y plugins activos del core, init container, almacenamiento, acceso a SQLite, vigilancia del despliegue, modelo de Blazor, descarga sin credenciales), cada una con recomendación.
+**Context**: INCEPTION - Application Design, compuerta de respuestas.
+
+---

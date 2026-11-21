@@ -3,7 +3,7 @@
 ## Project Information
 - **Project Type**: Greenfield
 - **Start Date**: 2026-11-21 (reinicio por cambio de alcance)
-- **Current Stage**: INCEPTION - Workflow Planning (esperando aprobación de `inception/plans/execution-plan.md`)
+- **Current Stage**: INCEPTION - Application Design (esperando respuestas en `inception/plans/application-design-plan.md`)
 - **Módulo 5 iniciado**: 2026-11-21T23:35:26Z. Se detiene al terminar Code Generation Parte 1 de cada unidad.
 - **Alcance anterior**: archivado en `archivo/alcance-2026-10/` (agente de IA regulatorio, 5 unidades, 91 tareas).
 
@@ -31,8 +31,8 @@
 - [x] Reverse Engineering: omitida (greenfield)
 - [x] Requirements Analysis (aprobada 2026-11-21T23:47:13Z)
 - [x] User Stories (aprobada 2026-11-21T23:53:33Z)
-- [ ] Workflow Planning (en curso)
-- [ ] Application Design - EXECUTE
+- [x] Workflow Planning (aprobada 2026-11-21T23:56:13Z)
+- [ ] Application Design - EXECUTE (en curso)
 - [ ] Units Generation - EXECUTE
 
 ### 🟢 CONSTRUCTION PHASE
