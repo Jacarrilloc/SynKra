@@ -392,3 +392,171 @@
 **Context**: Cambio solicitado sobre el documento consolidado de unidades y tareas, fuera de las etapas del flujo AI-DLC (que quedó cerrado en Code Generation Part 1).
 
 ---
+
+## Re-scope - Investigaciones de docs/ para el alcance sin IA (paso 1 del plan de módulos 2 y 3)
+**Timestamp**: 2026-11-21T14:57:09Z
+**User Input**: "este es el contexto, empecemos" / "listo, entonces vamos con el modulo 2 y 3" / Decisión: "Sin IA, desviación declarada" / "apruebalo"
+**AI Response**: Reescritos `Modulo 3/docs/overview.md`, `mercado.md`, `icp.md` y `critica.md` para el alcance nuevo: plataforma de despliegue micro-kernel sobre Kubernetes, con front de arrastrar y soltar y sin IA (desviación declarada). Fuentes consultadas el 21-nov-2026, con las marcas [INTERNO] y [VERIFICAR]. No se tocó el PVB ni el PRD: el Paso 0 y los segmentos esperan la aprobación del usuario.
+**Context**: Fuera de las etapas AI-DLC. Es el insumo del Prompt 1 del módulo 3.
+
+---
+
+## Decisión - Qué es un plugin
+**Timestamp**: 2026-11-21T15:07:35Z
+**User Input**: "es un contenedor, no de docker, el enfoque es que el compilado y lo que esté ahi sea capaz de detectarlo y verificar que plugins tiene y que plugins se van a desplegar"
+**AI Response**: Actualizados `Modulo 3/docs/overview.md` (§3) y `critica.md` (TL;DR y §3). El plugin es un contenedor lógico: un artefacto compilado que viaja con el core, que el core detecta y verifica al arrancar contra la lista de plugins que pide el despliegue. Quedan registrados los riesgos de este modelo.
+**Context**: Insumo del PRD. Resuelve la decisión abierta entre librería y contenedor.
+
+---
+
+## Re-scope - PVB para el alcance nuevo (paso 2)
+**Timestamp**: 2026-11-21T15:10:11Z
+**User Input**: "se ajustó la sustentación para la otra semana , asi que tenemos más tiempo, ahora, asi que tenemos más tiempo, ahora, con relación a PVB, empecemos con el PVB"
+**AI Response**: Reescrito `Modulo 2/pvb.md` con las 9 secciones para la plataforma de despliegue micro-kernel sin IA. Las secciones 4, 5 y 6 justifican la ausencia de IA, y se propone una North Star nueva. Ajustada `Modulo 3/docs/critica.md` §6 a la nueva fecha de sustentación.
+**Context**: Paso 2 del plan de módulos 2 y 3. El PRD no se tocó.
+
+---
+
+## Re-scope - Paso 0 del PRD: análisis de conflictos (paso 3)
+**Timestamp**: 2026-11-21T15:13:58Z
+**User Input**: "listo, continuemos con el proyecto"
+**AI Response**: Se da el PVB por aprobado. Creado `Modulo 3/specs/paso-0-conflictos.md` con 10 conflictos (tabla resumen más preguntas de opción múltiple con [Answer]:) y una recomendación para cada uno. Se espera la decisión del usuario antes del segmento 1.
+**Context**: Paso 3 del plan de módulos 2 y 3. Prompt 1, Paso 0.
+
+---
+
+## Re-scope - Decisiones del Paso 0 y segmento 1 del PRD
+**Timestamp**: 2026-11-21T15:21:24Z
+**User Input**: "1. si se reescribe 2. acepto 3. se carga un core y se utilizan una carpeta de plugins disponibles para ese core, lo que queremos es que sea algo mucho más visual que cualquier cosa, la idea es que visualmente sea entendible para el usuario lo que se esta desplegando con que plugins 4. acepto, 5. acepto 6. es mejor que tratemos el front con Blazor, ya que se considera una herramienta más robusta y más facil para trabajarla segun la experiencia del equipo 7. de momento es un demo asi que no es necesario tener un papeline tan definido, por todo lo demás actepto los cambios"
+**AI Response**: Respuestas registradas en `Modulo 3/specs/paso-0-conflictos.md`. Añadida al inicio de `CLAUDE.md` una nota de cambio de alcance (conflicto 10A). `Modulo 3/specs/prd.md` reiniciado como versión 2.0, con el segmento 1 en revisión.
+**Context**: Prompt 1, fin del Paso 0 e inicio del segmento 1.
+
+---
+
+## Re-scope - Sin Git: SynKra solo despliega
+**Timestamp**: 2026-11-21T15:35:02Z
+**User Input**: "con visual me referia a un front de acceso, en un futuro la idea es que sea una herramienta que pueda automatizar esos despliegues, no es necesario meter git, el proyecto ya está compilado, por lo que no hay que meter git en el proceso, la herramienta que estamos planteando solo es de despliegue"
+**AI Response**: Quitados Git, los PRs y Argo CD del flujo en el PVB, en los docs (overview, mercado, icp, critica) y en el segmento 1 del PRD. SynKra despliega directo, con una cuenta de servicio limitada a `synkra-*`, y registra cada despliegue. Se añadieron riesgos por la falta de revisión y de historial. En `paso-0-conflictos.md` se anotó el ajuste: el conflicto 7 queda sin efecto y el 4 pasa a ser un mecanismo interno.
+**Context**: Segmento 1 del PRD reescrito y de nuevo en revisión.
+
+---
+
+## PRD v2 - Segmento 1 aprobado; segmento 2 en revisión
+**Timestamp**: 2026-11-21T22:45:38Z
+**User Input**: "aprobado, continuemos con lo siguiente"
+**AI Response**: Segmento 1 marcado como aprobado. Redactado el segmento 2 (Contexto y problema) en `Modulo 3/specs/prd.md`: dolores con fuente, por qué ahora, alternativas y lo que ya está resuelto gratis.
+**Context**: Prompt 1, segmento 2.
+
+---
+
+## PRD v2 - Segmento 2 aprobado; segmento 3 en revisión
+**Timestamp**: 2026-11-21T22:48:55Z
+**User Input**: "aprobado, sigamos"
+**AI Response**: Segmento 2 marcado como aprobado. Redactado el segmento 3 (ICP detallado). Se quitó la señal "tiene GitOps" del ICP, porque contradice el ajuste sin Git; quedó corregido también en `docs/icp.md`.
+**Context**: Prompt 1, segmento 3.
+
+---
+
+## PRD v2 - Segmento 3 aprobado; segmento 4 en revisión
+**Timestamp**: 2026-11-21T22:51:21Z
+**User Input**: "Aprobado, sigamos"
+**AI Response**: Segmento 3 marcado como aprobado. Redactado el segmento 4 (propuesta de valor, diferenciación frente a las alternativas gratuitas, brecha y matriz de posicionamiento en Mermaid con texto alternativo).
+**Context**: Prompt 1, segmento 4.
+
+---
+
+## PRD v2 - Segmento 4 aprobado con ajuste; segmento 5 en revisión
+**Timestamp**: 2026-11-21T22:54:46Z
+**User Input**: "muy bien pero agregar a el como de synkra que se puedan aagregar los compilados,, por lo demás, aprobado"
+**AI Response**: Añadido al "cómo" del segmento 4 el paso 1: agregar los compilados (core y plugins) al catálogo de SynKra desde el front. Segmento 4 aprobado. Redactado el segmento 5 con 5 casos de uso; el CU1 es agregar compilados.
+**Context**: Prompt 1, segmento 5.
+
+---
+
+## PRD v2 - Segmento 5 aprobado con ajustes; segmento 6 en revisión
+**Timestamp**: 2026-11-21T22:59:58Z
+**User Input**: "Cada core que se suba, tiene su carpeta propia e i ndependiente de plugins, además el backend deberia y debe poder usarse como minumi en un futuro con CLI para pipelines de automatizacion, la aplicacion front es para usos academicos y demostrativos de la solucion propuesta, además, los pulings se le pueden taggear segun el pais, region o cliente que lo utilicé, tambien debe tener taggeo de versiones, su objetivo no es un control de versiones, es una herramienta para despliegue, no de codigo, por lo demás, queda aprobado"
+**AI Response**: Segmentos 4 y 5 ajustados: cada core tiene su carpeta de plugins independiente; los plugins llevan etiquetas de país, región o cliente y de versión; el backend es el producto (API, y a futuro CLI para pipelines) y el front es demostrativo; SynKra despliega, no versiona código. Segmento 5 aprobado. Redactado el segmento 6 con 8 principios verificables.
+**Context**: Prompt 1, segmento 6.
+
+---
+
+## PRD v2 - Segmento 6 aprobado; segmento 7 en revisión
+**Timestamp**: 2026-11-21T23:02:48Z
+**User Input**: "aprobado, sigamos"
+**AI Response**: Segmento 6 marcado como aprobado. Redactado el segmento 7 con cuatro journeys: happy path de la PO de país, happy path del operador por API, abandono y escalamiento cuando el core no arranca, con el traspaso de contexto al SRE.
+**Context**: Prompt 1, segmento 7.
+
+---
+
+## PRD v2 - Segmento 7 aprobado; segmento 8 en revisión
+**Timestamp**: 2026-11-21T23:05:22Z
+**User Input**: "aprobado"
+**AI Response**: Segmento 7 marcado como aprobado. Redactado el segmento 8 (MoSCoW): 8 Must, 5 Should, 4 Could, 5 Won't. Queda una decisión abierta para el segmento 9: cómo llega la carpeta de plugins al pod.
+**Context**: Prompt 1, segmento 8.
+
+---
+
+## PRD v2 - Segmento 8 aprobado; segmento 9 en revisión
+**Timestamp**: 2026-11-21T23:08:09Z
+**User Input**: "aprobado"
+**AI Response**: Segmento 8 marcado como aprobado. Redactado el segmento 9: 8 módulos, 4 roles, mecanismo propuesto para la carpeta de plugins (un init container descarga solo los plugins elegidos), 4 pantallas, diagrama Mermaid con texto alternativo, ubicación de cada componente y stack propuesto para el backend (Java 21).
+**Context**: Prompt 1, segmento 9.
+
+---
+
+## PRD v2 - Segmento 9 aprobado con sus decisiones; segmento 10 en revisión
+**Timestamp**: 2026-11-21T23:11:46Z
+**User Input**: "aprobado"
+**AI Response**: Segmento 9 aprobado, con dos decisiones: un init container descarga solo los plugins elegidos a /plugins, y el backend va en Java 21 / Spring Boot. Redactado el segmento 10: North Star, KPIs de activación, retención y calidad, métricas de la verificación y una métrica de ruido (deriva entre el registro y el clúster).
+**Context**: Prompt 1, segmento 10.
+
+---
+
+## PRD v2 - Segmento 10 aprobado sin métricas de negocio; segmento 11 en revisión
+**Timestamp**: 2026-11-21T23:15:37Z
+**User Input**: "retira las cosas de negocio, ya que es un ejerccio academico que no satisface problematicas reales, además , por ejemplo la metrica de ruido o la adopcion, por lo demás, aprobado"
+**AI Response**: Segmento 10 sin métricas de negocio: se quitaron la adopción, la métrica de ruido y la comparación con hacerlo a mano. Quedan la North Star, los KPIs técnicos y las métricas de la verificación, con la omisión de la métrica de ruido declarada frente al Prompt 1. Segmento 10 aprobado. Redactado el segmento 11: suite de combinaciones, criterios, revisión y red-teaming sobre descriptores y artefactos.
+**Context**: Prompt 1, segmento 11.
+
+---
+
+## PRD v2 - Sin contenido de negocio; segmento 11 aprobado; segmento 12 en revisión
+**Timestamp**: 2026-11-21T23:19:29Z
+**User Input**: "elimina los contenidos de negocio, ya que esto está como un ejercicio academico, dadas limitaciones y alcance no es posible de momento aplicarlo al trabajo, lo demás apruebalo"
+**AI Response**: Quitado el contenido de negocio del PRD: el segmento 2 queda como problema técnico, sin el "por qué ahora" ni la tabla de alternativas; el 3 pasa a "Usuarios y roles del ejercicio"; el 4 pierde la diferenciación competitiva y la matriz de posicionamiento. Añadida una nota de ejercicio académico al inicio. Segmento 11 aprobado. Redactado el segmento 12 con 10 riesgos técnicos, de seguridad y del proyecto.
+**Context**: Prompt 1, segmento 12.
+
+---
+
+## PRD v2 - Segmento 12 aprobado; segmento 13 en revisión
+**Timestamp**: 2026-11-21T23:22:10Z
+**User Input**: "aprobado"
+**AI Response**: Segmento 12 marcado como aprobado. Redactado el segmento 13: las fases del proyecto repartidas sobre los módulos 4 a 8, lo indispensable para la demo y el guion de la sustentación. Se propone resolver la tensión con el módulo 8 instalando SynKra mismo con GitOps, mientras los productos se despliegan sin Git.
+**Context**: Prompt 1, segmento 13.
+
+---
+
+## PRD v2 - Segmento 13: GitOps para SynKra mismo; pregunta sobre PostgreSQL
+**Timestamp**: 2026-11-21T23:24:50Z
+**User Input**: "esta bien que el proyecto synkra esté con gitops, la duda es para que postgresql?"
+**AI Response**: Se acepta que SynKra mismo se instale con GitOps (módulo 8). Se explicó para qué sirve la base de datos (catálogo, registro de despliegues, usuarios) y se ofrecieron tres alternativas: SQLite o H2 en el volumen (recomendada para el demo), estado en objetos de Kubernetes, o PostgreSQL. Se espera la elección antes de ajustar los segmentos 9 y 13 y consolidar.
+**Context**: Prompt 1, segmento 13.
+
+---
+
+## PRD v2 - Dos etiquetas de versión, SQLite; segmento 13 aprobado; PRD consolidado
+**Timestamp**: 2026-11-21T23:27:53Z
+**User Input**: "debe haber dos etiquetas de version, la primera es la version del plugin en si, y la segunda la version del core compatible con ese plugin, para esto \"Lo que hace falta es que todo eso sobreviva a un reinicio del pod y que se pueda consultar, por ejemplo \"último despliegue de Perú\" o \"plugins con pais=pe\". Pero no tiene que ser PostgreSQL. Para un demo con una sola réplica del backend hay opciones más simples:\" la desicion es usar sqlite"
+**AI Response**: En todo el PRD, la compatibilidad pasa de "versión del contrato" a dos etiquetas de versión (la del plugin y la del core compatible). PostgreSQL se reemplaza por SQLite en el mismo volumen que los artefactos. Segmento 13 aprobado, con SynKra mismo instalado por GitOps. El PRD v2 queda consolidado: los 13 segmentos aprobados y un anexo de decisiones.
+**Context**: Prompt 1, cierre y consolidación.
+
+---
+
+## Paso 6 - Repo ordenado para el alcance nuevo
+**Timestamp**: 2026-11-21T23:30:33Z
+**User Input**: "si, hazlo"
+**AI Response**: Movidos a `archivo/alcance-2026-10/` (con su README): `entradas/`, `DECISIONES.md`, `unidades-y-tareas.md`, `aidlc-docs/inception/`, `aidlc-docs/construction/` y el `aidlc-state.md` anterior. Nuevo `aidlc-docs/aidlc-state.md`, que reinicia INCEPTION a partir del PRD v2. `CLAUDE.md` (WHAT, WHY, HOW) y `README.md` reescritos para el alcance nuevo. El PVB y los docs alineados con las dos etiquetas de versión. Esta bitácora (`audit.md`) se conserva en su lugar.
+**Context**: Paso 6 del plan de módulos 2 y 3. Queda pendiente decidir en el módulo 5 qué pasa con la extensión de autonomía, escrita para el agente de IA.
+
+---

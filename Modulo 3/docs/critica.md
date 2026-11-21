@@ -1,54 +1,137 @@
-# Crítica adversarial — por qué SynKra podría fracasar
+# Investigación de crítica (adversarial): SynKra
 
-> Investigación en contra del producto. Viene de las secciones 4, 6 y 9 del PVB y se amplía
-> con la nueva dirección micro-kernel. Esta crítica **no** se resuelve a favor del optimismo.
+> El objetivo de este documento es **atacar la idea**: por qué fallaría, quién ya la da gratis
+> y qué riesgo la mata. Corresponde al alcance vigente desde el 21-nov-2026 (plataforma de
+> despliegue micro-kernel con front de arrastrar y soltar, sin IA) y sustituye la crítica del
+> 17-oct-2026.
+>
+> **[INTERNO]** marca un juicio propio. **[VERIFICAR]** marca lo que no se pudo confirmar.
+> Las fuentes se consultaron el 21-nov-2026.
 
-## 1. El micro-kernel le quita parte de la razón de ser al agente
+## TL;DR: por qué SynKra podría fracasar
 
-El PVB vendía el agente para **propagar** cambios entre ramas por país. Con un kernel y plugins,
-un cambio en el kernel llega a todos los países sin propagar nada. Lo que queda es localizar
-**qué plugin** tocar, que es un problema más pequeño y que un buen equipo resuelve leyendo el
-código. Si el número de plugins es bajo (2 a 5), el agente aporta poco.
+1. **El motor ya es gratis.** Kustomize components + Argo CD hacen la selección de plugins por
+   variante, sin SynKra. Lo único nuevo es el front, y un front es fácil de copiar.
+2. **Sin Git, se renuncia a la revisión.** SynKra despliega directo, a partir de artefactos ya
+   compilados (decisión del 21-nov-2026). Es más simple, pero ningún humano revisa el cambio
+   antes de que llegue al clúster, y el historial depende de lo que SynKra registre.
+3. **El problema principal no es de herramientas.** La CNCF reporta que el reto n.º 1 es
+   cultural (46%). Una herramienta más puede empeorar la complejidad que dice reducir.
+4. **El micro-kernel en un solo compilado tiene costos.** El core detecta y activa los plugins
+   al arrancar, sin reconstruir la imagen, pero cada imagen lleva el código de todos los países
+   y un plugin defectuoso comparte proceso con el core.
+5. **Sin IA, no cumple una condición del curso.** Se declaró como desviación, pero pesa en el
+   criterio de coherencia técnica.
+6. **El alcance no cabe en el tiempo.** Cuatro fases de construcción: core, motor, front y
+   migración de dos países.
 
-## 2. Comoditización (PVB riesgo #1)
+## 1. Comoditización: ya ocurrió
 
-- Rovo crea work items desde documentos; Copilot y Cursor hacen ticket → PR.
-- Kustomize, Argo CD ApplicationSets y PF4J resuelven gratis el despliegue y los plugins.
-- Un equipo competente conecta un LLM al repositorio y al tracker en un mes (PVB riesgo #2).
-- Harness tiene la mitad de despliegue y solo le falta el frente de entrada.
+- Argo CD soporta Kustomize components en la Application desde la v2.10.0
+  ([docs](https://argo-cd.readthedocs.io/en/stable/user-guide/kustomize/)). "Elegir qué
+  plugins tiene un país" se reduce a una lista en un YAML.
+- Helm hace lo mismo con `condition` y `tags` en los subcharts
+  ([Helm](https://helm.sh/docs/chart_best_practices/dependencies)).
+- KubeVela ya ofrece entrega de aplicaciones por componentes, con una interfaz web para
+  usuarios que no son expertos en Kubernetes, y está en la incubadora de la CNCF desde el
+  27-feb-2023 ([CNCF](https://www.cncf.io/blog/2023/02/27/kubevela-brings-software-delivery-control-plane-capabilities-to-cncf-incubator/)).
+- Port ofrece autoservicio gratis hasta 5 usuarios ([Port](https://port.io/pricing)).
 
-**Lo que queda propio:** el contrato de puntos de extensión regulatorios del kernel y un agente
-con límite de autonomía verificable. Es poco, y hay que decirlo.
+**Consecuencia:** el valor de SynKra no puede estar en desplegar. Tiene que estar en el
+**contrato de plugins y en la validación de compatibilidad**. Si eso no se construye bien, el
+producto es un formulario bonito encima de un `kustomization.yaml`.
 
-## 3. La IA se equivoca y alguien lo aprueba
+## 2. Una capa más contra la complejidad
 
-- Alucinación medida en preguntas sobre casos judiciales federales de EE.UU.: los modelos
-  públicos alucinan al menos 58% de las veces según la versión publicada (Dahl, Magesh, Suzgun &
-  Ho, "Large Legal Fictions", Journal of Legal Analysis, 2024,
-  [Stanford Law](https://law.stanford.edu/publications/large-legal-fictions-profiling-legal-hallucinations-in-large-language-models));
-  el preprint reporta un rango de 69% (GPT-3.5) a 88% (Llama 2)
-  ([arXiv 2401.01301](https://arxiv.org/abs/2401.01301v1)).
-- Herramientas legales comerciales con RAG (Lexis+ AI, Westlaw) alucinan entre 17% y 33%
-  (Magesh et al., "Hallucination-Free?", Journal of Empirical Legal Studies 22:216-242, 2025,
-  doi 10.1111/jels.12413,
-  [Stanford Law](https://law.stanford.edu/publications/hallucination-free-assessing-the-reliability-of-leading-ai-legal-research-tools)).
-- Ambos son benchmarks de derecho de EE.UU. con modelos de 2023-2024, no de código.
-- Fatiga de aprobación: el revisor aprueba en bloque y el "humano en el bucle" se vuelve ficción.
-- Falso negativo silencioso: el agente no reporta un plugin afectado y nadie lo nota.
+- "Too complex to understand or run" es el reto n.º 1 al usar proyectos CNCF en producción
+  (46%, y subiendo 13% interanual)
+  ([CNCF Annual Survey 2024](https://www.cncf.io/wp-content/uploads/2025/04/cncf_annual_survey24_031225a.pdf)).
+- Los portales de plataforma tienen un problema de adopción conocido: según TechTarget,
+  "Spotify officials have estimated publicly that the average Backstage adoption rate is 10%"
+  ([TechTarget, 7-nov-2023](https://techtarget.com/searchitoperations/news/366558592/Behind-the-scenes-Spotify-Backstage-a-work-in-progress)).
+  Un análisis escrito por un vendor competidor afirma que mantenerlo exige "usually 4+, and
+  often 15+ at scale" personas
+  ([Earthly, 15-jul-2025](https://earthly.dev/blog/backstage-is-at-peak-hype/); fuente con
+  conflicto de interés).
 
-## 4. Usar Claude contradice la ventaja de Trust
+**Consecuencia:** SynKra añade un servicio, un front y un contrato más. Si el equipo no lo
+adopta, es costo puro. El PRD tiene que medir la adopción, no solo si la plataforma funciona.
 
-El PVB dice que el código nunca sale del perímetro. Llamar a la API de Claude envía código y
-texto a un proveedor externo. Para un banco real eso es un veto del CISO. El MVP del curso lo
-acepta, pero **el argumento de venta del PVB no se cumple en modo Claude**.
+## 3. El micro-kernel, examinado en frío
 
-## 5. Inyección indirecta de prompts
+**Decisión del 21-nov-2026:** un plugin es un **contenedor lógico**, no un contenedor de Docker.
+Es un artefacto compilado que viaja con el core. Al arrancar, el core detecta qué plugins trae,
+verifica que la versión del core compatible de cada uno coincida con la del core, y activa solo
+los que pide el despliegue de ese país.
 
-El agente lee commits, issues y documentos que un tercero puede escribir. Un texto malicioso
-puede intentar que el agente modifique otra cosa. Mitigación estructural: el agente no puede
-fusionar ni escribir fuera de `synkra/*`.
+Eso resuelve el dilema anterior (si fuera librería habría que reconstruir por despliegue; si
+fuera contenedor de Docker serían microservicios con otro nombre), pero abre riesgos propios:
+
+| Riesgo | Por qué importa | Qué debe exigir el PRD |
+|---|---|---|
+| **El compilado lleva el código de todos los países** | La imagen de Perú contiene el plugin de Colombia aunque no lo active. Un fallo de aislamiento lo puede ejecutar, y la imagen crece con cada país | Probar que un plugin no activado no carga ninguna clase ni expone ninguna ruta |
+| **La compatibilidad se tiene que versionar** | Un cambio incompatible en el core rompe todos los plugins de todos los países a la vez **[INTERNO]** | Dos etiquetas de versión en cada plugin (la suya y la del core compatible) y rechazo al arrancar si no coincide |
+| **La validación solo ocurre al arrancar** | El error de "plugin pedido que no está" aparece en el pod, no antes | Que el motor de despliegue haga la misma verificación **antes** de desplegar |
+| **Aislamiento dentro de un solo proceso** | Un plugin con un bug o una dependencia en conflicto puede tumbar el core | Cargador de clases separado por plugin (como hace PF4J) y límites de recursos por pod |
+
+## 4. Sin IA: la desviación tiene un costo
+
+El curso pone como condición no negociable que el producto use IA de forma defendible, y
+evalúa que "Kubernetes e IA sean centrales, no decorativos" (módulo 2, instrucciones de
+entrega). SynKra decidió **no** usar IA. Es una decisión honesta, pero:
+
+- el criterio de **coherencia técnica** queda incumplido a medias, y
+- el PVB (§6) y el PRD (segmento 11) tienen que explicar **por qué** una IA no aporta aquí, en
+  lugar de dejar esas secciones vacías.
+
+## 5. Riesgo de seguridad que el diseño no elimina
+
+SynKra despliega directo en el clúster, sin pasar por Git (decisión del 21-nov-2026). Eso le
+da privilegios altos:
+
+- Si el front o la API se comprometen, un atacante puede desplegar una imagen arbitraria.
+- Como no hay un PR intermedio, ningún humano revisa el despliegue antes de que se aplique.
+- La cuenta de servicio de SynKra, con permisos de escritura, se convierte en el punto único de
+  falla.
+
+**Mitigación que el PRD debe hacer verificable:** acceso al front con autenticación; la cuenta
+de servicio de SynKra solo tiene permisos en los namespaces `synkra-*`
+(`kubectl auth can-i create deployments -n default --as=system:serviceaccount:synkra:deployer`
+debe responder `no`); solo se despliegan imágenes de un registro permitido; y cada despliegue
+queda registrado, con la opción de volver al anterior. Cada punto se comprueba con un comando,
+no con una promesa.
 
 ## 6. Alcance frente a tiempo
 
-Quedan 5 semanas hasta la sustentación (21-nov-2026) y no hay código. El PVB proponía CRDs con
-controladores, GPU, OpenTelemetry y multi-tenancy. Intentar todo eso garantiza no terminar.
+La sustentación del proyecto final estaba programada para el sábado 21-nov-2026 y se movió a la
+semana siguiente **[VERIFICAR fecha exacta]**. Aun con ese margen, las fases 1 a 4 (core y
+contrato, motor de despliegue, front y API, migración de CO y PE) son trabajo de semanas
+**[INTERNO]**. Si no se recorta, el riesgo más probable es llegar con cuatro fases a medias en
+lugar de una que funcione de punta a punta.
+
+**Corte propuesto para el PRD:** un core, **dos** plugins y un front de acceso mínimo que
+verifique y despliegue. Todo lo demás queda en Could o Won't.
+
+## 7. Qué cambiaría del PVB
+
+- La ventaja competitiva no es "desplegar con arrastrar y soltar". Es el contrato de plugins
+  más la validación de compatibilidad.
+- El segmento debe excluir explícitamente a los equipos que ya están contentos con Helm,
+  Kustomize, KubeVela o Backstage.
+- Las métricas deben incluir la **adopción** (cuántas variantes se arman con SynKra frente a
+  editar YAML a mano).
+
+## 8. Veredicto
+
+La idea es **construible y defendible como proyecto académico** si se presenta como lo que es:
+una capa delgada y opinada sobre Kustomize y Argo CD, cuyo aporte es el contrato micro-kernel
+y la validación. **No es defendible como producto comercial** frente a KubeVela, Backstage y
+Port sin evidencia de entrevistas que hoy no existe **[INTERNO]**.
+
+## 9. Afirmaciones descartadas o sin verificar
+
+- La cifra "Backstage tiene 89% de cuota de mercado" circula en foros, pero no se encontró una
+  fuente primaria. No se usa **[VERIFICAR]**.
+- La predicción de Gartner del 80% se refiere a organizaciones **grandes**. No vale para
+  empresas medianas de LatAm.
+- Las desventajas del micro-kernel según Richards no se pudieron leer (muro de pago).
