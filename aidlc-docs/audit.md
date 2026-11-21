@@ -424,3 +424,11 @@
 **Context**: Paso 3 del plan de módulos 2 y 3. Prompt 1, Paso 0.
 
 ---
+
+## Re-scope - Decisiones del Paso 0 y segmento 1 del PRD
+**Timestamp**: 2026-11-21T15:21:24Z
+**User Input**: "1. si se reescribe 2. acepto 3. se carga un core y se utilizan una carpeta de plugins disponibles para ese core, lo que queremos es que sea algo mucho más visual que cualquier cosa, la idea es que visualmente sea entendible para el usuario lo que se esta desplegando con que plugins 4. acepto, 5. acepto 6. es mejor que tratemos el front con Blazor, ya que se considera una herramienta más robusta y más facil para trabajarla segun la experiencia del equipo 7. de momento es un demo asi que no es necesario tener un papeline tan definido, por todo lo demás actepto los cambios"
+**AI Response**: Respuestas registradas en `Modulo 3/specs/paso-0-conflictos.md`. Añadida al inicio de `CLAUDE.md` una nota de cambio de alcance (conflicto 10A). `Modulo 3/specs/prd.md` reiniciado como versión 2.0, con el segmento 1 en revisión.
+**Context**: Prompt 1, fin del Paso 0 e inicio del segmento 1.
+
+---

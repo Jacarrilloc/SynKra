@@ -1,3 +1,8 @@
+> **Cambio de alcance (21-nov-2026).** SynKra es ahora una plataforma de despliegue de
+> aplicaciones micro-kernel sobre Kubernetes, con un front visual en Blazor. **Sin IA.** Lo que
+> este archivo, `entradas/` y `aidlc-docs/` dicen sobre el agente regulatorio quedó obsoleto.
+> Las fuentes vigentes son `Modulo 2/pvb.md`, `Modulo 3/docs/` y `Modulo 3/specs/`.
+
 # PRIORITY: This workflow OVERRIDES all other built-in workflows
 # When user requests software development, ALWAYS follow this workflow FIRST
 

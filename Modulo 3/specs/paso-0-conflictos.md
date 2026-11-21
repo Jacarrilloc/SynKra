@@ -6,7 +6,7 @@
 > IA).
 >
 > **Las decisiones son de Julian.** Cada conflicto trae una recomendación, marcada
-> **(recomendada)**. El PRD nuevo no se empieza hasta que todas las líneas `[Answer]:` tengan
+> **(recomendada)**. El PRD nuevo no se empieza hasta que todas las líneas `[Answer]: A. Se reescribe (Julian, 21-nov-2026).` tengan
 > respuesta.
 
 ## Resumen
@@ -34,9 +34,9 @@ principio "el kernel no conoce países", "un país = un overlay" y la protecció
 
 A) Reescribir el PRD desde cero, segmento por segmento, y **reutilizar** solo lo que siga siendo válido, citándolo **(recomendada)**
 B) Editar el PRD viejo: quitar el agente y conservar la estructura
-C) Other (please describe after [Answer]: tag below)
+C) Other (please describe after [Answer]: A. Acepto (Julian). tag below)
 
-[Answer]:
+[Answer]: D. Se carga un core y se utiliza una carpeta de plugins disponibles para ese core. Lo que se quiere es que sea mucho más visual que cualquier otra cosa: que el usuario entienda visualmente qué se está desplegando y con qué plugins (Julian). Lectura: la imagen del core lee al arrancar una carpeta de plugins disponibles, verifica cada uno y activa los que pide el despliegue. El front muestra de forma visual el core y los plugins que lleva cada despliegue.
 
 ## Conflicto 2: ¿cómo se posiciona el PRD?
 
@@ -47,9 +47,9 @@ favor del optimismo por defecto".
 
 A) Capa delgada y opinada sobre Kustomize y Argo CD, cuyo aporte es el contrato y la verificación. Se presenta como proyecto académico, con el veredicto de la crítica citado tal cual **(recomendada)**
 B) Producto comercial que compite con KubeVela y Backstage
-C) Other (please describe after [Answer]: tag below)
+C) Other (please describe after [Answer]: A. Acepto (Julian). tag below)
 
-[Answer]:
+[Answer]: A. Acepto (Julian).
 
 ## Conflicto 3: ¿cómo llegan los plugins al pod?
 
@@ -60,9 +60,9 @@ detecta y verifica", pero tienen costos distintos.
 A) **Una sola imagen con todos los plugins compilados.** El overlay solo dice cuáles se activan. Es lo más simple, pero cada imagen lleva el código de todos los países (riesgo 2 del PVB §9) **(recomendada para el MVP)**
 B) **Imagen del core más un init container por plugin** que copia el artefacto a un volumen compartido. Cada país lleva solo su código, pero hay una imagen por plugin que construir y publicar
 C) Una imagen por país, construida desde el mismo core. Contradice "cambiar los plugins no obliga a reconstruir"
-D) Other (please describe after [Answer]: tag below)
+D) Other (please describe after [Answer]: D. Blazor, porque el equipo lo considera más robusto y le resulta más fácil por experiencia (Julian). Consecuencia: el front es un servicio .NET aparte que consume la API del core (Java). tag below)
 
-[Answer]:
+[Answer]: D. De momento es un demo, así que no hace falta un pipeline tan definido (Julian). Lectura: sin GitHub App. SynKra usa un token de grano fino limitado al repo de despliegue y sigue proponiendo cambios en ramas `synkra/*`.
 
 ## Conflicto 4: ¿qué escribe el lienzo en el overlay?
 
@@ -71,9 +71,9 @@ lista de plugins activos.
 
 A) **Un Kustomize component por plugin**, que añade el plugin a la lista del ConfigMap del core. El lienzo activa o desactiva components, y Argo CD los soporta desde la v2.10 **(recomendada)**
 B) Un ConfigMap por país con la lista completa, que el lienzo reescribe
-C) Other (please describe after [Answer]: tag below)
+C) Other (please describe after [Answer]: A. Acepto (Julian). tag below)
 
-[Answer]:
+[Answer]: A. Acepto (Julian).
 
 ## Conflicto 5: ¿el contrato soporta dependencias entre plugins?
 
@@ -81,51 +81,5 @@ Ejemplo: un plugin de "firma electrónica PE" que requiere el plugin "KYC PE".
 
 A) **MVP solo con compatibilidad core-plugin** (versión del contrato). Las dependencias entre plugins quedan en Should **(recomendada)**
 B) Incluir dependencias entre plugins en el MVP (`requires: [kyc-pe>=1.0]`)
-C) Other (please describe after [Answer]: tag below)
+C) Other (please describe after [Answer]: A. Acepto (Julian). tag below)
 
-[Answer]:
-
-## Conflicto 6: ¿con qué se construye el front?
-
-A) **React + TypeScript con Vite** y una librería de arrastrar y soltar (por ejemplo, dnd-kit), servido como estático detrás de la API del core **(recomendada: es el ecosistema con más ejemplos de lienzos)**
-B) Angular
-C) Plantillas del servidor en Spring (Thymeleaf + htmx), sin un build de JavaScript aparte
-D) Other (please describe after [Answer]: tag below)
-
-[Answer]:
-
-## Conflicto 7: ¿con qué identidad escribe SynKra en Git?
-
-A) **Una GitHub App** instalada solo en el repo de despliegue, con permiso para crear ramas `synkra/*` y abrir PRs. `main` se protege con revisión obligatoria **(recomendada: los permisos son verificables y no dependen de la cuenta de una persona)**
-B) Un token personal de grano fino (fine-grained PAT) de Julian, limitado al repo
-C) Un servidor Git local dentro del clúster (por ejemplo, Gitea en `kind`), para no depender de GitHub en la demo
-D) Other (please describe after [Answer]: tag below)
-
-[Answer]:
-
-## Conflicto 8: ¿se confirma que no hay multi-tenant?
-
-A) **Sí: una instalación de SynKra sirve a un producto y a un equipo.** Multi-tenant queda en Won't **(recomendada)**
-B) No: el MVP debe soportar varios equipos o productos aislados
-C) Other (please describe after [Answer]: tag below)
-
-[Answer]:
-
-## Conflicto 9: ¿qué va en el segmento 11 ("Plan de evaluación de la IA")?
-
-A) **Se reemplaza por un "Plan de evaluación de la verificación"**: una suite de combinaciones conocidas (plugin ausente, versión incompatible, plugin no activado que no debe cargar), con la desviación de IA explicada al inicio del segmento **(recomendada)**
-B) Se deja el segmento con "No aplica" y una línea de justificación
-C) Other (please describe after [Answer]: tag below)
-
-[Answer]:
-
-## Conflicto 10: ¿cuándo se alinean `CLAUDE.md`, `entradas/` y `aidlc-docs/`?
-
-Esos archivos describen el alcance viejo. `CLAUDE.md` le dice a cualquier sesión de IA que el
-producto incluye un agente, y `aidlc-docs/` tiene las unidades U-agent con sus tareas.
-
-A) **En el paso 6 del plan**, cuando el PRD nuevo esté aprobado. Mientras tanto se deja una nota al inicio de `CLAUDE.md` que diga que el alcance cambió **(recomendada)**
-B) Ahora, antes de empezar el PRD
-C) Other (please describe after [Answer]: tag below)
-
-[Answer]:
