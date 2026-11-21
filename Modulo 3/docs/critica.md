@@ -95,11 +95,11 @@ permisos de escritura. Cada punto se comprueba con un comando, no con una promes
 
 ## 6. Alcance frente a tiempo
 
-Según el cronograma del curso, la sustentación del proyecto final es el sábado
-**21-nov-2026**, la misma fecha en que se redefinió el alcance. Las fases 1 a 4 (core y
+La sustentación del proyecto final estaba programada para el sábado 21-nov-2026 y se movió a la
+semana siguiente **[VERIFICAR fecha exacta]**. Aun con ese margen, las fases 1 a 4 (core y
 contrato, motor de despliegue, front y API, migración de CO y PE) son trabajo de semanas
-**[INTERNO]**. Si no se recorta, el riesgo más probable es llegar con cuatro fases a medias
-en lugar de una que funcione de punta a punta.
+**[INTERNO]**. Si no se recorta, el riesgo más probable es llegar con cuatro fases a medias en
+lugar de una que funcione de punta a punta.
 
 **Corte propuesto para el PRD:** un core, **dos** plugins y un front mínimo que genere el
 overlay y abra el PR. Todo lo demás queda en Could o Won't.

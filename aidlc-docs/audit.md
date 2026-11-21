@@ -408,3 +408,11 @@
 **Context**: Insumo del PRD. Resuelve la decisión abierta entre librería y contenedor.
 
 ---
+
+## Re-scope - PVB para el alcance nuevo (paso 2)
+**Timestamp**: 2026-11-21T15:10:11Z
+**User Input**: "se ajustó la sustentación para la otra semana , asi que tenemos más tiempo, ahora, asi que tenemos más tiempo, ahora, con relación a PVB, empecemos con el PVB"
+**AI Response**: Reescrito `Modulo 2/pvb.md` con las 9 secciones para la plataforma de despliegue micro-kernel sin IA. Las secciones 4, 5 y 6 justifican la ausencia de IA, y se propone una North Star nueva. Ajustada `Modulo 3/docs/critica.md` §6 a la nueva fecha de sustentación.
+**Context**: Paso 2 del plan de módulos 2 y 3. El PRD no se tocó.
+
+---
