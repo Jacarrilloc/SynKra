@@ -560,3 +560,27 @@
 **Context**: Paso 6 del plan de módulos 2 y 3. Queda pendiente decidir en el módulo 5 qué pasa con la extensión de autonomía, escrita para el agente de IA.
 
 ---
+
+## Módulo 5 - Inicio del flujo AI-DLC (INCEPTION) sobre el PRD v2
+**Timestamp**: 2026-11-21T23:35:26Z
+**User Input**: "listo, empecemos con el modulo 5"
+**AI Response**: Se arranca INCEPTION siguiendo `proyecto-final-de-prd-a-unidades-y-tareas.md` del módulo 5, con aprobación paso a paso. Entradas autoritativas: `Modulo 3/specs/prd.md` (PRD v2) y `Modulo 2/pvb.md`. El trabajo se detiene al terminar la Parte 1 de Code Generation (planes de tareas), sin código de aplicación.
+**Context**: Módulo 5, arranque del flujo.
+
+---
+
+## Workspace Detection
+**Timestamp**: 2026-11-21T23:41:00Z
+**User Input**: (n/a, etapa informativa)
+**AI Response**: Hallazgos: existe `aidlc-docs/aidlc-state.md` reiniciado el 21-nov-2026 (sin etapas completadas); no hay código de aplicación en la raíz (solo `Makefile`, `scripts/` del suelo Linux y documentación); proyecto **greenfield**; Reverse Engineering se omite. Extensiones encontradas: security, resiliency y property-based testing (con opt-in) y autonomía (sin opt-in, siempre activa, escrita para el agente de IA del alcance archivado). Siguiente etapa: Requirements Analysis.
+**Context**: INCEPTION - Workspace Detection completada.
+
+---
+
+## Requirements Analysis - Preguntas de verificación
+**Timestamp**: 2026-11-21T23:45:00Z
+**User Input**: (n/a)
+**AI Response**: Profundidad estándar (proyecto nuevo, varios componentes, requisitos ya detallados en el PRD). Creado `aidlc-docs/inception/requirements/requirement-verification-questions.md` con 14 preguntas: la decisión sobre la extensión de autonomía, los tres opt-in de extensiones y los huecos o contradicciones que deja el PRD v2. Cada pregunta trae una recomendación. Se espera la respuesta de Julian antes de redactar `requirements.md`.
+**Context**: INCEPTION - Requirements Analysis, Step 6 (compuerta: esperar respuestas).
+
+---
