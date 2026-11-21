@@ -46,7 +46,8 @@ cosas**:
 1. un **contrato de plugins** para una aplicación micro-kernel (no solo para servicios
    sueltos),
 2. **validación de compatibilidad** entre el core y los plugins antes de desplegar, y
-3. un **lienzo visual** que produce un overlay versionado en Git, revisable como PR.
+3. un **front de acceso** que despliega directo artefactos ya compilados, sin pasar por Git, y
+   muestra qué corre en cada país.
 
 Es un espacio estrecho. KubeVela cubre buena parte de los puntos 1 y 3 con otro modelo (OAM),
 y la diferencia puede no bastar a un comprador (ver `critica.md`, §1).

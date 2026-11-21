@@ -432,3 +432,11 @@
 **Context**: Prompt 1, fin del Paso 0 e inicio del segmento 1.
 
 ---
+
+## Re-scope - Sin Git: SynKra solo despliega
+**Timestamp**: 2026-11-21T15:35:02Z
+**User Input**: "con visual me referia a un front de acceso, en un futuro la idea es que sea una herramienta que pueda automatizar esos despliegues, no es necesario meter git, el proyecto ya está compilado, por lo que no hay que meter git en el proceso, la herramienta que estamos planteando solo es de despliegue"
+**AI Response**: Quitados Git, los PRs y Argo CD del flujo en el PVB, en los docs (overview, mercado, icp, critica) y en el segmento 1 del PRD. SynKra despliega directo, con una cuenta de servicio limitada a `synkra-*`, y registra cada despliegue. Se añadieron riesgos por la falta de revisión y de historial. En `paso-0-conflictos.md` se anotó el ajuste: el conflicto 7 queda sin efecto y el 4 pasa a ser un mecanismo interno.
+**Context**: Segmento 1 del PRD reescrito y de nuevo en revisión.
+
+---

@@ -53,5 +53,5 @@ vendors de software financiero y fintechs con presencia en Colombia y Perú.
 |---|---|
 | "Eso ya lo hago con Kustomize components o con Helm" | Cierto: SynKra los usa por debajo. Añade el contrato de plugins, la validación de compatibilidad y la vista por país. Si eso no vale la pena para el equipo, no es ICP |
 | "¿Por qué no KubeVela?" | KubeVela modela servicios con OAM. SynKra modela un core y sus plugins, con un contrato de versiones. Diferencia por validar en entrevistas **[VERIFICAR]** |
-| "Un front visual es un juguete; yo reviso PRs" | El lienzo **no despliega directo**: genera un PR con el overlay. La revisión sigue siendo en Git |
-| "Es otra pieza con permisos de escritura en mi repo y mi clúster" | Escribe solo en ramas de propuesta; despliega Argo CD, no SynKra. Los permisos son verificables (ver `critica.md`, §5) |
+| "Yo despliego con GitOps y reviso PRs" | SynKra no pasa por Git: despliega artefactos ya compilados. Para un equipo que exige PRs, hoy no es la herramienta, y se dice así |
+| "Es otra pieza con permisos de escritura en mi clúster" | Sus permisos se limitan a los namespaces `synkra-*`, solo despliega imágenes de un registro permitido y registra cada despliegue. Es verificable (ver `critica.md`, §5) |

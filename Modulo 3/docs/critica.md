@@ -12,14 +12,17 @@
 
 1. **El motor ya es gratis.** Kustomize components + Argo CD hacen la selección de plugins por
    variante, sin SynKra. Lo único nuevo es el front, y un front es fácil de copiar.
-2. **El problema principal no es de herramientas.** La CNCF reporta que el reto n.º 1 es
+2. **Sin Git, se renuncia a la revisión.** SynKra despliega directo, a partir de artefactos ya
+   compilados (decisión del 21-nov-2026). Es más simple, pero ningún humano revisa el cambio
+   antes de que llegue al clúster, y el historial depende de lo que SynKra registre.
+3. **El problema principal no es de herramientas.** La CNCF reporta que el reto n.º 1 es
    cultural (46%). Una herramienta más puede empeorar la complejidad que dice reducir.
-3. **El micro-kernel en un solo compilado tiene costos.** El core detecta y activa los plugins
+4. **El micro-kernel en un solo compilado tiene costos.** El core detecta y activa los plugins
    al arrancar, sin reconstruir la imagen, pero cada imagen lleva el código de todos los países
    y un plugin defectuoso comparte proceso con el core.
-4. **Sin IA, no cumple una condición del curso.** Se declaró como desviación, pero pesa en el
+5. **Sin IA, no cumple una condición del curso.** Se declaró como desviación, pero pesa en el
    criterio de coherencia técnica.
-5. **El alcance no cabe en el tiempo.** Cuatro fases de construcción: core, motor, front y
+6. **El alcance no cabe en el tiempo.** Cuatro fases de construcción: core, motor, front y
    migración de dos países.
 
 ## 1. Comoditización: ya ocurrió
@@ -67,7 +70,7 @@ fuera contenedor de Docker serían microservicios con otro nombre), pero abre ri
 |---|---|---|
 | **El compilado lleva el código de todos los países** | La imagen de Perú contiene el plugin de Colombia aunque no lo active. Un fallo de aislamiento lo puede ejecutar, y la imagen crece con cada país | Probar que un plugin no activado no carga ninguna clase ni expone ninguna ruta |
 | **El contrato se tiene que versionar** | Un cambio incompatible en el core rompe todos los plugins de todos los países a la vez **[INTERNO]** | Versión del contrato en cada plugin y rechazo al arrancar si no coincide |
-| **La validación solo ocurre al arrancar** | El error de "plugin pedido que no está" aparece en el pod, no antes | Que el motor de despliegue haga la misma verificación **antes** de abrir el PR |
+| **La validación solo ocurre al arrancar** | El error de "plugin pedido que no está" aparece en el pod, no antes | Que el motor de despliegue haga la misma verificación **antes** de desplegar |
 | **Aislamiento dentro de un solo proceso** | Un plugin con un bug o una dependencia en conflicto puede tumbar el core | Cargador de clases separado por plugin (como hace PF4J) y límites de recursos por pod |
 
 ## 4. Sin IA: la desviación tiene un costo
@@ -82,16 +85,20 @@ entrega). SynKra decidió **no** usar IA. Es una decisión honesta, pero:
 
 ## 5. Riesgo de seguridad que el diseño no elimina
 
-Una plataforma que escribe en Git y dispara despliegues tiene privilegios altos:
+SynKra despliega directo en el clúster, sin pasar por Git (decisión del 21-nov-2026). Eso le
+da privilegios altos:
 
-- Si el front o la API se comprometen, un atacante puede proponer un overlay que despliegue
-  una imagen arbitraria.
-- Si SynKra tiene credenciales para escribir en `main` o para aplicar en el clúster, se
-  convierte en el punto único de falla.
+- Si el front o la API se comprometen, un atacante puede desplegar una imagen arbitraria.
+- Como no hay un PR intermedio, ningún humano revisa el despliegue antes de que se aplique.
+- La cuenta de servicio de SynKra, con permisos de escritura, se convierte en el punto único de
+  falla.
 
-**Mitigación que el PRD debe hacer verificable:** SynKra solo escribe en ramas de propuesta y
-abre PRs; `main` está protegida; Argo CD es quien aplica, y SynKra no tiene un kubeconfig con
-permisos de escritura. Cada punto se comprueba con un comando, no con una promesa.
+**Mitigación que el PRD debe hacer verificable:** acceso al front con autenticación; la cuenta
+de servicio de SynKra solo tiene permisos en los namespaces `synkra-*`
+(`kubectl auth can-i create deployments -n default --as=system:serviceaccount:synkra:deployer`
+debe responder `no`); solo se despliegan imágenes de un registro permitido; y cada despliegue
+queda registrado, con la opción de volver al anterior. Cada punto se comprueba con un comando,
+no con una promesa.
 
 ## 6. Alcance frente a tiempo
 
@@ -101,8 +108,8 @@ contrato, motor de despliegue, front y API, migración de CO y PE) son trabajo d
 **[INTERNO]**. Si no se recorta, el riesgo más probable es llegar con cuatro fases a medias en
 lugar de una que funcione de punta a punta.
 
-**Corte propuesto para el PRD:** un core, **dos** plugins y un front mínimo que genere el
-overlay y abra el PR. Todo lo demás queda en Could o Won't.
+**Corte propuesto para el PRD:** un core, **dos** plugins y un front de acceso mínimo que
+verifique y despliegue. Todo lo demás queda en Could o Won't.
 
 ## 7. Qué cambiaría del PVB
 

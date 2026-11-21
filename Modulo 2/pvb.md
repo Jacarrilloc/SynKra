@@ -29,20 +29,20 @@ del producto.
 **Nombre del producto:** SynKra
 
 **Descripción en una línea (qué hace y para quién):**
-Plataforma de despliegue para aplicaciones **micro-kernel** sobre Kubernetes. Un equipo arma la
-variante de su producto para cada país arrastrando plugins a un lienzo. SynKra verifica que la
-combinación sea compatible con el core, genera el overlay de Kustomize y lo propone como pull
-request. Argo CD lo despliega. Está pensada para equipos de plataforma que mantienen un mismo
-producto en varios países.
+Herramienta de **despliegue** para aplicaciones **micro-kernel** ya compiladas, sobre
+Kubernetes. Desde un front de acceso, el equipo elige el core y los plugins que lleva cada país.
+SynKra verifica que la combinación sea compatible y la despliega directamente en el clúster. A
+futuro, la idea es que automatice esos despliegues. Está pensada para equipos de plataforma que
+mantienen un mismo producto en varios países.
 
 **Tagline interno:** _"El core es uno; cada país elige sus plugins, y nada incompatible llega al
 clúster."_
 
 **Alcance de la primera iteración (adición a la plantilla, para sustentar viabilidad):**
 un core en Java 21 / Spring Boot con las funciones básicas, un contrato de plugins versionado,
-dos plugins de país (Colombia y Perú), un motor que valida la selección y genera el overlay, y
-un front mínimo de arrastrar y soltar que abre el PR. Corre en un clúster local de `kind`. Sin
-IA, sin multi-tenant y sin marketplace de plugins.
+dos plugins de país (Colombia y Perú), un motor que valida la selección y la despliega, y un
+front de acceso en Blazor. Corre en un clúster local de `kind`. **SynKra no compila ni usa Git:
+parte de artefactos ya compilados.** Sin IA, sin multi-tenant y sin marketplace de plugins.
 
 ---
 
@@ -82,14 +82,14 @@ vista por país que alguien que no sea experto pueda usar**.
 **[X] Sí, porque es un problema de WORKFLOW/INTEGRACIÓN, no de OUTPUT**
 
 Ningún modelo sabe qué plugins compiló esta empresa, qué versión del contrato implementa cada
-uno ni qué pidió cada país. Esa información vive en el compilado y en Git, y la verificación de
+uno ni qué pidió cada país. Esa información vive en el compilado y en el clúster, y la verificación de
 compatibilidad es una regla determinista, no una generación.
 
 **Durability Score: 3/5**
 
 No es 4 porque el motor de abajo ya está comoditizado (Kustomize components, Helm con
 condiciones) y KubeVela ofrece una interfaz web para usuarios que no son expertos en Kubernetes.
-Lo durable es el contrato y la verificación. El lienzo es fácil de copiar.
+Lo durable es el contrato y la verificación. El front es fácil de copiar.
 
 ---
 
@@ -116,9 +116,9 @@ Backstage o KubeVela y están contentas.
 **¿Quién controla el veto de confianza?**
 
 1. **El Head of Platform o SRE Lead.** Su pregunta: _"¿esto añade una pieza que tengo que operar,
-   con permisos sobre mi repo y mi clúster?"_ La respuesta tiene que ser verificable: SynKra
-   solo escribe en ramas de propuesta, `main` está protegida y quien aplica en el clúster es
-   Argo CD, no SynKra.
+   con permisos de escritura sobre mi clúster?"_ La respuesta tiene que ser verificable: la
+   cuenta de servicio de SynKra solo puede crear y cambiar recursos en sus namespaces
+   (`synkra-*`), y eso se comprueba con `kubectl auth can-i`.
 2. **El arquitecto de software dueño del core.** Su pregunta: _"¿un plugin puede romper el
    core?"_ La respuesta es el contrato versionado y el rechazo al arrancar si un plugin no
    cumple.
@@ -136,17 +136,18 @@ comprobar.
 
 1. **Doble verificación del contrato (desde el día 1).** Cada plugin es un **contenedor lógico**:
    un artefacto compilado que viaja con el core y declara qué versión del contrato implementa.
-   El motor verifica la selección **antes** de abrir el PR, y el core la vuelve a verificar
+   El motor verifica la selección **antes** de desplegar, y el core la vuelve a verificar
    **al arrancar**: detecta qué plugins trae el compilado, los compara con la lista que pide el
    despliegue y no arranca si falta uno o si es incompatible.
-2. **Nada se despliega sin revisión (desde el día 1).** El lienzo no aplica nada: genera un
-   overlay y abre un PR. La revisión sigue ocurriendo en Git, como hoy.
-3. **Una sola fuente de verdad por país (se construye operando).** El overlay de cada país en Git
-   dice qué plugins y qué versiones tiene. La hoja de cálculo deja de existir.
+2. **Despliegue acotado (desde el día 1).** Una combinación que no pasa la verificación nunca
+   se aplica. SynKra solo tiene permisos en sus namespaces, y cada despliegue queda registrado
+   (quién, cuándo, qué core y qué plugins), con la opción de volver al anterior.
+3. **Una sola vista por país (se construye operando).** El front muestra, leyendo el propio
+   clúster, qué core y qué plugins corren en cada país. La hoja de cálculo deja de existir.
 
 **Por qué no elegí Data:** SynKra no genera datos únicos.
-**Por qué no elegí Distribution:** no controlo ningún canal. Me monto en Git y en Argo CD, que
-son de otros.
+**Por qué no elegí Distribution:** no controlo ningún canal. Me monto en Kubernetes, que es de
+otros.
 
 ---
 
@@ -158,9 +159,12 @@ existe** (armar y desplegar variantes por país) sin crear un mercado nuevo.
 
 **Cómo sobrevivo o complemento a los gigantes:**
 
-- **Contra Kustomize, Helm y Argo CD: no compito, me monto encima.** Argo CD corre en cerca del
-  60% de los clústeres encuestados (CNCF, 24-jul-2025). SynKra genera el overlay que Argo CD ya
-  sabe reconciliar.
+- **Contra Kustomize y Helm: no compito, me monto encima.** SynKra puede usar Kustomize para
+  generar los manifiestos de cada despliegue.
+- **Contra Argo CD y el flujo GitOps:** es la alternativa que muchos equipos ya usan; corre en
+  cerca del 60% de los clústeres encuestados (CNCF, 24-jul-2025). SynKra **no pasa por Git**:
+  despliega artefactos ya compilados. Es más simple para un demo, pero renuncia a la revisión y
+  al historial que da Git (sección 9).
 - **Contra KubeVela (CNCF Incubating):** es el competidor más cercano. Modela servicios con OAM
   y tiene una interfaz web, VelaUX. SynKra modela **un core y sus plugins con un contrato de
   versiones**. Si esa diferencia no le importa a un comprador, KubeVela gana.
@@ -180,12 +184,14 @@ propone**.
 
 **Por qué este paradigma:** quien arma la variante decide qué plugins lleva su país. SynKra no
 decide nada: verifica que la combinación sea válida, explica por qué una no lo es ("el plugin
-`kyc-pe` 2.x requiere el contrato 3, y el core implementa el 2") y propone el cambio como PR.
+`kyc-pe` 2.x requiere el contrato 3, y el core implementa el 2") y, cuando el usuario confirma,
+despliega.
 
-**Qué hace sin preguntar:** descubrir los plugins disponibles y sus versiones, verificar la
-compatibilidad mientras el usuario arrastra, y generar el overlay.
+**Qué hace sin preguntar:** descubrir los plugins disponibles para cada core y sus versiones,
+verificar la compatibilidad mientras el usuario elige, y mostrar qué corre en cada país.
 
-**Qué no hace nunca:** escribir en `main`, aplicar en el clúster, ni aprobar su propio PR.
+**Qué no hace nunca:** desplegar sin la confirmación del usuario, desplegar una combinación que
+no pasó la verificación, ni tocar recursos fuera de sus namespaces.
 
 ---
 
@@ -243,16 +249,16 @@ incompatible llegó al clúster.** _Target: 100%._ **[INTERNO]**
 
 **Métricas de usuario:**
 
-1. **Tiempo para armar la variante de un país nuevo**, desde que se abre el lienzo hasta que el
-   PR está listo, frente a hacerlo a mano en YAML. _Target: -50% en el piloto._ **[INTERNO]**
+1. **Tiempo para desplegar la variante de un país nuevo**, desde que se abre el front hasta que
+   los pods están listos, frente a hacerlo a mano con YAML y `kubectl`. _Target: -50% en el piloto._ **[INTERNO]**
    No existe un dato público de partida: se mide en el piloto (`docs/mercado.md`, §5).
-2. **Adopción:** % de cambios de plugins por país que se hacen desde SynKra frente a editar el
-   overlay a mano. Esta métrica existe por el riesgo de adopción de los portales (sección 9).
+2. **Adopción:** % de despliegues por país que se hacen desde SynKra frente a hacerlos a
+   mano. Esta métrica existe por el riesgo de adopción de los portales (sección 9).
    _Target: >70% al final del piloto._ **[INTERNO]**
 
 **Métricas de verificación** (sustituyen a las "métricas específicas de IA"):
 
-1. **Combinaciones inválidas detectadas antes del PR**, sobre una suite de casos conocidos
+1. **Combinaciones inválidas detectadas antes de desplegar**, sobre una suite de casos conocidos
    (plugin ausente, versión del contrato incompatible, dependencia entre plugins rota).
    _Target: 100%._
 2. **Concordancia entre el motor y el core:** toda combinación que el motor aprueba, el core la
@@ -270,11 +276,11 @@ interfaz web. Si KubeVela o Backstage añaden un modelo de "core + plugins con c
 diferenciación de SynKra desaparece.
 
 _Mitigación:_ no competir en desplegar, sino en el **contrato y la verificación**, y montarse
-encima de Kustomize y Argo CD en lugar de reemplazarlos.
+encima de Kubernetes y Kustomize en lugar de reemplazarlos.
 
 **2. ¿Puede un competidor replicar tu producto con la misma API en menos de 6 semanas?**
 
-**Sí, casi todo.** Un lienzo que escribe un `kustomization.yaml` se hace en semanas. Lo que cuesta
+**Sí, casi todo.** Un front que despliega un `kustomization.yaml` se hace en semanas. Lo que cuesta
 más replicar es un contrato de plugins bien versionado, con la doble verificación probada, y
 ni siquiera eso es un foso fuerte. Aceptarlo es parte de la honestidad que pide esta sección.
 
@@ -283,28 +289,32 @@ ni siquiera eso es un foso fuerte. Aceptarlo es parte de la honestidad que pide 
 En orden de probabilidad:
 
 1. **El motor y el core no coinciden.** El motor aprueba una combinación que el core rechaza
-   al arrancar, o al revés. El PR se fusiona y el pod no arranca en producción. _Mitigación:_
+   al arrancar, o al revés. El despliegue sale y el pod no arranca. _Mitigación:_
    una sola librería de verificación, compartida por el motor y el core, y la métrica de
    concordancia de la sección 8.
 2. **Un plugin no activado se ejecuta.** El compilado de cada país trae el código de todos
    los países. Si el aislamiento falla, se ejecuta código de otro país. _Mitigación:_ un
    cargador separado por plugin, y una prueba de que un plugin no activado no carga clases ni
    expone rutas.
-3. **SynKra se vuelve el punto único de falla con privilegios.** Si el front o la API se
-   comprometen, alguien puede proponer un overlay malicioso. _Mitigación:_ SynKra solo escribe
-   en ramas de propuesta, `main` está protegida, SynKra no tiene permisos de escritura en el
-   clúster, y cada punto se comprueba con un comando.
+3. **SynKra se vuelve el punto único de falla con privilegios.** Despliega directo en el
+   clúster, sin un PR que alguien revise. Si el front se compromete, alguien puede desplegar
+   lo que quiera. _Mitigación:_ acceso al front con autenticación; RBAC limitado a los
+   namespaces `synkra-*`; solo se despliegan imágenes de un registro permitido; y un registro de
+   cada despliegue. Cada punto se comprueba con un comando.
+4. **Sin Git, se pierde el historial.** Nadie revisa el cambio antes de que salga, y "qué
+   corría ayer en Perú" solo se sabe si SynKra lo registró. _Mitigación:_ el registro de
+   despliegues y la opción de volver al anterior son Must, no extras.
 
 **Riesgos adicionales del proyecto (adición a la plantilla):**
 
-4. **Adopción.** Los portales de plataforma tienen una adopción interna baja: según TechTarget,
+5. **Adopción.** Los portales de plataforma tienen una adopción interna baja: según TechTarget,
    Spotify estimó públicamente que la adopción media de Backstage es del 10% (TechTarget,
    7-nov-2023). Una capa más puede empeorar la complejidad que dice reducir, y el reto n.º 1
    con contenedores es cultural (46%, CNCF Annual Survey 2024). Por eso la adopción es una
    métrica (sección 8).
-5. **Sin IA, se incumple una condición del curso.** Se declaró como desviación y se justifica en
+6. **Sin IA, se incumple una condición del curso.** Se declaró como desviación y se justifica en
    la sección 6, pero puede costar puntos en el criterio de "coherencia técnica".
-6. **Alcance frente a tiempo.** La sustentación se movió a la semana siguiente al 21-nov-2026
+7. **Alcance frente a tiempo.** La sustentación se movió a la semana siguiente al 21-nov-2026
    **[VERIFICAR fecha exacta]**. Cuatro fases de construcción no caben en ese plazo. El MVP se
    recorta a un core, dos plugins y un front mínimo.
 

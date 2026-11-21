@@ -76,8 +76,10 @@ Las piezas de bajo nivel ya existen y son gratuitas:
   ([CNCF, 24-jul-2025](https://cncf.io/announcements/2025/07/24/cncf-end-user-survey-finds-argo-cd-as-majority-adopted-gitops-solution-for-kubernetes);
   contrastada el 17-oct-2026).
 
-SynKra no reemplaza esas piezas. Se monta **encima**: traduce "estos plugins para este país"
-en un overlay de Kustomize versionado en Git, y deja que Argo CD lo reconcilie.
+SynKra no reemplaza esas piezas: se monta **encima** de Kubernetes y puede usar Kustomize para
+generar los manifiestos. A diferencia del flujo GitOps, **SynKra no pasa por Git** (decisión del
+21-nov-2026): parte de un proyecto ya compilado, traduce "este core con estos plugins para este
+país" en un despliegue y lo aplica directo en el clúster.
 
 ## 5. Dónde se ubica en la categoría: platform engineering
 

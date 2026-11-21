@@ -19,19 +19,23 @@
 
 ## 1. One-liner y Job to be Done
 
-**One-liner.** SynKra es una plataforma **visual** para desplegar aplicaciones micro-kernel en
-Kubernetes: el equipo ve el core y arrastra los plugins que necesita cada país, y SynKra verifica
-que la combinación sea compatible antes de proponerla como cambio en Git para que Argo CD la
-despliegue.
+**One-liner.** SynKra es una herramienta de **despliegue** para aplicaciones micro-kernel ya
+compiladas, sobre Kubernetes. Desde un front de acceso, el equipo elige qué core y qué plugins
+lleva cada país, y SynKra verifica que la combinación sea compatible y la despliega directo en el
+clúster.
 
-**JTBD.** *Cuando* tengo que armar o cambiar el despliegue de mi producto para un país, *quiero*
-ver de un vistazo qué core y qué plugins lleva, y armarlo sin escribir YAML, *para* desplegarlo
-con la certeza de que la combinación es compatible y sin depender de la persona que sabe cómo
-está armado cada país.
+**JTBD.** *Cuando* tengo que desplegar mi producto ya compilado en un país, *quiero* elegir desde
+un solo lugar qué core y qué plugins lleva, y ver qué corre en cada país, *para* desplegarlo con
+la certeza de que la combinación es compatible, sin escribir YAML y sin depender de la persona
+que sabe cómo está armado cada país.
 
-**Misión.** Que desplegar el producto en un país nuevo sea elegir plugins en un lienzo, no clonar
-un repositorio. Que cualquiera del equipo entienda, mirando una pantalla, qué corre en cada país.
-Y que ninguna combinación incompatible llegue al clúster.
+**Misión.** Que desplegar el producto en un país nuevo sea elegir un core y sus plugins, no
+clonar un repositorio ni escribir manifiestos. Que ninguna combinación incompatible llegue al
+clúster. Y, a futuro, que esos despliegues se automaticen.
+
+> [!NOTE]
+> **SynKra no compila ni usa Git.** Parte de un proyecto ya compilado: la imagen del core y su
+> carpeta de plugins disponibles (`paso-0-conflictos.md`, ajuste posterior).
 
 ---
 

@@ -83,3 +83,23 @@ A) **MVP solo con compatibilidad core-plugin** (versión del contrato). Las depe
 B) Incluir dependencias entre plugins en el MVP (`requires: [kyc-pe>=1.0]`)
 C) Other (please describe after [Answer]: A. Acepto (Julian). tag below)
 
+
+---
+
+## Ajuste posterior (21-nov-2026, 10:35 hora de Bogotá)
+
+Julian precisó: _"con visual me referia a un front de acceso, en un futuro la idea es que sea
+una herramienta que pueda automatizar esos despliegues, no es necesario meter git, el proyecto
+ya está compilado, por lo que no hay que meter git en el proceso, la herramienta que estamos
+planteando solo es de despliegue"_.
+
+Efecto sobre las decisiones anteriores:
+
+- **Conflicto 3:** "visual" significa un **front de acceso** desde el que se eligen el core y
+  los plugins de cada despliegue. No es un lienzo como objetivo en sí mismo.
+- **Conflicto 4:** el Kustomize component por plugin se mantiene **solo como mecanismo interno**
+  para generar los manifiestos. No se versiona en Git y Argo CD no participa.
+- **Conflicto 7:** **queda sin efecto.** SynKra no usa Git ni abre PRs. Parte de artefactos ya
+  compilados y despliega directo en el clúster con una cuenta de servicio limitada a sus
+  namespaces.
+- **Visión a futuro:** automatizar esos despliegues. Queda fuera del MVP.

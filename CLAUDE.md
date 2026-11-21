@@ -1,5 +1,5 @@
 > **Cambio de alcance (21-nov-2026).** SynKra es ahora una plataforma de despliegue de
-> aplicaciones micro-kernel sobre Kubernetes, con un front visual en Blazor. **Sin IA.** Lo que
+> aplicaciones micro-kernel ya compiladas sobre Kubernetes, con un front de acceso en Blazor. **Sin IA y sin Git**: despliega directo. Lo que
 > este archivo, `entradas/` y `aidlc-docs/` dicen sobre el agente regulatorio quedó obsoleto.
 > Las fuentes vigentes son `Modulo 2/pvb.md`, `Modulo 3/docs/` y `Modulo 3/specs/`.
 
