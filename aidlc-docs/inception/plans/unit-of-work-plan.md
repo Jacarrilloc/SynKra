@@ -7,14 +7,14 @@
 
 ## Pasos
 
-- [ ] 1. Definir las unidades según la descomposición elegida en la pregunta 1, cada una con lo que hace y lo que **no** hace
-- [ ] 2. Documentar la organización del código (greenfield) según la pregunta 6
-- [ ] 3. Generar `unit-of-work.md`: responsabilidad, componentes, prioridad (Must o Should), cómo se prueba sola y "terminada cuando" con un comando
-- [ ] 4. Generar `unit-of-work-dependency.md`: matriz y grafo; comprobar con `scripts/verificar-grafo.py` que no hay ciclos y que hay al menos dos unidades sin dependencias entre sí
-- [ ] 5. Generar `unit-of-work-story-map.md`: cada una de las 34 historias asignada a una sola unidad dueña; ninguna huérfana
-- [ ] 6. Proponer el orden de construcción según la pregunta 7, con lo que se puede hacer en paralelo
-- [ ] 7. Validar las fronteras con la lista de la guía: sin ciclos, sin historias huérfanas, paralelismo, cada unidad probable sola, ninguna unidad es "el backend", el total cabe en el tiempo
-- [ ] 8. Revisar cumplimiento de extensiones (AUTONOMIA-01 y 02)
+- [x] 1. Definir las unidades según la descomposición elegida en la pregunta 1, cada una con lo que hace y lo que **no** hace
+- [x] 2. Documentar la organización del código (greenfield) según la pregunta 6
+- [x] 3. Generar `unit-of-work.md`: responsabilidad, componentes, prioridad (Must o Should), cómo se prueba sola y "terminada cuando" con un comando
+- [x] 4. Generar `unit-of-work-dependency.md`: matriz y grafo; comprobar con `scripts/verificar-grafo.py` que no hay ciclos y que hay al menos dos unidades sin dependencias entre sí
+- [x] 5. Generar `unit-of-work-story-map.md`: cada una de las 34 historias asignada a una sola unidad dueña; ninguna huérfana
+- [x] 6. Proponer el orden de construcción según la pregunta 7, con lo que se puede hacer en paralelo
+- [x] 7. Validar las fronteras con la lista de la guía: sin ciclos, sin historias huérfanas, paralelismo, cada unidad probable sola, ninguna unidad es "el backend", el total cabe en el tiempo
+- [x] 8. Revisar cumplimiento de extensiones (AUTONOMIA-01 y 02)
 
 ---
 
@@ -37,7 +37,7 @@ X) Other (please describe after [Answer]: tag below)
 separa piezas que no se prueban solas (la API sin sus módulos). A sigue los módulos del
 monolito modular: cada módulo del backend es su propia unidad, con sus controladores.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 2 (Dependencies)
 ¿Cómo se comunican los módulos del backend entre unidades?
@@ -51,7 +51,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** El flujo es corto y síncrono salvo la vigilancia, que ya es una tarea del
 propio módulo de despliegue. Los eventos añaden una forma más de fallar sin beneficio en el demo.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 3 (Team Alignment)
 ¿Quién construye las unidades?
@@ -64,7 +64,7 @@ X) Other (please describe after [Answer]: tag below)
 
 **Recomendación: A**, que es el caso real del proyecto.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 4 (Technical Considerations)
 ¿Cómo se tratan los Should en las unidades?
@@ -77,7 +77,7 @@ X) Other (please describe after [Answer]: tag below)
 
 **Recomendación: A**, por R9: lo que se corta tiene que poder cortarse entero.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 5 (Business Domain)
 ¿Dónde viven los controladores REST?
@@ -91,7 +91,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** Es lo que hace que cada unidad del backend se pruebe sola con `curl` y que
 no exista una unidad "API" que sea, en realidad, el backend entero.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 6 (Code Organization)
 ¿Qué estructura de directorios tiene el repositorio?
@@ -105,7 +105,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** Un solo proyecto `backend/` con fronteras comprobadas por D14 es lo que
 define al monolito modular; B lo acerca a microservicios en el build sin necesidad.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 7 (Orden y alcance)
 ¿Con qué criterio se ordenan las unidades?
@@ -119,4 +119,4 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** Coincide casi con B, pero adelanta la plataforma del backend en paralelo
 con el verificador para no dejar el camino crítico en una sola fila (R9).
 
-[Answer]: 
+[Answer]: A

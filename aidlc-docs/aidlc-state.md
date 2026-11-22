@@ -3,7 +3,7 @@
 ## Project Information
 - **Project Type**: Greenfield
 - **Start Date**: 2026-11-21 (reinicio por cambio de alcance)
-- **Current Stage**: INCEPTION - Units Generation, Parte 1 (esperando respuestas en `inception/plans/unit-of-work-plan.md`)
+- **Current Stage**: INCEPTION - Units Generation, Parte 2 (esperando aprobación de las unidades)
 - **Módulo 5 iniciado**: 2026-11-21T23:35:26Z. Se detiene al terminar Code Generation Parte 1 de cada unidad.
 - **Alcance anterior**: archivado en `archivo/alcance-2026-10/` (agente de IA regulatorio, 5 unidades, 91 tareas).
 
