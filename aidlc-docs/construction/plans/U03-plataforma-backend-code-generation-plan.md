@@ -17,7 +17,7 @@ Raíz del proyecto. Crea `backend/` con el paquete `plataforma`. Resumen en
 ## Tareas
 
 - [ ] **U03-T01 · Proyecto `backend/` (Spring Boot 3, Java 21)**
-  Incluido en `settings.gradle.kts`; dependencias de web, actuator, Spring Data JDBC, `sqlite-jdbc`,
+  Incluido en `settings.gradle.kts` (necesita la raíz de Gradle de U01-T01); dependencias de web, actuator, Spring Data JDBC, `sqlite-jdbc`,
   Flyway y Spring Modulith (pruebas).
   **Criterio:** `./gradlew :backend:bootJar` pasa. · H-24
 
@@ -28,7 +28,7 @@ Raíz del proyecto. Crea `backend/` con el paquete `plataforma`. Resumen en
 
 - [ ] **U03-T03 · Formato de error único**
   `ErrorApi {codigo, mensaje, detalles:[{campo, motivo}]}` y el manejador global para 400, 404,
-  409, 413 y 422; los módulos devuelven `Resultado` y la plataforma lo traduce.
+  409, 413 y 422; los controladores lanzan `ExcepcionApi` y cada módulo traduce a ella su `Resultado`.
   **Criterio:** `./gradlew :backend:test --tests '*ErrorApiTest'` pasa con un controlador de prueba que produce cada código. · H-24
 
 - [ ] **U03-T04 · Salud**
