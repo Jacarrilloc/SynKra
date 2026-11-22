@@ -3,7 +3,7 @@
 ## Project Information
 - **Project Type**: Greenfield
 - **Start Date**: 2026-11-21 (reinicio por cambio de alcance)
-- **Current Stage**: CONSTRUCTION - U01 Functional Design (esperando respuestas en `construction/plans/U01-verificador-functional-design-plan.md`)
+- **Current Stage**: CONSTRUCTION - U01 Functional Design (esperando aprobación de `construction/U01-verificador/functional-design/`)
 - **Regla de Julian**: avisarle antes de escribir cualquier código de aplicación (backend o front). El módulo 5 no lo hace
 - **Módulo 5 iniciado**: 2026-11-21T23:35:26Z. Se detiene al terminar Code Generation Parte 1 de cada unidad.
 - **Alcance anterior**: archivado en `archivo/alcance-2026-10/` (agente de IA regulatorio, 5 unidades, 91 tareas).

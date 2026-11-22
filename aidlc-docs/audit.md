@@ -746,3 +746,11 @@
 **Context**: CONSTRUCTION - U01 Functional Design, compuerta de respuestas.
 
 ---
+
+## U01 - Functional Design: respuestas
+**Timestamp**: 2026-11-22T00:22:09Z
+**User Input**: "aprobado"
+**AI Response**: Respuestas 1A a 5A (las recomendaciones). Sin ambigüedades. Generados `domain-entities.md`, `business-rules.md` y `business-logic-model.md` en `aidlc-docs/construction/U01-verificador/functional-design/`: 10 entidades valor, 9 códigos de motivo, 6 reglas (R-V1 a R-V6), suite de 12 casos sobre los 7 grupos del PRD y 5 propiedades con jqwik.
+**Context**: CONSTRUCTION - U01 Functional Design, esperando aprobación (Request Changes / Continue to Next Stage).
+
+---

@@ -6,14 +6,14 @@ H-03, H-21. **Salidas:** `aidlc-docs/construction/U01-verificador/functional-des
 
 ## Pasos
 
-- [ ] 1. Modelar las entidades: `Version`, `RangoVersion`, `Descriptor`, `Seleccion`, `Veredicto`, `Motivo`, `Alternativa`, `Caso` de la suite
-- [ ] 2. Definir la gramática de versiones y rangos (preguntas 1 y 2)
-- [ ] 3. Definir las reglas de validación del descriptor (pregunta 4)
-- [ ] 4. Definir el algoritmo de verificación y los códigos de motivo (pregunta 5)
-- [ ] 5. Definir cómo se eligen las alternativas (pregunta 3)
-- [ ] 6. Escribir los casos de la suite (7 grupos del PRD §11.1) con su resultado esperado
-- [ ] 7. Identificar las propiedades para PBT parcial (PBT-02 ida y vuelta del descriptor, PBT-03 invariantes de rangos) y los generadores (PBT-07)
-- [ ] 8. Revisar cumplimiento de extensiones
+- [x] 1. Modelar las entidades: `Version`, `RangoVersion`, `Descriptor`, `Seleccion`, `Veredicto`, `Motivo`, `Alternativa`, `Caso` de la suite
+- [x] 2. Definir la gramática de versiones y rangos (preguntas 1 y 2)
+- [x] 3. Definir las reglas de validación del descriptor (pregunta 4)
+- [x] 4. Definir el algoritmo de verificación y los códigos de motivo (pregunta 5)
+- [x] 5. Definir cómo se eligen las alternativas (pregunta 3)
+- [x] 6. Escribir los casos de la suite (7 grupos del PRD §11.1) con su resultado esperado
+- [x] 7. Identificar las propiedades para PBT parcial (PBT-02 ida y vuelta del descriptor, PBT-03 invariantes de rangos) y los generadores (PBT-07)
+- [x] 8. Revisar cumplimiento de extensiones
 
 ---
 
@@ -33,7 +33,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** El demo no publica versiones candidatas, y el orden de las pre-release es
 la parte de semver que más errores produce.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 2
 ¿Qué formas de rango acepta la etiqueta "versión del core compatible"?
@@ -47,7 +47,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** Son las formas que un desarrollador de plugins escribe de verdad, y las
 cuatro se reducen al mismo intervalo `[mínimo, máximo)` por dentro, así que no complican la regla.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 3
 Cuando un plugin no sirve, ¿qué alternativa propone el rechazo?
@@ -61,7 +61,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** CU4 pide "qué versión del core **o** del plugin sí sirve"; la más alta del
 plugin es la más actual, y la más baja del core es el cambio más pequeño.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 4
 ¿Qué hace el lector con un campo desconocido en `synkra-plugin.yaml`?
@@ -77,7 +77,7 @@ X) Other (please describe after [Answer]: tag below)
 dígitos y guiones), `version`, `core`, `coreCompatible`, `etiquetas` (opcional, clave=valor) y
 `descripcion` (opcional).
 
-[Answer]: 
+[Answer]: A
 
 ## Question 5
 ¿Qué pasa si una selección trae dos versiones del mismo plugin (`kyc-pe 1.3.0` y `kyc-pe 2.0.0`)?
@@ -91,4 +91,4 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** El motor nunca elige por el usuario: lo que se despliega es exactamente lo
 confirmado (adherencia, PRD §11.2).
 
-[Answer]: 
+[Answer]: A
