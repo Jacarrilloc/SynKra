@@ -697,3 +697,20 @@
 **Context**: INCEPTION - Application Design, esperando aprobación.
 
 ---
+
+## Application Design - Aprobado, con énfasis en monolito modular
+**Timestamp**: 2026-11-22T00:11:22Z
+**User Input**: "realiza el proyecto con el patron de monolito modular, por todo lo demas, aprobado"
+**AI Response**: El diseño ya tenía el backend como monolito modular (D1). Se añade la decisión D14: fronteras de módulo comprobadas con Spring Modulith (`ApplicationModules.verify()`), controladores y tablas propios por módulo. Application Design aprobada. Siguiente: Units Generation.
+**Context**: INCEPTION - Application Design aprobada (con un ajuste pedido por el usuario).
+
+---
+
+## Units Generation - Plan con preguntas
+**Timestamp**: 2026-11-22T00:20:00Z
+**User Input**: (n/a)
+**AI Prompt**: "Unit of work plan complete. Review the plan in aidlc-docs/inception/plans/unit-of-work-plan.md. Ready to proceed to generation?"
+**AI Response**: Creado `aidlc-docs/inception/plans/unit-of-work-plan.md` con 8 pasos y 7 preguntas que cubren las seis categorías (agrupación, dependencias, equipo, técnica, dominio, organización del código) más el orden de construcción. Propuesta recomendada: 11 unidades (9 Must y 2 Should), una por módulo con frontera real.
+**Context**: INCEPTION - Units Generation, Parte 1, compuerta de respuestas.
+
+---

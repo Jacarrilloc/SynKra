@@ -5,7 +5,7 @@ Respuestas de diseño en `../plans/application-design-plan.md`.
 
 ## 1. Forma del sistema
 
-- **Backend:** un solo desplegable Spring Boot (Java 21) en `synkra`, con seis módulos internos:
+- **Backend:** **monolito modular** (decisiones D1 y D14): un solo desplegable Spring Boot (Java 21) en `synkra`, con seis módulos internos de fronteras comprobadas:
   catálogo (C06), despliegue (C07), registro (C08), adaptador de Kubernetes (C09), API (C10) y
   seguridad (C11, Should). Una réplica, estrategia `Recreate`.
 - **Librerías:** verificador (C01), compartido por el backend y el core, y contrato de plugins (C02).
@@ -53,6 +53,7 @@ Esquema con Flyway; el detalle de tablas va en Functional Design.
 | D10 | Descarga por hash sin credenciales, solo desde `synkra-*` | Token en un Secret por país | No reparte credenciales; el hash es llave y comprobación |
 | D11 | Adaptador de Kubernetes propio (C09) | Que C07 y C08 usen Fabric8 cada uno | Rompe el ciclo C07 ↔ C08 y deja un solo punto que habla con el clúster |
 | D12 | Reversión como servicio de C07 | Reversión en C08 | Rompe el ciclo C07 ↔ C08; la reversión es un despliegue más |
+| D14 | **Monolito modular con fronteras comprobadas**: cada módulo del backend (catálogo, despliegue, registro, adaptador de Kubernetes, seguridad) expone solo su interfaz pública, tiene sus propios controladores y tablas, y una prueba con Spring Modulith (`ApplicationModules.of(SynkraApp.class).verify()`) falla si un módulo usa las clases internas de otro o si aparece un ciclo | Fronteras solo por convención de paquetes | Pedido de Julian ("realiza el proyecto con el patrón de monolito modular"): sin una comprobación, un monolito modular se degrada a un monolito sin más. La prueba es el criterio por comando (AUTONOMIA-02) |
 | D13 | Tres capas para el namespace: C07 valida el país, C09 rechaza lo que no sea `synkra-*`, RBAC | Solo RBAC | Defensa en profundidad (escenario "escalar el despliegue") |
 
 ## 5. Dependencias

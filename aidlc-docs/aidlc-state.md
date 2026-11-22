@@ -3,7 +3,7 @@
 ## Project Information
 - **Project Type**: Greenfield
 - **Start Date**: 2026-11-21 (reinicio por cambio de alcance)
-- **Current Stage**: INCEPTION - Application Design (esperando aprobación de `inception/application-design/`)
+- **Current Stage**: INCEPTION - Units Generation, Parte 1 (esperando respuestas en `inception/plans/unit-of-work-plan.md`)
 - **Módulo 5 iniciado**: 2026-11-21T23:35:26Z. Se detiene al terminar Code Generation Parte 1 de cada unidad.
 - **Alcance anterior**: archivado en `archivo/alcance-2026-10/` (agente de IA regulatorio, 5 unidades, 91 tareas).
 
@@ -32,8 +32,8 @@
 - [x] Requirements Analysis (aprobada 2026-11-21T23:47:13Z)
 - [x] User Stories (aprobada 2026-11-21T23:53:33Z)
 - [x] Workflow Planning (aprobada 2026-11-21T23:56:13Z)
-- [ ] Application Design - EXECUTE (en curso)
-- [ ] Units Generation - EXECUTE
+- [x] Application Design (aprobada 2026-11-22T00:11:22Z; monolito modular, D14)
+- [ ] Units Generation - EXECUTE (en curso)
 
 ### 🟢 CONSTRUCTION PHASE
 - [ ] Functional Design - EXECUTE solo en unidades con lógica
