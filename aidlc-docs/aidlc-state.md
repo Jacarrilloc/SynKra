@@ -3,7 +3,7 @@
 ## Project Information
 - **Project Type**: Greenfield
 - **Start Date**: 2026-11-21 (reinicio por cambio de alcance)
-- **Current Stage**: CONSTRUCTION - FD de U04, U06 y U07 en revisión; respuestas de ID de U08 pendientes. Planes aprobados: U01, U02, U03
+- **Current Stage**: CONSTRUCTION - ID de U08 y planes de U04 a U11 en revisión. Aprobados: FD de U01, U04, U06, U07; planes U01, U02, U03
 - **Regla de Julian**: avisarle antes de escribir cualquier código de aplicación (backend o front). El módulo 5 no lo hace
 - **Módulo 5 iniciado**: 2026-11-21T23:35:26Z. Se detiene al terminar Code Generation Parte 1 de cada unidad.
 - **Alcance anterior**: archivado en `archivo/alcance-2026-10/` (agente de IA regulatorio, 5 unidades, 91 tareas).
@@ -37,9 +37,9 @@
 - [x] Units Generation (aprobada 2026-11-22T00:19:15Z; 11 unidades)
 
 ### 🟢 CONSTRUCTION PHASE
-- [ ] Functional Design - EXECUTE solo en unidades con lógica (U01 aprobado; U04, U06, U07 generados, en revisión)
+- [x] Functional Design - EXECUTE solo en unidades con lógica (aprobados: U01, U04, U06, U07)
 - [ ] NFR Requirements - SKIP
 - [ ] NFR Design - SKIP
-- [ ] Infrastructure Design - EXECUTE solo en U08 (preguntas abiertas)
-- [ ] Code Generation Parte 1 (planes de tareas) de cada unidad - EXECUTE (aprobados: U01, U02, U03). La Parte 2 NO se ejecuta en el módulo 5
+- [ ] Infrastructure Design - EXECUTE solo en U08 (generado, en revisión)
+- [ ] Code Generation Parte 1 (planes de tareas) de cada unidad - EXECUTE (aprobados: U01, U02, U03; U04 a U11 en revisión). La Parte 2 NO se ejecuta en el módulo 5
 - [ ] Build and Test - módulos 6 a 8

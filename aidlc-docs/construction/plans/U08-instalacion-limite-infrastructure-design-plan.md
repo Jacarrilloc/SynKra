@@ -7,15 +7,15 @@ D10, D13), Functional Design de U04, U06 y U07. **Salidas:**
 
 ## Pasos
 
-- [ ] 1. Entorno: clúster, registro de imágenes y cómo se accede (preguntas 1 y 4)
-- [ ] 2. Cómputo: recursos por pod (pregunta 2)
-- [ ] 3. Almacenamiento: el PVC de SQLite y artefactos (pregunta 3)
-- [ ] 4. Mensajería: N/A (no hay colas; la vigilancia es una tarea interna del backend, D8)
-- [ ] 5. Red: Service interno para el init container, acceso de usuarios (pregunta 4)
-- [ ] 6. Monitoreo: logs con `kubectl logs` y la salud de Actuator; Prometheus es Could (fuera)
-- [ ] 7. Límite: cuenta `synkra:deployer`, `Role` por país, sin permisos de clúster; los pods de país sin token de Kubernetes
-- [ ] 8. Cómo se instala (pregunta 5) y el diagrama de despliegue
-- [ ] 9. Revisar AUTONOMIA-01 (todo se aplica solo al `kind` local) y AUTONOMIA-02
+- [x] 1. Entorno: clúster, registro de imágenes y cómo se accede (preguntas 1 y 4)
+- [x] 2. Cómputo: recursos por pod (pregunta 2)
+- [x] 3. Almacenamiento: el PVC de SQLite y artefactos (pregunta 3)
+- [x] 4. Mensajería: N/A (no hay colas; la vigilancia es una tarea interna del backend, D8)
+- [x] 5. Red: Service interno para el init container, acceso de usuarios (pregunta 4)
+- [x] 6. Monitoreo: logs con `kubectl logs` y la salud de Actuator; Prometheus es Could (fuera)
+- [x] 7. Límite: cuenta `synkra:deployer`, `Role` por país, sin permisos de clúster; los pods de país sin token de Kubernetes
+- [x] 8. Cómo se instala (pregunta 5) y el diagrama de despliegue
+- [x] 9. Revisar AUTONOMIA-01 (todo se aplica solo al `kind` local) y AUTONOMIA-02
 
 ---
 
@@ -35,7 +35,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** El registro local es el "registro permitido" del PRD (H-31) y la imagen del
 core se referencia por digest, que `kind load` no da.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 2 (Cómputo)
 ¿Qué recursos se reservan?
@@ -49,7 +49,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** Cabe en los 6 GiB que pide el curso, y los límites son también un Should
 (H-32) que así ya queda medido.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 3 (Almacenamiento)
 ¿Qué volumen usa el backend?
@@ -63,7 +63,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** Es el patrón del módulo 5 (PV, PVC, StorageClass) y sobrevive al borrado
 del pod, que es lo que prueba H-18.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 4 (Red y acceso)
 ¿Cómo se llega al front y a la API desde la máquina?
@@ -78,7 +78,7 @@ X) Other (please describe after [Answer]: tag below)
 el respaldo evita que la demo dependa de él. El init container siempre usa el Service interno
 `synkra-backend.synkra.svc:8080`, no el Ingress.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 5 (Cómo se instala)
 ¿Con qué se escriben y aplican los manifiestos de SynKra mismo?
@@ -94,4 +94,4 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** Kustomize sí encaja aquí: instala **SynKra mismo**, no los productos (que
 siguen con Fabric8, Q9 de requisitos), y es lo que GitOps consume sin cambios.
 
-[Answer]: 
+[Answer]: A

@@ -770,3 +770,11 @@
 **Context**: CONSTRUCTION - U01 a U03 CG Parte 1 aprobados; U04, U06, U07 FD esperando aprobación; U08 ID compuerta de respuestas.
 
 ---
+
+## Construction - FD de U04, U06, U07 aprobado; ID de U08; planes U04 a U11
+**Timestamp**: 2026-11-22T00:31:40Z
+**User Input**: "aprobado"
+**AI Response**: Se aprueban los artefactos de Functional Design de U04, U06 y U07 y las respuestas de Infrastructure Design de U08 (5A, recomendaciones). Se generan `U08-instalacion-limite/infrastructure-design/` (infrastructure-design.md, deployment-architecture.md) y los planes de tareas de U04 a U11. Toda historia H-01 a H-34 queda con al menos una tarea. Sin código de aplicación.
+**Context**: CONSTRUCTION, Infrastructure Design de U08 y Code Generation Parte 1 de U04 a U11, presentados para aprobación.
+
+---
