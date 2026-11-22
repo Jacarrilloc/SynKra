@@ -45,7 +45,7 @@ disponible para los despliegues. · **Must** · CU1 · RF-02, RF-04
 **para** corregirlo antes de que nadie intente desplegarlo. · **Must** · CU1, PRD §11.1 · RF-03
 
 - **Dado** un JAR sin `synkra-plugin.yaml`, o sin nombre, versión del plugin o core compatible,
-  **cuando** lo subo, **entonces** responde 422 y nombra el campo que falta → casos "descriptor incompleto" de la suite (`mvn verify`)
+  **cuando** lo subo, **entonces** responde 422 y nombra el campo que falta → casos "descriptor incompleto" de la suite (`./gradlew check`)
 - **Dado** un descriptor con el rango `>=2.x<`, **cuando** lo subo, **entonces** responde 422
   "rango mal formado" → `curl` = 422
 - **Dado** un descriptor que dice `core: otro-core`, **cuando** lo subo a la carpeta de
@@ -91,7 +91,7 @@ distinto. · **Must** · P1, R1 · RF-08, RF-09
 - **Dado** cualquier versión `2.*`, **cuando** la comparo con `2.x`, **entonces** siempre
   satisface, y ninguna `3.*` lo hace → prueba de propiedades (PBT-03) con generadores de versiones semver
 - **Dado** el módulo del verificador, **cuando** reviso sus dependencias, **entonces** no
-  incluye Spring ni Fabric8 → `mvn dependency:tree` del módulo sin `spring` ni `fabric8`
+  incluye Spring ni Fabric8 → `./gradlew :verificador:dependencies --configuration runtimeClasspath` sin `spring` ni `fabric8`
 
 ### H-08 · Explicar por qué una combinación no sirve
 **Como** P-RES **quiero** que un rechazo diga el motivo y qué versión sí sirve **para** saber qué
@@ -103,7 +103,7 @@ corregir sin preguntarle a nadie. · **Must** · CU4 · RF-10
 - **Dado** que no existe ninguna versión compatible, **cuando** verifico, **entonces** el rechazo
   lo dice explícitamente → caso de la suite
 - **Dado** toda la suite, **cuando** corre, **entonces** el 100% de los rechazos por versión trae
-  alternativa o "no hay alternativa" → `mvn verify` (métrica de utilidad)
+  alternativa o "no hay alternativa" → `./gradlew check` (métrica de utilidad)
 
 ### H-09 · Verificar sin desplegar
 **Como** P-RES **quiero** ver la verificación mientras elijo los plugins **para** no llegar al
@@ -119,9 +119,9 @@ RF-12
 
 - **Dado** la suite con sus 7 grupos (válidas, versión incompatible, plugin ausente, carpeta
   equivocada, descriptor incompleto, integridad, plugin no activado), **cuando** corro el build,
-  **entonces** todos los casos pasan → `mvn verify` = 0
+  **entonces** todos los casos pasan → `./gradlew check` = 0
 - **Dado** un caso cuyo resultado esperado se altera, **cuando** corro el build, **entonces**
-  falla → `mvn verify` ≠ 0
+  falla → `./gradlew check` ≠ 0
 
 ---
 

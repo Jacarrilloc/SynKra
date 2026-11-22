@@ -8,14 +8,14 @@ Design, por unidad.
 
 ## Pasos
 
-- [ ] 1. Identificar los componentes a partir de los módulos M1 a M8 del PRD y de las épicas E1 a E8, con la frontera dentro/fuera del clúster de cada uno
-- [ ] 2. Generar `components.md`: propósito, responsabilidades, interfaz y dónde corre cada componente
-- [ ] 3. Generar `component-methods.md`: firmas y entradas/salidas, trazadas a historias
-- [ ] 4. Generar `services.md`: servicios de orquestación (preparar plan, confirmar, vigilar, revertir) y sus interacciones
-- [ ] 5. Generar `component-dependency.md`: matriz de dependencias, comunicación y flujo de datos; verificar que no hay ciclos
-- [ ] 6. Registrar cada decisión estructural con su alternativa descartada
-- [ ] 7. Generar `application-design.md` consolidado
-- [ ] 8. Validar completitud (toda historia tocada por algún componente) y cumplimiento de extensiones
+- [x] 1. Identificar los componentes a partir de los módulos M1 a M8 del PRD y de las épicas E1 a E8, con la frontera dentro/fuera del clúster de cada uno
+- [x] 2. Generar `components.md`: propósito, responsabilidades, interfaz y dónde corre cada componente
+- [x] 3. Generar `component-methods.md`: firmas y entradas/salidas, trazadas a historias
+- [x] 4. Generar `services.md`: servicios de orquestación (preparar plan, confirmar, vigilar, revertir) y sus interacciones
+- [x] 5. Generar `component-dependency.md`: matriz de dependencias, comunicación y flujo de datos; verificar que no hay ciclos
+- [x] 6. Registrar cada decisión estructural con su alternativa descartada
+- [x] 7. Generar `application-design.md` consolidado
+- [x] 8. Validar completitud (toda historia tocada por algún componente) y cumplimiento de extensiones
 
 ---
 
@@ -37,7 +37,7 @@ X) Other (please describe after [Answer]: tag below)
 servicios multiplicaría despliegues sin necesidad. Las unidades se recortan por módulo, no por
 proceso.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 2
 ¿Cómo se organiza el repositorio?
@@ -53,7 +53,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** Un solo `mvn verify` construye la librería compartida y todo lo que la
 usa, que es lo que sostiene P1. Maven es lo más conocido en Spring.
 
-[Answer]: 
+[Answer]: B. Gradle multi-proyecto (Julian: "cambia maven por gradle").
 
 ## Question 3
 ¿Cómo carga el core sus plugins?
@@ -69,7 +69,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** Cumple RF-26 (un cargador por plugin) con lo que trae el JDK y es fácil de
 explicar en la sustentación. PF4J sirve, pero es una dependencia más.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 4
 ¿Cómo sabe el core su versión y qué plugins debe activar?
@@ -83,7 +83,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** La versión del core no debe poder cambiarse desde fuera (sería mentirle al
 verificador), y un archivo montado es lo que la vista general lee del clúster (RF-20).
 
-[Answer]: 
+[Answer]: A
 
 ## Question 5
 ¿Cómo se implementa el init container que descarga los plugins?
@@ -99,7 +99,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** Su único trabajo es descargar y comprobar el hash; la compatibilidad la
 verifica el core al arrancar. Imagen pequeña, no root y fácil de leer.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 6
 ¿Dónde se guardan los artefactos y sus metadatos?
@@ -112,7 +112,7 @@ X) Other (please describe after [Answer]: tag below)
 
 **Recomendación: A.** Es lo que dice el PRD ("en el mismo volumen") y mantiene la base pequeña.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 7
 ¿Cómo accede el backend a SQLite?
@@ -128,7 +128,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** Pocas tablas y consultas simples; Spring Data JDBC evita los problemas de
 Hibernate con SQLite, y Flyway deja el esquema versionado.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 8
 ¿Cómo vigila el backend un despliegue confirmado hasta que queda `listo` o `fallido`?
@@ -142,7 +142,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** Una petición de 3 minutos se corta en el navegador y en un proxy, y el
 front ya necesita consultar el estado (H-14).
 
-[Answer]: 
+[Answer]: A
 
 ## Question 9
 ¿Qué modelo de Blazor usa el front?
@@ -156,7 +156,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** Es la forma más simple de "solo consume la API" (P5), y no obliga a abrir la
 API al navegador.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 10
 ¿Cómo descarga el init container los artefactos si la API tiene autenticación (Should)?
@@ -170,4 +170,4 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** No reparte credenciales por los namespaces de los países, y el hash es a
 la vez la llave de la descarga y su comprobación de integridad.
 
-[Answer]: 
+[Answer]: A

@@ -67,7 +67,7 @@ una unidad ni se prueban solas.
 ## Question 3
 ¿En qué formato van los criterios de aceptación?
 
-A) Dado / Cuando / Entonces, y cada criterio termina con el comando que lo comprueba (`curl`, `kubectl`, `sqlite3`, `mvn`)
+A) Dado / Cuando / Entonces, y cada criterio termina con el comando que lo comprueba (`curl`, `kubectl`, `sqlite3`, `gradlew`)
 
 B) Lista de comprobaciones, una por línea, cada una con su comando
 

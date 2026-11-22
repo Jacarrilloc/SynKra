@@ -681,3 +681,19 @@
 **Context**: INCEPTION - Application Design, compuerta de respuestas.
 
 ---
+
+## Application Design - Respuestas: Gradle en vez de Maven
+**Timestamp**: 2026-11-22T00:01:19Z
+**User Input**: "cambia maven por gradle, lo demás queda aprobado"
+**AI Response**: Pregunta 2 respondida con B (Gradle multi-proyecto); las demás con la recomendación (A). Cambiados los comandos `mvn` por `./gradlew` en `requirements.md`, `stories.md` y el plan de historias. Sin ambigüedades; se generan los artefactos.
+**Context**: INCEPTION - Application Design, respuestas (cambio pedido por el usuario).
+
+---
+
+## Application Design - Artefactos generados; aprobación solicitada
+**Timestamp**: 2026-11-22T00:15:00Z
+**User Input**: (n/a)
+**AI Response**: Generados `components.md` (13 componentes con su frontera dentro/fuera del clúster), `component-methods.md`, `services.md` (8 servicios), `component-dependency.md` (19 dependencias, sin ciclos, comprobado con `scripts/verificar-grafo.py`) y `application-design.md` (13 decisiones con su alternativa descartada). Dos ciclos posibles entre despliegue y registro se rompieron con un adaptador de Kubernetes propio (C09) y la reversión dentro de C07. Cumplimiento: AUTONOMIA-01 y 02 cumplen.
+**Context**: INCEPTION - Application Design, esperando aprobación.
+
+---

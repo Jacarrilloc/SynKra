@@ -85,11 +85,11 @@ demuestra el requisito (AUTONOMIA-02); el detalle exacto se fija en las tareas.
 
 | ID | Requisito | Prio. | Traza | Verificación |
 |---|---|---|---|---|
-| RF-08 | Una librería Java pura, sin dependencias de Spring ni de Kubernetes, que recibe la versión del core y los descriptores elegidos y devuelve un veredicto por plugin y uno global | Must | P1, §9.1 | Pruebas unitarias y de propiedades del módulo (`mvn -pl verificador test`) |
+| RF-08 | Una librería Java pura, sin dependencias de Spring ni de Kubernetes, que recibe la versión del core y los descriptores elegidos y devuelve un veredicto por plugin y uno global | Must | P1, §9.1 | Pruebas unitarias y de propiedades del módulo (`./gradlew :verificador:test`) |
 | RF-09 | Interpretar rangos semver; `N.x` equivale a `>=N.0.0 <N+1.0.0` | Must | Q5 | Pruebas de propiedades (PBT-03): toda versión `2.*` satisface `2.x` y ninguna `3.*` |
 | RF-10 | Todo rechazo explica el motivo y qué versión del core o del plugin sí sirve, buscando en el catálogo | Must | CU4, §10 utilidad | Suite: el 100% de los rechazos por versión trae una alternativa o dice que no existe |
 | RF-11 | Exponer la verificación sin desplegar (`POST /api/verificaciones`) para la verificación en vivo del front | Must | §9.1, §9.4 | `curl` con una combinación inválida → 200 con veredicto "rechazada" y motivo |
-| RF-12 | Una suite de combinaciones versionada (los 7 grupos del PRD §11.1) corre en cada build del verificador y del core y **bloquea el build** si un caso falla | Must | §11.1, §11.3 | `mvn verify` falla si se altera un resultado esperado |
+| RF-12 | Una suite de combinaciones versionada (los 7 grupos del PRD §11.1) corre en cada build del verificador y del core y **bloquea el build** si un caso falla | Must | §11.1, §11.3 | `./gradlew check` falla si se altera un resultado esperado |
 
 ### 4.3 Motor de despliegue (M3)
 
