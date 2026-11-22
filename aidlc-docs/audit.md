@@ -401,3 +401,11 @@
 **Context**: Mantenimiento del repositorio, fuera de las etapas de AI-DLC.
 
 ---
+
+## Módulo 6 - Preparación del loop de agentes (sin código)
+**Timestamp**: 2026-11-22T01:24:51Z
+**User Input**: "concretemos lo que falte del modulo 6 que no sea codigo de momento"
+**AI Response**: Se prepara el loop del módulo 6 sin escribir código de aplicación. Se crean 7 archivos de tarea en `tareas/` (U01-T01 a T04 y U03-T01 a T03), los agentes `codificador` y `revisor` en `.claude/agents/` (copiados del curso, con una sección propia de SynKra), el contrato del orquestador en `loop/orquestador.md`, `loop/README.md` con el orden de despacho, las carpetas `bitacoras/` y `revisiones/`, `CANDIDATAS.md` y el esqueleto de `DECISIONES-LOOP.md`. Al preparar las tareas aparecieron dos vacíos del plan, y se enmiendan: (1) `Version.parsear` (U01-T03) necesita `CodigoMotivo`, que el plan creaba en U01-T08, así que los tipos `Resultado`, `Motivo` y `CodigoMotivo` pasan a U01-T03; (2) U03-T01 necesita la raíz de Gradle de U01-T01, así que esa tarea va sola, antes de la primera ola. En U03-T03 se fija que los controladores lanzan `ExcepcionApi` y cada módulo traduce su `Resultado`. Paquete base `io.synkra`.
+**Context**: Fuera de las etapas de AI-DLC. El loop es una técnica dentro de Code Generation Parte 2, y esta no ha empezado.
+
+---

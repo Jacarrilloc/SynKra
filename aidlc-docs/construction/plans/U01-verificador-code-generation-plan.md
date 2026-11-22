@@ -28,7 +28,9 @@ raíz; el resumen va en `aidlc-docs/construction/U01-verificador/code/`.
   **Criterio:** `./gradlew :verificador:dependencies --configuration runtimeClasspath | grep -ciE "spring|fabric8"` devuelve `0`. · H-07
 
 - [ ] **U01-T03 · `Version` (R-V1) y sus pruebas**
-  Record con `parsear`, orden y `toString`; rechaza pre-release y ceros a la izquierda.
+  Record con `parsear`, orden y `toString`; rechaza pre-release y ceros a la izquierda. Crea también
+  `Resultado<T>`, `Motivo` y la enumeración `CodigoMotivo` con los 9 códigos, porque `parsear` ya
+  devuelve `VERSION_INVALIDA`.
   **Criterio:** `./gradlew :verificador:test --tests '*VersionTest'` pasa, con casos `2.1.0`, `2.01.0`, `2.1.0-rc1`, `2.1`. · H-07
 
 - [ ] **U01-T04 · `RangoVersion` (R-V2) y sus pruebas**
@@ -49,7 +51,7 @@ raíz; el resumen va en `aidlc-docs/construction/U01-verificador/code/`.
   **Criterio:** `./gradlew :verificador:test --tests '*DescriptorPropiedades'` pasa con 1000 intentos. · H-03
 
 - [ ] **U01-T08 · Modelo del veredicto y códigos de motivo**
-  `Seleccion`, `Motivo`, `Alternativa`, `VeredictoPlugin`, `Veredicto` y la enumeración de los 9 códigos.
+  `Seleccion`, `Alternativa`, `VeredictoPlugin` y `Veredicto` (`Motivo` y `CodigoMotivo` nacen en T03).
   **Criterio:** `./gradlew :verificador:test --tests '*CodigoMotivoTest'` pasa y afirma que la enumeración tiene exactamente los 9 códigos de `domain-entities.md`. · H-07
 
 - [ ] **U01-T09 · `Verificador.verificar` (R-V4) y la interfaz `Catalogo`**
