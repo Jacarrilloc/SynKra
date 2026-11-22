@@ -3,7 +3,8 @@
 ## Project Information
 - **Project Type**: Greenfield
 - **Start Date**: 2026-11-21 (reinicio por cambio de alcance)
-- **Current Stage**: INCEPTION - Units Generation, Parte 2 (esperando aprobación de las unidades)
+- **Current Stage**: CONSTRUCTION - U01 Functional Design (esperando respuestas en `construction/plans/U01-verificador-functional-design-plan.md`)
+- **Regla de Julian**: avisarle antes de escribir cualquier código de aplicación (backend o front). El módulo 5 no lo hace
 - **Módulo 5 iniciado**: 2026-11-21T23:35:26Z. Se detiene al terminar Code Generation Parte 1 de cada unidad.
 - **Alcance anterior**: archivado en `archivo/alcance-2026-10/` (agente de IA regulatorio, 5 unidades, 91 tareas).
 
@@ -33,10 +34,10 @@
 - [x] User Stories (aprobada 2026-11-21T23:53:33Z)
 - [x] Workflow Planning (aprobada 2026-11-21T23:56:13Z)
 - [x] Application Design (aprobada 2026-11-22T00:11:22Z; monolito modular, D14)
-- [ ] Units Generation - EXECUTE (en curso)
+- [x] Units Generation (aprobada 2026-11-22T00:19:15Z; 11 unidades)
 
 ### 🟢 CONSTRUCTION PHASE
-- [ ] Functional Design - EXECUTE solo en unidades con lógica
+- [ ] Functional Design - EXECUTE solo en unidades con lógica (U01 en curso; luego U04, U06, U07)
 - [ ] NFR Requirements - SKIP
 - [ ] NFR Design - SKIP
 - [ ] Infrastructure Design - EXECUTE solo en la unidad de instalación y límite

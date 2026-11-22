@@ -730,3 +730,19 @@
 **Context**: INCEPTION - Units Generation, Parte 2, esperando aprobación.
 
 ---
+
+## Units Generation - Aprobado; inicio de CONSTRUCTION
+**Timestamp**: 2026-11-22T00:19:15Z
+**User Input**: "aprobado, avisame antes de que empecemos a hacer el codigo del proyecto, sea el backend o el frontend"
+**AI Response**: Units Generation aprobada; INCEPTION completa. Se entra a CONSTRUCTION. Regla de Julian registrada: no se escribe código de aplicación (backend ni front) sin avisarle antes. Convención del módulo 5: tras la Parte 1 de Code Generation de cada unidad, "Continue to Next Stage" significa pasar a la siguiente unidad; la Parte 2 no se ejecuta. Primera unidad: U01, Functional Design.
+**Context**: CONSTRUCTION - inicio, U01 Functional Design.
+
+---
+
+## U01 - Functional Design: plan con preguntas
+**Timestamp**: 2026-11-22T00:25:00Z
+**User Input**: (n/a)
+**AI Response**: Creado `aidlc-docs/construction/plans/U01-verificador-functional-design-plan.md` con 8 pasos y 5 preguntas (versiones aceptadas, formas de rango, alternativas, campos desconocidos, plugin repetido), cada una con recomendación.
+**Context**: CONSTRUCTION - U01 Functional Design, compuerta de respuestas.
+
+---
