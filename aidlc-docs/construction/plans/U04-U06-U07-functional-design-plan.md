@@ -7,11 +7,11 @@ aceptada por Julian el 22-nov-2026). Cada unidad produce sus propios artefactos 
 
 ## Pasos
 
-- [ ] 1. U04 Catálogo: entidades y tablas (cores, versiones, plugins, etiquetas), reglas de subida (preguntas 1 a 3)
-- [ ] 2. U06 Registro: entidades y tablas (despliegues, contexto), concordancia y contexto del fallo (preguntas 4 y 5)
-- [ ] 3. U07 Despliegue: entidades y tablas (planes), máquina de estados, concurrencia y reversión (preguntas 6 a 9)
-- [ ] 4. Comprobar que ningún módulo lee las tablas de otro (D14)
-- [ ] 5. Revisar cumplimiento de extensiones (AUTONOMIA-01 en U07 sobre todo)
+- [x] 1. U04 Catálogo: entidades y tablas (cores, versiones, plugins, etiquetas), reglas de subida (preguntas 1 a 3)
+- [x] 2. U06 Registro: entidades y tablas (despliegues, contexto), concordancia y contexto del fallo (preguntas 4 y 5)
+- [x] 3. U07 Despliegue: entidades y tablas (planes), máquina de estados, concurrencia y reversión (preguntas 6 a 9)
+- [x] 4. Comprobar que ningún módulo lee las tablas de otro (D14)
+- [x] 5. Revisar cumplimiento de extensiones (AUTONOMIA-01 en U07 sobre todo)
 
 ---
 
@@ -35,7 +35,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** El desarrollador declara lo esencial en el JAR, y el publicador puede
 etiquetar por cliente sin recompilar; el choque se rechaza para que no haya dos verdades.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 2
 ¿Qué pasa si se sube otra vez el mismo plugin con la misma versión?
@@ -49,7 +49,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** Si una versión pudiera cambiar de contenido, el registro de despliegues
 dejaría de decir qué se desplegó (P7) y el hash del ConfigMap quedaría viejo.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 3
 ¿Se pueden borrar cores o plugins del catálogo en el MVP?
@@ -64,7 +64,7 @@ X) Other (please describe after [Answer]: tag below)
 artefactos. El criterio de H-20 sobre "el anterior ya no es compatible" se mantiene como prueba
 defensiva con un registro manipulado.
 
-[Answer]: 
+[Answer]: A
 
 ### U06 · Registro
 
@@ -80,7 +80,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** El digest detecta que alguien cambió la imagen a mano, y el hash que alguien
 cambió un plugin sin pasar por SynKra (RNF-11).
 
-[Answer]: 
+[Answer]: A
 
 ## Question 5
 ¿Cuánto contexto se guarda de un despliegue fallido?
@@ -93,7 +93,7 @@ X) Other (please describe after [Answer]: tag below)
 
 **Recomendación: A.** Alcanza para diagnosticar y no llena SQLite con un pod en bucle de reinicios.
 
-[Answer]: 
+[Answer]: A
 
 ### U07 · Despliegue
 
@@ -109,7 +109,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** Un plan viejo confirmado sin volver a verificar rompería P1, y que venza deja
 limpio el caso del journey 7.3.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 7
 ¿Qué pasa si se confirma un despliegue en un país que ya tiene otro `aplicando`?
@@ -123,7 +123,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** Encolar sería aplicar algo sin que un humano mire el resultado del anterior
 (P2).
 
-[Answer]: 
+[Answer]: A
 
 ## Question 8
 ¿Se puede crear un plan idéntico a lo que ya corre (por ejemplo, para reintentar a mano tras un
@@ -138,7 +138,7 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** Es la forma de reintentar que respeta P2: el reintento lo decide y lo
 confirma una persona, no SynKra.
 
-[Answer]: 
+[Answer]: A
 
 ## Question 9
 ¿Quién puede confirmar un plan?
@@ -152,4 +152,4 @@ X) Other (please describe after [Answer]: tag below)
 **Recomendación: A.** Permite que el SRE con rol Desplegador confirme una reversión que preparó
 otro, y la traza conserva a los dos.
 
-[Answer]: 
+[Answer]: A
