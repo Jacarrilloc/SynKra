@@ -2,8 +2,6 @@
 
 > Insumo del PRD (módulo 3). Describe el dominio del **alcance vigente desde el
 > 21-nov-2026**: una plataforma de despliegue de aplicaciones micro-kernel sobre Kubernetes.
-> Sustituye el overview del 17-oct-2026, que se centraba en un agente de IA regulatorio. Ese
-> alcance quedó **fuera** del producto.
 >
 > Convenciones: toda cifra lleva fuente y fecha. **[INTERNO]** marca una proyección o un
 > supuesto propio. **[VERIFICAR]** marca lo que no se pudo confirmar con una fuente primaria.

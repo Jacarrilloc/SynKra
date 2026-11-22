@@ -9,7 +9,7 @@ Do not inline phase detail here; add it to the relevant rule-details file instea
 ## Project Context (WHAT / WHY / HOW)
 - **WHAT**: **SynKra** - herramienta de despliegue (ejercicio académico) para aplicaciones micro-kernel ya compiladas sobre Kubernetes. Se suben compilados: cores y, en la carpeta independiente de cada core, plugins con etiquetas de país, región o cliente, versión del plugin y versión del core compatible. SynKra verifica la compatibilidad y despliega directo en el clúster (namespace `synkra-<país>`). Backend Java 21 / Spring Boot con API REST (a futuro, CLI para pipelines); front de acceso en Blazor, solo demostrativo; persistencia en SQLite. **Sin IA y sin Git** en el flujo de despliegue; SynKra mismo se instala con GitOps. Requisitos en `Modulo 3/specs/prd.md` (PRD v2); visión en `Modulo 2/pvb.md`.
 - **WHY**: Desplegar la variante de cada país sin que una combinación incompatible de core y plugins llegue al clúster. North Star: % de despliegues por país hechos desde SynKra en los que ningún plugin incompatible llegó al clúster.
-- **HOW**: Greenfield: todavía no hay código. Los comandos de build y prueba se definen por unidad durante CONSTRUCTION. Hasta entonces, `Modulo 3/specs/prd.md` es la fuente autoritativa de requisitos. El alcance anterior (agente de IA) está archivado en `archivo/alcance-2026-10/` y no aplica.
+- **HOW**: Greenfield: todavía no hay código. Los comandos de build y prueba se definen por unidad durante CONSTRUCTION. Hasta entonces, `Modulo 3/specs/prd.md` es la fuente autoritativa de requisitos.
 
 ## Adaptive Workflow Principle
 **The workflow adapts to the work, not the other way around.**
