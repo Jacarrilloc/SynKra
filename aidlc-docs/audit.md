@@ -778,3 +778,11 @@
 **Context**: CONSTRUCTION, Infrastructure Design de U08 y Code Generation Parte 1 de U04 a U11, presentados para aprobación.
 
 ---
+
+## Construction - ID de U08 y planes U04 a U11 aprobados; consolidado
+**Timestamp**: 2026-11-22T00:36:45Z
+**User Input**: "aprobado"
+**AI Response**: Se aprueban el Infrastructure Design de U08 y los planes de tareas de U04 a U11. Code Generation Parte 1 queda terminada en las 11 unidades: ALTO del módulo 5, sin Parte 2 ni código. Se genera `unidades-y-tareas.md` en la raíz (114 tareas, extraídas de los planes con un script, más el orden por olas del grafo) y un borrador de `DECISIONES.md` para revisión. Enmienda menor: en `unit-of-work.md`, el criterio de U09 pasa de `dotnet test front/` a `dotnet test front.Tests`, para coincidir con el plan.
+**Context**: Fin del módulo 5. Pendiente: revisión de `DECISIONES.md` por el usuario.
+
+---

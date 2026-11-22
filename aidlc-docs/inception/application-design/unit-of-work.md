@@ -128,7 +128,7 @@ eventos.
   imagen multi-stage no root; Deployment y Service en `synkra`.
 - **Qué NO hace:** ninguna regla de versión ni de compatibilidad (P5).
 - **Se prueba sola:** sí, contra la API local; `dotnet test` con un cliente HTTP simulado.
-- **Terminada cuando:** `dotnet test front/` pasa, `grep -rniE "semver|compatib" front/` solo
+- **Terminada cuando:** `dotnet test front.Tests` pasa, `grep -rniE "semver|compatib" front/` solo
   devuelve llamadas a la API, y la pantalla "Desplegar" completa CU2 en el clúster de la demo.
 
 ### U10 · Seguridad y roles *(Should)*
