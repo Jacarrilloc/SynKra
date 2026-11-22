@@ -2,9 +2,7 @@
 
 **Módulo 2: AI & Agentic Engineering · Tópicos Especiales en Informática**
 
-**Versión:** 21 de noviembre de 2026. Reemplaza el PVB del 15 de agosto de 2026 y su ajuste
-del 17 de octubre, que describían un agente de IA regulatorio. Ese alcance queda **fuera**
-del producto.
+**Versión:** 21 de noviembre de 2026.
 
 > **Convención de evidencia:**
 >

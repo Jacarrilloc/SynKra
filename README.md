@@ -6,9 +6,6 @@ el core y los plugins de cada país, y SynKra verifica que sean compatibles ante
 Proyecto de la asignatura **Tópicos Especiales en Informática** · Maestría en Ingeniería de
 Sistemas · Pontificia Universidad Javeriana (Bogotá), 2026-3. Es un **ejercicio académico**.
 
-> **Cambio de alcance (21-nov-2026).** La versión anterior incluía un agente de IA regulatorio.
-> Ese alcance se reemplazó y quedó archivado en [`archivo/alcance-2026-10/`](archivo/alcance-2026-10/).
-
 ---
 
 ## 1. La idea
@@ -67,8 +64,10 @@ investigación en [`Modulo 3/docs/`](Modulo%203/docs/). Lo esencial:
 
 ## 3. Unidades y tareas
 
-Se definen en el módulo 5 con AI-DLC, a partir del PRD v2. Las 5 unidades y 91 tareas del alcance
-anterior quedaron archivadas en [`archivo/alcance-2026-10/`](archivo/alcance-2026-10/).
+Se definieron en el módulo 5 con AI-DLC, a partir del PRD v2: 11 unidades (9 Must, 2 Should) y
+114 tareas, cada una con su criterio por comando. Están consolidadas en
+[`unidades-y-tareas.md`](unidades-y-tareas.md), y las decisiones del paso, en
+[`DECISIONES.md`](DECISIONES.md).
 
 ---
 
@@ -171,6 +170,5 @@ Modulo 3/specs/paso-0-conflictos.md   Decisiones del Paso 0 del PRD
 aidlc-docs/                     Estado y bitácora de AI-DLC (audit.md)
 .aidlc-rule-details/            Reglas de AI-DLC
 CLAUDE.md                       Despachador de AI-DLC (se carga en cada sesión de Claude Code)
-archivo/alcance-2026-10/        Especificación del alcance anterior (agente de IA), archivada
 scripts/, Makefile              Instalación y comandos para Linux y WSL2
 ```

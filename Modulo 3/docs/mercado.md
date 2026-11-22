@@ -1,8 +1,7 @@
 # Mercado y competencia: SynKra
 
 > Investigación de **validación** para el alcance vigente desde el 21-nov-2026: una plataforma
-> de despliegue micro-kernel sobre Kubernetes, con un front de arrastrar y soltar. Sustituye
-> el análisis del 17-oct-2026, que trataba del mercado RegTech y de los agentes de IA.
+> de despliegue micro-kernel sobre Kubernetes, con un front de arrastrar y soltar.
 >
 > **[INTERNO]** marca una proyección propia. **[VERIFICAR]** marca lo que no se pudo confirmar.
 > Las fuentes se consultaron el 21-nov-2026.

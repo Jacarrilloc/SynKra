@@ -2,8 +2,7 @@
 
 > El objetivo de este documento es **atacar la idea**: por qué fallaría, quién ya la da gratis
 > y qué riesgo la mata. Corresponde al alcance vigente desde el 21-nov-2026 (plataforma de
-> despliegue micro-kernel con front de arrastrar y soltar, sin IA) y sustituye la crítica del
-> 17-oct-2026.
+> despliegue micro-kernel con front de arrastrar y soltar, sin IA).
 >
 > **[INTERNO]** marca un juicio propio. **[VERIFICAR]** marca lo que no se pudo confirmar.
 > Las fuentes se consultaron el 21-nov-2026.

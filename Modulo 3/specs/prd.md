@@ -7,8 +7,7 @@
 > Etiquetas: **[INTERNO]** = proyección propia; **[VERIFICAR]** = afirmación sin fuente primaria
 > confirmada. Ningún [VERIFICAR] se usa aquí como hecho.
 >
-> Reemplaza la versión 1.0 del 17-oct-2026, que especificaba un agente de IA regulatorio (queda
-> en el historial de Git). **Este PRD se escribió segmento por segmento y Julian aprobó cada
+> **Este PRD se escribió segmento por segmento y Julian aprobó cada
 > uno.** Estado: **los 13 segmentos están aprobados** (21-nov-2026).
 
 > [!IMPORTANT]

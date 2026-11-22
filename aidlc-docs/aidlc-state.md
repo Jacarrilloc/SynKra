@@ -2,11 +2,10 @@
 
 ## Project Information
 - **Project Type**: Greenfield
-- **Start Date**: 2026-11-21 (reinicio por cambio de alcance)
+- **Start Date**: 2026-11-21
 - **Current Stage**: CONSTRUCTION - Parte 1 de Code Generation terminada en las 11 unidades (ALTO del módulo 5). Consolidado `unidades-y-tareas.md` y borrador de `DECISIONES.md` en revisión
 - **Regla de Julian**: avisarle antes de escribir cualquier código de aplicación (backend o front). El módulo 5 no lo hace
 - **Módulo 5 iniciado**: 2026-11-21T23:35:26Z. Se detiene al terminar Code Generation Parte 1 de cada unidad.
-- **Alcance anterior**: archivado en `archivo/alcance-2026-10/` (agente de IA regulatorio, 5 unidades, 91 tareas).
 
 ## Workspace State
 - **Existing Code**: No

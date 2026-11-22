@@ -11,8 +11,7 @@ clúster. El límite que protegen estas reglas es doble: el del producto (SynKra
 con confirmación humana y solo en `synkra-*`) y el del proceso (ninguna tarea del plan aplica
 cambios a un clúster sin aprobación humana).
 
-> Adaptada el 21-nov-2026 (Requirements Analysis, pregunta 1). La versión anterior, escrita
-> para el agente de IA del alcance archivado, queda en el historial de Git.
+> Adaptada el 21-nov-2026 (Requirements Analysis, pregunta 1).
 
 ### Default Enforcement
 Todas las reglas de este documento son **bloqueantes**. Si no se cumple un criterio de
