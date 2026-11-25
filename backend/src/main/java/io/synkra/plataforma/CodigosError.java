@@ -1,0 +1,26 @@
+package io.synkra.plataforma;
+
+/** Codigos y mensajes de plataforma de {@link ErrorApi}: contrato de la API, un solo sitio. */
+public final class CodigosError {
+
+    public static final String SOLICITUD_INVALIDA = "SOLICITUD_INVALIDA";
+    public static final String NO_ENCONTRADO = "NO_ENCONTRADO";
+    public static final String METODO_NO_PERMITIDO = "METODO_NO_PERMITIDO";
+    public static final String CONFLICTO = "CONFLICTO";
+    public static final String DEMASIADO_GRANDE = "DEMASIADO_GRANDE";
+    public static final String TIPO_NO_SOPORTADO = "TIPO_NO_SOPORTADO";
+    public static final String ENTIDAD_NO_PROCESABLE = "ENTIDAD_NO_PROCESABLE";
+    public static final String ERROR_INTERNO = "ERROR_INTERNO";
+
+    public static final String MSG_SOLICITUD_INVALIDA = "La solicitud es inválida o su cuerpo no se puede leer";
+    public static final String MSG_NO_ENCONTRADO = "Recurso no encontrado";
+    public static final String MSG_METODO_NO_PERMITIDO = "Método no permitido";
+    public static final String MSG_CONFLICTO = "La solicitud entra en conflicto con el estado actual";
+    public static final String MSG_DEMASIADO_GRANDE = "El archivo supera el tamaño permitido";
+    public static final String MSG_TIPO_NO_SOPORTADO = "Tipo de contenido no soportado";
+    public static final String MSG_ENTIDAD_NO_PROCESABLE = "La solicitud no se puede procesar";
+    public static final String MSG_ERROR_INTERNO = "Error interno del servidor";
+
+    private CodigosError() {
+    }
+}
