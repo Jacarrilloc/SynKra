@@ -77,3 +77,5 @@ línea) y CA-4 y registra que fallan. Después, pasando.
 
 - Archivo que se **modifica en su sitio**: `verificador/build.gradle.kts`.
 - Versiones fijas (sin `+` ni `latest`), las estables al momento de escribir la tarea.
+- La raíz usa Gradle 9.9.2: `useJUnitPlatform()` exige declarar también
+  `testRuntimeOnly("org.junit.platform:junit-platform-launcher")` en cuanto haya pruebas (candidata C-01 de U01-T01).
