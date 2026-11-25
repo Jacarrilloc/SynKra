@@ -433,3 +433,11 @@
 **Context**: Loop del módulo 6, fuera de las etapas de AI-DLC.
 
 ---
+
+## Módulo 6 rehecho - Aprobación de PRs y C-02
+**Timestamp**: 2026-11-25T20:50:10Z
+**User Input**: "aprobado todo,"
+**AI Response**: Se abren los PRs #8 a #14, uno por tarea, todos contra `modulo-6-rehecho` y en orden de dependencia. La candidata C-02 se convierte en tarea (`tareas/C-02-ignorar-jqwik-database.md`, en la rama `m6r/C-02`) y se despacha por el loop. `DECISIONES-LOOP.md` queda como borrador para que lo reescriba el responsable.
+**Context**: Loop del módulo 6, fuera de las etapas de AI-DLC.
+
+---
