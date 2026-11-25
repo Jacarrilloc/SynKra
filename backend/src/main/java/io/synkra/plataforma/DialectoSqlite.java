@@ -1,9 +1,5 @@
 package io.synkra.plataforma;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Collection;
 import java.util.List;
 import org.springframework.core.convert.converter.Converter;
@@ -92,43 +88,8 @@ final class DialectoSqlite extends AbstractDialect {
         }
     }
 
-    /**
-     * sqlite-jdbc guarda las fechas como milisegundos desde la epoca (columna INTEGER), con la zona
-     * horaria del sistema para las fechas sin zona; al leer vuelven como Long.
-     */
-    @ReadingConverter
-    enum EnteroAInstant implements Converter<Long, Instant> {
-        INSTANCE;
-
-        @Override
-        public Instant convert(Long origen) {
-            return Instant.ofEpochMilli(origen);
-        }
-    }
-
-    @ReadingConverter
-    enum EnteroAFecha implements Converter<Long, LocalDate> {
-        INSTANCE;
-
-        @Override
-        public LocalDate convert(Long origen) {
-            return Instant.ofEpochMilli(origen).atZone(ZoneId.systemDefault()).toLocalDate();
-        }
-    }
-
-    @ReadingConverter
-    enum EnteroAFechaHora implements Converter<Long, LocalDateTime> {
-        INSTANCE;
-
-        @Override
-        public LocalDateTime convert(Long origen) {
-            return LocalDateTime.ofInstant(Instant.ofEpochMilli(origen), ZoneId.systemDefault());
-        }
-    }
-
     @Override
     public Collection<Object> getConverters() {
-        return List.of(EnteroABooleano.INSTANCE, EnteroAInstant.INSTANCE, EnteroAFecha.INSTANCE,
-                EnteroAFechaHora.INSTANCE);
+        return List.of(EnteroABooleano.INSTANCE);
     }
 }

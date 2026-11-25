@@ -36,7 +36,7 @@ class RepositorioSqliteTest {
     void esquema() {
         jdbc.execute("drop table if exists elemento");
         jdbc.execute("create table elemento (id integer primary key autoincrement, x integer not null,"
-                + " texto text, activo integer, instante integer, fecha integer, fecha_hora integer, monto text)");
+                + " texto text, activo integer, monto text)");
     }
 
     @Test
@@ -51,7 +51,6 @@ class RepositorioSqliteTest {
         var g = repo.save(Elemento.con(2));
         var l = repo.findById(g.id()).orElseThrow();
         assertThat(l).usingRecursiveComparison().isEqualTo(g);
-        assertThat(l.instante()).isEqualTo(Elemento.con(2).instante());
         assertThat(l.monto()).isEqualByComparingTo("12.50");
     }
 
