@@ -1,0 +1,1 @@
+-- Base vacia: las tablas de negocio llegan en U04, U06, U07 y U10.
