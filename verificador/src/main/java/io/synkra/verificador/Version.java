@@ -26,8 +26,10 @@ public record Version(int mayor, int menor, int parche) implements Comparable<Ve
                 }
             }
         }
-        return Resultado.fallo(Motivo.de(CodigoMotivo.VERSION_INVALIDA,
-                "La versión '" + texto + "' no tiene la forma MAYOR.MENOR.PARCHE (por ejemplo 2.1.0)", "version"));
+        var mensaje = texto == null
+                ? "Falta la versión: se esperaba MAYOR.MENOR.PARCHE (por ejemplo 2.1.0)"
+                : "La versión '" + texto + "' no tiene la forma MAYOR.MENOR.PARCHE (por ejemplo 2.1.0)";
+        return Resultado.fallo(Motivo.de(CodigoMotivo.VERSION_INVALIDA, mensaje, "version"));
     }
 
     @Override

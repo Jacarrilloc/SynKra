@@ -30,6 +30,9 @@ class VersionTest {
 
     @Test
     void diezEsMayorQueNueve() {
+        var diez = assertInstanceOf(Resultado.Exito.class, Version.parsear("2.10.0")).valor();
+        var nueve = assertInstanceOf(Resultado.Exito.class, Version.parsear("2.9.0")).valor();
+        assertTrue(((Version) diez).compareTo((Version) nueve) > 0);
         assertTrue(new Version(2, 10, 0).compareTo(new Version(2, 9, 0)) > 0);
         assertTrue(new Version(3, 0, 0).compareTo(new Version(2, 99, 99)) > 0);
         assertTrue(new Version(2, 1, 1).compareTo(new Version(2, 1, 0)) > 0);
@@ -47,5 +50,12 @@ class VersionTest {
     void numeroFueraDeRangoEsInvalidoSinExcepcion() {
         var r = assertDoesNotThrow(() -> Version.parsear("99999999999.0.0"));
         assertInstanceOf(Resultado.Fallo.class, r);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void nuloTieneMensajePropioSinLiteralNull() {
+        var fallo = (Resultado.Fallo<Version>) assertInstanceOf(Resultado.Fallo.class, Version.parsear(null));
+        assertFalse(fallo.motivos().get(0).mensaje().contains("'null'"));
     }
 }
