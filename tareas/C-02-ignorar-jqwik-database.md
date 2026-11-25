@@ -45,7 +45,7 @@
 
 - [ ] **CA-3**: no está rastreado
   ```bash
-  git ls-files | grep -c jqwik-database
+  git ls-files | grep -c '\.jqwik-database$'
   ```
   Esperado: `0`.
 
