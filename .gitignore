@@ -2,3 +2,6 @@
 .gradle/
 build/
 .kotlin/
+
+# jqwik
+**/.jqwik-database
