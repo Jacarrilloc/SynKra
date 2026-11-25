@@ -27,43 +27,46 @@ public class ManejadorErrores extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     ResponseEntity<Object> imprevista(Exception e) {
         LOG.error("Error no previsto", e);
-        return respuesta(HttpStatus.INTERNAL_SERVER_ERROR,
-                new ErrorApi("ERROR_INTERNO", "Error interno del servidor", List.of()));
+        return respuesta(HttpStatus.INTERNAL_SERVER_ERROR, errorInterno());
     }
 
     /** Las excepciones propias de Spring (cuerpo ilegible, metodo, ruta...) pasan por aqui. */
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
             HttpStatusCode statusCode, WebRequest request) {
-        HttpStatus estado = HttpStatus.valueOf(statusCode.value());
+        HttpStatus estado = HttpStatus.resolve(statusCode.value());
+        if (estado == null) {
+            estado = statusCode.is4xxClientError() ? HttpStatus.BAD_REQUEST : HttpStatus.INTERNAL_SERVER_ERROR;
+        }
         if (estado.is5xxServerError()) {
             LOG.error("Error de Spring", ex);
         }
-        ErrorApi error = new ErrorApi(codigoDe(estado), mensajeDe(estado), List.of());
-        return respuesta(estado, error, headers);
+        return respuesta(estado, errorDe(estado), headers);
     }
 
-    private static String codigoDe(HttpStatus estado) {
+    private static ErrorApi errorDe(HttpStatus estado) {
         return switch (estado) {
-            case NOT_FOUND -> "NO_ENCONTRADO";
-            case CONFLICT -> "CONFLICTO";
-            case PAYLOAD_TOO_LARGE -> "DEMASIADO_GRANDE";
-            case UNPROCESSABLE_ENTITY -> "ENTIDAD_NO_PROCESABLE";
-            case INTERNAL_SERVER_ERROR -> "ERROR_INTERNO";
-            default -> estado.is4xxClientError() ? "SOLICITUD_INVALIDA" : "ERROR_INTERNO";
+            case NOT_FOUND -> sinDetalles(CodigosError.NO_ENCONTRADO, CodigosError.MSG_NO_ENCONTRADO);
+            case METHOD_NOT_ALLOWED ->
+                sinDetalles(CodigosError.METODO_NO_PERMITIDO, CodigosError.MSG_METODO_NO_PERMITIDO);
+            case CONFLICT -> sinDetalles(CodigosError.CONFLICTO, CodigosError.MSG_CONFLICTO);
+            case PAYLOAD_TOO_LARGE -> sinDetalles(CodigosError.DEMASIADO_GRANDE, CodigosError.MSG_DEMASIADO_GRANDE);
+            case UNSUPPORTED_MEDIA_TYPE ->
+                sinDetalles(CodigosError.TIPO_NO_SOPORTADO, CodigosError.MSG_TIPO_NO_SOPORTADO);
+            case UNPROCESSABLE_ENTITY ->
+                sinDetalles(CodigosError.ENTIDAD_NO_PROCESABLE, CodigosError.MSG_ENTIDAD_NO_PROCESABLE);
+            default -> estado.is4xxClientError()
+                    ? sinDetalles(CodigosError.SOLICITUD_INVALIDA, CodigosError.MSG_SOLICITUD_INVALIDA)
+                    : errorInterno();
         };
     }
 
-    private static String mensajeDe(HttpStatus estado) {
-        return switch (estado) {
-            case NOT_FOUND -> "Recurso no encontrado";
-            case PAYLOAD_TOO_LARGE -> "El archivo supera el tamano permitido";
-            case METHOD_NOT_ALLOWED -> "Metodo no permitido";
-            case UNSUPPORTED_MEDIA_TYPE -> "Tipo de contenido no soportado";
-            case BAD_REQUEST -> "La solicitud es invalida o su cuerpo no se puede leer";
-            case INTERNAL_SERVER_ERROR -> "Error interno del servidor";
-            default -> estado.is4xxClientError() ? "Solicitud invalida" : "Error interno del servidor";
-        };
+    private static ErrorApi errorInterno() {
+        return sinDetalles(CodigosError.ERROR_INTERNO, CodigosError.MSG_ERROR_INTERNO);
+    }
+
+    private static ErrorApi sinDetalles(String codigo, String mensaje) {
+        return new ErrorApi(codigo, mensaje, List.of());
     }
 
     private static ResponseEntity<Object> respuesta(HttpStatus estado, ErrorApi error) {

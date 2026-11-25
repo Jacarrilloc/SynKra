@@ -35,7 +35,7 @@ class ErrorApiTest {
 
     @Test
     void estado400() throws Exception {
-        formato("/prueba/400", 400, "SOLICITUD_INVALIDA")
+        formato("/prueba/400", 400, CodigosError.SOLICITUD_INVALIDA)
                 .andExpect(jsonPath("$.detalles[0].campo").value("pais"))
                 .andExpect(jsonPath("$.detalles[0].motivo").value("obligatorio"));
     }
@@ -57,7 +57,8 @@ class ErrorApiTest {
 
     @Test
     void tamanoExcedidoDeSpringDa413ConElMismoFormato() throws Exception {
-        formato("/prueba/tamano", 413, "DEMASIADO_GRANDE");
+        formato("/prueba/tamano", 413, CodigosError.DEMASIADO_GRANDE)
+                .andExpect(jsonPath("$.mensaje").value(CodigosError.MSG_DEMASIADO_GRANDE));
     }
 
     @Test
@@ -69,14 +70,14 @@ class ErrorApiTest {
     void jsonMalFormadoDa400ConElMismoFormato() throws Exception {
         mvc.perform(post("/prueba/json").contentType(MediaType.APPLICATION_JSON).content("{no es json"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.codigo").value("SOLICITUD_INVALIDA"))
+                .andExpect(jsonPath("$.codigo").value(CodigosError.SOLICITUD_INVALIDA))
                 .andExpect(jsonPath("$.mensaje").isString())
                 .andExpect(jsonPath("$.detalles").isArray());
     }
 
     @Test
     void excepcionNoPrevistaDa500SinTraza() throws Exception {
-        formato("/prueba/500", 500, "ERROR_INTERNO")
+        formato("/prueba/500", 500, CodigosError.ERROR_INTERNO)
                 .andExpect(content().string(not(containsString("secreto interno"))))
                 .andExpect(content().string(not(containsString("IllegalStateException"))))
                 .andExpect(content().string(not(containsString("at io.synkra"))));
@@ -84,13 +85,34 @@ class ErrorApiTest {
 
     @Test
     void rutaInexistenteDa404ConElMismoFormato() throws Exception {
-        formato("/no/existe", 404, "NO_ENCONTRADO");
+        formato("/no/existe", 404, CodigosError.NO_ENCONTRADO);
     }
 
     @Test
     void metodoNoPermitidoDa405ConElMismoFormato() throws Exception {
         mvc.perform(post("/prueba/404")).andExpect(status().isMethodNotAllowed())
-                .andExpect(jsonPath("$.codigo").isString())
+                .andExpect(jsonPath("$.codigo").value(CodigosError.METODO_NO_PERMITIDO))
+                .andExpect(jsonPath("$.mensaje").value(CodigosError.MSG_METODO_NO_PERMITIDO))
                 .andExpect(jsonPath("$.detalles").isArray());
+    }
+
+    @Test
+    void tipoNoSoportadoDa415ConElMismoFormato() throws Exception {
+        mvc.perform(post("/prueba/json").contentType(MediaType.TEXT_PLAIN).content("x"))
+                .andExpect(status().isUnsupportedMediaType())
+                .andExpect(jsonPath("$.codigo").value(CodigosError.TIPO_NO_SOPORTADO))
+                .andExpect(jsonPath("$.mensaje").value(CodigosError.MSG_TIPO_NO_SOPORTADO))
+                .andExpect(jsonPath("$.detalles").isArray());
+    }
+
+    @Test
+    void elErrorInternoUsaElMensajeDePlataforma() throws Exception {
+        formato("/prueba/500", 500, CodigosError.ERROR_INTERNO)
+                .andExpect(jsonPath("$.mensaje").value(CodigosError.MSG_ERROR_INTERNO));
+    }
+
+    @Test
+    void losMensajesDePlataformaLlevanTildes() throws Exception {
+        mvc.perform(post("/prueba/404")).andExpect(jsonPath("$.mensaje").value("Método no permitido"));
     }
 }

@@ -1,5 +1,6 @@
 package io.synkra.plataforma.prueba;
 
+import io.synkra.plataforma.CodigosError;
 import io.synkra.plataforma.DetalleError;
 import io.synkra.plataforma.ErrorApi;
 import io.synkra.plataforma.ExcepcionApi;
@@ -17,24 +18,24 @@ public class ControladorDePrueba {
 
     @GetMapping("/prueba/400")
     void e400() {
-        throw new ExcepcionApi(HttpStatus.BAD_REQUEST, new ErrorApi("SOLICITUD_INVALIDA", "Solicitud invalida",
+        throw new ExcepcionApi(HttpStatus.BAD_REQUEST, new ErrorApi(CodigosError.SOLICITUD_INVALIDA, "Solicitud inválida",
                 List.of(new DetalleError("pais", "obligatorio"))));
     }
 
     @GetMapping("/prueba/404")
     void e404() {
-        throw new ExcepcionApi(HttpStatus.NOT_FOUND, new ErrorApi("NO_ENCONTRADO", "No existe", List.of()));
+        throw new ExcepcionApi(HttpStatus.NOT_FOUND, new ErrorApi(CodigosError.NO_ENCONTRADO, "No existe", List.of()));
     }
 
     @GetMapping("/prueba/409")
     void e409() {
-        throw new ExcepcionApi(HttpStatus.CONFLICT, new ErrorApi("CONFLICTO", "Ya existe", List.of()));
+        throw new ExcepcionApi(HttpStatus.CONFLICT, new ErrorApi(CodigosError.CONFLICTO, "Ya existe", List.of()));
     }
 
     @GetMapping("/prueba/413")
     void e413() {
         throw new ExcepcionApi(HttpStatus.PAYLOAD_TOO_LARGE,
-                new ErrorApi("DEMASIADO_GRANDE", "Archivo demasiado grande", List.of()));
+                new ErrorApi(CodigosError.DEMASIADO_GRANDE, "Archivo demasiado grande", List.of()));
     }
 
     @GetMapping("/prueba/422")
