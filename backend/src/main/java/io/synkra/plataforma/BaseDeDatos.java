@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.sql.DataSource;
-import org.springframework.data.relational.core.dialect.AnsiDialect;
 import org.springframework.data.relational.core.dialect.Dialect;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -35,9 +34,9 @@ public class BaseDeDatos {
         return new HikariDataSource(config);
     }
 
-    /** Spring Data JDBC no trae dialecto para SQLite; el ANSI basta para el uso previsto. */
+    /** Spring Data JDBC no trae dialecto para SQLite; se usa el propio. */
     @Bean
     Dialect jdbcDialect() {
-        return AnsiDialect.INSTANCE;
+        return DialectoSqlite.INSTANCE;
     }
 }
