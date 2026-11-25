@@ -46,4 +46,34 @@ class DialectoSqliteTest {
         assertThat(sql).doesNotContainIgnoringCase("FOR UPDATE");
         ejecutar(sql);
     }
+
+    @Test
+    void limitSoloSeEjecutaEnSqlite() throws Exception {
+        var t = Table.create("t");
+        Select s = Select.builder().select(t.column("x")).from(t).limit(2).build();
+        assertThat(render(s)).containsIgnoringCase("LIMIT 2");
+        ejecutar(render(s));
+    }
+
+    @Test
+    void offsetSinLimitUsaLimitMenosUno() throws Exception {
+        var t = Table.create("t");
+        Select s = Select.builder().select(t.column("x")).from(t).offset(1).build();
+        assertThat(render(s)).containsIgnoringCase("LIMIT -1 OFFSET 1");
+        ejecutar(render(s));
+    }
+
+    @Test
+    void paginacionConOrderBy() throws Exception {
+        var t = Table.create("t");
+        Select s = Select.builder().select(t.column("x")).from(t).orderBy(t.column("x"))
+                .limitOffset(2, 1).build();
+        assertThat(render(s)).containsIgnoringCase("ORDER BY t.x LIMIT 2 OFFSET 1");
+        ejecutar(render(s));
+    }
+
+    @Test
+    void generacionDeIdNoUsaLotes() {
+        assertThat(dialecto.getIdGeneration().supportedForBatchOperations()).isFalse();
+    }
 }
