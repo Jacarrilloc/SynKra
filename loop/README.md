@@ -44,8 +44,18 @@ U01 y U03 no dependen entre sí en el grafo, pero **U03-T01 necesita la raíz de
 | Ola 2 | U01-T03 y U03-T02 | 2 | `verificador/src` y `backend/src` |
 | Ola 3 | U01-T04 y U03-T03 | 2 | Igual |
 
-Cada ola sale de la punta de `modulo-6-rehecho` **después** de que el responsable fusione los PRs de
-la ola anterior.
+Lo previsto era que cada ola saliera de la punta de `modulo-6-rehecho` después de fusionar los PRs de
+la anterior. El responsable pidió avanzar sin abrir PRs todavía, así que **las ramas quedaron
+apiladas**: cada tarea sale de la rama de la tarea de la que depende.
+
+```text
+modulo-6-rehecho
+  └─ m6r/U01-T01
+       ├─ m6r/U01-T02 ─ m6r/U01-T03 ─ m6r/U01-T04
+       └─ m6r/U03-T01 ─ m6r/U03-T02 ─ m6r/U03-T03
+```
+
+Los PRs se fusionan en ese orden, de arriba hacia abajo.
 
 ## Cómo se arranca una tarea
 
