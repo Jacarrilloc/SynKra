@@ -1,0 +1,4 @@
+# Respuesta a la ronda 1 — U03-T01
+F-01: Corregido: quitada `implementation("...spring-modulith-starter-core")` de backend/build.gradle.kts; queda solo `testImplementation spring-modulith-starter-test`. Rojo: runtimeClasspath | grep -c -i modulith = 6; verde: 0. testRuntimeClasspath sigue con 6 coincidencias de org.springframework.modulith (CA-3b); JAR sin modulith (unzip -l | grep -c modulith = 0); SynkraAppTest tests="1" skipped="0" failures="0" errors="0".
+F-02: No es un defecto ahora: `version = "0.1.0"` es necesario para que el glob `backend-*.jar` de CA-2 coincida y la raíz está fuera de alcance. Centralizarla queda como tarea candidata para quien pueda tocar la raíz.
+F-03: Corregido: `./gradlew :backend:clean :backend:bootJar` y `ls backend/build/libs` muestra solo `backend-0.1.0.jar`; el directorio build/ está ignorado por git.

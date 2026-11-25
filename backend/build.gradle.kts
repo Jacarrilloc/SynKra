@@ -22,7 +22,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.xerial:sqlite-jdbc")
     implementation("org.flywaydb:flyway-core")
-    implementation("org.springframework.modulith:spring-modulith-starter-core")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.modulith:spring-modulith-starter-test")
