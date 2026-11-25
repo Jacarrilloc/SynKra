@@ -15,7 +15,7 @@ public record RangoVersion(Version minimo, Optional<Version> maximo, String text
     private static final Pattern MENOR_X = Pattern.compile("(" + NUM + ")\\.(" + NUM + ")\\.x");
     private static final Pattern EXACTA = Pattern.compile(NUM + "\\." + NUM + "\\." + NUM);
     private static final Pattern INTERVALO =
-            Pattern.compile(">=\\s*(" + NUM + "\\." + NUM + "\\." + NUM + ")(?:\\s*<\\s*(" + NUM + "\\." + NUM + "\\."
+            Pattern.compile(">= *(" + NUM + "\\." + NUM + "\\." + NUM + ")(?: *< *(" + NUM + "\\." + NUM + "\\."
                     + NUM + "))?");
 
     public RangoVersion {
