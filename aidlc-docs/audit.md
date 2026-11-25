@@ -409,3 +409,11 @@
 **Context**: Fuera de las etapas de AI-DLC. El loop es una técnica dentro de Code Generation Parte 2, y esta no ha empezado.
 
 ---
+
+## Módulo 6 - Rehacer el loop desde cero en una rama nueva
+**Timestamp**: 2026-11-25T19:29:31Z
+**User Input**: "descarta todo lo que va hecho del modulo 6, lo vamos a volver a hacer, pero necesitamos hacer los cambios en una nueva rama, para no tocar la rama main, entonces, empecemos haciendo de nuevo todo el modulo 6 desde el inicio en otra rama"
+**AI Response**: Se crea la rama `modulo-6-rehecho` desde `main` (611d41a). En ella se quitan los artefactos del módulo 6 (`tareas/`, `bitacoras/`, `revisiones/`, `loop/`, `CANDIDATAS.md`, `DECISIONES-LOOP.md`, `.claude/agents/`) y el código que produjo el loop anterior (raíz de Gradle, wrapper y `verificador/`). Se conservan las enmiendas del módulo 5 en los planes de U01 y U03. `main` y las ramas `tarea/*` no se tocan.
+**Context**: Fuera de las etapas de AI-DLC. El loop es una técnica dentro de Code Generation Parte 2.
+
+---
