@@ -1,4 +1,4 @@
-# U01-T04: `RangoVersion` (R-V2) y sus pruebas
+# U01-T04: `RangoVersion` (R-V2)
 
 **Unidad:** U01: `Verificador y suite`
 **Historias que implementa:** H-07
@@ -15,15 +15,15 @@
 **Fuera** (lo que el codificador debe rechazar aunque lo vea roto):
 
 - Propiedades de jqwik sobre rangos: son de U01-T05.
-- Formas de rango que R-V2 no lista (`^2.1`, `~2.1`, `2.*`, `||`): se rechazan con `RANGO_INVALIDO`, no se implementan.
-- Cambios en `Version`, `Resultado`, `Motivo` o `CodigoMotivo`, salvo un defecto que impida esta tarea (se reporta en la bitácora).
+- Formas que R-V2 no lista (`^2.1`, `~2.1`, `2.*`, `||`): se rechazan con `RANGO_INVALIDO`, no se implementan.
+- Cambios en `Version`, `Resultado`, `Motivo` o `CodigoMotivo`, salvo un defecto que impida esta tarea (se reporta en la bitácora antes de tocarlo).
 - `Descriptor`, `Verificador` y el resto de U01.
 
 ---
 
 ## Archivos de contexto
 
-- `aidlc-docs/construction/U01-verificador/functional-design/business-rules.md` (R-V2, con su tabla)
+- `aidlc-docs/construction/U01-verificador/functional-design/business-rules.md` (R-V2 y su tabla)
 - `aidlc-docs/construction/U01-verificador/functional-design/domain-entities.md` (`RangoVersion`)
 - `aidlc-docs/construction/plans/U01-verificador-code-generation-plan.md`
 
@@ -41,11 +41,14 @@
   ```bash
   grep -ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' verificador/build/test-results/test/TEST-*RangoVersionTest.xml
   ```
-  Esperado: `tests` ≥ 10, `skipped="0" failures="0" errors="0"`. Casos mínimos: `2.x` → `[2.0.0, 3.0.0)`; `2.1.x` → `[2.1.0, 2.2.0)`; `2.1.0` → `[2.1.0, 2.1.1)`; `>=2.1.0 <3.0.0` y `>= 2.1.0  <  3.0.0` → `[2.1.0, 3.0.0)`; `>=2.1.0` → `[2.1.0, ∞)`; `>=3.0.0 <2.0.0`, `2.x.x` y `^2.1` → `RANGO_INVALIDO`; `2.x` incluye `2.0.0` y `2.99.0` y no incluye `3.0.0` ni `1.9.9`.
+  Esperado: `tests` ≥ 12, `skipped="0" failures="0" errors="0"`. Casos mínimos: `2.x` → `[2.0.0, 3.0.0)`;
+  `2.1.x` → `[2.1.0, 2.2.0)`; `2.1.0` → `[2.1.0, 2.1.1)`; `>=2.1.0 <3.0.0` y `>= 2.1.0  <  3.0.0` →
+  `[2.1.0, 3.0.0)`; `>=2.1.0` → `[2.1.0, ∞)`; `>=3.0.0 <2.0.0`, `>=2.0.0 <2.0.0`, `2.x.x` y `^2.1` →
+  `RANGO_INVALIDO`; `2.x` incluye `2.0.0` y `2.99.0` y no incluye `3.0.0` ni `1.9.9`.
 
-- [ ] **CA-3**: todo el verificador sigue pasando
+- [ ] **CA-3**: todo el verificador sigue pasando, sin caché
   ```bash
-  ./gradlew :verificador:check
+  ./gradlew :verificador:check --rerun
   ```
   Esperado: `BUILD SUCCESSFUL`.
 
@@ -54,15 +57,14 @@
 ## Plan de pruebas
 
 - `RangoVersionTest` parametrizada con la tabla de R-V2 y los inválidos.
-- Prueba de bordes de `incluye`: el mínimo entra, el máximo no.
+- Bordes de `incluye`: el mínimo entra y el máximo no.
 
-**Rojo primero:** prueba antes que código; registra el fallo de CA-1 y luego el mismo comando
-pasando.
+**Rojo primero:** prueba antes que código; registra el fallo de CA-1 y luego el mismo comando pasando.
 
 ---
 
 ## Notas
 
 - Paquete: `io.synkra.verificador`.
-- `RangoVersion.parsear` devuelve `Resultado<RangoVersion>`; un rango inválido nunca lanza
-  excepción.
+- `RangoVersion.parsear` devuelve `Resultado<RangoVersion>`. Un rango inválido nunca lanza excepción.
+- Un intervalo vacío (`minimo ≥ maximo`) es `RANGO_INVALIDO`.

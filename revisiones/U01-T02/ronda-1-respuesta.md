@@ -1,2 +1,0 @@
-F-01: Corregido en el commit de esta ronda (rama tarea/U01-T02): snakeyaml-engine 2.10 -> 3.2, junit-bom 5.13.4 -> 5.14.4, jqwik 1.9.3 -> 1.10.2, verificadas en maven-metadata.xml; justificación (3.x adoptada, JUnit 6 descartado) en bitacoras/U01-T02.md, ronda 2.
-F-02: Corregido en el commit de esta ronda: la bitácora ronda 2 registra CA-5 con el comando literal `./gradlew :verificador:check --rerun`.

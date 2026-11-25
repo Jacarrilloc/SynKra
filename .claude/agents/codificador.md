@@ -96,7 +96,7 @@ Corto. El detalle vive en la bitácora, no aquí:
 
 ```
 TAREA: U0X-T0N
-RAMA: tarea/U0X-T0N   SHA: <sha>
+RAMA: m6r/U0X-T0N   SHA: <sha>
 CRITERIOS: N de N verificados
 BITACORA: bitacoras/U0X-T0N.md
 CANDIDATAS: <tareas candidatas propuestas, o ninguna>
@@ -109,15 +109,19 @@ diferencia entre tu número y el suyo es un hallazgo rojo sobre ti.
 
 ## En SynKra
 
-- Build: Gradle multi-proyecto desde la raíz del worktree (`./gradlew`), Java 21. El front
-  (U09) es .NET 8 (`dotnet test`).
-- Para que la evidencia sea fresca, corre las pruebas con `--rerun` (por ejemplo,
+- **Build.** Gradle multi-proyecto, siempre desde la raíz de tu worktree con `./gradlew`. La
+  máquina tiene un JDK 25 y no tiene Java 21 instalado: el proyecto fija Java 21 con un
+  *toolchain* de Gradle y lo provisiona solo. Nunca instales paquetes del sistema (`apt`,
+  `sudo`). Si falta una herramienta que un criterio necesita, es un **bloqueo** que reportas.
+- **Evidencia fresca.** Corre las pruebas con `--rerun` (por ejemplo,
   `./gradlew :verificador:test --rerun --tests '*VersionTest'`).
-- Paquete base del código Java: `io.synkra`.
-- El único clúster permitido para pruebas es el `kind` local con contexto `kind-synkra`. Nada
-  se aplica a otro contexto (AUTONOMIA-01 del proyecto).
-- Las ramas de tarea se llaman `tarea/U0X-T0N`. Los pull requests los fusiona el responsable del
-  proyecto, nunca un agente.
+- **Paquete base** del código Java: `io.synkra`.
+- **Clúster.** El único permitido para pruebas es el `kind` local con contexto `kind-synkra`
+  (AUTONOMIA-01). Nada se aplica a otro contexto.
+- **Ramas.** Tu rama es `m6r/U0X-T0N` y sale de `modulo-6-rehecho`. Haz commits en tu rama, en
+  tu worktree. **No hagas push**: el orquestador sube la rama cuando el revisor da VERDE.
+- **Dónde escribes.** Tu bitácora va en `bitacoras/U0X-T0N.md` y tus respuestas en
+  `revisiones/U0X-T0N/ronda-N-respuesta.md`, las dos dentro de tu worktree y en tu rama.
 
 ---
 

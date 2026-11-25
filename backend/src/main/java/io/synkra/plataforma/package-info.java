@@ -1,0 +1,1 @@
+package io.synkra.plataforma;

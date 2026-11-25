@@ -156,6 +156,25 @@ ESPERANDO REVISION HUMANA: <n> pull requests
 DECISIONES QUE NECESITO DE TI: <lista, o ninguna>
 ```
 
+
+## En SynKra
+
+- **Ramas.** La rama base del loop es `modulo-6-rehecho`. Cada tarea va en `m6r/U0X-T0N`, con su
+  worktree en `../wt-m6r-U0X-T0N`, creado desde la punta de `modulo-6-rehecho`. Las ramas `tarea/*`
+  antiguas no se tocan.
+- **Pull requests.** Cada PR de tarea apunta a `modulo-6-rehecho`. Al cerrar el módulo, un PR de
+  `modulo-6-rehecho` a `main`. **Todos los fusiona el responsable del proyecto.** El orquestador
+  sube la rama y abre el PR solo con el permiso del responsable.
+- **Quién escribe qué en la rama de la tarea.** El codificador escribe código, su bitácora y sus
+  respuestas. El orquestador escribe solo `revisiones/U0X-T0N/ronda-N.md` (el informe del revisor,
+  tal cual) y, en la rama base, `CANDIDATAS.md`.
+- **Hash de la tarea.** El archivo de la tarea se lee desde el worktree del codificador; el hash del
+  despacho es el de `git hash-object` sobre ese archivo en la punta de `modulo-6-rehecho`.
+- **Rondas.** Una tarea que llega a la ronda 4 se para y se lleva al responsable, con el patrón de
+  los hallazgos. Nunca se bajan los criterios para cerrarla.
+- **Límite.** El único clúster permitido es el `kind` local `kind-synkra` (AUTONOMIA-01). Nada del
+  loop se escribe en `aidlc-docs/aidlc-state.md`.
+
 ---
 
 _Creado con ❤️ por Luis Felipe Ariza Vesga._

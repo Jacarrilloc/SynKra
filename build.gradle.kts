@@ -1,6 +1,6 @@
-// Convenciones comunes para todo subproyecto Java.
+// Convenciones comunes de todo subproyecto Java de SynKra.
 subprojects {
-    plugins.withType<JavaPlugin> {
+    plugins.withId("java") {
         extensions.configure<JavaPluginExtension> {
             toolchain {
                 languageVersion.set(JavaLanguageVersion.of(21))

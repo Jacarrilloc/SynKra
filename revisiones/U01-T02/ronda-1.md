@@ -1,62 +1,63 @@
 # Ronda 1 — U01-T02
 
-VEREDICTO: NO-VERDE
+VEREDICTO: VERDE
 
-Los cinco criterios pasan cuando los corro yo. El bloqueo viene de una nota de la tarea que el diff no cumple: las tres versiones fijadas tienen unos 16 meses y no son «las estables al momento de escribir la tarea».
+Todos los criterios de aceptación pasan con mis propias ejecuciones. No queda ningún ROJO ni NARANJA. El único hallazgo es un AMARILLO: la carpeta `verificador/.jqwik-database` queda sin ignorar.
 
-Diff revisado: `git diff 93a5e0e..tarea/U01-T02` (sha 0229b30). Toca solo `verificador/build.gradle.kts` (+16 líneas) y `bitacoras/U01-T02.md`. No se desborda del alcance: no hay clases Java, ni cambios en `settings.gradle.kts` o en el `build.gradle.kts` de la raíz, ni en `backend/`, ni otras librerías.
+Contexto comprobado:
+- El worktree está en `2bf3b91`, que coincide con el sha reportado.
+- El hash de la tarea es `2a0f93800d3d438661885eac92becb40c5c9d09b` y coincide con el esperado.
+- Diff revisado: `git diff m6r/U01-T01...m6r/U01-T02`. Tiene 1 commit y 3 archivos: `bitacoras/U01-T02.md`, `verificador/build.gradle.kts` y `verificador/src/test/java/io/synkra/verificador/HumoMotoresTest.java`.
 
 ## Criterios de aceptación, verificados por mí
-Todos corridos desde /home/user/wt-U01-T02.
-
-| # | Criterio | Comando que corrí | Resultado |
+| # | Criterio | Comando que corrí (desde la raíz del worktree) | Resultado |
 |---|---|---|---|
 | 1 | Sin framework en ejecución | `./gradlew -q :verificador:dependencies --configuration runtimeClasspath \| grep -ciE "spring\|fabric8"` | `0`, pasa |
-| 2a | SnakeYAML Engine en ejecución | `... runtimeClasspath \| grep -c 'org.snakeyaml:snakeyaml-engine'` | `1`, pasa |
-| 2b | jqwik fuera de ejecución | `... runtimeClasspath \| grep -c 'net.jqwik'` | `0`, pasa |
-| 3 | JUnit 5 y jqwik en pruebas | `... testRuntimeClasspath \| grep -cE 'net\.jqwik:jqwik\|org\.junit\.jupiter'` | `18`, pasa |
-| 4 | Existen los test fixtures | `./gradlew -q :verificador:tasks --all \| grep -E '^testFixturesJar'` | una línea `testFixturesJar - Assembles a jar ...`, pasa |
-| 5 | El proyecto construye | `./gradlew :verificador:check --rerun` | `BUILD SUCCESSFUL`, pasa (`test NO-SOURCE`) |
+| 2a | SnakeYAML Engine en ejecución | `... runtimeClasspath \| grep -c 'org.snakeyaml:snakeyaml-engine'` | `1`, pasa. El runtimeClasspath completo es solo `org.snakeyaml:snakeyaml-engine:3.2` |
+| 2b | Nada de pruebas en ejecución | `... runtimeClasspath \| grep -ciE 'jqwik\|junit'` | `0`, pasa |
+| 3 | Jupiter, launcher y jqwik en pruebas | `... testRuntimeClasspath \| grep -oE '...' \| sort -u` | Salen las tres líneas (`net.jqwik:jqwik-engine`, `org.junit.jupiter:junit-jupiter-engine`, `org.junit.platform:junit-platform-launcher`), pasa |
+| 4 | Los dos motores corren; lectura del XML | Primero borré `verificador/build/test-results`, luego `./gradlew :verificador:test --rerun` y el `grep -ho` del XML | `BUILD SUCCESSFUL`. Reporte `tests="2" skipped="0" failures="0" errors="0"`, con timestamp de mi corrida (`2026-11-25T19:59:58Z`). Pasa |
+| 5 | Existe `testFixturesJar` | `./gradlew -q :verificador:tasks --all \| grep -E '^testFixturesJar'` | Una línea `testFixturesJar - Assembles a jar archive ...`, pasa |
 
-Comprobaciones extra, con el árbol completo de dependencias:
-- `runtimeClasspath` y `compileClasspath` contienen solo `org.snakeyaml:snakeyaml-engine:2.10`.
-- `testFixturesRuntimeClasspath` contiene solo el proyecto y snakeyaml-engine.
-- En `testRuntimeClasspath`, jqwik 1.9.3 pide junit-platform 1.13.1 y el BOM lo sube a 1.13.4. No hay conflicto de versiones.
+Detalle de CA-4:
+- El XML trae dos casos: `motorJUnitCarga()` (0.014 s) y `motorJqwikCarga` (0.131 s).
+- El informe de jqwik dice `tries = 1000 | checks = 1000`. La propiedad corrió de verdad y no se saltó.
+- El `1s` del build se explica porque solo se volvió a ejecutar la tarea `test`.
 
-Que CA-5 termine en 1 s con `test NO-SOURCE` está explicado: la tarea prohíbe clases de prueba y su plan dice «sin código, las pruebas son los criterios». No es una prueba saltada, y no hay XML en `build/test-results` contra el que contar.
-
-Evidencia de la bitácora: el «rojo primero» (CA-2a dio `0`, CA-4 dio `exit=1`) y el «verde» coinciden con lo que obtengo yo y pueden haber salido del diff actual.
-
-Estado del worktree al terminar: limpio. `git status --short --ignored` muestra solo `.gradle/` y `verificador/build/`, que son cachés ignorados.
+Otras afirmaciones que comprobé:
+- **Rojo primero:** lo reproduje en una copia fuera del worktree (`git archive` de la rama, con el `verificador/build.gradle.kts` de `m6r/U01-T01`). Da `12 errors` y `BUILD FAILED`, igual que en la bitácora.
+- **Versiones:** en Maven Central, `maven-metadata.xml` da `release` 3.2 para snakeyaml-engine y 1.10.2 para jqwik, que son las fijadas. Para junit-bom da `6.2.0-M1`, que es un milestone, así que 6.1.3 como estable más reciente es razonable. No hay rangos ni `latest.release`.
+- **Plataforma 1.14.4:** jqwik pide `junit-platform-*:1.14.4` y Gradle lo resuelve a 6.1.3 (`1.14.4 -> 6.1.3` en testRuntimeClasspath). CA-4 confirma que funciona así.
+- **Alcance:**
+  - No hay cambios en `settings.gradle.kts` ni en el `build.gradle.kts` de la raíz.
+  - No hay clases de producción (`verificador/src/main` no existe).
+  - `testFixtures` no tiene contenido ni dependencias.
+  - No hay librerías vetadas.
+  - `useJUnitPlatform()` sale de la raíz (U01-T01), no del diff.
 
 ## Hallazgos
-
-### F-01 · NARANJA · verificador/build.gradle.kts:12,15,17 · Versiones fijas que no son las estables al escribir la tarea
-La nota de la tarea pide «Versiones fijas (sin `+` ni `latest`), las estables al momento de escribir la tarea». El archivo de la tarea es del 2026-11-22. Las tres versiones fijadas son de mediados de 2025.
-
-| Librería | Versión en el diff | Estable más reciente en Maven Central |
-|---|---|---|
-| snakeyaml-engine | 2.10 (2025-07-12) | 3.2 (2026-10-03) |
-| junit-bom | 5.13.4 (2025-07-21) | 5.14.4 en la línea 5; 6.1.3 (2026-08-07) en la línea 6 |
-| jqwik | 1.9.3 (2025-06-07) | 1.10.2 (2026-10-10) |
-
-Cómo lo comprobé: leí `<latest>` y `<release>` en `repo1.maven.org/maven2/<grupo>/<artefacto>/maven-metadata.xml` y las fechas en el listado de cada versión.
-
-Para elegir el arreglo:
-- El POM de `jqwik-engine:1.10.2` declara `junit-platform-engine` y `junit-platform-commons` en 1.14.4, que corresponde a JUnit 5.14.4. La pareja coherente con la tarea («JUnit 5») sería junit-bom 5.14.4 con jqwik 1.10.2.
-- Saltar a snakeyaml-engine 3.x es un cambio de versión mayor. Si el codificador decide quedarse en 2.x, tiene que justificarlo en la bitácora. Hoy la bitácora no dice nada sobre la elección de versiones.
-
-### F-02 · AMARILLO · bitacoras/U01-T02.md · La evidencia de CA-5 no es el comando del criterio
-La bitácora registra `./gradlew :verificador:check --rerun-tasks | tail -5`, no el comando literal del criterio. Es equivalente y lo reproduje con `--rerun`, así que no bloquea.
+### F-01 · AMARILLO · verificador/.jqwik-database · El artefacto de jqwik ensucia el worktree
+- Al correr las pruebas, jqwik crea `verificador/.jqwik-database` y nada la ignora.
+- `git check-ignore -v verificador/.jqwik-database` no devuelve nada, y `git status --short` muestra `?? verificador/.jqwik-database`.
+- Ya estaba antes de mi revisión (la dejaron las corridas del codificador) y vuelve a crearse con cada `test`.
+- No rompe ningún criterio. Pero el worktree queda sucio después de cada corrida de pruebas, y es fácil que alguien lo suba por error en un `git add -A`.
+- El codificador lo registró en la bitácora como candidata, y estoy de acuerdo.
 
 ## Tareas candidatas (defectos reales fuera de alcance)
-- Cuando U01-T12 ponga la suite en `testFixtures`, `testFixturesApi`/`testFixturesImplementation` necesitarán JUnit y jqwik. Hoy `testFixturesRuntimeClasspath` no los tiene, lo cual es correcto para esta tarea.
+- Ignorar `.jqwik-database` en el `.gitignore` de la raíz, que es de U01-T01. Otra opción es apuntar la base de datos de jqwik a `build/` con `jqwik.database` en `verificador/src/test/resources/junit-platform.properties`.
+
+## Estado del worktree al terminar
+- Sucio solo por `?? verificador/.jqwik-database`, que existía antes y que mi corrida de CA-4 regeneró. No hay fuentes modificadas.
+- Mi reproducción de «rojo primero» se hizo en el scratchpad, no en el worktree.
 
 ## Rutas de transcripciones largas
-- Ninguna. Las salidas son cortas y están resumidas arriba.
+- /tmp/claude-1000/-home-casdav-Projects-Master-SynKra/5b13ba94-befc-454f-88e7-3182922701e5/scratchpad/ca4.txt
+- /tmp/claude-1000/-home-casdav-Projects-Master-SynKra/5b13ba94-befc-454f-88e7-3182922701e5/scratchpad/rt.txt
+- /tmp/claude-1000/-home-casdav-Projects-Master-SynKra/5b13ba94-befc-454f-88e7-3182922701e5/scratchpad/trt.txt
+- /tmp/claude-1000/-home-casdav-Projects-Master-SynKra/5b13ba94-befc-454f-88e7-3182922701e5/scratchpad/rojo/ (copia para el rojo primero)
 
 ```
-VEREDICTO: NO-VERDE
-NARANJA|verificador/build.gradle.kts:12,15,17|Versiones fijas que no son las estables al escribir la tarea (snakeyaml-engine 2.10 vs 3.2, junit-bom 5.13.4 vs 5.14.4, jqwik 1.9.3 vs 1.10.2)
+VEREDICTO: VERDE
+AMARILLO|verificador/.jqwik-database|El artefacto de jqwik ensucia el worktree
 INFORME: revisiones/U01-T02/ronda-1.md
 ```

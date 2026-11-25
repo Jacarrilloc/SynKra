@@ -1,0 +1,3 @@
+# Respuesta a la ronda 2 — U03-T02
+F-05: Corregido en el commit de esta ronda: DialectoSqlite.getIdGeneration() sin operaciones por lotes; RepositorioSqliteTest (repositorio y esquema solo en src/test) falló en rojo con "After saving the identifier must not be null" y ahora lee los ids de saveAll. El barrido encontró además dos defectos del mismo tipo, corregidos con su rojo en la bitácora: boolean (SQLite devuelve Integer) y fechas Instant/LocalDate/LocalDateTime (vuelven como Long en milisegundos; deben guardarse en columnas INTEGER).
+F-06: Corregido en el commit de esta ronda: DialectoSqliteTest cubre limit solo, offset solo (LIMIT -1 OFFSET), ORDER BY con paginación y la ausencia de lotes.

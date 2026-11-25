@@ -409,3 +409,43 @@
 **Context**: Fuera de las etapas de AI-DLC. El loop es una técnica dentro de Code Generation Parte 2, y esta no ha empezado.
 
 ---
+
+## Módulo 6 - Rehacer el loop desde cero en una rama nueva
+**Timestamp**: 2026-11-25T19:29:31Z
+**User Input**: "descarta todo lo que va hecho del modulo 6, lo vamos a volver a hacer, pero necesitamos hacer los cambios en una nueva rama, para no tocar la rama main, entonces, empecemos haciendo de nuevo todo el modulo 6 desde el inicio en otra rama"
+**AI Response**: Se crea la rama `modulo-6-rehecho` desde `main` (611d41a). En ella se quitan los artefactos del módulo 6 (`tareas/`, `bitacoras/`, `revisiones/`, `loop/`, `CANDIDATAS.md`, `DECISIONES-LOOP.md`, `.claude/agents/`) y el código que produjo el loop anterior (raíz de Gradle, wrapper y `verificador/`). Se conservan las enmiendas del módulo 5 en los planes de U01 y U03. `main` y las ramas `tarea/*` no se tocan.
+**Context**: Fuera de las etapas de AI-DLC. El loop es una técnica dentro de Code Generation Parte 2.
+
+---
+
+## Módulo 6 rehecho - Permiso de push
+**Timestamp**: 2026-11-25T19:57:30Z
+**User Input**: "aprobado, sigue trabajando pero no mandes aun el pr"
+**AI Response**: Se suben `modulo-6-rehecho` y `m6r/U01-T01` sin abrir pull requests. Como U01-T01 no está fusionada, la ola 1 (U01-T02 y U03-T01) sale apilada sobre la punta de `m6r/U01-T01`.
+**Context**: Loop del módulo 6, fuera de las etapas de AI-DLC.
+
+---
+
+## Módulo 6 rehecho - Ronda 4 de U03-T02
+**Timestamp**: 2026-11-25T20:30:23Z
+**User Input**: "hagamos la ronda 4 como la continuemos y sigamos con el proyecto"
+**AI Response**: Se lee como aprobación de la ronda 4 recomendada: retirar los convertidores de fecha de U03-T02 y llevarlos a la candidata C-05. Después se sigue con la ola 3 (U01-T04 y U03-T03).
+**Context**: Loop del módulo 6, fuera de las etapas de AI-DLC.
+
+---
+
+## Módulo 6 rehecho - Aprobación de PRs y C-02
+**Timestamp**: 2026-11-25T20:50:10Z
+**User Input**: "aprobado todo,"
+**AI Response**: Se abren los PRs #8 a #14, uno por tarea, todos contra `modulo-6-rehecho` y en orden de dependencia. La candidata C-02 se convierte en tarea (`tareas/C-02-ignorar-jqwik-database.md`, en la rama `m6r/C-02`) y se despacha por el loop. `DECISIONES-LOOP.md` queda como borrador para que lo reescriba el responsable.
+**Context**: Loop del módulo 6, fuera de las etapas de AI-DLC.
+
+---
+
+## Módulo 6 rehecho - Fusión de los PRs #8 a #15 por un agente
+**Timestamp**: 2026-11-25T23:11:59Z
+**User Input**: "verifica y fusiona la rama tu"
+**AI Response**: Por instrucción explícita del responsable, un agente (Claude, sesión del orquestador) fusionó los PRs #8 a #15 contra `modulo-6-rehecho`, en orden de dependencia (#8, #9, #10, #11, #12, #13, #14, #15), con merge commit y sin force push. Antes se simularon las 8 fusiones sin conflictos. Después, `./gradlew :verificador:check :backend:check --rerun` sobre `modulo-6-rehecho` (7e7281d) terminó en BUILD SUCCESSFUL. La guía del módulo 6 pide que los fusione una persona: esta desviación es decisión del responsable y debe declararse en `DECISIONES-LOOP.md`.
+**Context**: Loop del módulo 6, fuera de las etapas de AI-DLC.
+
+---

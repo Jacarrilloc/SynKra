@@ -115,12 +115,15 @@ pasan, y no queda ningún ROJO ni NARANJA en pie. Verde quiere decir *vale la pe
 ## En SynKra
 
 - Corre los criterios desde la raíz del worktree del codificador, con `--rerun` en las pruebas
-  de Gradle, y compara los conteos del reporte XML (`build/test-results/test/TEST-*.xml`) con los
-  que pide el criterio: `skipped` distinto de 0 es ROJO.
+  de Gradle, y compara los conteos del reporte XML (`*/build/test-results/test/TEST-*.xml`) con
+  los que pide el criterio: un `skipped` distinto de 0 es ROJO.
+- La rama base de cada tarea es `modulo-6-rehecho`. El diff que revisas es
+  `git diff modulo-6-rehecho...m6r/U0X-T0N`.
 - Un criterio que toque un clúster solo se corre contra el contexto `kind-synkra`. Si el diff
   aplica algo a otro contexto, es ROJO.
 - Un `sleep` fijo en una prueba o en un criterio es una señal: si algo depende de esperar, exige
   la espera con `timeout` y una condición.
+- Tus transcripciones largas van a tu scratchpad, nunca dentro del worktree.
 
 ---
 
