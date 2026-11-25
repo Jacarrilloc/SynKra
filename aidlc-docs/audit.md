@@ -417,3 +417,11 @@
 **Context**: Fuera de las etapas de AI-DLC. El loop es una técnica dentro de Code Generation Parte 2.
 
 ---
+
+## Módulo 6 rehecho - Permiso de push
+**Timestamp**: 2026-11-25T19:57:30Z
+**User Input**: "aprobado, sigue trabajando pero no mandes aun el pr"
+**AI Response**: Se suben `modulo-6-rehecho` y `m6r/U01-T01` sin abrir pull requests. Como U01-T01 no está fusionada, la ola 1 (U01-T02 y U03-T01) sale apilada sobre la punta de `m6r/U01-T01`.
+**Context**: Loop del módulo 6, fuera de las etapas de AI-DLC.
+
+---
