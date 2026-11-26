@@ -90,7 +90,7 @@
 
 - [ ] **CA-6**: todo el verificador sigue pasando, sin caché
   ```bash
-  ./gradlew :verificador:check --rerun
+  ./gradlew :verificador:test --rerun :verificador:check
   ```
   Esperado: `BUILD SUCCESSFUL`, sin pruebas saltadas en ningún XML.
 
