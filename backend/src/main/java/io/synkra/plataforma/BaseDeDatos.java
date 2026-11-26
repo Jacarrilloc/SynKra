@@ -15,8 +15,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class BaseDeDatos {
 
+    /** Única fuente de la ruta del archivo de la base. */
+    public static Path archivo(String directorio) {
+        return Path.of(directorio, "synkra.db");
+    }
+
     public static String urlJdbc(String directorio) {
-        return "jdbc:sqlite:" + directorio + "/synkra.db";
+        return "jdbc:sqlite:" + archivo(directorio);
     }
 
     @Bean

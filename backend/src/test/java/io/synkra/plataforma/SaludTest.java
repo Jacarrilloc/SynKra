@@ -56,6 +56,7 @@ class SaludTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     void conBaseInutilizableLaSaludCae() throws IOException {
         try (var arbol = Files.walk(datos)) {
             arbol.sorted(Comparator.reverseOrder())
@@ -66,5 +67,7 @@ class SaludTest {
         var r = http.getForEntity("/actuator/health", Map.class);
         assertThat(r.getStatusCode()).isEqualTo(HttpStatus.SERVICE_UNAVAILABLE);
         assertThat(r.getBody()).containsEntry("status", "DOWN");
+        var componentes = (Map<String, Object>) r.getBody().get("components");
+        assertThat((Map<String, Object>) componentes.get("db")).containsEntry("status", "DOWN");
     }
 }

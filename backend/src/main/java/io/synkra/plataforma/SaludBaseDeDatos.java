@@ -21,7 +21,7 @@ class SaludBaseDeDatos implements HealthIndicator {
 
     SaludBaseDeDatos(DataSource dataSource, @Value("${synkra.data}") String directorio) {
         this.dataSource = dataSource;
-        this.archivo = Path.of(directorio, "synkra.db");
+        this.archivo = BaseDeDatos.archivo(directorio);
     }
 
     @Override
