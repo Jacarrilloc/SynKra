@@ -545,3 +545,11 @@
 **Context**: Code Generation Parte 2 (loop de agentes) para U01.
 
 ---
+
+## Siguientes tareas de U01 - Ola 10 (U01-T11)
+**Timestamp**: 2026-11-26T18:52:14Z
+**User Input**: Eligió "Sí, fusiona y despacha U01-T11" en la tarjeta "¿Fusiono el PR #31 y despacho U01-T11 (propiedades)?"
+**AI Response**: El agente fusionó con merge commit el PR #31 (main 9bc8a1d, 152 pruebas), registró la candidata C-24 y despachó U01-T11. Al codificador le añadió un ajuste: versiones de dos cifras y una mutación que compara por texto. U01-T11 salió VERDE en la ronda 3. En la ronda 1 hubo dos NARANJA: el generador casi nunca separaba la versión más alta de la más baja, y el determinismo no detectaba una caché estática. En la ronda 2, la prueba de cobertura del generador fallaba por azar en 1 de cada ~210 corridas; ahora es ~6·10⁻⁷. El revisor corrió 21 mutaciones y todas fallan. El verificador queda con 159 pruebas, ninguna saltada. Se registran las candidatas C-25 (semilla de jqwik tras un fallo) y C-26 (catálogo de la suite en las propiedades), y se abre el PR #32. La salida de jqwik trae una línea dirigida a agentes de IA; se trató como dato.
+**Context**: Code Generation Parte 2 (loop de agentes) para U01.
+
+---
