@@ -15,14 +15,19 @@ final class Generadores {
             "~", "null", "Null", "NULL", "true", "True", "FALSE", "false", "007", "0x1F", "0o17", "12", "-3", "1e3",
             "1.5", ".NaN", "-.Inf", ".inf", "a: b", "a #b", "x # y", "# c", "- a", "? a", "&a", "*a", "!t", "{a}",
             "[b]", "'q'", "\"d\"", "@a", "%d", "|", ">", "---", "...", " ", "", " p", "p ", "l1\nl2", "l1\n\nl3\n",
-            "tab\taqui", "ñandú", "日本語", "emoji 😀", "é");
+            "tab\taqui", "ñandú", "日本語", "emoji 😀", "é",
+            "palabra ".repeat(15).trim(), "a\rb", "a\u0085b", "a\u2028b", "\uFEFFbom", "c\u0007d", "+.inf", ".NAN",
+            "+12", "yes", "no", "on", "Yes", "OFF");
 
     private static final List<String> NOMBRES_ENGANOSOS = List.of("007", "true", "null", "1", "0", "false", "10-20");
+
+    /** Cota superior (inclusive) de cada componente de versión generado. */
+    static final int MAX_COMPONENTE = 50;
 
     private Generadores() {}
 
     static Arbitrary<Integer> componente() {
-        return Arbitraries.integers().between(0, 50);
+        return Arbitraries.integers().between(0, MAX_COMPONENTE);
     }
 
     static Arbitrary<Version> versiones() {
@@ -33,22 +38,26 @@ final class Generadores {
         return Arbitraries.integers().between(0, 3).map(" "::repeat);
     }
 
-    /** Un entero estrictamente mayor que {@code x} y de máximo 50 (para {@code x < 50}); reduce hacia {@code x + 1}. */
+    /** Un entero estrictamente mayor que {@code x} y de máximo {@code MAX_COMPONENTE} (para {@code x < MAX}); reduce hacia {@code x + 1}. */
     private static Arbitrary<Integer> mayorQueAcotado(int x) {
-        return Arbitraries.integers().between(0, 49 - x).map(d -> x + 1 + d);
+        return Arbitraries.integers().between(0, MAX_COMPONENTE - 1 - x).map(d -> x + 1 + d);
     }
 
-    /** Una versión estrictamente mayor que {@code a} con todos sus componentes en {@code 0..50} (C-10, F-01). */
+    /** Una versión estrictamente mayor que {@code a} con todos sus componentes en {@code 0..MAX_COMPONENTE} (C-10, F-01). Requiere {@code a.mayor() < MAX_COMPONENTE}. */
     private static Arbitrary<Version> mayorQue(Version a) {
-        return Arbitraries.oneOf(
-                mayorQueAcotado(a.parche()).map(p -> new Version(a.mayor(), a.menor(), p)),
-                Combinators.combine(mayorQueAcotado(a.menor()), componente())
-                        .as((m, p) -> new Version(a.mayor(), m, p)),
-                Combinators.combine(mayorQueAcotado(a.mayor()), componente(), componente())
-                        .as(Version::new));
+        var opciones = new java.util.ArrayList<Arbitrary<Version>>();
+        if (a.parche() < MAX_COMPONENTE) {
+            opciones.add(mayorQueAcotado(a.parche()).map(p -> new Version(a.mayor(), a.menor(), p)));
+        }
+        if (a.menor() < MAX_COMPONENTE) {
+            opciones.add(Combinators.combine(mayorQueAcotado(a.menor()), componente())
+                    .as((m, p) -> new Version(a.mayor(), m, p)));
+        }
+        opciones.add(Combinators.combine(mayorQueAcotado(a.mayor()), componente(), componente()).as(Version::new));
+        return Arbitraries.oneOf(opciones);
     }
 
-    /** Las cuatro formas de R-V2. El mínimo del intervalo cerrado va en {@code 0..49} para que siempre haya un mayor. */
+    /** Las cuatro formas de R-V2. En el intervalo cerrado solo el mayor del mínimo se acota (a {@code < MAX_COMPONENTE}) para que siempre haya un máximo. */
     static Arbitrary<RangoVersion> rangos() {
         Arbitrary<RangoVersion> mayorX = componente().map(n -> new RangoVersion(
                 new Version(n, 0, 0), Optional.of(new Version(n + 1, 0, 0)), n + ".x"));
@@ -60,10 +69,8 @@ final class Generadores {
                         v, Optional.of(new Version(v.mayor(), v.menor(), v.parche() + 1)), v.toString()));
         Arbitrary<RangoVersion> abierto = Combinators.combine(versiones(), espacios())
                 .as((a, s) -> new RangoVersion(a, Optional.empty(), ">=" + s + a));
-        Arbitrary<Version> minimosCerrados = Arbitraries.integers().between(0, 49).flatMap(x ->
-                Combinators.combine(
-                                Arbitraries.integers().between(0, 49),
-                                Arbitraries.integers().between(0, 49))
+        Arbitrary<Version> minimosCerrados = Arbitraries.integers().between(0, MAX_COMPONENTE - 1).flatMap(x ->
+                Combinators.combine(componente(), componente())
                         .as((y, z) -> new Version(x, y, z)));
         Arbitrary<RangoVersion> cerrado = minimosCerrados.flatMap(a ->
                 Combinators.combine(mayorQue(a), espacios(), espacios(), espacios())
@@ -91,8 +98,9 @@ final class Generadores {
         Arbitrary<String> ambiguo = Arbitraries.of(AMBIGUOS);
         Arbitrary<String> mezcla = Combinators.combine(ambiguo, comun, Arbitraries.of("", " ", "\n", ": ", " # "))
                 .as((a, c, sep) -> a + sep + c);
+        // Peso 6/10 a los ambiguos exactos: la prueba de cobertura depende de ello (ver DescriptorPropiedades).
         return Arbitraries.frequencyOf(
-                net.jqwik.api.Tuple.of(3, ambiguo), net.jqwik.api.Tuple.of(3, comun), net.jqwik.api.Tuple.of(2, mezcla));
+                net.jqwik.api.Tuple.of(6, ambiguo), net.jqwik.api.Tuple.of(2, comun), net.jqwik.api.Tuple.of(2, mezcla));
     }
 
     private static Arbitrary<Map<String, String>> etiquetas() {
