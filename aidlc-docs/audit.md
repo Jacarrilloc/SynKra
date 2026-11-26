@@ -553,3 +553,11 @@
 **Context**: Code Generation Parte 2 (loop de agentes) para U01.
 
 ---
+
+## Siguientes tareas de U01 - Tareas U01-T12 a U01-T14
+**Timestamp**: 2026-11-26T23:14:05Z
+**User Input**: Eligió "Sí, fusiona y escribe T12-T14" en la tarjeta "¿Fusiono el PR #32 y escribo las tareas U01-T12 a U01-T14?"
+**AI Response**: El agente fusionó con merge commit el PR #32 (U01-T11) y el #33 (candidatas C-24 a C-26 y audit). Las pruebas pasan sobre `main` (e7faba0): 159 en el verificador y 35 en el backend, ninguna saltada. Después escribió, sin código, `tareas/U01-T12-suite-combinaciones.md` (suite S1–S12 en `testFixtures`, cierra C-26), `tareas/U01-T13-suite-bloquea-build.md` (tarea `verificarSuite` y script de control) y `tareas/U01-T14-resumen-unidad.md` (resumen de U01, con las candidatas listadas por origen según C-21). También añadió las olas 11 a 13 a `loop/README.md`, una tarea por ola.
+**Context**: Code Generation Parte 2 (loop de agentes) para U01.
+
+---

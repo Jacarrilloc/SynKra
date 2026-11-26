@@ -50,6 +50,9 @@ U01 y U03 no dependen entre sí en el grafo, pero **U03-T01 necesita la raíz de
 | Ola 8 | U01-T09 | 1 | `Verificador` y `Catalogo`; el resto depende de esta API. Sale de `main` después de fusionar la ola 7 |
 | Ola 9 | U01-T10 | 1 | `Verificador.java` y `VeredictoPlugin.java`: no se puede repartir. Sale de `main` después de la ola 8 |
 | Ola 10 | U01-T11 | 1 | Solo `src/test`. Podría ir junto con U01-T12 cuando esa tarea exista. Sale de `main` después de la ola 9 |
+| Ola 11 | U01-T12 | 1 | `SuiteCombinaciones` en `testFixtures`; toca `VerificadorPropiedades` por C-26, así que va sola. Sale de `main` después de la ola 10 |
+| Ola 12 | U01-T13 | 1 | `verificador/build.gradle.kts` y `scripts/control-suite.sh`. Sale de `main` después de la ola 11 |
+| Ola 13 | U01-T14 | 1 | Solo el resumen de U01. Cierra la unidad. Sale de `main` después de la ola 12 |
 
 Lo previsto era que cada ola saliera de la punta de `modulo-6-rehecho` después de fusionar los PRs de
 la anterior. El responsable pidió avanzar sin abrir PRs todavía, así que **las ramas quedaron
