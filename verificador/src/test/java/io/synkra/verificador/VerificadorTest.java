@@ -92,6 +92,9 @@ class VerificadorTest {
         assertEquals(Veredicto.Global.RECHAZADA, r.global());
         assertEquals(List.of("VERSION_INCOMPATIBLE|kyc-pe|coreCompatible"), motivos(r));
         assertEquals(List.of(), r.porPlugin().get(0).alternativas());
+        var msg = r.porPlugin().get(0).motivos().get(0).mensaje();
+        assertTrue(
+                msg.contains("kyc-pe") && msg.contains("2.0.0") && msg.contains("3.x") && msg.contains("2.1.0"), msg);
         assertFalse(r.porPlugin().get(0).compatible());
     }
 
@@ -99,12 +102,16 @@ class VerificadorTest {
     void s6PluginAusente() {
         var r = Verificador.verificar(sel21(KYC_MX), catalogo());
         assertEquals(List.of("PLUGIN_AUSENTE|kyc-mx|"), motivos(r));
+        var msg = r.porPlugin().get(0).motivos().get(0).mensaje();
+        assertTrue(msg.contains("kyc-mx") && msg.contains("1.0.0") && msg.contains("synkra-core"), msg);
     }
 
     @Test
     void s7CoreEquivocadoSinOtroMotivo() {
         var r = Verificador.verificar(sel21(KYC_XX), catalogo());
         assertEquals(List.of("CORE_EQUIVOCADO|kyc-xx|core"), motivos(r));
+        var msg = r.porPlugin().get(0).motivos().get(0).mensaje();
+        assertTrue(msg.contains("kyc-xx") && msg.contains("otro-core") && msg.contains("synkra-core"), msg);
     }
 
     @Test
@@ -117,6 +124,25 @@ class VerificadorTest {
         assertTrue(r.porPlugin().get(0).compatible());
         var msg = r.motivosGlobales().get(0).mensaje();
         assertTrue(msg.contains("1.3.0") && msg.contains("2.0.0"), msg);
+    }
+
+    @Test
+    void pluginAusenteCortaAunqueSeaDeOtroCoreOIncompatible() {
+        var deOtroCore = d("kyc-zz", v(9, 0, 0), "otro-core", "5.x");
+        var r = Verificador.verificar(sel21(deOtroCore), catalogo());
+        assertEquals(List.of("PLUGIN_AUSENTE|kyc-zz|"), motivos(r));
+        var incompatible = d("kyc-yy", v(9, 0, 0), "synkra-core", "5.x");
+        assertEquals(List.of("PLUGIN_AUSENTE|kyc-yy|"), motivos(Verificador.verificar(sel21(incompatible), catalogo())));
+    }
+
+    @Test
+    void dosNombresRepetidosSalenEnOrdenDePrimeraAparicion() {
+        var r = Verificador.verificar(sel21(KYC_PE_13, KYC_CO, KYC_CO, KYC_PE_20), catalogo());
+        assertEquals(List.of("PLUGIN_REPETIDO|kyc-co|", "PLUGIN_REPETIDO|kyc-pe|"), motivos(r).stream().sorted().toList());
+        assertEquals(
+                List.of("kyc-pe", "kyc-co"),
+                r.motivosGlobales().stream().map(m -> m.plugin().orElseThrow()).toList());
+        assertEquals(2, r.porPlugin().size());
     }
 
     @Test

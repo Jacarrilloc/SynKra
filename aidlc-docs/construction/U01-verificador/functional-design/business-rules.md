@@ -39,7 +39,7 @@
 - **Etiqueta explícita en `etiquetas`**: una etiqueta explícita que no sea `str` en una clave o en un valor de `etiquetas` (`{!!int pais: pe}`, `{pais: !!int pe}`) es `DESCRIPTOR_INVALIDO`, a diferencia de los campos (`version: !!int 1` da `VERSION_INVALIDA`).
 
 ## R-V4 Verificación de una selección
-Para cada plugin de la selección, en este orden, acumulando motivos:
+Para cada plugin de la selección, en este orden, acumulando motivos (a lo sumo uno por plugin, ver abajo):
 1. `PLUGIN_REPETIDO` si su `nombre` ya apareció (motivo global, Q5).
 2. `PLUGIN_AUSENTE` si el `Catalogo` no tiene ese plugin y versión en la carpeta del core.
 3. `CORE_EQUIVOCADO` si `descriptor.core ≠ seleccion.core`.

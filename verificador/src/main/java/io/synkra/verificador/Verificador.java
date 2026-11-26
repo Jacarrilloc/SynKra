@@ -41,7 +41,7 @@ public final class Verificador {
                         CodigoMotivo.PLUGIN_REPETIDO,
                         Optional.of(nombre),
                         "El plugin '" + nombre + "' aparece " + versiones.size() + " veces en la selección (versiones "
-                                + versiones.stream().map(Verificador::texto).toList() + "); solo se admite una",
+                                + versiones.stream().map(Version::toString).toList() + "); solo se admite una",
                         Optional.empty()));
             }
         });
@@ -55,7 +55,7 @@ public final class Verificador {
             return Optional.of(motivo(
                     CodigoMotivo.PLUGIN_AUSENTE,
                     d,
-                    "El plugin '" + d.nombre() + "' " + texto(d.version()) + " no está en la carpeta del core '"
+                    "El plugin '" + d.nombre() + "' " + d.version() + " no está en la carpeta del core '"
                             + d.core() + "'",
                     Optional.empty()));
         }
@@ -70,8 +70,8 @@ public final class Verificador {
             return Optional.of(motivo(
                     CodigoMotivo.VERSION_INCOMPATIBLE,
                     d,
-                    "El plugin '" + d.nombre() + "' " + texto(d.version()) + " requiere el core '" + d.core()
-                            + "' en " + d.coreCompatible().texto() + " y se pidió " + texto(s.versionCore()),
+                    "El plugin '" + d.nombre() + "' " + d.version() + " requiere el core '" + d.core()
+                            + "' en " + d.coreCompatible().texto() + " y se pidió " + s.versionCore(),
                     Optional.of("coreCompatible")));
         }
         return Optional.empty();
@@ -79,9 +79,5 @@ public final class Verificador {
 
     private static Motivo motivo(CodigoMotivo codigo, Descriptor d, String mensaje, Optional<String> campo) {
         return new Motivo(codigo, Optional.of(d.nombre()), mensaje, campo);
-    }
-
-    private static String texto(Version v) {
-        return v.mayor() + "." + v.menor() + "." + v.parche();
     }
 }
