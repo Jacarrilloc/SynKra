@@ -1,0 +1,6 @@
+F-01: Corregido en el commit de la ronda 2: límite propio de anidación (32 niveles) contando eventos del parser antes de componer; devuelve DESCRIPTOR_INVALIDO. Prueba anidacionProfundaNoLanza con 2000 y 32000 niveles por desdeYaml y por leer (y mapas). No se atrapa StackOverflowError: el conteo es iterativo y suficiente.
+F-02: Corregido en el commit de la ronda 2: claves duplicadas detectadas en validar() y en etiquetas() como DESCRIPTOR_INVALIDO acumulado con los demás motivos; quitados setAllowDuplicateKeys y setAllowRecursiveKeys (inertes con Composer), con comentario de por qué.
+F-03: Corregido en el commit de la ronda 2: reglas del orquestador aplicadas (esquema CoreSchema, porque el esquema JSON por defecto no resuelve «~» como nulo). Una prueba por regla.
+F-04: Corregido en el commit de la ronda 2: límites 64 KB, 10 alias y 32 niveles documentados en R-V3 de business-rules.md y referenciados desde las constantes; valores sin cambio.
+F-05: Corregido en el commit de la ronda 2: aliasRecursivo afirma código, campo y mensaje, y documenta por qué basta con rechazar colecciones en los campos.
+F-06: Corregido en el commit de la ronda 2: eliminado el código muerto (OBLIGATORIOS); claveDeEtiquetaInvalida comprueba tamaño y campo.
