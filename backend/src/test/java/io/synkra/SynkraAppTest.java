@@ -3,6 +3,7 @@ package io.synkra;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.nio.file.Path;
+import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,12 @@ class SynkraAppTest {
 
     @Test
     void laAppDePruebaDeFronterasNoEntraAlContextoReal() {
-        assertThat(contexto.getBeanDefinitionNames()).noneMatch(n -> n.toLowerCase().contains("fronteras"));
+        // Se filtra por el paquete del TIPO de cada bean, no por su nombre.
+        var intrusos = Arrays.stream(contexto.getBeanDefinitionNames())
+                .map(n -> contexto.getType(n))
+                .filter(t -> t != null && t.getName().startsWith("io.synkra.fronteras"))
+                .map(Class::getName)
+                .toList();
+        assertThat(intrusos).isEmpty();
     }
 }
