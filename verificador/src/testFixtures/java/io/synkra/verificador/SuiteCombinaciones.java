@@ -15,7 +15,7 @@ public final class SuiteCombinaciones {
 
     private SuiteCombinaciones() {}
 
-    /** Los siete grupos del PRD §11.1. */
+    /** Los siete grupos del PRD §11.1 y {@link #REPETIDO}. */
     public enum Grupo {
         VALIDAS,
         VERSION_INCOMPATIBLE,
@@ -23,7 +23,9 @@ public final class SuiteCombinaciones {
         CARPETA_EQUIVOCADA,
         DESCRIPTOR_INCOMPLETO,
         INTEGRIDAD,
-        PLUGIN_NO_ACTIVADO
+        PLUGIN_NO_ACTIVADO,
+        /** Lo añade el diseño de U01 (Q5); no es uno de los 7 grupos del PRD §11.1. Solo contiene S10. */
+        REPETIDO
     }
 
     /** Lo que se le da al sistema bajo prueba. */
@@ -165,7 +167,7 @@ public final class SuiteCombinaciones {
                                         delcampo(CodigoMotivo.DESCRIPTOR_CAMPO_DESCONOCIDO, "coreCompatibel"),
                                         delcampo(CodigoMotivo.DESCRIPTOR_FALTA_CAMPO, "coreCompatible")),
                                 List.of())),
-                new Caso("S10", Grupo.VERSION_INCOMPATIBLE, "kyc-pe 1.3.0 y kyc-pe 2.0.0 a la vez",
+                new Caso("S10", Grupo.REPETIDO, "kyc-pe 1.3.0 y kyc-pe 2.0.0 a la vez",
                         sel(v(2, 1, 0), KYC_PE_13, KYC_PE_20),
                         rechazada(List.of(deplugin(CodigoMotivo.PLUGIN_REPETIDO, "kyc-pe", null)), List.of())),
                 new Caso("S11", Grupo.INTEGRIDAD, "el hash del artefacto no coincide",

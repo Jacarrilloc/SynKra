@@ -115,11 +115,19 @@ class SuiteCombinacionesTest {
     }
 
     @Test
-    void aparecenLosSieteGruposDelPrd() {
+    void aparecenLosSieteGruposDelPrdMasRepetido() {
         var grupos = EnumSet.noneOf(Grupo.class);
         SuiteCombinaciones.casos().forEach(c -> grupos.add(c.grupo()));
-        assertEquals(7, Grupo.values().length);
+        var delPrd = EnumSet.complementOf(EnumSet.of(Grupo.REPETIDO));
+        assertEquals(7, delPrd.size());
+        assertTrue(grupos.containsAll(delPrd), "faltan grupos del PRD: " + delPrd);
         assertEquals(EnumSet.allOf(Grupo.class), grupos);
+        assertEquals(
+                List.of("S10"),
+                SuiteCombinaciones.casos().stream()
+                        .filter(c -> c.grupo() == Grupo.REPETIDO)
+                        .map(Caso::id)
+                        .toList());
     }
 
     @Test
