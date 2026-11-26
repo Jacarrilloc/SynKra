@@ -1,0 +1,3 @@
+F-10: Corregido en el commit de esta ronda 4: dentro de `## Códigos de motivo`, toda línea con `|` sin escapar fuera de la tabla leída (antes o después) y toda apertura ``` o ~~~ fallan citando la línea; pruebas en memoria encabezadoSinPipe, segundaSinPipe y fence9 (rojo y verde en la bitácora, Ronda 4).
+F-11: Corregido en el commit de esta ronda 4: el encabezado debe empezar por `| Código |`, el separador debe tener las mismas columnas, y una comilla invertida suelta en la primera celda falla (prueba encabezadoSeparadorYCeldaMalFormados).
+F-12: Corregido en el commit de esta ronda 4: cada par falla-pasa de la bitácora trae el mensaje completo y su propio revertido con salida; scratchpad propio `cod-u01t08r4/`.
