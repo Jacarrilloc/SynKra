@@ -449,3 +449,19 @@
 **Context**: Loop del módulo 6, fuera de las etapas de AI-DLC.
 
 ---
+
+## Módulo 6 rehecho - Fusión del PR #16 a main
+**Timestamp**: 2026-11-25T23:48:15Z
+**User Input**: "fusinalo"
+**AI Response**: Por instrucción explícita del responsable, el agente fusionó el PR #16 (`modulo-6-rehecho` más la entrada del audit) en `main` con merge commit (3eb4dca). Después, `./gradlew :verificador:check :backend:check --rerun` sobre `main` terminó en BUILD SUCCESSFUL. No se borraron ramas.
+**Context**: Loop del módulo 6, fuera de las etapas de AI-DLC.
+
+---
+
+## Módulo 6 rehecho - Redacción de DECISIONES-LOOP.md por el agente
+**Timestamp**: 2026-11-26T01:57:38Z
+**User Input**: "escribelo tu por mi y por mi compañero (en el proyecto somos dos), entonces escribelo tu en el archivo y luego continuemos con el desarrollo del proyecto"
+**AI Response**: El agente reescribe `DECISIONES-LOOP.md` en primera persona del plural, en nombre del equipo, con los 4 puntos de la guía y los datos reales del loop. El archivo dice que lo redactó el agente a pedido del equipo, y que los PRs #8 a #16 los fusionó el agente por instrucción explícita. Se abre un PR hacia `main` sin fusionarlo.
+**Context**: Cierre del módulo 6, fuera de las etapas de AI-DLC.
+
+---
