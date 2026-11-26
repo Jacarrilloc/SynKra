@@ -29,3 +29,4 @@ guarda nada.
 | `VERSION_INCOMPATIBLE` | `versionCore` fuera de `coreCompatible` | `Verificador` |
 | `PLUGIN_REPETIDO` | Dos descriptores con el mismo `nombre` (Q5) | `Verificador` |
 | `PLUGIN_AUSENTE` | La selección pide un plugin que el catálogo no tiene | `Verificador` (con `Catalogo`) |
+| `DESCRIPTOR_INVALIDO` | YAML ilegible, con etiqueta de tipo, alias recursivo o excesivo, demasiado grande, un valor del tipo equivocado, o `nombre`/`core`/clave de etiqueta que no cumple `^[a-z0-9]+(-[a-z0-9]+)*$` | `LectorDescriptor` |
