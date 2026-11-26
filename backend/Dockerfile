@@ -1,8 +1,10 @@
 # Imagen del backend: solo empaqueta el JAR compilado en el host (./gradlew :backend:bootJar).
 FROM eclipse-temurin:21-jre-alpine AS capas
 WORKDIR /app
-COPY build/libs/backend-0.1.0.jar app.jar
-RUN java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
+COPY build/libs/backend-*.jar /jars/
+RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un backend-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; } \
+ && mv /jars/backend-*.jar app.jar \
+ && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
 
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
