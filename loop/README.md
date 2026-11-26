@@ -43,6 +43,8 @@ U01 y U03 no dependen entre sí en el grafo, pero **U03-T01 necesita la raíz de
 | Ola 1 | U01-T02 y U03-T01 | 2 | Tocan archivos distintos: `verificador/build.gradle.kts`, y `backend/` más una línea de `settings.gradle.kts` |
 | Ola 2 | U01-T03 y U03-T02 | 2 | `verificador/src` y `backend/src` |
 | Ola 3 | U01-T04 y U03-T03 | 2 | Igual |
+| Ola 4 | U01-T05 y U03-T04 | 2 | `verificador/src/test` y `backend/` (configuración y una prueba). Sale de `main` |
+| Ola 5 | U01-T06 y U03-T05 | 2 | `verificador/src` y `backend/src/test`. Sale de `main` después de fusionar la ola 4 |
 
 Lo previsto era que cada ola saliera de la punta de `modulo-6-rehecho` después de fusionar los PRs de
 la anterior. El responsable pidió avanzar sin abrir PRs todavía, así que **las ramas quedaron

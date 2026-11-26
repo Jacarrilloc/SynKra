@@ -465,3 +465,11 @@
 **Context**: Cierre del módulo 6, fuera de las etapas de AI-DLC.
 
 ---
+
+## Siguientes tareas de U01 y U03 - Redacción sin código
+**Timestamp**: 2026-11-26T01:59:05Z
+**User Input**: Eligió "Escribir tareas primero" en la tarjeta "¿Cómo seguimos con el desarrollo después del módulo 6?"
+**AI Response**: El orquestador escribe 4 tareas sin código: U01-T05 (propiedades de rangos), U01-T06 (`Descriptor` y `LectorDescriptor`), U03-T04 (salud) y U03-T05 (fronteras de módulos). Añade las olas 4 y 5 a `loop/README.md`. U01-T06 propone un código de motivo nuevo, `DESCRIPTOR_INVALIDO`, que el equipo debe aprobar. No se despacha nada hasta que el equipo apruebe las tareas.
+**Context**: Code Generation Parte 1 (redacción de tareas) para U01 y U03.
+
+---
