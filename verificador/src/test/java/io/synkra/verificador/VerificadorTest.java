@@ -123,7 +123,7 @@ class VerificadorTest {
         assertEquals(v(1, 3, 0), r.porPlugin().get(0).descriptor().version());
         assertTrue(r.porPlugin().get(0).compatible());
         var msg = r.motivosGlobales().get(0).mensaje();
-        assertTrue(msg.contains("1.3.0") && msg.contains("2.0.0"), msg);
+        assertTrue(msg.contains("kyc-pe") && msg.contains("1.3.0") && msg.contains("2.0.0"), msg);
     }
 
     @Test
@@ -140,6 +140,9 @@ class VerificadorTest {
         // Los dos órdenes: uno de ellos difiere del que daría un HashMap.
         var r1 = Verificador.verificar(sel21(KYC_PE_13, KYC_CO, KYC_CO, KYC_PE_20), catalogo());
         assertEquals(List.of("kyc-pe", "kyc-co"), repetidos(r1));
+        for (var m : r1.motivosGlobales()) {
+            assertTrue(m.mensaje().contains(m.plugin().orElseThrow()), m.mensaje());
+        }
         assertEquals(2, r1.porPlugin().size());
         var r2 = Verificador.verificar(sel21(KYC_CO, KYC_PE_13, KYC_PE_20, KYC_CO), catalogo());
         assertEquals(List.of("kyc-co", "kyc-pe"), repetidos(r2));
