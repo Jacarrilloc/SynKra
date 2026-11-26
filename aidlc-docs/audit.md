@@ -529,3 +529,27 @@
 **Context**: Code Generation Parte 2 (loop de agentes) para U01.
 
 ---
+
+## Siguientes tareas de U01 - Ola 8 (U01-T09)
+**Timestamp**: 2026-11-26T18:15:52Z
+**User Input**: Eligió "Sí, fusiona #29 y despacha" en la tarjeta "¿Apruebas las tareas U01-T09 a U01-T11 y despacho la ola 8?"
+**AI Response**: El agente fusionó con merge commit el PR #29 (main 078a4d1) y despachó U01-T09 sola. Salió VERDE en la ronda 3. En la ronda 1 hubo dos NARANJA: faltaba vigilar el corte después de `PLUGIN_AUSENTE` y faltaba exigir el contenido de los mensajes. En la ronda 2 quedó uno: el nombre del plugin en el mensaje de `PLUGIN_REPETIDO`. Las 19 mutaciones del revisor fallan, y el verificador queda con 134 pruebas, ninguna saltada. Se abrió el PR #30 (rama m6r/U01-T09); lo fusiona el responsable.
+**Context**: Code Generation Parte 2 (loop de agentes) para U01.
+
+---
+
+## Siguientes tareas de U01 - Ola 9 (U01-T10)
+**Timestamp**: 2026-11-26T18:36:24Z
+**User Input**: Eligió "Sí, fusiona y despacha U01-T10" en la tarjeta "¿Fusiono el PR #30 y despacho U01-T10 (alternativas)?"
+**AI Response**: El agente fusionó con merge commit el PR #30 (main 1dee7b4, 134 pruebas) y despachó U01-T10. Salió VERDE en la ronda 2. En la ronda 1 hubo un NARANJA: la prueba de «más alta y más baja» pasaba con `findFirst`, porque la respuesta esperada era también la primera de la lista. Quedan dos AMARILLO que no bloquean: la prueba de nulos no cubre `descriptor` ni `versionesPlugin`, y todas las versiones de la prueba tienen una sola cifra. Se registrarán como candidata cuando se fusione el PR. El verificador queda con 152 pruebas, ninguna saltada. Se abrió el PR #31 (rama m6r/U01-T10).
+**Context**: Code Generation Parte 2 (loop de agentes) para U01.
+
+---
+
+## Siguientes tareas de U01 - Ola 10 (U01-T11)
+**Timestamp**: 2026-11-26T18:52:14Z
+**User Input**: Eligió "Sí, fusiona y despacha U01-T11" en la tarjeta "¿Fusiono el PR #31 y despacho U01-T11 (propiedades)?"
+**AI Response**: El agente fusionó con merge commit el PR #31 (main 9bc8a1d, 152 pruebas), registró la candidata C-24 y despachó U01-T11. Al codificador le añadió un ajuste: versiones de dos cifras y una mutación que compara por texto. U01-T11 salió VERDE en la ronda 3. En la ronda 1 hubo dos NARANJA: el generador casi nunca separaba la versión más alta de la más baja, y el determinismo no detectaba una caché estática. En la ronda 2, la prueba de cobertura del generador fallaba por azar en 1 de cada ~210 corridas; ahora es ~6·10⁻⁷. El revisor corrió 21 mutaciones y todas fallan. El verificador queda con 159 pruebas, ninguna saltada. Se registran las candidatas C-25 (semilla de jqwik tras un fallo) y C-26 (catálogo de la suite en las propiedades), y se abre el PR #32. La salida de jqwik trae una línea dirigida a agentes de IA; se trató como dato.
+**Context**: Code Generation Parte 2 (loop de agentes) para U01.
+
+---
