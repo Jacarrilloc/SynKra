@@ -180,28 +180,48 @@ class VerificadorPropiedades {
                                                 .as(l -> l)))
                                 .toList())
                         .as(ls -> ls.stream().flatMap(List::stream).toList()));
-        // Un segundo core con los mismos nombres de plugin y un rango que sirve: la versión compatible está solo en otra carpeta.
+        // Un segundo core (registrado) con los mismos nombres de plugin y un rango que sirve: la versión compatible está solo en otra carpeta.
         var abierto = new RangoVersion(new Version(1, 0, 0), Optional.empty(), ">=1.0.0");
         return Combinators.combine(versionesCore, plugins).as((vs, ds) -> {
             var todos = new ArrayList<>(ds);
             ds.stream().map(Descriptor::nombre).distinct().forEach(n -> todos.add(
                     new Descriptor(n, new Version(1, 0, 0), "core-b", abierto, Map.of(), Optional.empty())));
-            // «core-b» solo tiene carpeta de plugins: las selecciones se hacen sobre «core-a».
-            return new Datos(Map.of("core-a", vs), todos);
+            // «core-b» tiene una versión registrada: «solo en otra carpeta» también ocurre con ese core registrado.
+            var cores = new LinkedHashMap<String, List<Version>>();
+            cores.put("core-a", vs);
+            cores.put("core-b", List.of(new Version(1, 0, 0)));
+            return new Datos(cores, todos);
         });
     }
 
-    /** El catálogo de la suite (el de AlternativasTest: S4, S5...) como uno de los posibles. */
+    /**
+     * El catálogo de la suite (S1 a S12) como uno de los posibles. Los datos salen de {@code SuiteCombinaciones}: los
+     * nombres se leen de sus selecciones y los descriptores y versiones, de su catálogo.
+     */
     private static Datos catalogoDeLaSuite() {
-        return new Datos(
-                Map.of(
-                        "synkra-core", List.of(new Version(2, 1, 0), new Version(3, 0, 0)),
-                        "otro-core", List.of(new Version(1, 0, 0))),
-                List.of(
-                        AlternativasTest.KYC_CO,
-                        AlternativasTest.KYC_PE_13,
-                        AlternativasTest.KYC_PE_20,
-                        AlternativasTest.KYC_XX));
+        var catalogo = SuiteCombinaciones.catalogo();
+        var cores = new java.util.TreeSet<String>();
+        var plugins = new java.util.TreeSet<String>();
+        for (var caso : SuiteCombinaciones.casos()) {
+            if (caso.entrada() instanceof SuiteCombinaciones.Entrada.PorSeleccion p) {
+                cores.add(p.seleccion().core());
+                p.seleccion().plugins().forEach(d -> {
+                    cores.add(d.core());
+                    plugins.add(d.nombre());
+                });
+            }
+        }
+        var versionesCore = new LinkedHashMap<String, List<Version>>();
+        var descriptores = new ArrayList<Descriptor>();
+        for (var core : cores) {
+            versionesCore.put(core, catalogo.versionesCore(core));
+            for (var plugin : plugins) {
+                for (var version : catalogo.versionesPlugin(core, plugin)) {
+                    descriptores.add(catalogo.descriptor(core, plugin, version).orElseThrow());
+                }
+            }
+        }
+        return new Datos(versionesCore, descriptores);
     }
 
     private static Arbitrary<Datos> catalogos() {
@@ -228,8 +248,12 @@ class VerificadorPropiedades {
 
     private static Arbitrary<Seleccion> selecciones(Datos datos) {
         var nombresDeCores = new ArrayList<>(datos.cores().keySet());
+        // El primer core (el de las versiones de texto en catalogosDeTexto) pesa más: registrar «core-b» no diluye
+        // los casos que dependen de él (ver la bitácora de U01-T12).
         Arbitrary<String> core = Arbitraries.frequencyOf(
-                Tuple.of(9, Arbitraries.of(nombresDeCores)), Tuple.of(1, Arbitraries.just("core-z")));
+                Tuple.of(8, Arbitraries.just(nombresDeCores.get(0))),
+                Tuple.of(1, Arbitraries.of(nombresDeCores)),
+                Tuple.of(1, Arbitraries.just("core-z")));
         return core.flatMap(c -> {
             var delCore = datos.cores().getOrDefault(c, List.of());
             Arbitrary<Version> versionCore = delCore.isEmpty()
@@ -477,11 +501,9 @@ class VerificadorPropiedades {
         vistos.merge(clave, 1, Integer::sum);
     }
 
-    @Test
-    void generadorCubreLosCodigos() {
+    /** Cuántos casos de cada clase hay en la muestra (lo usan la prueba de cobertura y la medición de la bitácora). */
+    static Map<String, Integer> frecuencias(List<Caso> casos) {
         var vistos = new java.util.TreeMap<String, Integer>();
-        var casos = casos().sampleStream().limit(1000).collect(Collectors.toList());
-        assertEquals(1000, casos.size());
         for (var caso : casos) {
             var s = caso.seleccion();
             var datos = caso.datos();
@@ -529,18 +551,35 @@ class VerificadorPropiedades {
                 if (!plugin && enOtraCarpeta) {
                     cuenta(vistos, "compatible solo en la carpeta de otro core");
                 }
+                boolean enOtraCarpetaConCoreRegistrado = datos.descriptores().stream()
+                        .anyMatch(d -> !d.core().equals(s.core())
+                                && d.nombre().equals(nombre)
+                                && incluye(d.coreCompatible(), s.versionCore())
+                                && !datos.cores().getOrDefault(d.core(), List.of()).isEmpty());
+                if (!plugin && enOtraCarpetaConCoreRegistrado) {
+                    cuenta(vistos, "compatible solo en la carpeta de otro core registrado");
+                }
             }
         }
+        return vistos;
+    }
+
+    @Test
+    void generadorCubreLosCodigos() {
+        var casos = casos().sampleStream().limit(1000).collect(Collectors.toList());
+        assertEquals(1000, casos.size());
+        var vistos = frecuencias(casos);
         var esperados = Set.of(
                 "APROBADA", "PLUGIN_AUSENTE", "CORE_EQUIVOCADO", "VERSION_INCOMPATIBLE", "PLUGIN_REPETIDO",
                 "seleccion vacia", "nombre repetido 3 veces", "alternativa de plugin y de core",
                 "alternativa solo de plugin", "alternativa solo de core", "sin ninguna alternativa",
-                "compatible solo en la carpeta de otro core");
+                "compatible solo en la carpeta de otro core", "compatible solo en la carpeta de otro core registrado");
         assertTrue(vistos.keySet().containsAll(esperados), "faltan: " + esperados.stream().filter(e -> !vistos.containsKey(e)).toList());
         // Los casos que separan el máximo del mínimo, el texto del número y una carpeta de otra: que no dependan de la
         // suerte. Cada umbral es menos de la tercera parte de la media medida en 100 lotes de 1000 (ver la bitácora).
         assertTrue(vistos.getOrDefault("2 o más de plugin con texto distinto de número", 0) >= 15, "frecuencias: " + vistos);
         assertTrue(vistos.getOrDefault("2 o más de core con texto distinto de número", 0) >= 6, "frecuencias: " + vistos);
         assertTrue(vistos.getOrDefault("compatible solo en la carpeta de otro core", 0) >= 10, "frecuencias: " + vistos);
+        assertTrue(vistos.getOrDefault("compatible solo en la carpeta de otro core registrado", 0) >= 10, "frecuencias: " + vistos);
     }
 }
