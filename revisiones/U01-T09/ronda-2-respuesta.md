@@ -1,0 +1,1 @@
+F-06: Corregido en este commit: s10 exige kyc-pe en el mensaje de PLUGIN_REPETIDO y dosNombresRepetidos... comprueba el nombre en cada mensaje; la mutación msgRepSinNombre falla en las dos pruebas y revierte a verde.
