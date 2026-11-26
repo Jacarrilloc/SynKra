@@ -66,6 +66,34 @@ class VeredictoTest {
                 () -> new VeredictoPlugin(descriptor("a"), true, null, List.of()));
     }
 
+    private static Motivo incompatible() {
+        return new Motivo(CodigoMotivo.VERSION_INCOMPATIBLE, Optional.of("a"), "no sirve", Optional.of("coreCompatible"));
+    }
+
+    private static Alternativa alternativa() {
+        return new Alternativa(Alternativa.TipoAlternativa.PLUGIN, "a", V1);
+    }
+
+    @Test
+    void compatibleConAlternativasSeRechaza() {
+        var e = assertThrows(IllegalArgumentException.class,
+                () -> new VeredictoPlugin(descriptor("a"), true, List.of(), List.of(alternativa())));
+        assertTrue(e.getMessage().contains("VERSION_INCOMPATIBLE"), e.getMessage());
+    }
+
+    @Test
+    void incompatibleSinVersionIncompatibleConAlternativasSeRechaza() {
+        var e = assertThrows(IllegalArgumentException.class,
+                () -> new VeredictoPlugin(descriptor("a"), false, List.of(motivo()), List.of(alternativa())));
+        assertTrue(e.getMessage().contains("VERSION_INCOMPATIBLE"), e.getMessage());
+    }
+
+    @Test
+    void versionIncompatibleConAlternativasEsValido() {
+        var vp = new VeredictoPlugin(descriptor("a"), false, List.of(incompatible()), List.of(alternativa()));
+        assertEquals(1, vp.alternativas().size());
+    }
+
     @Test
     void aprobadaConMotivosSeRechaza() {
         assertThrows(IllegalArgumentException.class,

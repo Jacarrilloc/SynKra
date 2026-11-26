@@ -63,8 +63,16 @@ Solo para `VERSION_INCOMPATIBLE`:
   `coreCompatible` incluye `versionCore`.
 - **Core:** la versión **más baja** registrada del core que está en el `coreCompatible` del plugin
   elegido.
-- Si no existe ninguna de las dos, el motivo dice "no hay una versión compatible registrada".
+- La alternativa de core se calcula con el `coreCompatible` del plugin **pedido** (el que dio
+  `VERSION_INCOMPATIBLE`), entre las versiones registradas del core de la selección.
+- Si no existe ninguna de las dos, el motivo conserva código, `plugin` y `campo` y su mensaje termina en
+  "no hay una versión compatible registrada".
 - Toda alternativa sugerida, aplicada, debe dar `APROBADA` para ese plugin (se comprueba en la suite).
+- **Entrada:** el veredicto que recibe `alternativas` debe ser exactamente `verificar(seleccion, catalogo)`
+  para esa selección; si no, `IllegalArgumentException`. Así no se aplican dos veces ni sobre otra selección.
+- **Invariante (C-22):** un plugin sin `VERSION_INCOMPATIBLE` nunca trae alternativas; `VeredictoPlugin`
+  lo rechaza con `IllegalArgumentException`. Un plugin con `compatible = true` no trae alternativas.
+- El `global`, los motivos globales, el orden de `porPlugin` y los plugins sin `VERSION_INCOMPATIBLE` no cambian.
 
 ## R-V6 Lo que el core usa
 El core llama a `Verificador.verificar` con su versión compilada y un `Catalogo` construido con
