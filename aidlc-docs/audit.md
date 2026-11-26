@@ -537,3 +537,11 @@
 **Context**: Code Generation Parte 2 (loop de agentes) para U01.
 
 ---
+
+## Siguientes tareas de U01 - Ola 9 (U01-T10)
+**Timestamp**: 2026-11-26T18:36:24Z
+**User Input**: Eligió "Sí, fusiona y despacha U01-T10" en la tarjeta "¿Fusiono el PR #30 y despacho U01-T10 (alternativas)?"
+**AI Response**: El agente fusionó con merge commit el PR #30 (main 1dee7b4, 134 pruebas) y despachó U01-T10. Salió VERDE en la ronda 2. En la ronda 1 hubo un NARANJA: la prueba de «más alta y más baja» pasaba con `findFirst`, porque la respuesta esperada era también la primera de la lista. Quedan dos AMARILLO que no bloquean: la prueba de nulos no cubre `descriptor` ni `versionesPlugin`, y todas las versiones de la prueba tienen una sola cifra. Se registrarán como candidata cuando se fusione el PR. El verificador queda con 152 pruebas, ninguna saltada. Se abrió el PR #31 (rama m6r/U01-T10).
+**Context**: Code Generation Parte 2 (loop de agentes) para U01.
+
+---
