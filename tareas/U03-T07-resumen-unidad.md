@@ -10,7 +10,7 @@
 
 **Dentro** (una línea, concreta):
 
-> `aidlc-docs/construction/U03-plataforma-backend/code/summary.md`: qué construyó U03 (tareas T01 a T06 con su PR), los archivos de código y de prueba que dejó, cómo se construye, prueba y empaqueta, la salida real de `./gradlew :backend:check --rerun` y de la imagen, los conteos de pruebas leídos de los XML, y las candidatas que U03 deja para otras unidades.
+> `aidlc-docs/construction/U03-plataforma-backend/code/summary.md`: qué construyó U03 (tareas T01 a T06 con su PR), los archivos de código y de prueba que dejó, cómo se construye, prueba y empaqueta, la salida real de `./gradlew :backend:test --rerun :backend:check` y de la imagen, los conteos de pruebas leídos de los XML, y las candidatas que U03 deja para otras unidades.
 
 **Fuera** (lo que el codificador debe rechazar aunque lo vea roto):
 
@@ -35,7 +35,7 @@
 
 - [ ] **CA-1**: el resumen trae la salida real de `:backend:check`, de esta ejecución
   ```bash
-  ./gradlew :backend:check --rerun 2>&1 | tee /tmp/u03-check.txt | tail -5
+  ./gradlew :backend:test --rerun :backend:check 2>&1 | tee /tmp/u03-check.txt | tail -5
   grep -c 'BUILD SUCCESSFUL' aidlc-docs/construction/U03-plataforma-backend/code/summary.md
   ```
   Esperado: `BUILD SUCCESSFUL` en la corrida y ≥ 1 en el resumen. El bloque pegado en el resumen es
