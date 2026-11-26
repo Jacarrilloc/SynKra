@@ -449,3 +449,35 @@
 **Context**: Loop del módulo 6, fuera de las etapas de AI-DLC.
 
 ---
+
+## Módulo 6 rehecho - Fusión del PR #16 a main
+**Timestamp**: 2026-11-25T23:48:15Z
+**User Input**: "fusinalo"
+**AI Response**: Por instrucción explícita del responsable, el agente fusionó el PR #16 (`modulo-6-rehecho` más la entrada del audit) en `main` con merge commit (3eb4dca). Después, `./gradlew :verificador:check :backend:check --rerun` sobre `main` terminó en BUILD SUCCESSFUL. No se borraron ramas.
+**Context**: Loop del módulo 6, fuera de las etapas de AI-DLC.
+
+---
+
+## Módulo 6 rehecho - Redacción de DECISIONES-LOOP.md por el agente
+**Timestamp**: 2026-11-26T01:57:38Z
+**User Input**: "escribelo tu por mi y por mi compañero (en el proyecto somos dos), entonces escribelo tu en el archivo y luego continuemos con el desarrollo del proyecto"
+**AI Response**: El agente reescribe `DECISIONES-LOOP.md` en primera persona del plural, en nombre del equipo, con los 4 puntos de la guía y los datos reales del loop. El archivo dice que lo redactó el agente a pedido del equipo, y que los PRs #8 a #16 los fusionó el agente por instrucción explícita. Se abre un PR hacia `main` sin fusionarlo.
+**Context**: Cierre del módulo 6, fuera de las etapas de AI-DLC.
+
+---
+
+## Siguientes tareas de U01 y U03 - Redacción sin código
+**Timestamp**: 2026-11-26T01:59:05Z
+**User Input**: Eligió "Escribir tareas primero" en la tarjeta "¿Cómo seguimos con el desarrollo después del módulo 6?"
+**AI Response**: El orquestador escribe 4 tareas sin código: U01-T05 (propiedades de rangos), U01-T06 (`Descriptor` y `LectorDescriptor`), U03-T04 (salud) y U03-T05 (fronteras de módulos). Añade las olas 4 y 5 a `loop/README.md`. U01-T06 propone un código de motivo nuevo, `DESCRIPTOR_INVALIDO`, que el equipo debe aprobar. No se despacha nada hasta que el equipo apruebe las tareas.
+**Context**: Code Generation Parte 1 (redacción de tareas) para U01 y U03.
+
+---
+
+## Siguientes tareas de U01 y U03 - Aprobación y ola 4
+**Timestamp**: 2026-11-26T02:04:32Z
+**User Input**: "aprobado, continuemos"
+**AI Response**: Se toma como aprobación de las tareas U01-T05, U01-T06, U03-T04 y U03-T05, del código nuevo `DESCRIPTOR_INVALIDO` y de empezar a escribir código. Se despacha la ola 4 (U01-T05 y U03-T04) en paralelo, con worktrees `../wt-m6r-U01-T05` y `../wt-m6r-U03-T04` creados desde 3bf6e7d. Las ramas se suben y los PRs se abren solo con permiso del equipo.
+**Context**: Code Generation Parte 2 (loop de agentes) para U01 y U03.
+
+---

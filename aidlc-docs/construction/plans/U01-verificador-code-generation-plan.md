@@ -52,7 +52,7 @@ raíz; el resumen va en `aidlc-docs/construction/U01-verificador/code/`.
 
 - [ ] **U01-T08 · Modelo del veredicto y códigos de motivo**
   `Seleccion`, `Alternativa`, `VeredictoPlugin` y `Veredicto` (`Motivo` y `CodigoMotivo` nacen en T03).
-  **Criterio:** `./gradlew :verificador:test --tests '*CodigoMotivoTest'` pasa y afirma que la enumeración tiene exactamente los 9 códigos de `domain-entities.md`. · H-07
+  **Criterio:** `./gradlew :verificador:test --tests '*CodigoMotivoTest'` pasa y afirma que la enumeración tiene exactamente los 10 códigos de `domain-entities.md` (9 del diseño más `DESCRIPTOR_INVALIDO`, aprobado con U01-T06). · H-07
 
 - [ ] **U01-T09 · `Verificador.verificar` (R-V4) y la interfaz `Catalogo`**
   Orden de comprobaciones de R-V4, determinista.
