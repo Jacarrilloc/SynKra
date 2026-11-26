@@ -90,15 +90,23 @@ public final class Verificador {
     }
 
     private static Optional<Version> altaDelPlugin(Seleccion s, Catalogo catalogo, Descriptor pedido) {
-        return catalogo.versionesPlugin(s.core(), pedido.nombre()).stream()
-                .filter(version -> catalogo.descriptor(s.core(), pedido.nombre(), version)
+        var versiones = catalogo.versionesPlugin(s.core(), pedido.nombre());
+        Objects.requireNonNull(versiones, "Catalogo.versionesPlugin devolvió null en vez de una lista vacía");
+        return versiones.stream()
+                .filter(version -> sinNulo(catalogo.descriptor(s.core(), pedido.nombre(), version))
                         .filter(c -> c.core().equals(s.core()) && c.coreCompatible().incluye(s.versionCore()))
                         .isPresent())
                 .max(Comparator.naturalOrder());
     }
 
+    private static Optional<Descriptor> sinNulo(Optional<Descriptor> d) {
+        return Objects.requireNonNull(d, "Catalogo.descriptor devolvió null en vez de Optional.empty()");
+    }
+
     private static Optional<Version> bajaDelCore(Seleccion s, Catalogo catalogo, Descriptor pedido) {
-        return catalogo.versionesCore(s.core()).stream()
+        var versiones = catalogo.versionesCore(s.core());
+        Objects.requireNonNull(versiones, "Catalogo.versionesCore devolvió null en vez de una lista vacía");
+        return versiones.stream()
                 .filter(pedido.coreCompatible()::incluye)
                 .min(Comparator.naturalOrder());
     }

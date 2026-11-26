@@ -62,7 +62,7 @@ Solo para `VERSION_INCOMPATIBLE`:
 - **Plugin:** la versión **más alta** del mismo plugin, en la carpeta del mismo core, cuyo
   `coreCompatible` incluye `versionCore`.
 - **Core:** la versión **más baja** registrada del core que está en el `coreCompatible` del plugin
-  elegido.
+  **pedido**.
 - La alternativa de core se calcula con el `coreCompatible` del plugin **pedido** (el que dio
   `VERSION_INCOMPATIBLE`), entre las versiones registradas del core de la selección.
 - Si no existe ninguna de las dos, el motivo conserva código, `plugin` y `campo` y su mensaje termina en

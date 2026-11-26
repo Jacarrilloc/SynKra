@@ -74,13 +74,25 @@ class AlternativasTest {
     }
 
     @Test
-    void masAltaYMasBajaDeVerdad() {
+    void masAltaYMasBajaDeVerdadSinImportarElOrden() {
+        // El Catalogo no garantiza orden: la respuesta esperada no puede ser la primera de la lista en ningún orden.
         var kyc12 = d("kyc-pe", v(1, 2, 0), "synkra-core", "2.x");
-        var c = new CatalogoEnMemoria(
-                Map.of("synkra-core", List.of(v(2, 1, 0), v(3, 0, 0), v(3, 1, 0)), "otro-core", List.of(v(1, 0, 0))),
-                List.of(KYC_CO, KYC_PE_13, KYC_PE_20, KYC_XX, kyc12));
-        var r = alt(sel21(KYC_PE_20), c);
-        assertEquals(List.of("PLUGIN|kyc-pe|1.3.0", "CORE|synkra-core|3.0.0"), claves(r.porPlugin().get(0)));
+        var plugins = List.of(kyc12, KYC_PE_13, KYC_PE_20, KYC_CO, KYC_XX);
+        var cores = List.of(v(2, 1, 0), v(3, 0, 0), v(3, 1, 0));
+        for (var invertir : List.of(false, true)) {
+            var ps = new java.util.ArrayList<>(plugins);
+            var cs = new java.util.ArrayList<>(cores);
+            if (invertir) {
+                java.util.Collections.reverse(ps);
+                java.util.Collections.reverse(cs);
+            }
+            var c = new CatalogoEnMemoria(Map.of("synkra-core", cs, "otro-core", List.of(v(1, 0, 0))), ps);
+            var r = alt(sel21(KYC_PE_20), c);
+            assertEquals(
+                    List.of("PLUGIN|kyc-pe|1.3.0", "CORE|synkra-core|3.0.0"),
+                    claves(r.porPlugin().get(0)),
+                    "invertido=" + invertir);
+        }
     }
 
     @Test
@@ -229,5 +241,41 @@ class AlternativasTest {
         var vistoEnOtroCatalogo = Verificador.verificar(s, new CatalogoEnMemoria(Map.of(), List.of()));
         assertThrows(
                 IllegalArgumentException.class, () -> Verificador.alternativas(s, vistoEnOtroCatalogo, catalogo()));
+    }
+
+    @Test
+    void catalogoQueDevuelveNullEsErrorConMensaje() {
+        var s = sel21(KYC_PE_20);
+        var v = Verificador.verificar(s, catalogo());
+        Catalogo sinCore = new Catalogo() {
+            public List<Version> versionesCore(String nombre) {
+                return null;
+            }
+
+            public List<Version> versionesPlugin(String core, String plugin) {
+                return catalogo().versionesPlugin(core, plugin);
+            }
+
+            public Optional<Descriptor> descriptor(String core, String plugin, Version version) {
+                return catalogo().descriptor(core, plugin, version);
+            }
+        };
+        var e = assertThrows(NullPointerException.class, () -> Verificador.alternativas(s, v, sinCore));
+        assertTrue(e.getMessage().contains("versionesCore"), e.getMessage());
+        Catalogo sinDescriptor = new Catalogo() {
+            public List<Version> versionesCore(String nombre) {
+                return catalogo().versionesCore(nombre);
+            }
+
+            public List<Version> versionesPlugin(String core, String plugin) {
+                return catalogo().versionesPlugin(core, plugin);
+            }
+
+            public Optional<Descriptor> descriptor(String core, String plugin, Version version) {
+                return version.equals(KYC_PE_20.version()) ? Optional.of(KYC_PE_20) : null;
+            }
+        };
+        var e2 = assertThrows(NullPointerException.class, () -> Verificador.alternativas(s, v, sinDescriptor));
+        assertTrue(e2.getMessage().contains("Optional"), e2.getMessage());
     }
 }
