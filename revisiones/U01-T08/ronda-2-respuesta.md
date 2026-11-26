@@ -1,0 +1,4 @@
+# U01-T08 — respuesta a la ronda 2
+F-07: Corregido en el commit de la ronda 3: la tabla termina solo en línea en blanco o `## `; toda línea no vacía tras el separador es fila y, si no empieza por `|` y un único nombre de código, falla citando la línea. Tres pruebas en memoria (sin `|` inicial, 2 espacios de sangría, línea sin `|` en medio) más `> cita`, `###`, `---`, comentario HTML y texto suelto; y las mutaciones (c), (d), (e) sobre el documento real fallan con "línea N: ...". Recorrido de otras formas en la bitácora.
+F-08: Corregido en el commit de la ronda 3: una línea con `|` tras terminar la tabla falla con "trae más de una tabla ... línea N"; prueba lectorFallaSiHayMasDeUnaTabla y mutación (f) en el documento real.
+F-09: Corregido en el commit de la ronda 3: la sección «Ronda 3» de la bitácora trae cada criterio y cada par falla-pasa con su `$ comando` y la salida pegada.

@@ -46,9 +46,10 @@ class CodigoMotivoTest {
     }
 
     /**
-     * Lee la tabla de la sección «Códigos de motivo». La primera línea de la tabla es el encabezado y la
-     * segunda el separador; se saltan por posición. Toda fila de datos debe empezar por un único nombre de
-     * código; si no, falla citando la línea.
+     * Lee la tabla de la sección «Códigos de motivo». La tabla empieza en la primera línea que empieza por
+     * {@code |} (encabezado) y termina SOLO en una línea en blanco o en un {@code ## }. Toda línea no vacía
+     * entre medias, tras el separador, es una fila de datos y debe empezar por {@code |} y un único nombre de
+     * código (sin sangría); si no, falla citando la línea. Una segunda tabla en la sección también falla.
      */
     static List<String> nombresDeLasLineas(List<String> lineas, String origen) {
         int i = lineas.indexOf("## Códigos de motivo");
@@ -56,31 +57,43 @@ class CodigoMotivoTest {
             fail("No se encontró la sección '## Códigos de motivo' en " + origen);
         }
         List<String> nombres = new ArrayList<>();
-        int posicion = 0; // 0 = encabezado, 1 = separador, 2+ = datos
-        boolean enTabla = false;
+        int posicion = 0; // 0 = antes de la tabla, 1 = encabezado, 2 = separador, 3+ = datos
+        boolean terminada = false;
         for (int n = i + 1; n < lineas.size(); n++) {
             String linea = lineas.get(n);
-            if (linea.startsWith("## ") && !enTabla) {
+            if (linea.startsWith("## ")) {
                 break;
             }
-            if (linea.startsWith("|")) {
-                enTabla = true;
-                posicion++;
-                if (posicion <= 2) {
-                    if (posicion == 2 && !SEPARADOR.matcher(linea).matches()) {
-                        fail("Se esperaba el separador '|---|' en la línea " + (n + 1) + ": " + linea);
-                    }
-                    continue;
-                }
-                Matcher m = FILA.matcher(linea);
-                if (!m.matches()) {
-                    fail("Fila de la tabla que no empieza por un único nombre de código, línea "
+            if (terminada) {
+                if (linea.stripLeading().startsWith("|")) {
+                    fail("La sección '## Códigos de motivo' trae más de una tabla; otra empieza en la línea "
                             + (n + 1) + ": " + linea);
                 }
-                nombres.add(m.group(1));
-            } else if (enTabla) {
-                break;
+                continue;
             }
+            if (posicion == 0) {
+                if (linea.startsWith("|")) {
+                    posicion = 1;
+                }
+                continue;
+            }
+            if (linea.isBlank()) {
+                terminada = true;
+                continue;
+            }
+            posicion++;
+            if (posicion == 2) {
+                if (!SEPARADOR.matcher(linea).matches()) {
+                    fail("Se esperaba el separador '|---|' en la línea " + (n + 1) + ": " + linea);
+                }
+                continue;
+            }
+            Matcher m = FILA.matcher(linea);
+            if (!m.matches()) {
+                fail("Fila de la tabla que no empieza por '|' y un único nombre de código, línea "
+                        + (n + 1) + ": " + linea);
+            }
+            nombres.add(m.group(1));
         }
         if (nombres.isEmpty()) {
             fail("La sección '## Códigos de motivo' en " + origen + " no trae una tabla con filas de datos");
@@ -98,18 +111,36 @@ class CodigoMotivoTest {
     @Test
     void lectorAceptaFilasBienFormadas() {
         assertEquals(List.of("PLUGIN_AUSENTE", "B_C", "D"),
-                nombresDeLasLineas(lineas("|  B_C  | x |", "| `D` | y |", "", "| otra | tabla |"), "mem"));
+                nombresDeLasLineas(lineas("|  B_C  | x |", "| `D` | y |", "", "texto posterior"), "mem"));
     }
 
     @Test
     void lectorFallaSiLaFilaNoEsUnNombre() {
         for (String fila : List.of("| X-INVENTADO | x |", "| `X_INVENTADO` (nuevo) | x |",
-                "| `PLUGIN_AUSENTE`, `X_INVENTADO` | x |")) {
+                "| `PLUGIN_AUSENTE`, `X_INVENTADO` | x |", "`X_INVENTADO` | x | y |",
+                "  | `X_INVENTADO` | x | y |", "  `X_INVENTADO` | x | y |", "texto suelto sin pipe", "> cita",
+                "### otro titulo", "---", "<!-- c -->")) {
             AssertionError e = assertThrows(AssertionError.class,
                     () -> nombresDeLasLineas(lineas(fila), "mem"), fila);
             assertTrue(e.getMessage().contains("línea 8") && e.getMessage().contains(fila),
                     "el mensaje debe citar la línea: " + e.getMessage());
         }
+    }
+
+    @Test
+    void lectorFallaSiLaLineaSinPipeCaeEnMedioDeLaTabla() {
+        List<String> l = lineas("texto sin pipe", "| `D` | y |");
+        AssertionError e = assertThrows(AssertionError.class, () -> nombresDeLasLineas(l, "mem"));
+        assertTrue(e.getMessage().contains("línea 8") && e.getMessage().contains("texto sin pipe"),
+                e.getMessage());
+    }
+
+    @Test
+    void lectorFallaSiHayMasDeUnaTabla() {
+        List<String> l = lineas("", "| Otro | Enc |", "|---|---|", "| `X_INVENTADO` | x |");
+        AssertionError e = assertThrows(AssertionError.class, () -> nombresDeLasLineas(l, "mem"));
+        assertTrue(e.getMessage().contains("más de una tabla") && e.getMessage().contains("línea 9"),
+                e.getMessage());
     }
 
     @Test
