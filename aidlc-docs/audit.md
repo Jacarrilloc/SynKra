@@ -497,3 +497,11 @@
 **Context**: Code Generation Parte 1 (redacción de tareas) para U01 y U03.
 
 ---
+
+## Siguientes tareas de U01 y U03 - Ola 6 y despacho de la ola 7
+**Timestamp**: 2026-11-26T17:23:10Z
+**User Input**: Eligió "Sí, despacha la ola 6" en la tarjeta "¿Apruebas las cuatro tareas y despacho la ola 6?" (16:26:28Z), y después "Sí, fusiona y sigue con la ola 7" en la tarjeta "¿Fusiono los PRs #23, #24 y #25 y despacho la ola 7?" (17:23:10Z).
+**AI Response**: Con la primera respuesta, el agente fusionó el PR #22 (las tareas) y despachó U01-T07 y U03-T06. Las dos salieron VERDE en la ronda 2. U03-T06 tuvo en la ronda 1 un NARANJA, un JAR de versión fija. U01-T07 tuvo tres: un ajuste de C-10 sin aplicar, una prueba que fallaba al azar y un hueco en la propiedad de entradas hostiles. Se registraron las candidatas C-17 a C-20. U01-T08 y U03-T07 se corrigieron antes de despacharlas para que corran `test --rerun` antes de `check`. Con la segunda respuesta, el agente fusionó con merge commit los PRs #25, #23 y #24. Las pruebas pasan sobre `main` (b4ec449): 85 en el verificador y 35 en el backend, sin saltadas. Después despachó la ola 7, U01-T08 y U03-T07, desde b4ec449.
+**Context**: Code Generation Parte 2 (loop de agentes) para U01 y U03.
+
+---
