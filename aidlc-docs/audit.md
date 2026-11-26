@@ -497,3 +497,27 @@
 **Context**: Code Generation Parte 1 (redacción de tareas) para U01 y U03.
 
 ---
+
+## Siguientes tareas de U01 y U03 - Ola 6 y despacho de la ola 7
+**Timestamp**: 2026-11-26T17:23:10Z
+**User Input**: Eligió "Sí, despacha la ola 6" en la tarjeta "¿Apruebas las cuatro tareas y despacho la ola 6?" (16:26:28Z), y después "Sí, fusiona y sigue con la ola 7" en la tarjeta "¿Fusiono los PRs #23, #24 y #25 y despacho la ola 7?" (17:23:10Z).
+**AI Response**: Con la primera respuesta, el agente fusionó el PR #22 (las tareas) y despachó U01-T07 y U03-T06. Las dos salieron VERDE en la ronda 2. U03-T06 tuvo en la ronda 1 un NARANJA, un JAR de versión fija. U01-T07 tuvo tres: un ajuste de C-10 sin aplicar, una prueba que fallaba al azar y un hueco en la propiedad de entradas hostiles. Se registraron las candidatas C-17 a C-20. U01-T08 y U03-T07 se corrigieron antes de despacharlas para que corran `test --rerun` antes de `check`. Con la segunda respuesta, el agente fusionó con merge commit los PRs #25, #23 y #24. Las pruebas pasan sobre `main` (b4ec449): 85 en el verificador y 35 en el backend, sin saltadas. Después despachó la ola 7, U01-T08 y U03-T07, desde b4ec449.
+**Context**: Code Generation Parte 2 (loop de agentes) para U01 y U03.
+
+---
+
+## Siguientes tareas de U01 y U03 - U01-T08 llega al tope de rondas
+**Timestamp**: 2026-11-26T17:47:30Z
+**User Input**: "autizada la ronda 4, cuanto falta para acabar el modulo 6?"
+**AI Response**: U03-T07 salió VERDE en la ronda 2 (PR #26). U01-T08 salió NO-VERDE en la ronda 3: el lector de la tabla de códigos de `CodigoMotivoTest` se deja engañar con formas de GFM sin `|` inicial. Por la regla del loop, se paró y se llevó al responsable con una tarjeta de tres opciones, y el responsable autorizó la ronda 4. Sobre su pregunta: el módulo 6 ya está terminado (PRs #8 a #16 y `DECISIONES-LOOP.md` en el #17). Lo que sigue es construir U01 y las unidades siguientes.
+**Context**: Code Generation Parte 2 (loop de agentes) para U01 y U03.
+
+---
+
+## Siguientes tareas de U01 y U03 - Cierre de U01-T08
+**Timestamp**: 2026-11-26T18:02:14Z
+**User Input**: Eligió "Cerrar: HTML crudo fuera de alcance" en la tarjeta "¿Cómo cierro U01-T08 después de la ronda 4?"
+**AI Response**: La ronda 4 de U01-T08 salió NO-VERDE con dos NARANJA: F-13, con HTML crudo que engaña la prueba, y F-14, con la evidencia recortada. Por decisión del responsable, F-13 queda como candidata C-23. El codificador solo completa la evidencia de F-14 en la bitácora, sin tocar código, y después se abre el PR.
+**Context**: Code Generation Parte 2 (loop de agentes) para U01.
+
+---
