@@ -521,3 +521,11 @@
 **Context**: Code Generation Parte 2 (loop de agentes) para U01.
 
 ---
+
+## Siguientes tareas de U01 - Tareas U01-T09 a U01-T11
+**Timestamp**: 2026-11-26T18:04:32Z
+**User Input**: Eligió "Sí, fusiona y escribe U01-T09+" en la tarjeta de cierre de la ola 7 (fusionar #28, #26 y #27 y escribir sin código las tareas siguientes)
+**AI Response**: El agente fusionó con merge commit los PRs #28, #26 y #27. Las pruebas pasan sobre `main` (d07e377): 113 en el verificador y 35 en el backend, sin saltadas. U03 queda cerrada (U03-T08 es *Should*). Después escribió, sin código, `tareas/U01-T09-verificador.md`, `tareas/U01-T10-alternativas.md` y `tareas/U01-T11-propiedades-verificador.md`, con las lecturas del diseño que cada una fija (dónde se busca el plugin, un motivo por plugin, repetidos fuera de `porPlugin`, cierre de C-06 y C-22), y añadió las olas 8 a 10 a `loop/README.md`. U01-T12 a U01-T14 se escriben cuando U01-T10 fije la API de alternativas.
+**Context**: Code Generation Parte 2 (loop de agentes) para U01.
+
+---

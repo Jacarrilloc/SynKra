@@ -47,6 +47,9 @@ U01 y U03 no dependen entre sí en el grafo, pero **U03-T01 necesita la raíz de
 | Ola 5 | U01-T06 y U03-T05 | 2 | `verificador/src` y `backend/src/test`. Sale de `main` después de fusionar la ola 4 |
 | Ola 6 | U01-T07 y U03-T06 | 2 | `verificador/src/test` y diseño de U01; `backend/Dockerfile` y `backend/.dockerignore`. Sale de `main` después de fusionar la ola 5 |
 | Ola 7 | U01-T08 y U03-T07 | 2 | `verificador/src` (records nuevos); `aidlc-docs/construction/U03-plataforma-backend/code/`. Cierra U03 (T08 es *Should*). Sale de `main` después de fusionar la ola 6 |
+| Ola 8 | U01-T09 | 1 | `Verificador` y `Catalogo`; el resto depende de esta API. Sale de `main` después de fusionar la ola 7 |
+| Ola 9 | U01-T10 | 1 | `Verificador.java` y `VeredictoPlugin.java`: no se puede repartir. Sale de `main` después de la ola 8 |
+| Ola 10 | U01-T11 | 1 | Solo `src/test`. Podría ir junto con U01-T12 cuando esa tarea exista. Sale de `main` después de la ola 9 |
 
 Lo previsto era que cada ola saliera de la punta de `modulo-6-rehecho` después de fusionar los PRs de
 la anterior. El responsable pidió avanzar sin abrir PRs todavía, así que **las ramas quedaron
