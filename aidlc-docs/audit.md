@@ -481,3 +481,19 @@
 **Context**: Code Generation Parte 2 (loop de agentes) para U01 y U03.
 
 ---
+
+## Siguientes tareas de U01 y U03 - Fusión de las olas 4 y 5
+**Timestamp**: 2026-11-26T15:52:19Z
+**User Input**: "si, haz todo lo que sea necesario para continuar con el proyecto"
+**AI Response**: Por instrucción del responsable, el agente sube `m6r/U01-T06` y `m6r/U03-T05`, abre los PRs #20 y #21 y fusiona con merge commit, en este orden, #17, #18, #19, #20 y #21. Antes simula las fusiones, que no dan conflictos. Después, `./gradlew :verificador:check :backend:check --rerun` sobre `main` (2a936d2) termina en BUILD SUCCESSFUL. Propone el plan hacia la fase 2 (motor de despliegue), sin escribir código hasta que el equipo lo apruebe.
+**Context**: Code Generation Parte 2 (loop de agentes) para U01 y U03.
+
+---
+
+## Siguientes tareas de U01 y U03 - Redacción de las olas 6 y 7
+**Timestamp**: 2026-11-26T16:01:19Z
+**User Input**: Eligió "Sí, escribe olas 6 y 7" en la tarjeta "¿Escribo las tareas de las olas 6 y 7 con este plan?"
+**AI Response**: El orquestador escribe 4 tareas sin código: U01-T07 (propiedad de ida y vuelta del descriptor, con C-09, C-10, C-15 y C-16), U03-T06 (imagen del backend multi-stage y no root), U01-T08 (modelo del veredicto y códigos de motivo) y U03-T07 (resumen de U03). Las tareas traen criterios de entrada hostil y de regresión (mutaciones con par falla-pasa), por la lección de las olas 4 y 5. U03-T06 empaqueta un JAR compilado en el host, porque los contenedores de este entorno no confían en la CA del proxy. Añade las olas 6 y 7 a `loop/README.md`. No se despacha nada hasta que el equipo apruebe las tareas.
+**Context**: Code Generation Parte 1 (redacción de tareas) para U01 y U03.
+
+---
