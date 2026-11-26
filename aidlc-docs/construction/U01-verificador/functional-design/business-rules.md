@@ -23,6 +23,15 @@
   `descripcion`. Cualquier otro campo → `DESCRIPTOR_CAMPO_DESCONOCIDO`.
 - Se informan **todos** los motivos de una vez, no solo el primero (para corregir en una vuelta).
 - El YAML se lee en modo seguro (sin etiquetas de tipo ni anclas recursivas): es dato de un tercero.
+- **Límites del lector** (constantes `MAX_BYTES`, `MAX_ALIAS`, `MAX_PROFUNDIDAD` de `LectorDescriptor`;
+  superarlos es `DESCRIPTOR_INVALIDO`): tamaño máximo 64 KB (65536 bytes), como máximo 10 alias a colecciones y
+  anidación máxima de 32 niveles (se cuenta con los eventos del parser antes de componer).
+- **Tipos de los campos** (esquema Core de YAML): `nombre`, `core`, `descripcion` y los valores de `etiquetas`
+  exigen un escalar de texto; un escalar plano que YAML resuelve como bool, int, float o nulo es del tipo
+  equivocado (`DESCRIPTOR_INVALIDO`), salvo el nulo en un campo obligatorio (`DESCRIPTOR_FALTA_CAMPO`) o en
+  `descripcion` (cuenta como ausente). `version` y `coreCompatible` pasan su texto a `Version`/`RangoVersion`
+  (`version: 2.1` da `VERSION_INVALIDA`); una etiqueta explícita que no sea `str` (`!!int 1.0.0`) es
+  `DESCRIPTOR_INVALIDO`. Una clave repetida (en la raíz o en `etiquetas`) es `DESCRIPTOR_INVALIDO`.
 
 ## R-V4 Verificación de una selección
 Para cada plugin de la selección, en este orden, acumulando motivos:

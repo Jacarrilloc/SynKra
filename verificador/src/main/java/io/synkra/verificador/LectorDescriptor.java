@@ -18,6 +18,7 @@ import org.snakeyaml.engine.v2.api.Dump;
 import org.snakeyaml.engine.v2.api.DumpSettings;
 import org.snakeyaml.engine.v2.api.LoadSettings;
 import org.snakeyaml.engine.v2.common.FlowStyle;
+import org.snakeyaml.engine.v2.schema.CoreSchema;
 import org.snakeyaml.engine.v2.composer.Composer;
 import org.snakeyaml.engine.v2.nodes.MappingNode;
 import org.snakeyaml.engine.v2.nodes.Node;
@@ -35,9 +36,10 @@ import org.snakeyaml.engine.v2.scanner.StreamReader;
 public final class LectorDescriptor {
 
     public static final String ARCHIVO = "synkra-plugin.yaml";
+    // Límites de R-V3 (business-rules.md, «Límites del lector»): si cambian, cambian allí también.
     static final int MAX_BYTES = 64 * 1024;
-    private static final int MAX_ALIAS = 10;
-    private static final Set<String> OBLIGATORIOS = Set.of("nombre", "version", "core", "coreCompatible");
+    static final int MAX_ALIAS = 10;
+    static final int MAX_PROFUNDIDAD = 32;
     private static final Set<String> CONOCIDOS =
             Set.of("nombre", "version", "core", "coreCompatible", "etiquetas", "descripcion");
     private static final Set<Tag> TAGS_BASICOS =
@@ -85,10 +87,15 @@ public final class LectorDescriptor {
         Node raiz;
         try {
             var ajustes = LoadSettings.builder()
-                    .setAllowRecursiveKeys(false)
-                    .setAllowDuplicateKeys(false)
+                    .setSchema(new CoreSchema()) // el esquema JSON por defecto no resuelve «~» como nulo
+                    // Solo se compone (no se construye): las claves duplicadas se detectan en validar(), y las
+                    // claves no escalares (incluidas las recursivas) las rechaza el Composer por defecto.
                     .setMaxAliasesForCollections(MAX_ALIAS)
                     .build();
+            var excesiva = profundidadExcesiva(ajustes, yaml);
+            if (excesiva != null) {
+                return invalido(excesiva, null);
+            }
             var composer = new Composer(ajustes, new ParserImpl(ajustes, new StreamReader(ajustes, yaml)));
             raiz = composer.getSingleNode().orElse(null);
             if (raiz != null) {
@@ -97,13 +104,30 @@ public final class LectorDescriptor {
                     return invalido(cortes, null);
                 }
             }
-        } catch (RuntimeException e) {
+        } catch (RuntimeException e) { // YamlEngineException y similares: el YAML es ilegible
             return invalido("El YAML del descriptor no es válido o no es seguro: " + e.getMessage(), null);
         }
         if (!(raiz instanceof MappingNode mapa)) {
             return invalido("El descriptor debe ser un mapa de campos", null);
         }
         return validar(mapa);
+    }
+
+    /** Cuenta la anidación con los eventos del parser (iterativo) antes de componer, que es recursivo. */
+    private static String profundidadExcesiva(LoadSettings ajustes, String yaml) {
+        var parser = new ParserImpl(ajustes, new StreamReader(ajustes, yaml));
+        int profundidad = 0;
+        while (parser.hasNext()) {
+            var ev = parser.next();
+            if (ev instanceof org.snakeyaml.engine.v2.events.CollectionStartEvent) {
+                if (++profundidad > MAX_PROFUNDIDAD) {
+                    return "El descriptor supera la anidación máxima de " + MAX_PROFUNDIDAD + " niveles";
+                }
+            } else if (ev instanceof org.snakeyaml.engine.v2.events.CollectionEndEvent) {
+                profundidad--;
+            }
+        }
+        return null;
     }
 
     /** Devuelve un mensaje si hay una etiqueta no básica; recorre sin repetir nodos (los alias comparten nodo). */
@@ -135,6 +159,28 @@ public final class LectorDescriptor {
         return null;
     }
 
+    /** Clase de un escalar según su etiqueta (resuelta o explícita). */
+    private static boolean esStr(ScalarNode n) {
+        return n.getTag().equals(Tag.STR);
+    }
+
+    private static boolean esNulo(Node n) {
+        return n instanceof ScalarNode s && s.getTag().equals(Tag.NULL);
+    }
+
+    /** Una etiqueta explícita que no es str ni lo que el YAML resolvería solo (p. ej. {@code !!int 1.0.0}). */
+    private static boolean etiquetaExplicitaNoStr(ScalarNode n, LoadSettings ajustes) {
+        if (esStr(n)) {
+            return false;
+        }
+        var implicita = n.getScalarStyle() == org.snakeyaml.engine.v2.common.ScalarStyle.PLAIN
+                ? ajustes.getSchema().getScalarResolver().resolve(n.getValue(), true)
+                : Tag.STR;
+        return !n.getTag().equals(implicita);
+    }
+
+    private static final LoadSettings AJUSTES = LoadSettings.builder().setSchema(new CoreSchema()).build();
+
     private static Resultado<Descriptor> validar(MappingNode mapa) {
         var motivos = new ArrayList<Motivo>();
         var campos = new LinkedHashMap<String, Node>();
@@ -150,25 +196,31 @@ public final class LectorDescriptor {
                         clave.getValue()));
                 continue;
             }
-            campos.put(clave.getValue(), t.getValueNode());
-        }
-        for (var nombre : List.of("nombre", "version", "core", "coreCompatible")) {
-            if (!OBLIGATORIOS.contains(nombre)) {
-                continue;
-            }
-            var nodo = campos.get(nombre);
-            if (nodo == null || (nodo instanceof ScalarNode s && s.getTag().equals(Tag.NULL))) {
+            if (campos.put(clave.getValue(), t.getValueNode()) != null) {
                 motivos.add(Motivo.de(
-                        CodigoMotivo.DESCRIPTOR_FALTA_CAMPO, "Falta el campo obligatorio '" + nombre + "'", nombre));
-                campos.remove(nombre);
+                        CodigoMotivo.DESCRIPTOR_INVALIDO,
+                        "El campo '" + clave.getValue() + "' está repetido",
+                        clave.getValue()));
             }
         }
-        var nombre = texto(campos, "nombre", motivos);
-        var core = texto(campos, "core", motivos);
+        for (var obligatorio : OBLIGATORIOS_EN_ORDEN) {
+            var nodo = campos.get(obligatorio);
+            if (nodo == null || esNulo(nodo)) {
+                motivos.add(Motivo.de(
+                        CodigoMotivo.DESCRIPTOR_FALTA_CAMPO,
+                        "Falta el campo obligatorio '" + obligatorio + "'",
+                        obligatorio));
+                campos.remove(obligatorio);
+            }
+        }
+        // nombre y core: str; un escalar que YAML resuelve como bool, int o float es del tipo equivocado.
+        var nombre = texto(campos, "nombre", true, motivos);
+        var core = texto(campos, "core", true, motivos);
         patron(nombre, "nombre", motivos);
         patron(core, "core", motivos);
-        var version = texto(campos, "version", motivos);
-        var rango = texto(campos, "coreCompatible", motivos);
+        // version y coreCompatible: el texto del escalar plano (2.1 llega como "2.1" y da VERSION_INVALIDA).
+        var version = texto(campos, "version", false, motivos);
+        var rango = texto(campos, "coreCompatible", false, motivos);
         Version v = null;
         if (version != null) {
             switch (Version.parsear(version)) {
@@ -183,7 +235,12 @@ public final class LectorDescriptor {
                 case Resultado.Fallo<RangoVersion> f -> motivos.addAll(f.motivos());
             }
         }
-        var descripcion = campos.containsKey("descripcion") ? texto(campos, "descripcion", motivos) : null;
+        // descripcion: str; un nulo explícito cuenta como ausente.
+        String descripcion = null;
+        var nodoDescripcion = campos.get("descripcion");
+        if (nodoDescripcion != null && !esNulo(nodoDescripcion)) {
+            descripcion = texto(campos, "descripcion", true, motivos);
+        }
         var etiquetas = etiquetas(campos.get("etiquetas"), motivos);
         if (!motivos.isEmpty()) {
             return new Resultado.Fallo<>(motivos);
@@ -191,12 +248,22 @@ public final class LectorDescriptor {
         return Resultado.exito(new Descriptor(nombre, v, core, r, etiquetas, Optional.ofNullable(descripcion)));
     }
 
-    private static String texto(Map<String, Node> campos, String campo, List<Motivo> motivos) {
+    private static final List<String> OBLIGATORIOS_EN_ORDEN = List.of("nombre", "version", "core", "coreCompatible");
+
+    private static String texto(Map<String, Node> campos, String campo, boolean soloStr, List<Motivo> motivos) {
         var nodo = campos.get(campo);
         if (nodo == null) {
             return null;
         }
         if (nodo instanceof ScalarNode s) {
+            if (soloStr ? !esStr(s) : etiquetaExplicitaNoStr(s, AJUSTES)) {
+                motivos.add(Motivo.de(
+                        CodigoMotivo.DESCRIPTOR_INVALIDO,
+                        "El campo '" + campo + "' debe ser un texto, no '" + s.getValue() + "' de tipo "
+                                + s.getTag().getValue(),
+                        campo));
+                return null;
+            }
             return s.getValue();
         }
         motivos.add(Motivo.de(CodigoMotivo.DESCRIPTOR_INVALIDO, "El campo '" + campo + "' debe ser un texto", campo));
@@ -214,7 +281,7 @@ public final class LectorDescriptor {
 
     private static Map<String, String> etiquetas(Node nodo, List<Motivo> motivos) {
         var salida = new TreeMap<String, String>();
-        if (nodo == null || (nodo instanceof ScalarNode s && s.getTag().equals(Tag.NULL))) {
+        if (nodo == null || esNulo(nodo)) {
             return salida;
         }
         if (!(nodo instanceof MappingNode m)) {
@@ -223,19 +290,22 @@ public final class LectorDescriptor {
             return salida;
         }
         for (NodeTuple t : m.getValue()) {
-            if (t.getKeyNode() instanceof ScalarNode k && t.getValueNode() instanceof ScalarNode v) {
+            if (t.getKeyNode() instanceof ScalarNode k && t.getValueNode() instanceof ScalarNode v && esStr(v)) {
                 if (!Descriptor.NOMBRE.matcher(k.getValue()).matches()) {
                     motivos.add(Motivo.de(
                             CodigoMotivo.DESCRIPTOR_INVALIDO,
                             "La clave de etiqueta '" + k.getValue() + "' debe cumplir " + Descriptor.NOMBRE.pattern(),
                             "etiquetas"));
-                } else {
-                    salida.put(k.getValue(), v.getValue());
+                } else if (salida.put(k.getValue(), v.getValue()) != null) {
+                    motivos.add(Motivo.de(
+                            CodigoMotivo.DESCRIPTOR_INVALIDO,
+                            "La etiqueta '" + k.getValue() + "' está repetida",
+                            "etiquetas"));
                 }
             } else {
                 motivos.add(Motivo.de(
                         CodigoMotivo.DESCRIPTOR_INVALIDO,
-                        "Cada etiqueta debe ser un par de texto a texto",
+                        "Cada etiqueta debe ser un par de texto a texto (los nulos, números y booleanos no valen)",
                         "etiquetas"));
             }
         }
