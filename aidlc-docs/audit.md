@@ -513,3 +513,11 @@
 **Context**: Code Generation Parte 2 (loop de agentes) para U01 y U03.
 
 ---
+
+## Siguientes tareas de U01 y U03 - Cierre de U01-T08
+**Timestamp**: 2026-11-26T18:02:14Z
+**User Input**: Eligió "Cerrar: HTML crudo fuera de alcance" en la tarjeta "¿Cómo cierro U01-T08 después de la ronda 4?"
+**AI Response**: La ronda 4 de U01-T08 salió NO-VERDE con dos NARANJA: F-13, con HTML crudo que engaña la prueba, y F-14, con la evidencia recortada. Por decisión del responsable, F-13 queda como candidata C-23. El codificador solo completa la evidencia de F-14 en la bitácora, sin tocar código, y después se abre el PR.
+**Context**: Code Generation Parte 2 (loop de agentes) para U01.
+
+---
