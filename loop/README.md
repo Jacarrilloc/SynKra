@@ -45,6 +45,8 @@ U01 y U03 no dependen entre sí en el grafo, pero **U03-T01 necesita la raíz de
 | Ola 3 | U01-T04 y U03-T03 | 2 | Igual |
 | Ola 4 | U01-T05 y U03-T04 | 2 | `verificador/src/test` y `backend/` (configuración y una prueba). Sale de `main` |
 | Ola 5 | U01-T06 y U03-T05 | 2 | `verificador/src` y `backend/src/test`. Sale de `main` después de fusionar la ola 4 |
+| Ola 6 | U01-T07 y U03-T06 | 2 | `verificador/src/test` y diseño de U01; `backend/Dockerfile` y `backend/.dockerignore`. Sale de `main` después de fusionar la ola 5 |
+| Ola 7 | U01-T08 y U03-T07 | 2 | `verificador/src` (records nuevos); `aidlc-docs/construction/U03-plataforma-backend/code/`. Cierra U03 (T08 es *Should*). Sale de `main` después de fusionar la ola 6 |
 
 Lo previsto era que cada ola saliera de la punta de `modulo-6-rehecho` después de fusionar los PRs de
 la anterior. El responsable pidió avanzar sin abrir PRs todavía, así que **las ramas quedaron

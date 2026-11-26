@@ -489,3 +489,11 @@
 **Context**: Code Generation Parte 2 (loop de agentes) para U01 y U03.
 
 ---
+
+## Siguientes tareas de U01 y U03 - Redacción de las olas 6 y 7
+**Timestamp**: 2026-11-26T16:01:19Z
+**User Input**: Eligió "Sí, escribe olas 6 y 7" en la tarjeta "¿Escribo las tareas de las olas 6 y 7 con este plan?"
+**AI Response**: El orquestador escribe 4 tareas sin código: U01-T07 (propiedad de ida y vuelta del descriptor, con C-09, C-10, C-15 y C-16), U03-T06 (imagen del backend multi-stage y no root), U01-T08 (modelo del veredicto y códigos de motivo) y U03-T07 (resumen de U03). Las tareas traen criterios de entrada hostil y de regresión (mutaciones con par falla-pasa), por la lección de las olas 4 y 5. U03-T06 empaqueta un JAR compilado en el host, porque los contenedores de este entorno no confían en la CA del proxy. Añade las olas 6 y 7 a `loop/README.md`. No se despacha nada hasta que el equipo apruebe las tareas.
+**Context**: Code Generation Parte 1 (redacción de tareas) para U01 y U03.
+
+---
