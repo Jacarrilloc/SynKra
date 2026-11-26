@@ -529,3 +529,11 @@
 **Context**: Code Generation Parte 2 (loop de agentes) para U01.
 
 ---
+
+## Siguientes tareas de U01 - Ola 8 (U01-T09)
+**Timestamp**: 2026-11-26T18:15:52Z
+**User Input**: Eligió "Sí, fusiona #29 y despacha" en la tarjeta "¿Apruebas las tareas U01-T09 a U01-T11 y despacho la ola 8?"
+**AI Response**: El agente fusionó con merge commit el PR #29 (main 078a4d1) y despachó U01-T09 sola. Salió VERDE en la ronda 3. En la ronda 1 hubo dos NARANJA: faltaba vigilar el corte después de `PLUGIN_AUSENTE` y faltaba exigir el contenido de los mensajes. En la ronda 2 quedó uno: el nombre del plugin en el mensaje de `PLUGIN_REPETIDO`. Las 19 mutaciones del revisor fallan, y el verificador queda con 134 pruebas, ninguna saltada. Se abrió el PR #30 (rama m6r/U01-T09); lo fusiona el responsable.
+**Context**: Code Generation Parte 2 (loop de agentes) para U01.
+
+---
