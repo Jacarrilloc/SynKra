@@ -59,7 +59,7 @@ Catálogo fijo de la suite: core `synkra-core` con versiones `2.1.0` y `3.0.0`; 
 | PBT-03 | Para todo `N` y toda `v`: `parsear("N.x").incluye(v)` ⇔ `v.mayor == N` | `N` y `v` en `0..50` |
 | PBT-03 | `verificar` es determinista y no depende del orden de llamadas | Selecciones aleatorias sobre el catálogo de la suite |
 | PBT-03 | Toda alternativa sugerida da `APROBADA` al aplicarse | Selecciones con `VERSION_INCOMPATIBLE` |
-| PBT-08 | Semilla fija registrada y reducción automática del contraejemplo | La del framework |
+| PBT-08 | La semilla cambia en cada ejecución y se registra en el reporte (`seed = ...`); reducción automática del contraejemplo | La del framework |
 | PBT-09 | **jqwik** sobre JUnit 5 (se ejecuta con `./gradlew :verificador:test`) | |
 
 ## Cumplimiento de extensiones
