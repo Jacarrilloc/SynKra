@@ -36,6 +36,7 @@
   es `DESCRIPTOR_INVALIDO`. Una etiqueta explícita igual a la que YAML resolvería sola (`!!int 1`) se trata como
   el escalar plano (`version: !!int 1` da `VERSION_INVALIDA`). `aYaml` y `desdeYaml` usan el mismo esquema, así
   que los textos ambiguos (`~`, `007`, `True`) salen entre comillas y vuelven iguales.
+- **Etiqueta explícita en `etiquetas`**: una etiqueta explícita que no sea `str` en una clave o en un valor de `etiquetas` (`{!!int pais: pe}`, `{pais: !!int pe}`) es `DESCRIPTOR_INVALIDO`, a diferencia de los campos (`version: !!int 1` da `VERSION_INVALIDA`).
 
 ## R-V4 Verificación de una selección
 Para cada plugin de la selección, en este orden, acumulando motivos:
