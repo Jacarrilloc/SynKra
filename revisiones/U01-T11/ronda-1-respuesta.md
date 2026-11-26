@@ -1,0 +1,7 @@
+# Respuesta a la ronda 1 — U01-T11
+
+F-01: Corregido en el commit de la ronda 2 (ver SHA en el informe): generador sesgado (versiones de 1 y 2 cifras que comparten mayor, rangos comunes por plugin, rangos «de texto» y un tercer tipo de catálogo) y `generadorCubreLosCodigos` cuenta y exige >= 15 por 1000 los casos «2 o más candidatas con orden de texto distinto del numérico» de plugin y de core. Medido con `sampleStream()` sobre 10 000 casos: core 34,9 y plugin 82,1 por 1000. Las mutaciones (b), (d) y «toString solo del plugin», 5 corridas cada una con `.jqwik-database` borrada: 15 de 15 fallan en `minimoYMaximo`.
+F-02: Corregido en el commit de la ronda 2: `determinista` verifica la misma selección contra otro catálogo generado y contra uno vacío entre las dos comparaciones, con un oráculo de motivos por plugin. La mutación g2 (caché estática) falla `determinista` en 3 de 3 corridas.
+F-03: Corregido en el commit de la ronda 2: `alternativaAplicadaAprueba` afirma mismo orden de `porPlugin`, mismos globales y mismo `global` que `verificar`. La mutación j falla `alternativaAplicadaAprueba` ("alternativas conserva los globales").
+F-04: Corregido en el commit de la ronda 2: `alternativaAplicadaAprueba` afirma que la alternativa de plugin va antes que la de core cuando hay las dos. La mutación h falla ("la de plugin va antes que la de core ==> expected: <PLUGIN> but was: <CORE>").
+F-05: Corregido en el commit de la ronda 2: la salida cruda de la mutación (a) está en la sección «Ronda 2» de la bitácora (`7 tests completed, 4 failed`).
