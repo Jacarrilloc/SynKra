@@ -45,6 +45,12 @@ Para cada plugin de la selección, en este orden, acumulando motivos:
 3. `CORE_EQUIVOCADO` si `descriptor.core ≠ seleccion.core`.
 4. `VERSION_INCOMPATIBLE` si `!coreCompatible.incluye(versionCore)`.
 
+El plugin se busca en la carpeta que declara su propio descriptor (`descriptor.core`), no en la de
+`seleccion.core`: así un plugin de otro core da `CORE_EQUIVOCADO` y no `PLUGIN_AUSENTE`. Los pasos 2 a 4
+se evalúan en orden y el primero que falla corta los siguientes para ese plugin (a lo sumo un motivo por
+plugin). La primera aparición de un `nombre` se verifica normal; las apariciones repetidas no entran en
+`porPlugin` y dan un único `PLUGIN_REPETIDO` global por nombre.
+
 `global = APROBADA` si no hay ningún motivo; una selección sin plugins es `APROBADA`.
 
 **Determinismo:** el mismo `(Seleccion, Catalogo)` da siempre el mismo `Veredicto`, con los
