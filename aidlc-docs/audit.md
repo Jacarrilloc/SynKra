@@ -505,3 +505,11 @@
 **Context**: Code Generation Parte 2 (loop de agentes) para U01 y U03.
 
 ---
+
+## Siguientes tareas de U01 y U03 - U01-T08 llega al tope de rondas
+**Timestamp**: 2026-11-26T17:47:30Z
+**User Input**: "autizada la ronda 4, cuanto falta para acabar el modulo 6?"
+**AI Response**: U03-T07 salió VERDE en la ronda 2 (PR #26). U01-T08 salió NO-VERDE en la ronda 3: el lector de la tabla de códigos de `CodigoMotivoTest` se deja engañar con formas de GFM sin `|` inicial. Por la regla del loop, se paró y se llevó al responsable con una tarjeta de tres opciones, y el responsable autorizó la ronda 4. Sobre su pregunta: el módulo 6 ya está terminado (PRs #8 a #16 y `DECISIONES-LOOP.md` en el #17). Lo que sigue es construir U01 y las unidades siguientes.
+**Context**: Code Generation Parte 2 (loop de agentes) para U01 y U03.
+
+---
