@@ -1,0 +1,5 @@
+# Respuesta a la ronda 1 — U03-T06
+F-01: Corregido en el commit de la ronda 2 (HEAD de m6r/U03-T06): el Dockerfile ya no escribe la versión; `COPY build/libs/backend-*.jar /jars/` más un `RUN` que falla en voz alta si hay distinto de un JAR. Rojo (Dockerfile viejo con 0.1.0 y 0.2.0: build exit 0 con el JAR equivocado) y verde (dos JAR: `ERROR: hay mas de un backend-*.jar`, exit 1; un JAR: build ok) en la bitácora. Ojo: `COPY backend-*.jar app.jar` a secas NO falla con dos JAR en este BuildKit, por eso la comprobación explícita.
+F-02: Fuera de alcance: defecto de la especificación (CA-6); el código no cambia. Medido listando el contexto: solo `backend-0.1.0.jar` (42 253 555 B); el orquestador corrige la plantilla.
+F-03: Fuera de alcance: defecto de la especificación (CA-7); corrí `./gradlew :backend:test --rerun :backend:check` (35 pruebas, 0 fallos); el orquestador corrige la plantilla.
+F-04: Fuera de alcance: tarea candidata propuesta para U08 (`fsGroup: 10001` o `chgrp 0 /data && chmod g+rwX /data`).
