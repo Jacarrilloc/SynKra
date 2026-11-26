@@ -8,7 +8,6 @@ import io.synkra.verificador.Alternativa.TipoAlternativa;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -53,8 +52,24 @@ class VerificadorPropiedades {
         return Arbitraries.of(COMPONENTES);
     }
 
-    private static Arbitrary<Version> versiones() {
+    private static Arbitrary<Version> versionesLibres() {
         return Combinators.combine(comp(), comp(), comp()).as(Version::new);
+    }
+
+    /** Versiones que comparten mayor o menor y mezclan una y dos cifras: el texto y el número ordenan distinto. */
+    private static Arbitrary<Version> versionesDeTexto() {
+        return Combinators.combine(
+                        Arbitraries.of(1, 2, 9, 10, 11), Arbitraries.of(0, 1), Arbitraries.of(0, 1))
+                .as(Version::new);
+    }
+
+    private static Arbitrary<Version> versiones() {
+        return Arbitraries.frequencyOf(Tuple.of(1, versionesLibres()), Tuple.of(1, versionesDeTexto()));
+    }
+
+    /** Rangos que abarcan versiones de una y de dos cifras a la vez (varias candidatas que sirven). */
+    private static Arbitrary<RangoVersion> rangosAmplios() {
+        return Arbitraries.of(0, 1, 2).map(n -> new RangoVersion(new Version(n, 0, 0), Optional.empty(), ">=" + n + ".0.0"));
     }
 
     /** Las cuatro formas de R-V2 con componentes pequeños, para que los rangos acierten a menudo. */
@@ -80,8 +95,21 @@ class VerificadorPropiedades {
         return Arbitraries.oneOf(mayorX, menorX, exacta, abierto, cerrado);
     }
 
+    /** Rangos que dejan fuera lo bajo y abarcan 9.x, 10.x y 11.x: varias candidatas con orden de texto distinto. */
+    private static Arbitrary<RangoVersion> rangosDeTexto() {
+        Arbitrary<RangoVersion> abierto = Arbitraries.of(2, 9, 10).map(n ->
+                new RangoVersion(new Version(n, 0, 0), Optional.empty(), ">=" + n + ".0.0"));
+        Arbitrary<RangoVersion> cerrado = Combinators.combine(Arbitraries.of(2, 9), Arbitraries.of(11, 12)).as((a, b) ->
+                new RangoVersion(new Version(a, 0, 0), Optional.of(new Version(b, 0, 0)), ">=" + a + ".0.0 <" + b + ".0.0"));
+        return Arbitraries.oneOf(abierto, cerrado);
+    }
+
     private static Arbitrary<RangoVersion> rangos() {
-        return Arbitraries.frequencyOf(Tuple.of(9, rangosPequenos()), Tuple.of(1, Generadores.rangos()));
+        return Arbitraries.frequencyOf(
+                Tuple.of(5, rangosPequenos()),
+                Tuple.of(2, rangosAmplios()),
+                Tuple.of(4, rangosDeTexto()),
+                Tuple.of(1, Generadores.rangos()));
     }
 
     private static Arbitrary<Descriptor> descriptor(String core, String nombre, Version version) {
@@ -89,8 +117,15 @@ class VerificadorPropiedades {
     }
 
     private static Arbitrary<List<Descriptor>> pluginDeCarpeta(String core, String nombre) {
-        return versiones().list().ofMinSize(1).ofMaxSize(3).uniqueElements().flatMap(vs ->
-                Combinators.combine(vs.stream().map(v -> descriptor(core, nombre, v)).toList()).as(l -> l));
+        // Un rango común a todas las versiones del plugin (a menudo) o uno independiente por versión.
+        return versiones().list().ofMinSize(1).ofMaxSize(3).uniqueElements().flatMap(vs -> {
+            Arbitrary<List<Descriptor>> independientes =
+                    Combinators.combine(vs.stream().map(v -> descriptor(core, nombre, v)).toList()).as(l -> l);
+            Arbitrary<List<Descriptor>> compartido = rangos().map(r -> vs.stream()
+                    .map(v -> new Descriptor(nombre, v, core, r, Map.of(), Optional.empty()))
+                    .toList());
+            return Arbitraries.frequencyOf(Tuple.of(1, independientes), Tuple.of(1, compartido));
+        });
     }
 
     private static Arbitrary<List<Descriptor>> carpeta(String core) {
@@ -102,7 +137,9 @@ class VerificadorPropiedades {
     private static Arbitrary<Datos> catalogosGenerados() {
         return Arbitraries.of(CORES).list().ofMinSize(1).ofMaxSize(2).uniqueElements().flatMap(cores -> {
             Arbitrary<List<List<Version>>> versionesCore = Combinators.combine(cores.stream()
-                            .map(c -> versiones().list().ofMinSize(1).ofMaxSize(4).uniqueElements())
+                            .map(c -> Arbitraries.frequencyOf(
+                                    Tuple.of(1, versiones().list().ofMinSize(1).ofMaxSize(4).uniqueElements()),
+                                    Tuple.of(2, versionesDeTexto().list().ofMinSize(2).ofMaxSize(4).uniqueElements())))
                             .toList())
                     .as(l -> l);
             Arbitrary<List<Descriptor>> descriptores = Combinators.combine(
@@ -116,6 +153,33 @@ class VerificadorPropiedades {
                 return new Datos(mapa, ds);
             });
         });
+    }
+
+    /**
+     * Catálogos hechos para separar el texto del número: un core con 9.x, 10.x y 11.x entre sus versiones, y plugins
+     * con 2.0.0, 9.0.0, 10.0.0 y 11.0.0 cuyos rangos a menudo sirven a varias versiones a la vez.
+     */
+    private static Arbitrary<Datos> catalogosDeTexto() {
+        Arbitrary<Version> mayores = Arbitraries.of(2, 9, 10, 11).map(n -> new Version(n, 0, 0));
+        Arbitrary<List<Version>> versionesCore = Arbitraries.of(
+                List.of(new Version(2, 0, 0), new Version(9, 0, 0), new Version(10, 0, 0)),
+                List.of(new Version(2, 0, 0), new Version(9, 0, 0), new Version(10, 0, 0), new Version(11, 0, 0)));
+        Arbitrary<RangoVersion> rango = Arbitraries.of(">=1.0.0", "2.x", ">=9.0.0", ">=9.0.0", ">=9.0.0", ">=10.0.0", ">=9.0.0 <11.0.0")
+                .map(t -> switch (RangoVersion.parsear(t)) {
+                    case Resultado.Exito<RangoVersion> e -> e.valor();
+                    case Resultado.Fallo<RangoVersion> f -> throw new AssertionError(t);
+                });
+        Arbitrary<List<Descriptor>> plugins = Arbitraries.of(PLUGINS).list().ofMinSize(1).ofMaxSize(2).uniqueElements().flatMap(ns ->
+                Combinators.combine(ns.stream()
+                                .map(n -> mayores.list().ofMinSize(2).ofMaxSize(4).uniqueElements().flatMap(vs ->
+                                        Combinators.combine(vs.stream()
+                                                        .map(v -> rango.map(r -> new Descriptor(
+                                                                n, v, "core-a", r, Map.of(), Optional.empty())))
+                                                        .toList())
+                                                .as(l -> l)))
+                                .toList())
+                        .as(ls -> ls.stream().flatMap(List::stream).toList()));
+        return Combinators.combine(versionesCore, plugins).as((vs, ds) -> new Datos(Map.of("core-a", vs), ds));
     }
 
     /** El catálogo de la suite (el de AlternativasTest: S4, S5...) como uno de los posibles. */
@@ -132,7 +196,10 @@ class VerificadorPropiedades {
     }
 
     private static Arbitrary<Datos> catalogos() {
-        return Arbitraries.frequencyOf(Tuple.of(9, catalogosGenerados()), Tuple.of(1, Arbitraries.just(catalogoDeLaSuite())));
+        return Arbitraries.frequencyOf(
+                Tuple.of(4, catalogosGenerados()),
+                Tuple.of(5, catalogosDeTexto()),
+                Tuple.of(1, Arbitraries.just(catalogoDeLaSuite())));
     }
 
     /** Un plugin de una selección: del catálogo (cualquier carpeta), con otro rango, ausente o con versión que no está. */
@@ -220,6 +287,34 @@ class VerificadorPropiedades {
                 .orElseThrow();
     }
 
+    /** El motivo que debe tener cada plugin (sin repetidos) según el catálogo, calculado recorriendo los datos. */
+    private static Map<String, Optional<CodigoMotivo>> motivosEsperados(Seleccion s, Datos datos) {
+        var esperado = new LinkedHashMap<String, Optional<CodigoMotivo>>();
+        for (var d : s.plugins()) {
+            if (esperado.containsKey(d.nombre())) {
+                continue;
+            }
+            boolean existe = datos.descriptores().stream().anyMatch(e -> e.core().equals(d.core())
+                    && e.nombre().equals(d.nombre())
+                    && e.version().equals(d.version()));
+            esperado.put(d.nombre(), !existe
+                    ? Optional.of(CodigoMotivo.PLUGIN_AUSENTE)
+                    : !d.core().equals(s.core())
+                            ? Optional.of(CodigoMotivo.CORE_EQUIVOCADO)
+                            : !incluye(d.coreCompatible(), s.versionCore())
+                                    ? Optional.of(CodigoMotivo.VERSION_INCOMPATIBLE)
+                                    : Optional.<CodigoMotivo>empty());
+        }
+        return esperado;
+    }
+
+    private static void afirmaMotivos(Veredicto v, Seleccion s, Datos datos, String donde) {
+        var obtenido = new LinkedHashMap<String, Optional<CodigoMotivo>>();
+        v.porPlugin().forEach(p -> obtenido.put(
+                p.descriptor().nombre(), p.motivos().stream().map(Motivo::codigo).findFirst()));
+        assertEquals(motivosEsperados(s, datos), obtenido, "motivo de cada plugin " + donde);
+    }
+
     private static Veredicto conAlternativas(Seleccion s, Datos datos) {
         var c = datos.catalogo();
         return Verificador.alternativas(s, Verificador.verificar(s, c), c);
@@ -227,16 +322,26 @@ class VerificadorPropiedades {
 
     // ---------------------------------------------------------------- propiedades
 
+    @Provide
+    Arbitrary<Datos> otrosCatalogos() {
+        return catalogos();
+    }
+
     @Property(tries = 1000)
-    void determinista(@ForAll("casos") Caso caso) {
+    void determinista(@ForAll("casos") Caso caso, @ForAll("otrosCatalogos") Datos otro) {
         var s = caso.seleccion();
         var c = caso.datos().catalogo();
         var primero = Verificador.verificar(s, c);
+        afirmaMotivos(primero, s, caso.datos(), "(catálogo del caso)");
         assertEquals(primero, Verificador.verificar(s, c), "segunda llamada");
         assertEquals(primero, Verificador.verificar(s, caso.datos().catalogo()), "sobre una copia nueva del catálogo");
         Verificador.verificar(caso.otra(), c);
         conAlternativas(caso.otra(), caso.datos());
-        assertEquals(primero, Verificador.verificar(s, c), "tras verificar otra selección en medio");
+        // La misma selección contra otro catálogo (generado y vacío) no puede arrastrar nada del primero.
+        afirmaMotivos(Verificador.verificar(s, otro.catalogo()), s, otro, "(otro catálogo generado)");
+        var vacio = new Datos(Map.of(), List.of());
+        afirmaMotivos(Verificador.verificar(s, vacio.catalogo()), s, vacio, "(catálogo vacío)");
+        assertEquals(primero, Verificador.verificar(s, c), "tras verificar otra selección y otros catálogos en medio");
     }
 
     @Property(tries = 1000)
@@ -281,7 +386,17 @@ class VerificadorPropiedades {
         var s = caso.seleccion();
         var datos = caso.datos();
         var conAlt = conAlternativas(s, datos);
+        var base = Verificador.verificar(s, datos.catalogo());
+        assertEquals(
+                base.porPlugin().stream().map(VeredictoPlugin::descriptor).toList(),
+                conAlt.porPlugin().stream().map(VeredictoPlugin::descriptor).toList(),
+                "alternativas conserva el orden de porPlugin");
+        assertEquals(base.motivosGlobales(), conAlt.motivosGlobales(), "alternativas conserva los globales");
+        assertEquals(base.global(), conAlt.global());
         for (var p : conAlt.porPlugin()) {
+            if (alt(p, TipoAlternativa.PLUGIN).isPresent() && alt(p, TipoAlternativa.CORE).isPresent()) {
+                assertEquals(TipoAlternativa.PLUGIN, p.alternativas().get(0).tipo(), "la de plugin va antes que la de core");
+            }
             if (!esIncompatible(p)) {
                 assertTrue(p.alternativas().isEmpty(), "solo VERSION_INCOMPATIBLE trae alternativas: " + p);
                 continue;
@@ -349,9 +464,13 @@ class VerificadorPropiedades {
 
     // ---------------------------------------------------------------- cobertura del generador (CA-3)
 
+    private static void cuenta(Map<String, Integer> vistos, String clave) {
+        vistos.merge(clave, 1, Integer::sum);
+    }
+
     @Test
     void generadorCubreLosCodigos() {
-        var vistos = new LinkedHashSet<String>();
+        var vistos = new java.util.TreeMap<String, Integer>();
         var casos = casos().sampleStream().limit(1000).collect(Collectors.toList());
         assertEquals(1000, casos.size());
         for (var caso : casos) {
@@ -359,10 +478,10 @@ class VerificadorPropiedades {
             var datos = caso.datos();
             var v = conAlternativas(s, datos);
             if (v.global() == Veredicto.Global.APROBADA) {
-                vistos.add("APROBADA");
+                cuenta(vistos, "APROBADA");
             }
             if (s.plugins().isEmpty()) {
-                vistos.add("seleccion vacia");
+                cuenta(vistos, "seleccion vacia");
             }
             s.plugins().stream()
                     .collect(Collectors.groupingBy(Descriptor::nombre, Collectors.counting()))
@@ -370,26 +489,36 @@ class VerificadorPropiedades {
                     .stream()
                     .filter(n -> n >= 3)
                     .findAny()
-                    .ifPresent(n -> vistos.add("nombre repetido 3 veces"));
-            v.motivosGlobales().forEach(m -> vistos.add(m.codigo().name()));
+                    .ifPresent(n -> cuenta(vistos, "nombre repetido 3 veces"));
+            v.motivosGlobales().forEach(m -> cuenta(vistos, m.codigo().name()));
             for (var p : v.porPlugin()) {
-                p.motivos().forEach(m -> vistos.add(m.codigo().name()));
+                p.motivos().forEach(m -> cuenta(vistos, m.codigo().name()));
                 if (!esIncompatible(p)) {
                     continue;
                 }
                 boolean plugin = alt(p, TipoAlternativa.PLUGIN).isPresent();
                 boolean core = alt(p, TipoAlternativa.CORE).isPresent();
-                vistos.add(plugin && core ? "alternativa de plugin y de core"
+                cuenta(vistos, plugin && core ? "alternativa de plugin y de core"
                         : plugin ? "alternativa solo de plugin"
                         : core ? "alternativa solo de core"
                         : "sin ninguna alternativa");
                 var nombre = p.descriptor().nombre();
+                var sirven = pluginesQueSirven(datos, s, nombre);
+                if (sirven.size() >= 2
+                        && !sirven.stream().max(NUMERICO).equals(sirven.stream().max(Comparator.comparing(Version::toString)))) {
+                    cuenta(vistos, "2 o más de plugin con texto distinto de número");
+                }
+                var caben = coresQueCaben(datos, s, p.descriptor().coreCompatible());
+                if (caben.size() >= 2
+                        && !caben.stream().min(NUMERICO).equals(caben.stream().min(Comparator.comparing(Version::toString)))) {
+                    cuenta(vistos, "2 o más de core con texto distinto de número");
+                }
                 boolean enOtraCarpeta = datos.descriptores().stream()
                         .anyMatch(d -> !d.core().equals(s.core())
                                 && d.nombre().equals(nombre)
                                 && incluye(d.coreCompatible(), s.versionCore()));
                 if (!plugin && enOtraCarpeta) {
-                    vistos.add("compatible solo en la carpeta de otro core");
+                    cuenta(vistos, "compatible solo en la carpeta de otro core");
                 }
             }
         }
@@ -398,7 +527,9 @@ class VerificadorPropiedades {
                 "seleccion vacia", "nombre repetido 3 veces", "alternativa de plugin y de core",
                 "alternativa solo de plugin", "alternativa solo de core", "sin ninguna alternativa",
                 "compatible solo en la carpeta de otro core");
-        assertTrue(vistos.containsAll(esperados), "faltan: " + esperados.stream().filter(e -> !vistos.contains(e)).toList());
-        assertFalse(vistos.isEmpty());
+        assertTrue(vistos.keySet().containsAll(esperados), "faltan: " + esperados.stream().filter(e -> !vistos.containsKey(e)).toList());
+        // Los dos casos que separan el máximo del mínimo y el texto del número: que no dependan de la suerte.
+        assertTrue(vistos.getOrDefault("2 o más de plugin con texto distinto de número", 0) >= 15, "frecuencias: " + vistos);
+        assertTrue(vistos.getOrDefault("2 o más de core con texto distinto de número", 0) >= 15, "frecuencias: " + vistos);
     }
 }
