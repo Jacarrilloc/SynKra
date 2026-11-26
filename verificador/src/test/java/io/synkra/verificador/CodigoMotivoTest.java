@@ -23,7 +23,9 @@ class CodigoMotivoTest {
 
     private static final String RUTA =
             "aidlc-docs/construction/U01-verificador/functional-design/domain-entities.md";
-    private static final Pattern FILA = Pattern.compile("^\\|\\s*`?([A-Za-z0-9_]+)`?\\s*\\|.*");
+    private static final Pattern FILA = Pattern.compile("^\\|\\s*(?:`([A-Za-z0-9_]+)`|([A-Za-z0-9_]+))\\s*\\|.*");
+    private static final Pattern ENCABEZADO = Pattern.compile("^\\|\\s*Código\\s*\\|.*");
+    private static final Pattern PIPE_SIN_ESCAPAR = Pattern.compile("(?<!\\\\)\\|");
     private static final Pattern SEPARADOR = Pattern.compile("^\\|[\\s:|-]+$");
 
     private static Path raiz() {
@@ -45,9 +47,19 @@ class CodigoMotivoTest {
         return nombresDeLasLineas(Files.readAllLines(archivo), archivo.toString());
     }
 
+    private static int columnas(String linea) {
+        String t = linea.strip();
+        t = t.substring(1);
+        if (t.endsWith("|") && !t.endsWith("\\|")) {
+            t = t.substring(0, t.length() - 1);
+        }
+        return PIPE_SIN_ESCAPAR.split(t, -1).length;
+    }
+
     /**
      * Lee la tabla de la sección «Códigos de motivo». La tabla empieza en la primera línea que empieza por
-     * {@code |} (encabezado) y termina SOLO en una línea en blanco o en un {@code ## }. Toda línea no vacía
+     * {@code |} (encabezado) y termina SOLO en una línea en blanco o en un {@code ## }. Fuera de ella, en la sección, toda línea con un
+     * {@code |} sin escapar y toda apertura de bloque de código fallan. Toda línea no vacía
      * entre medias, tras el separador, es una fila de datos y debe empezar por {@code |} y un único nombre de
      * código (sin sangría); si no, falla citando la línea. Una segunda tabla en la sección también falla.
      */
@@ -59,20 +71,28 @@ class CodigoMotivoTest {
         List<String> nombres = new ArrayList<>();
         int posicion = 0; // 0 = antes de la tabla, 1 = encabezado, 2 = separador, 3+ = datos
         boolean terminada = false;
+        int columnas = 0;
         for (int n = i + 1; n < lineas.size(); n++) {
             String linea = lineas.get(n);
             if (linea.startsWith("## ")) {
                 break;
             }
-            if (terminada) {
-                if (linea.stripLeading().startsWith("|")) {
-                    fail("La sección '## Códigos de motivo' trae más de una tabla; otra empieza en la línea "
-                            + (n + 1) + ": " + linea);
-                }
-                continue;
+            String sinSangria = linea.stripLeading();
+            if (sinSangria.startsWith("```") || sinSangria.startsWith("~~~")) {
+                fail("La sección '## Códigos de motivo' no admite bloques de código; apertura en la línea "
+                        + (n + 1) + ": " + linea);
             }
-            if (posicion == 0) {
-                if (linea.startsWith("|")) {
+            if (terminada || posicion == 0) {
+                boolean empiezaTabla = posicion == 0 && linea.startsWith("|");
+                if (!empiezaTabla && PIPE_SIN_ESCAPAR.matcher(linea).find()) {
+                    fail("La sección '## Códigos de motivo' trae un '|' fuera de la tabla leída (más de una tabla "
+                            + "o tabla mal formada), línea " + (n + 1) + ": " + linea);
+                }
+                if (empiezaTabla) {
+                    if (!ENCABEZADO.matcher(linea).matches()) {
+                        fail("El encabezado debe empezar por '| Código |', línea " + (n + 1) + ": " + linea);
+                    }
+                    columnas = columnas(linea);
                     posicion = 1;
                 }
                 continue;
@@ -86,6 +106,10 @@ class CodigoMotivoTest {
                 if (!SEPARADOR.matcher(linea).matches()) {
                     fail("Se esperaba el separador '|---|' en la línea " + (n + 1) + ": " + linea);
                 }
+                if (columnas(linea) != columnas) {
+                    fail("El separador tiene " + columnas(linea) + " columnas y el encabezado " + columnas
+                            + ", línea " + (n + 1) + ": " + linea);
+                }
                 continue;
             }
             Matcher m = FILA.matcher(linea);
@@ -93,7 +117,7 @@ class CodigoMotivoTest {
                 fail("Fila de la tabla que no empieza por '|' y un único nombre de código, línea "
                         + (n + 1) + ": " + linea);
             }
-            nombres.add(m.group(1));
+            nombres.add(m.group(1) != null ? m.group(1) : m.group(2));
         }
         if (nombres.isEmpty()) {
             fail("La sección '## Códigos de motivo' en " + origen + " no trae una tabla con filas de datos");
@@ -141,6 +165,54 @@ class CodigoMotivoTest {
         AssertionError e = assertThrows(AssertionError.class, () -> nombresDeLasLineas(l, "mem"));
         assertTrue(e.getMessage().contains("más de una tabla") && e.getMessage().contains("línea 9"),
                 e.getMessage());
+    }
+
+    private static void falla(List<String> l, String... trozos) {
+        AssertionError e = assertThrows(AssertionError.class, () -> nombresDeLasLineas(l, "mem"));
+        for (String z : trozos) {
+            assertTrue(e.getMessage().contains(z), "falta '" + z + "' en: " + e.getMessage());
+        }
+    }
+
+    private static List<String> filasReales() {
+        return List.of("| `PLUGIN_AUSENTE` | a |", "| `B` | b |");
+    }
+
+    @Test
+    void encabezadoSinPipe() {
+        List<String> l = List.of("## Códigos de motivo", "", "Código | Cuándo | Lo detecta", "--- | --- | ---",
+                "| `X_INVENTADO` | x | y |", "| | | |", "| `B` | b | c |");
+        falla(l, "línea 3", "Código | Cuándo | Lo detecta");
+    }
+
+    @Test
+    void segundaSinPipe() {
+        List<String> l = new ArrayList<>(lineas("", "Otro | A | B", "--- | --- | ---", "`X_INVENTADO` | x | y"));
+        falla(l, "línea 9", "Otro | A | B");
+    }
+
+    @Test
+    void fence9() {
+        List<String> l = List.of("## Códigos de motivo", "", "```", "| Código | S |", "|---|---|", "| `A` | b |",
+                "```", "", "Código | S", "--- | ---", "`B` | c");
+        falla(l, "línea 3", "```");
+        falla(List.of("## Códigos de motivo", "~~~", "| Código | S |"), "línea 2", "~~~");
+    }
+
+    @Test
+    void pipeAntesDeLaTablaYEscapado() {
+        falla(List.of("## Códigos de motivo", "prosa | con pipe", "| Código | S |", "|---|---|", "| A | b |"),
+                "línea 2", "prosa | con pipe");
+        assertEquals(List.of("A"), nombresDeLasLineas(List.of("## Códigos de motivo", "prosa con \\| escapado",
+                "| Código | S |", "|---|---|", "| A | b |", "", "tras \\| tabla"), "mem"));
+    }
+
+    @Test
+    void encabezadoSeparadorYCeldaMalFormados() {
+        falla(List.of("## Códigos de motivo", "| `X_INVENTADO` | S |", "|---|---|", "| A | b |"), "línea 2", "Código");
+        falla(List.of("## Códigos de motivo", "| Código | A | B |", "|---|---|", "| A | b | c |"), "línea 3", "columnas");
+        falla(lineas("| `B_C | x |"), "línea 8", "`B_C");
+        falla(lineas("| B_C` | x |"), "línea 8", "B_C`");
     }
 
     @Test
