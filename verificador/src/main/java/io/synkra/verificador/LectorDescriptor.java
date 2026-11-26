@@ -290,7 +290,7 @@ public final class LectorDescriptor {
             return salida;
         }
         for (NodeTuple t : m.getValue()) {
-            if (t.getKeyNode() instanceof ScalarNode k && t.getValueNode() instanceof ScalarNode v && esStr(v)) {
+            if (t.getKeyNode() instanceof ScalarNode k && esStr(k) && t.getValueNode() instanceof ScalarNode v && esStr(v)) {
                 if (!Descriptor.NOMBRE.matcher(k.getValue()).matches()) {
                     motivos.add(Motivo.de(
                             CodigoMotivo.DESCRIPTOR_INVALIDO,
@@ -305,7 +305,7 @@ public final class LectorDescriptor {
             } else {
                 motivos.add(Motivo.de(
                         CodigoMotivo.DESCRIPTOR_INVALIDO,
-                        "Cada etiqueta debe ser un par de texto a texto (los nulos, números y booleanos no valen)",
+                        "Cada etiqueta debe ser un par de texto a texto (clave y valor son str: los nulos, números y booleanos no valen)",
                         "etiquetas"));
             }
         }
@@ -323,7 +323,10 @@ public final class LectorDescriptor {
             m.put("etiquetas", new TreeMap<>(d.etiquetas()));
         }
         d.descripcion().ifPresent(x -> m.put("descripcion", x));
-        var ajustes = DumpSettings.builder().setDefaultFlowStyle(FlowStyle.BLOCK).build();
+        var ajustes = DumpSettings.builder()
+                .setDefaultFlowStyle(FlowStyle.BLOCK)
+                .setSchema(new CoreSchema()) // el mismo esquema que desdeYaml: los textos ambiguos salen entre comillas
+                .build();
         return new Dump(ajustes).dumpToString(m);
     }
 

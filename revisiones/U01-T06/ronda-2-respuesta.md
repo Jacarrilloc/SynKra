@@ -1,0 +1,3 @@
+F-07: Corregido en el commit de la ronda 3: aYaml usa CoreSchema, igual que desdeYaml. Prueba idaYVueltaConTextosQueYamlResuelveComoOtroTipo (~, True, 007, Null, 0x1F, .NaN en descripcion y en cliente), vista fallar antes y pasar después.
+F-08: Corregido en el commit de la ronda 3: documentado en R-V3 (business-rules.md) que una etiqueta explícita igual a la implícita se trata como el escalar plano; sin cambio de código.
+F-09: Corregido en el commit de la ronda 3: la clave de etiqueta debe ser str (una que YAML resuelve como bool, int, float o nulo es DESCRIPTOR_INVALIDO), escrito en R-V3; prueba claveDeEtiquetaResueltaComoOtroTipoEsInvalida.

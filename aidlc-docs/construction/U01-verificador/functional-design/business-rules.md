@@ -32,6 +32,10 @@
   `descripcion` (cuenta como ausente). `version` y `coreCompatible` pasan su texto a `Version`/`RangoVersion`
   (`version: 2.1` da `VERSION_INVALIDA`); una etiqueta explícita que no sea `str` (`!!int 1.0.0`) es
   `DESCRIPTOR_INVALIDO`. Una clave repetida (en la raíz o en `etiquetas`) es `DESCRIPTOR_INVALIDO`.
+  Las claves de `etiquetas` siguen la regla de `nombre`: una clave que YAML resuelve como bool, int, float o nulo
+  es `DESCRIPTOR_INVALIDO`. Una etiqueta explícita igual a la que YAML resolvería sola (`!!int 1`) se trata como
+  el escalar plano (`version: !!int 1` da `VERSION_INVALIDA`). `aYaml` y `desdeYaml` usan el mismo esquema, así
+  que los textos ambiguos (`~`, `007`, `True`) salen entre comillas y vuelven iguales.
 
 ## R-V4 Verificación de una selección
 Para cada plugin de la selección, en este orden, acumulando motivos:

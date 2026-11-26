@@ -283,4 +283,36 @@ class LectorDescriptorTest {
                 codigos(LectorDescriptor.desdeYaml("nombre: kyc\nversion: 1.0.0\ncore: banco\ncoreCompatible: !!bool 2.x\n")));
         assertEquals(1, valor(LectorDescriptor.desdeYaml("nombre: kyc\nversion: !!str 1.0.0\ncore: banco\ncoreCompatible: 2.x\n")).version().mayor());
     }
+
+    @Test
+    void idaYVueltaConTextosQueYamlResuelveComoOtroTipo() {
+        for (var texto : List.of("~", "True", "007", "Null", "0x1F", ".NaN")) {
+            var d = new Descriptor(
+                    "kyc",
+                    new Version(1, 0, 0),
+                    "banco",
+                    valorRango("2.x"),
+                    Map.of("cliente", texto),
+                    Optional.of(texto));
+            assertEquals(d, valor(LectorDescriptor.desdeYaml(LectorDescriptor.aYaml(d))), texto);
+        }
+    }
+
+    private static RangoVersion valorRango(String t) {
+        return switch (RangoVersion.parsear(t)) {
+            case Resultado.Exito<RangoVersion> e -> e.valor();
+            case Resultado.Fallo<RangoVersion> f -> fail();
+        };
+    }
+
+    @Test
+    void claveDeEtiquetaResueltaComoOtroTipoEsInvalida() {
+        for (var clave : List.of("1", "true", "~")) {
+            var m = motivos(LectorDescriptor.desdeYaml(VALIDO + "etiquetas: {" + clave + ": pe}\n"));
+            assertEquals(1, m.size(), clave);
+            assertEquals(CodigoMotivo.DESCRIPTOR_INVALIDO, m.get(0).codigo());
+            assertEquals("etiquetas", m.get(0).campo().orElseThrow());
+        }
+        assertEquals(Map.of("1", "pe"), valor(LectorDescriptor.desdeYaml(VALIDO + "etiquetas: {'1': pe}\n")).etiquetas());
+    }
 }
