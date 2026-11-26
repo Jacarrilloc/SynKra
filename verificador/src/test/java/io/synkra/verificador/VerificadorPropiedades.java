@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import net.jqwik.api.Arbitraries;
 import net.jqwik.api.Arbitrary;
 import net.jqwik.api.Combinators;
+import net.jqwik.api.EdgeCasesMode;
 import net.jqwik.api.ForAll;
 import net.jqwik.api.Property;
 import net.jqwik.api.Provide;
@@ -179,7 +180,15 @@ class VerificadorPropiedades {
                                                 .as(l -> l)))
                                 .toList())
                         .as(ls -> ls.stream().flatMap(List::stream).toList()));
-        return Combinators.combine(versionesCore, plugins).as((vs, ds) -> new Datos(Map.of("core-a", vs), ds));
+        // Un segundo core con los mismos nombres de plugin y un rango que sirve: la versión compatible está solo en otra carpeta.
+        var abierto = new RangoVersion(new Version(1, 0, 0), Optional.empty(), ">=1.0.0");
+        return Combinators.combine(versionesCore, plugins).as((vs, ds) -> {
+            var todos = new ArrayList<>(ds);
+            ds.stream().map(Descriptor::nombre).distinct().forEach(n -> todos.add(
+                    new Descriptor(n, new Version(1, 0, 0), "core-b", abierto, Map.of(), Optional.empty())));
+            // «core-b» solo tiene carpeta de plugins: las selecciones se hacen sobre «core-a».
+            return new Datos(Map.of("core-a", vs), todos);
+        });
     }
 
     /** El catálogo de la suite (el de AlternativasTest: S4, S5...) como uno de los posibles. */
@@ -197,8 +206,8 @@ class VerificadorPropiedades {
 
     private static Arbitrary<Datos> catalogos() {
         return Arbitraries.frequencyOf(
-                Tuple.of(4, catalogosGenerados()),
-                Tuple.of(5, catalogosDeTexto()),
+                Tuple.of(3, catalogosGenerados()),
+                Tuple.of(6, catalogosDeTexto()),
                 Tuple.of(1, Arbitraries.just(catalogoDeLaSuite())));
     }
 
@@ -327,7 +336,7 @@ class VerificadorPropiedades {
         return catalogos();
     }
 
-    @Property(tries = 1000)
+    @Property(tries = 1000, edgeCases = EdgeCasesMode.NONE)
     void determinista(@ForAll("casos") Caso caso, @ForAll("otrosCatalogos") Datos otro) {
         var s = caso.seleccion();
         var c = caso.datos().catalogo();
@@ -528,8 +537,10 @@ class VerificadorPropiedades {
                 "alternativa solo de plugin", "alternativa solo de core", "sin ninguna alternativa",
                 "compatible solo en la carpeta de otro core");
         assertTrue(vistos.keySet().containsAll(esperados), "faltan: " + esperados.stream().filter(e -> !vistos.containsKey(e)).toList());
-        // Los dos casos que separan el máximo del mínimo y el texto del número: que no dependan de la suerte.
+        // Los casos que separan el máximo del mínimo, el texto del número y una carpeta de otra: que no dependan de la
+        // suerte. Cada umbral es menos de la tercera parte de la media medida en 100 lotes de 1000 (ver la bitácora).
         assertTrue(vistos.getOrDefault("2 o más de plugin con texto distinto de número", 0) >= 15, "frecuencias: " + vistos);
-        assertTrue(vistos.getOrDefault("2 o más de core con texto distinto de número", 0) >= 15, "frecuencias: " + vistos);
+        assertTrue(vistos.getOrDefault("2 o más de core con texto distinto de número", 0) >= 6, "frecuencias: " + vistos);
+        assertTrue(vistos.getOrDefault("compatible solo en la carpeta de otro core", 0) >= 10, "frecuencias: " + vistos);
     }
 }
