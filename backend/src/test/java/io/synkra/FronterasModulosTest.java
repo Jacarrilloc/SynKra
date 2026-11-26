@@ -28,15 +28,17 @@ class FronterasModulosTest {
         var documenter = new Documenter(backendReal());
         documenter.writeModulesAsPlantUml();
         documenter.writeModuleCanvases();
+        // Documenter escribe en build/spring-modulith-docs relativo al directorio de trabajo de la
+        // prueba, que Gradle fija en backend/ (carpeta por defecto de Documenter).
         assertThat(Files.readString(Path.of("build/spring-modulith-docs/module-plataforma.adoc")))
                 .contains("plataforma");
     }
 
     @Test
     void verifyFallaCuandoUnModuloImportaUnPaqueteInternoDeOtro() {
-        var modulos = // Modulith, por defecto, no importa clases de prueba (DoNotIncludeTests): la
+        // Modulith, por defecto, no importa clases de prueba (DoNotIncludeTests): la
         // aplicación de prueba solo es visible con una opción que sí las incluya.
-        ApplicationModules.of(AppFronteras.class, (ImportOption) location -> true);
+        var modulos = ApplicationModules.of(AppFronteras.class, (ImportOption) location -> true);
         assertThatThrownBy(modulos::verify)
                 .isInstanceOf(Violations.class)
                 .hasMessageContaining("dos.interno");
