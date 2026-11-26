@@ -16,12 +16,13 @@ Este resumen lo escribe U03-T07 sin cambiar código. La unidad queda lista para 
 | U03-T07 | Este resumen | (pendiente de PR) | (pendiente) |
 | U03-T08 | OpenAPI (Should, H-29): pendiente opcional, no se hizo | n/a | n/a |
 
-T01 a T03 llegaron a `main` dentro de la rama `modulo-6-rehecho` (PR #16); sus PR propios (#10, #12, #14) también figuran como fusionados.
+Los PR #10, #12 y #14 (T01 a T03) se fusionaron en `modulo-6-rehecho`. Esa rama llegó a `main` con el PR #16, cuya rama de origen era otra (`claude/project-thread-ti5y5k`) y contenía `modulo-6-rehecho`.
 
 ## Archivos
 
-Código (`backend/`):
+Código (`backend/`, más una línea en la raíz):
 
+- `settings.gradle.kts` (raíz): U03-T01 le añadió `backend` a los módulos del proyecto
 - `backend/build.gradle.kts`, `backend/Dockerfile`, `backend/.dockerignore`
 - `backend/src/main/java/io/synkra/SynkraApp.java`
 - `backend/src/main/java/io/synkra/plataforma/BaseDeDatos.java`
@@ -59,15 +60,15 @@ Si `docker info` no responde, se arranca el daemon con `dockerd > /tmp/dockerd.l
 
 ## Evidencia
 
-### `:backend:check` (corrida del 2026-11-26, 17:24 UTC)
+### `:backend:check` (corrida del 2026-11-26, 17:29 UTC)
 
 Cola de `./gradlew :backend:test --rerun :backend:check`, sin editar:
 
 ```
 For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD SUCCESSFUL in 10s
-4 actionable tasks: 4 executed
+BUILD SUCCESSFUL in 9s
+4 actionable tasks: 1 executed, 3 up-to-date
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
 ```
 
@@ -100,10 +101,11 @@ Consider enabling configuration cache to speed up this build: https://docs.gradl
 
 ## Candidatas pendientes
 
-Fuente: `CANDIDATAS.md`. U03 no las resuelve.
+Fuente: `CANDIDATAS.md`. Regla: están todas las candidatas cuya columna de origen es una revisión o una ronda de una tarea de U03. U03 no las resuelve.
 
 | Candidata | Una línea | Unidad que la recibe |
 |---|---|---|
+| C-03 | Centralizar versión y repositorios en `settings.gradle.kts` (`dependencyResolutionManagement`) | Una tarea que pueda tocar la raíz |
 | C-04 | PRAGMA de SQLite (`busy_timeout`, WAL, `foreign_keys`) | U04-T01 |
 | C-05 | Convertidores de fecha de SQLite y regla de columnas `INTEGER` para fechas | U04-T01 |
 | C-07 | Traducir `@Valid` (`MethodArgumentNotValidException`, `HandlerMethodValidationException`) a `detalles` | U04 (primeros DTO) |
@@ -111,8 +113,9 @@ Fuente: `CANDIDATAS.md`. U03 no las resuelve.
 | C-11 | Detalle `error` de `SaludBaseDeDatos` con `BaseDeDatos.archivo(...)` | La siguiente tarea que toque salud o `BaseDeDatos` |
 | C-12 | Afirmar el contenido real de `components.puml` | U04 (primer módulo de negocio) |
 | C-14 | Decidir si los fixtures de `plataforma.prueba` entran a todos los `@SpringBootTest` | U04 (cuando traiga sus controladores) |
+| C-17 | UID arbitrario con `fsGroup` o permisos de grupo en `/data` | U08, con el `securityContext` del Deployment |
 
-Además, C-17 (UID arbitrario con `fsGroup` o permisos de grupo en `/data`) queda para U08, con el `securityContext` del Deployment. Estaba fuera de la lista de la tarea, pero sale de U03-T06.
+C-03 y C-17 no estaban en la lista de la tarea, pero salen de U03 (T01 y T06). C-18 (plantilla de criterios) sale de U03-T06 y ya está aplicada en U01-T08 y U03-T07: no queda pendiente.
 
 ## Lo que queda fuera
 
