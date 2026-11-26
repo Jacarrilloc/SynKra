@@ -1,6 +1,7 @@
 package io.synkra.verificador;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -148,5 +149,36 @@ class VeredictoTest {
         var v2 = Veredicto.de(List.of(mal("a"), ok("b")), List.of(motivo()));
         assertEquals(v1, v2);
         assertEquals(v1.hashCode(), v2.hashCode());
+    }
+
+    @Test
+    void distintosNoSonEquals() {
+        var v1 = Veredicto.de(List.of(mal("a")), List.of());
+        var v2 = Veredicto.de(List.of(mal("b")), List.of());
+        var v3 = Veredicto.de(List.of(ok("a")), List.of());
+        assertNotEquals(v1, v2);
+        assertNotEquals(v1, v3);
+    }
+
+    @Test
+    void nulosDentroDeLasListasYAlternativasNulas() {
+        var motivosConNulo = new ArrayList<Motivo>();
+        motivosConNulo.add(null);
+        var alternativasConNulo = new ArrayList<Alternativa>();
+        alternativasConNulo.add(null);
+        var pluginsConNulo = new ArrayList<VeredictoPlugin>();
+        pluginsConNulo.add(null);
+        assertThrows(NullPointerException.class,
+                () -> new VeredictoPlugin(descriptor("a"), false, motivosConNulo, List.of()));
+        assertThrows(NullPointerException.class,
+                () -> new VeredictoPlugin(descriptor("a"), false, List.of(motivo()), alternativasConNulo));
+        assertThrows(NullPointerException.class,
+                () -> new VeredictoPlugin(descriptor("a"), false, List.of(motivo()), null));
+        assertThrows(NullPointerException.class,
+                () -> new Veredicto(Veredicto.Global.RECHAZADA, pluginsConNulo, List.of(motivo())));
+        assertThrows(NullPointerException.class,
+                () -> new Veredicto(Veredicto.Global.RECHAZADA, List.of(), motivosConNulo));
+        assertThrows(NullPointerException.class, () -> Veredicto.de(pluginsConNulo, List.of()));
+        assertThrows(NullPointerException.class, () -> Veredicto.de(List.of(), motivosConNulo));
     }
 }

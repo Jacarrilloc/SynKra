@@ -15,7 +15,7 @@ public record Veredicto(Global global, List<VeredictoPlugin> porPlugin, List<Mot
         Objects.requireNonNull(motivosGlobales, "motivosGlobales");
         porPlugin = List.copyOf(porPlugin);
         motivosGlobales = List.copyOf(motivosGlobales);
-        boolean hayMotivos = !motivosGlobales.isEmpty() || porPlugin.stream().anyMatch(p -> !p.motivos().isEmpty());
+        boolean hayMotivos = hayMotivos(porPlugin, motivosGlobales);
         if (global == Global.APROBADA && hayMotivos) {
             throw new IllegalArgumentException("APROBADA con motivos");
         }
@@ -28,7 +28,11 @@ public record Veredicto(Global global, List<VeredictoPlugin> porPlugin, List<Mot
     public static Veredicto de(List<VeredictoPlugin> porPlugin, List<Motivo> motivosGlobales) {
         Objects.requireNonNull(porPlugin, "porPlugin");
         Objects.requireNonNull(motivosGlobales, "motivosGlobales");
-        boolean hayMotivos = !motivosGlobales.isEmpty() || porPlugin.stream().anyMatch(p -> !p.motivos().isEmpty());
+        boolean hayMotivos = hayMotivos(porPlugin, motivosGlobales);
         return new Veredicto(hayMotivos ? Global.RECHAZADA : Global.APROBADA, porPlugin, motivosGlobales);
+    }
+
+    private static boolean hayMotivos(List<VeredictoPlugin> porPlugin, List<Motivo> motivosGlobales) {
+        return !motivosGlobales.isEmpty() || porPlugin.stream().anyMatch(p -> !p.motivos().isEmpty());
     }
 }
