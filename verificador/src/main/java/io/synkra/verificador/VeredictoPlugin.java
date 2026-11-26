@@ -19,5 +19,10 @@ public record VeredictoPlugin(
         if (!compatible && motivos.isEmpty()) {
             throw new IllegalArgumentException("incompatible sin motivos");
         }
+        if (!alternativas.isEmpty()
+                && motivos.stream().noneMatch(m -> m.codigo() == CodigoMotivo.VERSION_INCOMPATIBLE)) {
+            throw new IllegalArgumentException(
+                    "alternativas solo existen para un plugin con motivo VERSION_INCOMPATIBLE (R-V5)");
+        }
     }
 }
