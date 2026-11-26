@@ -65,7 +65,7 @@ aidlc-docs/inception/application-design/unit-of-work-dependency.md` (11 nodos, 2
 | U01-T05 | Propiedades de rangos (PBT-03, PBT-07, PBT-08) | `./gradlew :verificador:test --tests '*RangoVersionPropiedades'` pasa con 1000 intentos por propiedad. | H-07 |
 | U01-T06 | `Descriptor` y `LectorDescriptor` (R-V3) | `./gradlew :verificador:test --tests '*LectorDescriptorTest'` pasa con: JAR sin archivo, campo faltante, campo desconocido, YAML con etiqueta de tipo (rechazado) y descriptor válido. | H-03 |
 | U01-T07 | Propiedad de ida y vuelta del descriptor (PBT-02) | `./gradlew :verificador:test --tests '*DescriptorPropiedades'` pasa con 1000 intentos. | H-03 |
-| U01-T08 | Modelo del veredicto y códigos de motivo | `./gradlew :verificador:test --tests '*CodigoMotivoTest'` pasa y afirma que la enumeración tiene exactamente los 9 códigos de `domain-entities.md`. | H-07 |
+| U01-T08 | Modelo del veredicto y códigos de motivo | `./gradlew :verificador:test --tests '*CodigoMotivoTest'` pasa y afirma que la enumeración tiene exactamente los 10 códigos de `domain-entities.md` (9 del diseño más `DESCRIPTOR_INVALIDO`, aprobado con U01-T06). | H-07 |
 | U01-T09 | `Verificador.verificar` (R-V4) y la interfaz `Catalogo` | `./gradlew :verificador:test --tests '*VerificadorTest'` pasa con un caso por código (`PLUGIN_REPETIDO`, `PLUGIN_AUSENTE`, `CORE_EQUIVOCADO`, `VERSION_INCOMPATIBLE`) y la selección vacía aprobada. | H-07 |
 | U01-T10 | `Verificador.alternativas` (R-V5) | `./gradlew :verificador:test --tests '*AlternativasTest'` pasa con S4 y S5 de la suite. | H-08 |
 | U01-T11 | Propiedades del verificador (PBT-03) | `./gradlew :verificador:test --tests '*VerificadorPropiedades'` pasa con 1000 intentos. | H-08 |
