@@ -137,12 +137,16 @@ class VerificadorTest {
 
     @Test
     void dosNombresRepetidosSalenEnOrdenDePrimeraAparicion() {
-        var r = Verificador.verificar(sel21(KYC_PE_13, KYC_CO, KYC_CO, KYC_PE_20), catalogo());
-        assertEquals(List.of("PLUGIN_REPETIDO|kyc-co|", "PLUGIN_REPETIDO|kyc-pe|"), motivos(r).stream().sorted().toList());
-        assertEquals(
-                List.of("kyc-pe", "kyc-co"),
-                r.motivosGlobales().stream().map(m -> m.plugin().orElseThrow()).toList());
-        assertEquals(2, r.porPlugin().size());
+        // Los dos órdenes: uno de ellos difiere del que daría un HashMap.
+        var r1 = Verificador.verificar(sel21(KYC_PE_13, KYC_CO, KYC_CO, KYC_PE_20), catalogo());
+        assertEquals(List.of("kyc-pe", "kyc-co"), repetidos(r1));
+        assertEquals(2, r1.porPlugin().size());
+        var r2 = Verificador.verificar(sel21(KYC_CO, KYC_PE_13, KYC_PE_20, KYC_CO), catalogo());
+        assertEquals(List.of("kyc-co", "kyc-pe"), repetidos(r2));
+    }
+
+    private static List<String> repetidos(Veredicto v) {
+        return v.motivosGlobales().stream().map(m -> m.plugin().orElseThrow()).toList();
     }
 
     @Test
