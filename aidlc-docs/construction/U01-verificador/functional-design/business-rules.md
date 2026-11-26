@@ -39,11 +39,17 @@
 - **Etiqueta explícita en `etiquetas`**: una etiqueta explícita que no sea `str` en una clave o en un valor de `etiquetas` (`{!!int pais: pe}`, `{pais: !!int pe}`) es `DESCRIPTOR_INVALIDO`, a diferencia de los campos (`version: !!int 1` da `VERSION_INVALIDA`).
 
 ## R-V4 Verificación de una selección
-Para cada plugin de la selección, en este orden, acumulando motivos:
+Para cada plugin de la selección, en este orden, acumulando motivos (a lo sumo uno por plugin, ver abajo):
 1. `PLUGIN_REPETIDO` si su `nombre` ya apareció (motivo global, Q5).
 2. `PLUGIN_AUSENTE` si el `Catalogo` no tiene ese plugin y versión en la carpeta del core.
 3. `CORE_EQUIVOCADO` si `descriptor.core ≠ seleccion.core`.
 4. `VERSION_INCOMPATIBLE` si `!coreCompatible.incluye(versionCore)`.
+
+El plugin se busca en la carpeta que declara su propio descriptor (`descriptor.core`), no en la de
+`seleccion.core`: así un plugin de otro core da `CORE_EQUIVOCADO` y no `PLUGIN_AUSENTE`. Los pasos 2 a 4
+se evalúan en orden y el primero que falla corta los siguientes para ese plugin (a lo sumo un motivo por
+plugin). La primera aparición de un `nombre` se verifica normal; las apariciones repetidas no entran en
+`porPlugin` y dan un único `PLUGIN_REPETIDO` global por nombre.
 
 `global = APROBADA` si no hay ningún motivo; una selección sin plugins es `APROBADA`.
 

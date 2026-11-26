@@ -315,4 +315,15 @@ class LectorDescriptorTest {
         }
         assertEquals(Map.of("1", "pe"), valor(LectorDescriptor.desdeYaml(VALIDO + "etiquetas: {'1': pe}\n")).etiquetas());
     }
+
+    /** C-06: Version y RangoVersion fijan los nombres de campo, que son los del descriptor. */
+    @Test
+    void versionYCoreCompatibleInvalidosLlevanSuCampo() {
+        var m = motivos(LectorDescriptor.desdeYaml("nombre: kyc-pe\nversion: 1.2\ncore: banco\ncoreCompatible: dos\n"));
+        assertEquals(
+                List.of(CodigoMotivo.VERSION_INVALIDA, CodigoMotivo.RANGO_INVALIDO),
+                m.stream().map(Motivo::codigo).toList());
+        assertEquals("version", m.get(0).campo().orElseThrow());
+        assertEquals("coreCompatible", m.get(1).campo().orElseThrow());
+    }
 }
