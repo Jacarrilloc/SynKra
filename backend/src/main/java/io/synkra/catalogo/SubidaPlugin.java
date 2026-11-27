@@ -61,13 +61,18 @@ class SubidaPlugin {
             PluginRepositorio plugins, EtiquetaRepositorio etiquetas, JdbcAggregateTemplate plantilla,
             TransactionTemplate transaccion) {
         this.datos = Path.of(datos);
-        this.raiz = this.datos.resolve("artefactos");
+        this.raiz = raizArtefactos(this.datos);
         this.recepcion = recepcion;
         this.cores = cores;
         this.plugins = plugins;
         this.etiquetas = etiquetas;
         this.plantilla = plantilla;
         this.transaccion = transaccion;
+    }
+
+    /** La raíz de los JAR guardados: {@code $SYNKRA_DATA/artefactos}; la comparten la subida y la descarga (R-C13). */
+    static Path raizArtefactos(Path datos) {
+        return datos.resolve("artefactos");
     }
 
     PluginSubido subir(String core, InputStream jar, Map<String, String> deLaPeticion) throws IOException {

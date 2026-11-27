@@ -133,7 +133,7 @@ class ArtefactosPorHashTest {
     }
 
     @Test
-    void hashMalFormadoEs404SinTocarLaBase() throws Exception {
+    void hashMalFormadoEs404() throws Exception {
         var hash = subir(jar("kyc-pe", "1.3.0", "a"));
         esError(get("/api/artefactos/" + hash.toUpperCase()), 404, "NO_ENCONTRADO");
         esError(get("/api/artefactos/" + hash.substring(1)), 404, "NO_ENCONTRADO");
@@ -221,6 +221,39 @@ class ArtefactosPorHashTest {
         } finally {
             Files.deleteIfExists(archivo);
             Files.deleteIfExists(otro);
+        }
+    }
+
+    @Test
+    void laBaseSqliteNoSeSirveAunqueLaFilaApuntaAEllaConSuTamano() throws Exception {
+        var hash = subir(jar("kyc-pe", "1.3.0", "a"));
+        for (var nombre : List.of("synkra.db", "artefactos/../synkra.db")) {
+            var db = datos.resolve("synkra.db");
+            assertThat(db).exists();
+            jdbc.update("update cat_plugin set ruta = ?, tamano = ?", nombre, Files.size(db));
+            var r = get("/api/artefactos/" + hash);
+            esError(r, 500, "ERROR_INTERNO");
+            assertThat(r.headers().firstValue("X-Synkra-Sha256")).isEmpty();
+            assertThat(new String(r.body(), StandardCharsets.UTF_8)).contains(MotivosCatalogo.ARTEFACTO_RUTA_FUERA);
+        }
+    }
+
+    @Test
+    void directorioIntermedioEnlazadoEs500() throws Exception {
+        var hash = subir(jar("kyc-pe", "1.3.0", "a"));
+        var carpeta = archivoDe("kyc-pe").getParent();
+        var movida = Files.createTempDirectory("movida");
+        try {
+            Files.move(carpeta, movida, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            Files.createSymbolicLink(carpeta, movida);
+            esError(get("/api/artefactos/" + hash), 500, "ERROR_INTERNO");
+        } finally {
+            Files.deleteIfExists(carpeta);
+            try (Stream<Path> s = Files.walk(movida)) {
+                for (var p : s.sorted(Comparator.reverseOrder()).toList()) {
+                    Files.delete(p);
+                }
+            }
         }
     }
 }

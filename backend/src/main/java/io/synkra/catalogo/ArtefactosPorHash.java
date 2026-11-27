@@ -6,10 +6,13 @@ import io.synkra.plataforma.DetalleError;
 import io.synkra.plataforma.ErrorApi;
 import io.synkra.plataforma.ExcepcionApi;
 import java.io.IOException;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Comparator;
 import java.util.List;
@@ -28,11 +31,13 @@ class ArtefactosPorHash {
     private static final Pattern HASH = Pattern.compile("[0-9a-f]{64}");
     private static final String CAMPO = "artefacto";
 
+    private final Path datos;
     private final Path raiz;
     private final PluginRepositorio plugins;
 
     ArtefactosPorHash(@Value("${synkra.data}") String datos, PluginRepositorio plugins) {
-        this.raiz = Path.of(datos).normalize();
+        this.datos = Path.of(datos);
+        this.raiz = SubidaPlugin.raizArtefactos(this.datos).normalize();
         this.plugins = plugins;
     }
 
@@ -43,29 +48,31 @@ class ArtefactosPorHash {
         var fila = plugins.findBySha256(sha256).stream()
                 .min(Comparator.comparing(Plugin::core).thenComparing(Plugin::nombre).thenComparing(Plugin::version))
                 .orElseThrow(ArtefactosPorHash::noEncontrado);
-        var ruta = raiz.resolve(fila.ruta()).normalize();
+        var ruta = datos.resolve(fila.ruta()).normalize();
         if (fila.ruta().isEmpty() || !ruta.startsWith(raiz) || ruta.equals(raiz) || hayEnlace(ruta)) {
             throw interno(MotivosCatalogo.ARTEFACTO_RUTA_FUERA);
         }
-        BasicFileAttributes atributos;
+        FileChannel canal;
         try {
-            atributos = Files.readAttributes(ruta, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
+            canal = FileChannel.open(ruta, StandardOpenOption.READ, LinkOption.NOFOLLOW_LINKS);
         } catch (NoSuchFileException e) {
             throw interno(MotivosCatalogo.ARTEFACTO_AUSENTE);
         }
-        if (!atributos.isRegularFile()) {
-            throw interno(MotivosCatalogo.ARTEFACTO_AUSENTE);
-        }
-        if (atributos.size() != fila.tamano()) {
-            throw interno(MotivosCatalogo.ARTEFACTO_TAMANO);
+        try {
+            var regular = Files.readAttributes(ruta, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS)
+                    .isRegularFile();
+            if (!regular) {
+                throw interno(MotivosCatalogo.ARTEFACTO_AUSENTE);
+            }
+            if (canal.size() != fila.tamano()) {
+                throw interno(MotivosCatalogo.ARTEFACTO_TAMANO);
+            }
+        } catch (IOException | RuntimeException e) {
+            canal.close();
+            throw e;
         }
         var nombre = fila.nombre() + "-" + fila.version() + ".jar";
-        try {
-            return new ArtefactoAbierto(sha256, fila.tamano(), nombre,
-                    Files.newInputStream(ruta, LinkOption.NOFOLLOW_LINKS));
-        } catch (NoSuchFileException e) {
-            throw interno(MotivosCatalogo.ARTEFACTO_AUSENTE);
-        }
+        return new ArtefactoAbierto(sha256, fila.tamano(), nombre, Channels.newInputStream(canal));
     }
 
     /** Algún componente de la ruta, por debajo de la raíz, es un enlace simbólico. */
