@@ -561,3 +561,43 @@
 **Context**: Code Generation Parte 2 (loop de agentes) para U01.
 
 ---
+
+## Siguientes tareas de U01 - Ola 11 (U01-T12)
+**Timestamp**: 2026-11-26T23:18:42Z
+**User Input**: Eligió "Sí, fusiona #34 y despacha" en la tarjeta para fusionar el PR #34 (tareas U01-T12 a U01-T14) y despachar U01-T12.
+**AI Response**: El agente fusionó con merge commit el PR #34 (main b4259d8) y despachó U01-T12 sola (rama m6r/U01-T12). La ronda 1 salió NO-VERDE: el peso del generador caía en `otro-core` y casi no muestreaba `synkra-core`. La ronda 2 también: un contador nuevo podía fallar por azar 1 vez de cada ~6 250 corridas. La ronda 3 también: la puerta de `core-b` no detectaba la regresión de C-26.
+**Context**: Code Generation Parte 2 (loop de agentes) para U01.
+
+---
+
+## U01-T12 - Ronda 4 autorizada
+**Timestamp**: 2026-11-27T02:59:50Z
+**User Input**: Eligió "Ronda 4 para corregir la puerta" en la tarjeta "¿Qué hago con U01-T12 tras tres rondas en NO-VERDE?"
+**AI Response**: El agente despachó la ronda 4. Salió NO-VERDE: la puerta contaba la etiqueta del catálogo, no si `core-b` estaba registrado de verdad. Volvió a preguntar con una tarjeta y recomendó una ronda 5.
+**Context**: Code Generation Parte 2 (loop de agentes) para U01.
+
+---
+
+## U01 - Autorización para correr la unidad completa
+**Timestamp**: 2026-11-27T03:51:07Z
+**User Input**: "elige la opcion recomendada, pero hagamos algo para agilizar el proceso, corre todo hasta completar el modulo, cuando vuelva a pasar esto, elige siempre la opcion recomendada, lo que quiero es que corras todo hasta dejar listo el modulo completo, no importa lo que te demores"
+**AI Response**: El agente despachó la ronda 5 de U01-T12. Desde aquí, hasta cerrar U01 (T12, T13 y T14), toma la opción recomendada sin preguntar: rondas extra si una tarea sale NO-VERDE, PR y fusión con merge commit si sale VERDE, y despacho de la siguiente tarea. Cada decisión queda registrada aquí.
+**Context**: Code Generation Parte 2 (loop de agentes) para U01.
+
+---
+
+## U01-T12 - VERDE y fusión
+**Timestamp**: 2026-11-27T05:23:00Z
+**User Input**: (Sin nueva entrada. Rige la autorización del 2026-11-27T03:51:07Z: «corre todo hasta completar el modulo… elige siempre la opcion recomendada».)
+**AI Response**: Con esa autorización, el agente despachó las rondas 5 y 6. La ronda 5 salió NO-VERDE: un umbral daba P(fallo) por encima de 10⁻⁶ con la varianza medida. La ronda 6 salió VERDE: 178 pruebas del verificador, 0 saltadas, todas las mutaciones detectadas y las puertas nuevas por debajo de 10⁻⁶ con la varianza de 700 lotes. El agente abrió el PR #35 y lo fusionó con merge commit (main 08a251e). Registró la candidata C-27 (umbral 6 de U01-T11) y despachó U01-T13 (rama m6r/U01-T13).
+**Context**: Code Generation Parte 2 (loop de agentes) para U01.
+
+---
+
+## U01-T13 - VERDE y fusión
+**Timestamp**: 2026-11-27T06:27:10Z
+**User Input**: (Sin nueva entrada. Rige la autorización del 2026-11-27T03:51:07Z.)
+**AI Response**: El agente despachó U01-T13. La ronda 1 salió NO-VERDE con dos NARANJA. Primero, la comparación por mtime daba falso rojo cuando `test` quedaba UP-TO-DATE. Segundo, no se miraban `failures` ni `errors`. Con la autorización vigente, el orquestador decidió cambiar la frescura a una huella SHA-256 del contenido de las clases de main, testFixtures y test. La ronda 2 salió VERDE: control 0 / ≠0 / ≠0 con rc=0, 213 pruebas en verificador y backend, ninguna saltada. Se abrió el PR #36 y se fusionó con merge commit (main c649eaf). Se registró la candidata C-28 y se pasa a U01-T14.
+**Context**: Code Generation Parte 2 (loop de agentes) para U01.
+
+---
