@@ -26,10 +26,10 @@ final class MotivosCatalogo {
     static final String DEMASIADAS_ENTRADAS = "El artefacto tiene más de %d entradas";
     static final String ENTRADA_UNICODE_DISTINTA =
             "La entrada '%s' lleva un nombre Unicode distinto del nombre crudo";
-    static final String ENTRADA_LOCAL_DISTINTA =
-            "La entrada '%s' tiene una cabecera local distinta de la del directorio central";
-    static final String ESTRUCTURA_AMBIGUA =
-            "El JAR tiene datos o entradas locales fuera del directorio central";
+    static final String ENTRADAS_NO_COINCIDEN =
+            "El JAR tiene entradas que no coinciden entre su índice y su contenido";
+    /** Se completa con el tope de bytes descomprimidos configurado. */
+    static final String DESCOMPRIMIDO_EXCEDIDO = "El contenido descomprimido supera el límite de %s";
 
     private MotivosCatalogo() {
     }

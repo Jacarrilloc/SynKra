@@ -38,6 +38,7 @@ import org.springframework.util.unit.DataSize;
 class RecepcionArtefactoTest {
 
     private static final DataSize VEINTE_MB = DataSize.ofMegabytes(20);
+    private static final DataSize DESC = DataSize.ofMegabytes(200);
 
     @TempDir
     static Path datosSpring;
@@ -81,7 +82,7 @@ class RecepcionArtefactoTest {
     }
 
     private RecepcionArtefacto componente(DataSize limite) {
-        return new RecepcionArtefacto(datos.toString(), limite, 10000, RecepcionArtefacto::nuevoDigest);
+        return new RecepcionArtefacto(datos.toString(), limite, 10000, DESC, RecepcionArtefacto::nuevoDigest);
     }
 
     private ArtefactoRecibido recibir(RecepcionArtefacto c, byte[] bytes) throws IOException {
@@ -222,10 +223,10 @@ class RecepcionArtefactoTest {
         assertThat(MotivosCatalogo.DEMASIADAS_ENTRADAS).isEqualTo("El artefacto tiene más de %d entradas");
         assertThat(MotivosCatalogo.ENTRADA_UNICODE_DISTINTA)
                 .isEqualTo("La entrada '%s' lleva un nombre Unicode distinto del nombre crudo");
-        assertThat(MotivosCatalogo.ENTRADA_LOCAL_DISTINTA)
-                .isEqualTo("La entrada '%s' tiene una cabecera local distinta de la del directorio central");
-        assertThat(MotivosCatalogo.ESTRUCTURA_AMBIGUA)
-                .isEqualTo("El JAR tiene datos o entradas locales fuera del directorio central");
+        assertThat(MotivosCatalogo.ENTRADAS_NO_COINCIDEN)
+                .isEqualTo("El JAR tiene entradas que no coinciden entre su índice y su contenido");
+        assertThat(MotivosCatalogo.DESCOMPRIMIDO_EXCEDIDO)
+                .isEqualTo("El contenido descomprimido supera el límite de %s");
         assertThat(MotivosCatalogo.ENTRADA_ENLACE).isEqualTo("La entrada '%s' es un enlace simbólico");
         assertThat(CodigosCatalogo.RUTA_NO_PERMITIDA).isEqualTo("RUTA_NO_PERMITIDA");
         assertThat(CodigosCatalogo.ARTEFACTO_INVALIDO).isEqualTo("ARTEFACTO_INVALIDO");
@@ -475,18 +476,14 @@ class RecepcionArtefactoTest {
     }
 
     @Test
-    void f02_distincionFormatoInvalidoDeES() {
-        assertThat(RecepcionArtefacto.esFormatoInvalido(new java.util.zip.ZipException("x"))).isTrue();
-        assertThat(RecepcionArtefacto.esFormatoInvalido(new java.io.EOFException())).isTrue();
-        assertThat(RecepcionArtefacto.esFormatoInvalido(new IOException("Cannot find Central Directory"))).isTrue();
-        assertThat(RecepcionArtefacto.esFormatoInvalido(new IOException("No space left on device"))).isFalse();
-        assertThat(RecepcionArtefacto.esFormatoInvalido(new java.nio.channels.ClosedByInterruptException()))
-                .isFalse();
-        assertThat(RecepcionArtefacto.esFormatoInvalido(new IOException())).isFalse();
-        assertThat(RecepcionArtefacto.esFormatoInvalido(new IOException("envuelto", new java.util.zip.ZipException())))
-                .isTrue();
-        assertThat(RecepcionArtefacto.esFormatoInvalido(
-                new IOException("envuelto", new java.nio.channels.ClosedByInterruptException()))).isFalse();
+    void f02_soloLaInterrupcionEsDelServidor() {
+        assertThat(RecepcionArtefacto.esInterrupcion(new java.nio.channels.ClosedByInterruptException())).isTrue();
+        assertThat(RecepcionArtefacto.esInterrupcion(new java.io.InterruptedIOException())).isTrue();
+        assertThat(RecepcionArtefacto.esInterrupcion(
+                new IOException("envuelto", new java.nio.channels.ClosedByInterruptException()))).isTrue();
+        assertThat(RecepcionArtefacto.esInterrupcion(new java.util.zip.ZipException("x"))).isFalse();
+        assertThat(RecepcionArtefacto.esInterrupcion(new IOException("Too many disks"))).isFalse();
+        assertThat(RecepcionArtefacto.esInterrupcion(new IllegalArgumentException())).isFalse();
     }
 
     private void estructuraAmbigua(byte[] z) throws IOException {
@@ -502,7 +499,7 @@ class RecepcionArtefactoTest {
         var ex = rechazo(componente(VEINTE_MB), z);
         assertThat(ex.error().codigo()).isEqualTo(CodigosCatalogo.RUTA_NO_PERMITIDA);
         assertThat(ex.error().detalles()).containsExactly(
-                new DetalleError("archivo", MotivosCatalogo.ENTRADA_LOCAL_DISTINTA.formatted("ok/evil123")));
+                new DetalleError("archivo", MotivosCatalogo.ENTRADAS_NO_COINCIDEN));
         nadaEnDisco();
     }
 
@@ -522,37 +519,6 @@ class RecepcionArtefactoTest {
         var junto = new byte[100 + b.length];
         System.arraycopy(b, 0, junto, 100, b.length);
         estructuraAmbigua(junto);
-    }
-
-    @Test
-    void f04_directorioCentralVacioConEntradasLocales_seRechaza() throws Exception {
-        var z = zip(e("../../evil"));
-        int cd = indice(z, 'P', 'K', 1, 2, false);
-        var local = java.util.Arrays.copyOf(z, cd);
-        var eocd = java.nio.ByteBuffer.allocate(22).order(java.nio.ByteOrder.LITTLE_ENDIAN)
-                .putInt(0x06054b50).putShort((short) 0).putShort((short) 0).putShort((short) 0).putShort((short) 0)
-                .putInt(0).putInt(local.length).putShort((short) 0).array();
-        var sinCentral = new byte[local.length + 22];
-        System.arraycopy(local, 0, sinCentral, 0, local.length);
-        System.arraycopy(eocd, 0, sinCentral, local.length, 22);
-        // commons ya no lo lee como ZIP: 422 de formato inválido, y nada queda en disco
-        var ex = rechazo(componente(VEINTE_MB), sinCentral);
-        assertThat(ex.estado()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
-        assertThat(ex.error().codigo()).isEqualTo(CodigosCatalogo.ARTEFACTO_INVALIDO);
-        nadaEnDisco();
-    }
-
-    @Test
-    void f04_bytesEntreLaUltimaEntradaYElDirectorioCentral_seRechazan() throws Exception {
-        var z = zip(e("a"), e("b"));
-        int cd = indice(z, 'P', 'K', 1, 2, false);
-        int eocd = indice(z, 'P', 'K', 5, 6, true);
-        var nuevo = new byte[z.length + 40];
-        System.arraycopy(z, 0, nuevo, 0, cd);
-        System.arraycopy(z, cd, nuevo, cd + 40, z.length - cd);
-        var b = java.nio.ByteBuffer.wrap(nuevo).order(java.nio.ByteOrder.LITTLE_ENDIAN);
-        b.putInt(eocd + 40 + 16, b.getInt(eocd + 40 + 16) + 40);
-        estructuraAmbigua(nuevo);
     }
 
     @Test
@@ -619,7 +585,7 @@ class RecepcionArtefactoTest {
         new java.util.Random(7).nextBytes(relleno);
         var bytes = zip(new Entrada("datos.bin", null, relleno));
         var espia = new Espia();
-        var c = new RecepcionArtefacto(datos.toString(), VEINTE_MB, 10000, () -> espia);
+        var c = new RecepcionArtefacto(datos.toString(), VEINTE_MB, 10000, DESC, () -> espia);
         var r = recibir(c, bytes);
         assertThat(espia.llamadas).as("alimentado mientras se copia, en trozos del búfer")
                 .hasSizeGreaterThanOrEqualTo(bytes.length / 8192)
@@ -627,6 +593,43 @@ class RecepcionArtefactoTest {
         assertThat(espia.llamadas.stream().mapToLong(Integer::longValue).sum()).isEqualTo(bytes.length);
         assertThat(r.sha256()).isEqualTo(
                 HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(bytes)));
+    }
+
+    /** Digest que ignora lo que recibe y devuelve siempre el mismo valor: el hash devuelto tiene que ser el suyo. */
+    private static final class Centinela extends MessageDigest {
+        static final byte[] VALOR = new byte[32];
+
+        static {
+            java.util.Arrays.fill(VALOR, (byte) 0xAB);
+        }
+
+        Centinela() {
+            super("SHA-256");
+        }
+
+        @Override
+        protected void engineUpdate(byte b) {
+        }
+
+        @Override
+        protected void engineUpdate(byte[] in, int off, int len) {
+        }
+
+        @Override
+        protected byte[] engineDigest() {
+            return VALOR.clone();
+        }
+
+        @Override
+        protected void engineReset() {
+        }
+    }
+
+    @Test
+    void f11_elSha256DevueltoSaleDelDigestDeLaCopia() throws Exception {
+        var c = new RecepcionArtefacto(datos.toString(), VEINTE_MB, 10000, DESC, Centinela::new);
+        var r = recibir(c, zip(e("a")));
+        assertThat(r.sha256()).isEqualTo(HexFormat.of().formatHex(Centinela.VALOR));
     }
 
     @Test
@@ -650,7 +653,7 @@ class RecepcionArtefactoTest {
 
     @Test
     void f07_topeDeEntradas_enElLimiteSeAcepta_unoMasSeRechaza() throws Exception {
-        var tres = new RecepcionArtefacto(datos.toString(), VEINTE_MB, 3, RecepcionArtefacto::nuevoDigest);
+        var tres = new RecepcionArtefacto(datos.toString(), VEINTE_MB, 3, DESC, RecepcionArtefacto::nuevoDigest);
         assertThat(recibir(tres, zip(e("a"), e("b"), e("c"))).temporal()).exists();
         var ex = rechazo(tres, zip(e("a"), e("b"), e("c"), e("d")));
         assertThat(ex.estado()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
@@ -664,7 +667,7 @@ class RecepcionArtefactoTest {
         var z = zip(e("a"), e("b"), e("c"), e("d"));
         int eocd = indice(z, 'P', 'K', 5, 6, true);
         java.nio.ByteBuffer.wrap(z).order(java.nio.ByteOrder.LITTLE_ENDIAN).putShort(eocd + 10, (short) 1);
-        var tres = new RecepcionArtefacto(datos.toString(), VEINTE_MB, 3, RecepcionArtefacto::nuevoDigest);
+        var tres = new RecepcionArtefacto(datos.toString(), VEINTE_MB, 3, DESC, RecepcionArtefacto::nuevoDigest);
         var ex = rechazo(tres, z);
         assertThat(ex.error().detalles().get(0).motivo()).isEqualTo(MotivosCatalogo.DEMASIADAS_ENTRADAS.formatted(3));
     }
@@ -674,7 +677,7 @@ class RecepcionArtefactoTest {
         var z = zip(e("a"), e("b"), e("c"), e("d"));
         int cd = indice(z, 'P', 'K', 1, 2, false);
         z[cd] = 'X'; // commons ya no podría leerlo, pero el EOCD dice 4 entradas
-        var tres = new RecepcionArtefacto(datos.toString(), VEINTE_MB, 3, RecepcionArtefacto::nuevoDigest);
+        var tres = new RecepcionArtefacto(datos.toString(), VEINTE_MB, 3, DESC, RecepcionArtefacto::nuevoDigest);
         var ex = rechazo(tres, z);
         assertThat(ex.error().detalles().get(0).motivo()).isEqualTo(MotivosCatalogo.DEMASIADAS_ENTRADAS.formatted(3));
     }
@@ -687,6 +690,293 @@ class RecepcionArtefactoTest {
         }
         assertThat(p.getProperty("synkra.max-entradas-artefacto"))
                 .isEqualTo("${SYNKRA_MAX_ENTRADAS_ARTEFACTO:10000}");
+    }
+
+    // ---------- ronda 3: consenso de lectores, con ZIP armados byte a byte ----------
+
+    /** Constructor mínimo de ZIP para fixtures hostiles: cada parte se escribe como la dice el caso. */
+    private static final class Zb {
+        static byte[] deflate(byte[] d) {
+            var df = new java.util.zip.Deflater(9, true);
+            df.setInput(d);
+            df.finish();
+            var o = new ByteArrayOutputStream();
+            var b = new byte[4096];
+            while (!df.finished()) {
+                o.write(b, 0, df.deflate(b));
+            }
+            df.end();
+            return o.toByteArray();
+        }
+
+        static int crc(byte[] d) {
+            var c = new java.util.zip.CRC32();
+            c.update(d);
+            return (int) c.getValue();
+        }
+
+        static java.nio.ByteBuffer buf(int n) {
+            return java.nio.ByteBuffer.allocate(n).order(java.nio.ByteOrder.LITTLE_ENDIAN);
+        }
+
+        static byte[] cat(byte[]... partes) {
+            var o = new ByteArrayOutputStream();
+            for (var p : partes) {
+                o.writeBytes(p);
+            }
+            return o.toByteArray();
+        }
+
+        static byte[] loc(String nombre, int metodo, int flag, int crc, long cs, long us, byte[] extra) {
+            var n = nombre.getBytes(StandardCharsets.UTF_8);
+            var b = buf(30).putInt(0x04034b50).putShort((short) 20).putShort((short) flag).putShort((short) metodo)
+                    .putShort((short) 0).putShort((short) 0).putInt(crc).putInt((int) cs).putInt((int) us)
+                    .putShort((short) n.length).putShort((short) extra.length);
+            return cat(b.array(), n, extra);
+        }
+
+        static byte[] cen(String nombre, long off, int metodo, int flag, int crc, long cs, long us, byte[] extra) {
+            var n = nombre.getBytes(StandardCharsets.UTF_8);
+            var b = buf(46).putInt(0x02014b50).putShort((short) ((3 << 8) | 20)).putShort((short) 20)
+                    .putShort((short) flag).putShort((short) metodo).putShort((short) 0).putShort((short) 0)
+                    .putInt(crc).putInt((int) cs).putInt((int) us).putShort((short) n.length)
+                    .putShort((short) extra.length).putShort((short) 0).putShort((short) 0).putShort((short) 0)
+                    .putInt(0100644 << 16).putInt((int) off);
+            return cat(b.array(), n, extra);
+        }
+
+        static byte[] eocd(int n, long cdSize, long cdOff, byte[] comentario) {
+            var b = buf(22).putInt(0x06054b50).putShort((short) 0).putShort((short) 0).putShort((short) n)
+                    .putShort((short) n).putInt((int) cdSize).putInt((int) cdOff).putShort((short) comentario.length);
+            return cat(b.array(), comentario);
+        }
+
+        static byte[] build(byte[] cuerpo, byte[] cd, int nEocd, byte[] comentario) {
+            return cat(cuerpo, cd, eocd(nEocd, cd.length, cuerpo.length, comentario));
+        }
+
+        static byte[] e64(byte[] base, byte[] cd, long nEntradas, long cdOff, long posLocalizador) {
+            long pos64 = base.length + cd.length;
+            var rec = buf(56).putInt(0x06064b50).putLong(44).putShort((short) 45).putShort((short) 45).putInt(0)
+                    .putInt(0).putLong(nEntradas).putLong(nEntradas).putLong(cd.length).putLong(cdOff).array();
+            var locr = buf(20).putInt(0x07064b50).putInt(0).putLong(posLocalizador < 0 ? pos64 : posLocalizador)
+                    .putInt(1).array();
+            var fin = buf(22).putInt(0x06054b50).putShort((short) 0).putShort((short) 0).putShort((short) -1)
+                    .putShort((short) -1).putInt(-1).putInt(-1).putShort((short) 0).array();
+            return cat(base, cd, rec, locr, fin);
+        }
+    }
+
+    private static final byte[] NADA = new byte[0];
+    private static final byte[] CONTENIDO = "contenido de a".repeat(10).getBytes(StandardCharsets.UTF_8);
+
+    private static byte[] unaEntrada(String nombre) {
+        var d = Zb.deflate(CONTENIDO);
+        return Zb.cat(Zb.loc(nombre, 8, 0, Zb.crc(CONTENIDO), d.length, CONTENIDO.length, NADA), d);
+    }
+
+    private static byte[] centralDe(String nombre, long off, long csExtra) {
+        var d = Zb.deflate(CONTENIDO);
+        return Zb.cen(nombre, off, 8, 0, Zb.crc(CONTENIDO), d.length + csExtra, CONTENIDO.length, NADA);
+    }
+
+    private static byte[] cabeceraOculta() {
+        var h = "malo".getBytes(StandardCharsets.UTF_8);
+        return Zb.cat(Zb.loc("../../evil", 0, 0, Zb.crc(h), h.length, h.length, NADA), h);
+    }
+
+    private ExcepcionApi rechazado422(byte[] z) throws IOException {
+        var ex = rechazo(componente(VEINTE_MB), z);
+        assertThat(ex.estado()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
+        nadaEnDisco();
+        return ex;
+    }
+
+    private void noCoinciden(byte[] z) throws IOException {
+        var ex = rechazado422(z);
+        assertThat(ex.error().codigo()).isEqualTo(CodigosCatalogo.RUTA_NO_PERMITIDA);
+        assertThat(ex.error().detalles())
+                .containsExactly(new DetalleError("archivo", MotivosCatalogo.ENTRADAS_NO_COINCIDEN));
+    }
+
+    @Test
+    void r3_soloCabecerasLocalesConEocdEnCero_seRechaza() throws Exception {
+        noCoinciden(Zb.cat(cabeceraOculta(), Zb.eocd(0, 0, 0, NADA)));
+    }
+
+    @Test
+    void r3_eocdFalsoDentroDelComentarioDelVerdadero_seRechaza() throws Exception {
+        var fake = Zb.eocd(0, 0, 0, NADA);
+        var comentario = Zb.cat("hola".getBytes(StandardCharsets.UTF_8), fake);
+        var cuerpo = unaEntrada("../../evil");
+        noCoinciden(Zb.build(cuerpo, centralDe("../../evil", 0, 0), 1, comentario));
+    }
+
+    @Test
+    void r3_entradaOcultaDentroDelCsizeDelCentral_sinBit3_seRechaza() throws Exception {
+        var d = Zb.deflate(CONTENIDO);
+        var oculta = cabeceraOculta();
+        var cuerpo = Zb.cat(Zb.loc("a.txt", 8, 0, Zb.crc(CONTENIDO), d.length, CONTENIDO.length, NADA), d, oculta);
+        noCoinciden(Zb.build(cuerpo, centralDe("a.txt", 0, oculta.length), 1, NADA));
+    }
+
+    @Test
+    void r3_entradaOcultaDentroDelCsizeDelCentral_conBit3YDescriptor_seRechaza() throws Exception {
+        var d = Zb.deflate(CONTENIDO);
+        var dd = Zb.buf(16).putInt(0x08074b50).putInt(Zb.crc(CONTENIDO)).putInt(d.length).putInt(CONTENIDO.length)
+                .array();
+        var oculta = cabeceraOculta();
+        var cuerpo = Zb.cat(Zb.loc("a.txt", 8, 8, 0, 0, 0, NADA), d, dd, oculta);
+        var central = Zb.cen("a.txt", 0, 8, 8, Zb.crc(CONTENIDO), d.length + dd.length + oculta.length,
+                CONTENIDO.length, NADA);
+        noCoinciden(Zb.build(cuerpo, central, 1, NADA));
+    }
+
+    @Test
+    void r3_metodoLocalDistintoDelCentral_seRechaza422() throws Exception {
+        // STORED en la cabecera local y DEFLATED en el central: el lector en flujo lee otros bytes (CRC no cuadra)
+        var d = Zb.deflate(CONTENIDO);
+        var cuerpo = Zb.cat(Zb.loc("a.txt", 0, 0, Zb.crc(CONTENIDO), d.length, d.length, NADA), d);
+        var ex = rechazado422(Zb.build(cuerpo, centralDe("a.txt", 0, 0), 1, NADA));
+        assertThat(ex.error().codigo()).isEqualTo(CodigosCatalogo.ARTEFACTO_INVALIDO);
+    }
+
+    @Test
+    void r3_topeDeEntradasTambienEnElIndiceDeLaJdk_antesDeComparar() throws Exception {
+        // una sola cabecera local, pero el directorio central (y su conteo, honesto) declara 4 entradas
+        var cuerpo = unaEntrada("a");
+        var cd = Zb.cat(centralDe("a", 0, 0), centralDe("b", 0, 0), centralDe("c", 0, 0), centralDe("d", 0, 0));
+        var tres = new RecepcionArtefacto(datos.toString(), VEINTE_MB, 3, DESC, RecepcionArtefacto::nuevoDigest);
+        var ex = rechazo(tres, Zb.build(cuerpo, cd, 4, NADA));
+        assertThat(ex.error().codigo()).isEqualTo(CodigosCatalogo.ARTEFACTO_INVALIDO);
+        assertThat(ex.error().detalles())
+                .containsExactly(new DetalleError("archivo", MotivosCatalogo.DEMASIADAS_ENTRADAS.formatted(3)));
+    }
+
+    @Test
+    void r3_nombreLocalMaloYCentralBueno_seRechaza() throws Exception {
+        noCoinciden(reemplazar(zip(e("ok/evil123")), "ok/evil123", "../../evil", false));
+    }
+
+    @Test
+    void r3_zipMaloAntepuestoAUnoBueno_seRechaza() throws Exception {
+        var malo = Zb.build(unaEntrada("../../evil"), centralDe("../../evil", 0, 0), 1, NADA);
+        var bueno = Zb.build(unaEntrada("ok"), centralDe("ok", 0, 0), 1, NADA);
+        var ex = rechazado422(Zb.cat(malo, bueno));
+        assertThat(ex.error().codigo()).isEqualTo(CodigosCatalogo.RUTA_NO_PERMITIDA);
+    }
+
+    @Test
+    void r3_zip64_conOffsetDelCentralNegativo_da422YNoDa500() throws Exception {
+        var base = unaEntrada("a.txt");
+        var cd = centralDe("a.txt", 0, 0);
+        var ex = rechazado422(Zb.e64(base, cd, 1, -100L, -1));
+        assertThat(ex.error().codigo()).isEqualTo(CodigosCatalogo.ARTEFACTO_INVALIDO);
+    }
+
+    @Test
+    void r3_zip64_conEntradasNegativas_da422YNoDa500() throws Exception {
+        var base = unaEntrada("a.txt");
+        var ex = rechazado422(Zb.e64(base, centralDe("a.txt", 0, 0), -1L, base.length, -1));
+        assertThat(ex.error().codigo()).isEqualTo(CodigosCatalogo.ARTEFACTO_INVALIDO);
+    }
+
+    @Test
+    void r3_zip64_valido_seAcepta() throws Exception {
+        var base = unaEntrada("a.txt");
+        var r = recibir(componente(VEINTE_MB), Zb.e64(base, centralDe("a.txt", 0, 0), 1, base.length, -1));
+        assertThat(r.temporal()).exists();
+    }
+
+    @Test
+    void r3_jarValidoConComentarioLargo_seAcepta() throws Exception {
+        var base = unaEntrada("a.txt");
+        var comentario = "x".repeat(1000).getBytes(StandardCharsets.UTF_8);
+        var r = recibir(componente(VEINTE_MB), Zb.build(base, centralDe("a.txt", 0, 0), 1, comentario));
+        assertThat(r.temporal()).exists();
+    }
+
+    @Test
+    void r3_bombaDeDescompresion_seRechazaPorElTopeDeDescomprimido() throws Exception {
+        var salida = new ByteArrayOutputStream();
+        try (var z = new java.util.zip.ZipOutputStream(salida)) {
+            z.putNextEntry(new java.util.zip.ZipEntry("bomba.bin"));
+            var ceros = new byte[1 << 20];
+            for (int i = 0; i < 5; i++) {
+                z.write(ceros);
+            }
+            z.closeEntry();
+        }
+        var bytes = salida.toByteArray();
+        assertThat(bytes.length).as("comprime muy por debajo de los 5 MB").isLessThan(100_000);
+        var c = new RecepcionArtefacto(datos.toString(), VEINTE_MB, 10000, DataSize.ofMegabytes(1),
+                RecepcionArtefacto::nuevoDigest);
+        var ex = rechazo(c, bytes);
+        assertThat(ex.estado()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
+        assertThat(ex.error().codigo()).isEqualTo(CodigosCatalogo.ARTEFACTO_INVALIDO);
+        assertThat(ex.error().detalles()).containsExactly(
+                new DetalleError("archivo", MotivosCatalogo.DESCOMPRIMIDO_EXCEDIDO.formatted("1 MB")));
+        nadaEnDisco();
+        // y justo en el tope se acepta
+        var justo = new RecepcionArtefacto(datos.toString(), VEINTE_MB, 10000, DataSize.ofMegabytes(5),
+                RecepcionArtefacto::nuevoDigest);
+        assertThat(recibir(justo, bytes).temporal()).exists();
+    }
+
+    @Test
+    void r3_elTopeDeDescomprimidoPorDefectoEs200Mb() throws Exception {
+        var p = new Properties();
+        try (var in = getClass().getResourceAsStream("/application.properties")) {
+            p.load(new InputStreamReader(in, StandardCharsets.UTF_8));
+        }
+        assertThat(p.getProperty("synkra.max-descomprimido-artefacto"))
+                .isEqualTo("${SYNKRA_MAX_DESCOMPRIMIDO_ARTEFACTO:200MB}");
+    }
+
+    @Test
+    void r3_cualquierExcepcionDelLectorEnLaRevision_es422() throws Exception {
+        // nombre local no UTF-8 válido: la JDK lanza IllegalArgumentException, que no puede salir como 500
+        var d = Zb.deflate(CONTENIDO);
+        var malo = Zb.cat(Zb.loc("a", 8, 0, Zb.crc(CONTENIDO), d.length, CONTENIDO.length, NADA), d);
+        malo[30] = (byte) 0xC3; // 0xC3 solo, sin continuación
+        var cd = centralDe("a", 0, 0);
+        var ex = rechazado422(Zb.build(malo, cd, 1, NADA));
+        assertThat(ex.error().codigo()).isIn(CodigosCatalogo.ARTEFACTO_INVALIDO, CodigosCatalogo.RUTA_NO_PERMITIDA);
+    }
+
+    /** Proceso aparte con -Xmx256m: el EOCD que miente no puede cargar el directorio central en memoria. */
+    public static final class Sonda {
+        public static void main(String[] args) throws Exception {
+            var c = new RecepcionArtefacto(args[0], DataSize.ofMegabytes(20), 10000, DataSize.ofMegabytes(200),
+                    RecepcionArtefacto::nuevoDigest);
+            try (var in = Files.newInputStream(Path.of(args[1]))) {
+                c.recibir(in);
+                System.out.println("ACEPTADO");
+            } catch (ExcepcionApi e) {
+                System.out.println("RECHAZADO " + e.estado().value() + " " + e.error().codigo());
+            }
+        }
+    }
+
+    @Test
+    void r3_eocdQueMiente_con20MbDeDirectorioCentral_noAgotaLaMemoriaDeUnaJvmDe256Mb() throws Exception {
+        var base = unaEntrada("a");
+        var una = centralDe("a", 0, 0);
+        int n = (20 * 1024 * 1024 - base.length - 22) / una.length;
+        var cd = java.nio.ByteBuffer.allocate(n * una.length);
+        for (int i = 0; i < n; i++) {
+            cd.put(una);
+        }
+        var jar = datos.resolve("miente.zip");
+        Files.write(jar, Zb.build(base, cd.array(), 1, NADA));
+        var java = Path.of(System.getProperty("java.home"), "bin", "java").toString();
+        var proceso = new ProcessBuilder(java, "-Xmx256m", "-cp", System.getProperty("java.class.path"),
+                Sonda.class.getName(), datos.resolve("sonda").toString(), jar.toString())
+                .redirectErrorStream(true).start();
+        var salida = new String(proceso.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+        assertThat(proceso.waitFor()).as(salida).isZero();
+        assertThat(salida).contains("RECHAZADO 422");
+        assertThat(archivos(datos.resolve("sonda/artefactos"))).isEmpty();
     }
 
     private static Throwable catchThrowable(org.assertj.core.api.ThrowableAssert.ThrowingCallable c) {

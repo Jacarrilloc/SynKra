@@ -4,11 +4,12 @@ import io.synkra.plataforma.CodigosError;
 import io.synkra.plataforma.DetalleError;
 import io.synkra.plataforma.ErrorApi;
 import io.synkra.plataforma.ExcepcionApi;
-import java.io.EOFException;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InterruptedIOException;
 import java.nio.file.Files;
-import java.nio.charset.Charset;
+import java.nio.channels.ClosedByInterruptException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermissions;
@@ -21,8 +22,10 @@ import java.util.HexFormat;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
-import java.util.zip.ZipException;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import org.apache.commons.compress.archivers.zip.UnicodePathExtraField;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,25 +41,28 @@ class RecepcionArtefacto {
     static final int MAX_NOMBRE = 200;
     private static final Pattern UNIDAD = Pattern.compile("^[A-Za-z]:.*", Pattern.DOTALL);
 
-    private static final Charset CP437 = Charset.forName("IBM437");
     private static final int BUFFER = 8192;
 
     private final Path temporales;
     private final DataSize maximo;
     private final int maxEntradas;
+    private final DataSize maxDescomprimido;
     private final Supplier<MessageDigest> digest;
 
     @Autowired
     RecepcionArtefacto(@Value("${synkra.data}") String datos, @Value("${synkra.max-artefacto}") DataSize maximo,
-            @Value("${synkra.max-entradas-artefacto}") int maxEntradas) {
-        this(datos, maximo, maxEntradas, RecepcionArtefacto::nuevoDigest);
+            @Value("${synkra.max-entradas-artefacto}") int maxEntradas,
+            @Value("${synkra.max-descomprimido-artefacto}") DataSize maxDescomprimido) {
+        this(datos, maximo, maxEntradas, maxDescomprimido, RecepcionArtefacto::nuevoDigest);
     }
 
     /** Para las pruebas: permite observar cómo se alimenta el digest. */
-    RecepcionArtefacto(String datos, DataSize maximo, int maxEntradas, Supplier<MessageDigest> digest) {
+    RecepcionArtefacto(String datos, DataSize maximo, int maxEntradas, DataSize maxDescomprimido,
+            Supplier<MessageDigest> digest) {
         this.temporales = Path.of(datos).resolve("artefactos").resolve(".tmp");
         this.maximo = maximo;
         this.maxEntradas = maxEntradas;
+        this.maxDescomprimido = maxDescomprimido;
         this.digest = digest;
     }
 
@@ -102,19 +108,23 @@ class RecepcionArtefacto {
         return total;
     }
 
+    /**
+     * Consenso de lectores (R-C6): el JAR se acepta solo si el lector en flujo (el del kernel y el init container),
+     * el índice de la JDK y commons-compress ven los mismos nombres en el mismo orden, y cada uno pasa las reglas.
+     */
     private void revisarEntradas(Path jar) throws IOException {
-        var culpables = new ArrayList<DetalleError>();
-        String desajuste;
         try {
-            var fin = EstructuraZip.leerFin(jar);
-            if (fin.entradas() > maxEntradas) {
-                throw demasiadasEntradas();
+            var enFlujo = leerEnFlujo(jar);
+            if (!enFlujo.equals(leerIndiceJdk(jar))) {
+                throw noCoinciden();
             }
-            // Sin los extras Unicode: el nombre es el crudo, el que ven java.util.zip y los extractores.
-            try (var zip = ZipFile.builder().setPath(jar).setCharset(CP437).setUseUnicodeExtraFields(false).get()) {
+            var culpables = new ArrayList<DetalleError>();
+            // Sin los extras Unicode: el nombre es el crudo, el mismo que decodifican los lectores de la JDK.
+            try (var zip = ZipFile.builder().setPath(jar).setCharset(StandardCharsets.UTF_8)
+                    .setUseUnicodeExtraFields(false).get()) {
                 var entradas = Collections.list(zip.getEntries());
-                if (entradas.size() > maxEntradas) {
-                    throw demasiadasEntradas();
+                if (!entradas.stream().map(ZipArchiveEntry::getName).toList().equals(enFlujo)) {
+                    throw noCoinciden();
                 }
                 for (var en : entradas) {
                     var motivo = motivoDeRechazo(en.getName());
@@ -128,22 +138,63 @@ class RecepcionArtefacto {
                         culpables.add(detalle(motivo));
                     }
                 }
-                desajuste = culpables.isEmpty() ? EstructuraZip.desajuste(jar, entradas, fin.inicioDirectorio()) : null;
             }
-        } catch (IOException e) {
-            if (esFormatoInvalido(e)) {
-                throw error(HttpStatus.UNPROCESSABLE_ENTITY, CodigosCatalogo.ARTEFACTO_INVALIDO,
-                        CodigosError.MSG_ENTIDAD_NO_PROCESABLE, List.of(detalle(MotivosCatalogo.ARTEFACTO_NO_ES_ZIP)));
+            if (!culpables.isEmpty()) {
+                throw error(HttpStatus.UNPROCESSABLE_ENTITY, CodigosCatalogo.RUTA_NO_PERMITIDA,
+                        CodigosError.MSG_ENTIDAD_NO_PROCESABLE, culpables);
             }
-            throw e; // E/S del servidor: sube como error interno, con su causa
+        } catch (ExcepcionApi rechazo) {
+            throw rechazo;
+        } catch (IOException | RuntimeException fallo) {
+            // Se clasifica por fase, no por el texto: en la revisión todo fallo del lector es un JAR ilegible,
+            // salvo la interrupción del hilo, que es del servidor.
+            if (esInterrupcion(fallo)) {
+                throw fallo;
+            }
+            throw error(HttpStatus.UNPROCESSABLE_ENTITY, CodigosCatalogo.ARTEFACTO_INVALIDO,
+                    CodigosError.MSG_ENTIDAD_NO_PROCESABLE, List.of(detalle(MotivosCatalogo.ARTEFACTO_NO_ES_ZIP)));
         }
-        if (desajuste != null) {
-            culpables.add(detalle(desajuste));
+    }
+
+    /** Recorre las cabeceras locales y descarta el contenido, con topes de entradas y de bytes descomprimidos. */
+    private List<String> leerEnFlujo(Path jar) throws IOException {
+        var nombres = new ArrayList<String>();
+        var buffer = new byte[BUFFER];
+        long total = 0;
+        long tope = maxDescomprimido.toBytes();
+        try (var in = new ZipInputStream(new BufferedInputStream(Files.newInputStream(jar)))) {
+            for (ZipEntry en; (en = in.getNextEntry()) != null; ) {
+                if (nombres.size() >= maxEntradas) {
+                    throw demasiadasEntradas();
+                }
+                nombres.add(en.getName());
+                int n;
+                while ((n = in.read(buffer)) != -1) {
+                    total += n;
+                    if (total > tope) {
+                        throw error(HttpStatus.UNPROCESSABLE_ENTITY, CodigosCatalogo.ARTEFACTO_INVALIDO,
+                                CodigosError.MSG_ENTIDAD_NO_PROCESABLE, List.of(detalle(
+                                        MotivosCatalogo.DESCOMPRIMIDO_EXCEDIDO.formatted(texto(maxDescomprimido)))));
+                    }
+                }
+            }
         }
-        if (!culpables.isEmpty()) {
-            throw error(HttpStatus.UNPROCESSABLE_ENTITY, CodigosCatalogo.RUTA_NO_PERMITIDA,
-                    CodigosError.MSG_ENTIDAD_NO_PROCESABLE, culpables);
+        return nombres;
+    }
+
+    /** El directorio central según la JDK; corta por el tope antes de listar nada. */
+    private List<String> leerIndiceJdk(Path jar) throws IOException {
+        try (var zip = new java.util.zip.ZipFile(jar.toFile())) {
+            if (zip.size() > maxEntradas) {
+                throw demasiadasEntradas();
+            }
+            return zip.stream().map(ZipEntry::getName).toList();
         }
+    }
+
+    private static ExcepcionApi noCoinciden() {
+        return error(HttpStatus.UNPROCESSABLE_ENTITY, CodigosCatalogo.RUTA_NO_PERMITIDA,
+                CodigosError.MSG_ENTIDAD_NO_PROCESABLE, List.of(detalle(MotivosCatalogo.ENTRADAS_NO_COINCIDEN)));
     }
 
     private ExcepcionApi demasiadasEntradas() {
@@ -152,12 +203,13 @@ class RecepcionArtefacto {
                 List.of(detalle(MotivosCatalogo.DEMASIADAS_ENTRADAS.formatted(maxEntradas))));
     }
 
-    /** Formato inválido (culpa del cliente): ZIP mal formado o truncado. Cualquier otra E/S es del servidor. */
-    static boolean esFormatoInvalido(IOException e) {
-        // commons envuelve los fallos de formato en un IOException genérico: se mira toda la cadena de causas
-        for (Throwable t = e; t != null; t = t.getCause()) {
-            if (t instanceof ZipException || t instanceof EOFException
-                    || (t.getMessage() != null && t.getMessage().toLowerCase().contains("central directory"))) {
+    /** Interrupción del hilo (propia o en la causa): no es culpa del JAR y sube tal cual. */
+    static boolean esInterrupcion(Throwable fallo) {
+        if (Thread.currentThread().isInterrupted()) {
+            return true;
+        }
+        for (Throwable t = fallo; t != null; t = t.getCause()) {
+            if (t instanceof ClosedByInterruptException || t instanceof InterruptedIOException) {
                 return true;
             }
         }
@@ -165,7 +217,7 @@ class RecepcionArtefacto {
     }
 
     /** El extra 0x7075 dice otro nombre que el crudo: otros lectores verían un nombre distinto. */
-    private static boolean unicodeDistinto(org.apache.commons.compress.archivers.zip.ZipArchiveEntry en) {
+    private static boolean unicodeDistinto(ZipArchiveEntry en) {
         return en.getExtraField(UnicodePathExtraField.UPATH_ID) instanceof UnicodePathExtraField u
                 && !new String(u.getUnicodeName(), StandardCharsets.UTF_8).equals(en.getName());
     }
