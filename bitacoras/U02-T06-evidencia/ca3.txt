@@ -35,8 +35,8 @@
 > Task :core:test
 
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
-2026-11-27T21:06:57.641Z  INFO 29518 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
-2026-11-27T21:06:57.647Z  INFO 29518 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-27T21:15:27.748Z  INFO 13939 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-27T21:15:27.755Z  INFO 13939 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
 
 > Task :core:check
 
@@ -48,11 +48,12 @@ You can use '--warning-mode all' to show the individual deprecation warnings and
 
 For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD SUCCESSFUL in 1m 5s
+BUILD SUCCESSFUL in 1m 2s
 15 actionable tasks: 4 executed, 11 up-to-date
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
+$ XML core
 TEST-io.synkra.core.ArranquePluginsTest.xml tests="10" skipped="0" failures="0" errors="0"
 TEST-io.synkra.core.CargadorPluginsTest.xml tests="10" skipped="0" failures="0" errors="0"
 TEST-io.synkra.core.ConcordanciaSuiteTest.xml tests="10" skipped="0" failures="0" errors="0"
-TEST-io.synkra.core.FalloInicioPluginTest.xml tests="6" skipped="0" failures="0" errors="0"
+TEST-io.synkra.core.FalloInicioPluginTest.xml tests="7" skipped="0" failures="0" errors="0"
 TEST-io.synkra.core.VersionCoreTest.xml tests="4" skipped="0" failures="0" errors="0"
