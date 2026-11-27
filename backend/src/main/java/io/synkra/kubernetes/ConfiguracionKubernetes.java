@@ -7,6 +7,7 @@ import io.fabric8.kubernetes.client.KubernetesClientBuilder;
 import io.synkra.kubernetes.api.AdaptadorKubernetes;
 import java.nio.file.Files;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
@@ -44,7 +45,8 @@ class ConfiguracionKubernetes {
     }
 
     @Bean
-    AdaptadorKubernetes adaptadorKubernetes(ObjectProvider<KubernetesClient> cliente) {
-        return new AdaptadorFabric8(cliente.getIfAvailable());
+    AdaptadorKubernetes adaptadorKubernetes(ObjectProvider<KubernetesClient> cliente,
+            @Value("${synkra.kubernetes.imagen-init:" + ConstructorObjetosPais.IMAGEN_INIT_POR_DEFECTO + "}") String imagenInit) {
+        return new AdaptadorFabric8(cliente.getIfAvailable(), imagenInit);
     }
 }
