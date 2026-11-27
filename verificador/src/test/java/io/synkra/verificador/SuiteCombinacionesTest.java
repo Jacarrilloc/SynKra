@@ -221,6 +221,9 @@ class SuiteCombinacionesTest {
                 () -> assertThrows(NullPointerException.class, () -> new Caso(
                         null, Grupo.INTEGRIDAD, "d", new Entrada.FueraDeU01("U04"),
                         new Esperado(Origen.FUERA_DE_U01, vacio, List.of(), List.of()))),
+                () -> assertThrows(NullPointerException.class, () -> new Caso(
+                        "X3", null, "d", new Entrada.FueraDeU01("U04"),
+                        new Esperado(Origen.FUERA_DE_U01, vacio, List.of(), List.of()))),
                 () -> assertThrows(NullPointerException.class,
                         () -> new SuiteCombinaciones.CoreDelCatalogo(null, List.of(), List.of())),
                 () -> assertThrows(IllegalArgumentException.class, () -> new SuiteCombinaciones.CoreDelCatalogo(

@@ -547,11 +547,6 @@ class VerificadorPropiedades {
                 if (!plugin && enOtraCarpeta) {
                     cuenta(vistos, "compatible solo en la carpeta de otro core");
                 }
-                // Por origen: solo los catálogos de texto registran (o no) «core-b» a propósito, así que estas dos claves
-                // detectan que se pierda una de las dos variantes aunque otros generadores aporten casos parecidos.
-                if (!plugin && enOtraCarpeta && datos.origen().startsWith("texto")) {
-                    cuenta(vistos, "otra carpeta: " + datos.origen());
-                }
                 boolean enOtraCarpetaSinCoreRegistrado = datos.descriptores().stream()
                         .anyMatch(d -> !d.core().equals(s.core())
                                 && d.nombre().equals(nombre)
@@ -559,6 +554,11 @@ class VerificadorPropiedades {
                                 && datos.cores().getOrDefault(d.core(), List.of()).isEmpty());
                 if (!plugin && enOtraCarpetaSinCoreRegistrado) {
                     cuenta(vistos, "compatible solo en la carpeta de otro core NO registrado");
+                    // Por origen Y por el estado real de la carpeta: solo catalogosDeTexto registra (o no) «core-b» a
+                    // propósito, y la clave exige que el core esté (o no) de verdad en «cores» con una versión.
+                    if (datos.origen().equals(TEXTO_SIN_REGISTRAR)) {
+                        cuenta(vistos, "otra carpeta: " + TEXTO_SIN_REGISTRAR);
+                    }
                 }
                 boolean enOtraCarpetaConCoreRegistrado = datos.descriptores().stream()
                         .anyMatch(d -> !d.core().equals(s.core())
@@ -567,10 +567,27 @@ class VerificadorPropiedades {
                                 && !datos.cores().getOrDefault(d.core(), List.of()).isEmpty());
                 if (!plugin && enOtraCarpetaConCoreRegistrado) {
                     cuenta(vistos, "compatible solo en la carpeta de otro core registrado");
+                    if (datos.origen().equals(TEXTO_REGISTRADO)) {
+                        cuenta(vistos, "otra carpeta: " + TEXTO_REGISTRADO);
+                    }
                 }
             }
         }
         return vistos;
+    }
+
+    @Test
+    void catalogosDeTextoRegistranCoreBSegunSuOrigen() {
+        var muestra = catalogosDeTexto().sampleStream().limit(300).collect(Collectors.toList());
+        assertEquals(300, muestra.size());
+        for (var datos : muestra) {
+            boolean registrado = !datos.cores().getOrDefault("core-b", List.of()).isEmpty();
+            assertEquals(TEXTO_REGISTRADO.equals(datos.origen()), registrado, "origen " + datos.origen() + ": " + datos.cores());
+            assertTrue(datos.descriptores().stream().anyMatch(d -> d.core().equals("core-b")));
+        }
+        assertEquals(
+                Set.of(TEXTO_REGISTRADO, TEXTO_SIN_REGISTRAR),
+                muestra.stream().map(Datos::origen).collect(Collectors.toSet()));
     }
 
     @Test
