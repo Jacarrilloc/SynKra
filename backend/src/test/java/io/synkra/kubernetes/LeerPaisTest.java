@@ -238,12 +238,13 @@ class LeerPaisTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     void pluginsActivosQueEscribeConstruirEsUnaListaEnLaRaiz() {
         ConfigMap c = adaptador.construir(PLAN).configMap();
         Object raiz = new Load(LoadSettings.builder().build()).loadFromString(c.getData().get(ConstructorObjetosPais.CLAVE_PLUGINS));
 
         assertThat(raiz).isInstanceOf(List.class);
-        assertThat((List<?>) raiz).containsExactly(
+        assertThat((List<Object>) raiz).containsExactly(
                 java.util.Map.of("nombre", "facturacion", "version", "1.2.0"),
                 java.util.Map.of("nombre", "impuestos", "version", "2.0.1"));
 

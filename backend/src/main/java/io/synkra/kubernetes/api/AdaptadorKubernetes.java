@@ -1,5 +1,7 @@
 package io.synkra.kubernetes.api;
 
+import java.util.Optional;
+
 /** Puerta del módulo Kubernetes. Los métodos de negocio llegan en U05-T02 a T06. */
 public interface AdaptadorKubernetes {
 
@@ -50,4 +52,17 @@ public interface AdaptadorKubernetes {
      * @throws LecturaFallidaException si la API falla
      */
     ContextoFalloK8s contextoFallo(String namespace);
+
+    /**
+     * Lee del clúster, solo con {@code GET}, el Deployment {@code synkra-core} y el ConfigMap {@code synkra-core-config}
+     * de {@code synkra-<país>}: la imagen del core y los plugins con nombre, versión y sha256. Vacío si no existe
+     * ninguno de los dos objetos.
+     *
+     * @throws NamespaceNoPermitidoException si el país no son dos letras minúsculas (sin peticiones)
+     * @throws ClienteNoDisponibleException si no hay cliente (sin peticiones)
+     * @throws LecturaPaisInconsistenteException si falta uno de los dos objetos, un plugin está en un solo archivo
+     *     del ConfigMap, el YAML no es seguro o un valor no cumple el formato de {@link PlanPais}
+     * @throws LecturaFallidaException si la API falla
+     */
+    Optional<LecturaPais> leerPais(String pais);
 }

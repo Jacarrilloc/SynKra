@@ -59,6 +59,12 @@ final class ConstructorObjetosPais {
     static final int PUERTO = 8080;
     static final String RUTA_READINESS = "/actuator/health/readiness";
 
+    /**
+     * Clave del ConfigMap con los plugins activos. Formato canónico (el que lee el core, U02-T04; C-81): una
+     * <b>lista YAML en la raíz</b> de mapas con exactamente dos claves de texto, {@code nombre} y {@code version}
+     * (entre comillas, para que {@code 1.0} no se lea como número), o {@code []} sin plugins. No hay mapa
+     * envolvente {@code plugins:}.
+     */
     static final String CLAVE_PLUGINS = "plugins-activos.yaml";
     static final String CLAVE_ARTEFACTOS = "artefactos.txt";
 
@@ -100,9 +106,9 @@ final class ConstructorObjetosPais {
 
     private static ConfigMap configMap(List<PluginPlan> plugins, String namespace) {
         String activos = plugins.isEmpty()
-                ? "plugins: []\n"
-                : "plugins:\n" + plugins.stream()
-                        .map(p -> "  - nombre: " + p.nombre() + "\n    version: " + p.version() + "\n")
+                ? "[]\n"
+                : plugins.stream()
+                        .map(p -> "- nombre: \"" + p.nombre() + "\"\n  version: \"" + p.version() + "\"\n")
                         .collect(Collectors.joining());
         String artefactos = plugins.stream()
                 .map(p -> p.sha256() + " " + p.nombre() + "-" + p.version() + ".jar\n")

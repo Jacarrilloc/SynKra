@@ -1,5 +1,6 @@
 package io.synkra.kubernetes;
 
+import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.ContainerStatus;
 import io.fabric8.kubernetes.api.model.Event;
 import io.fabric8.kubernetes.api.model.Pod;
@@ -10,6 +11,8 @@ import io.synkra.kubernetes.api.ContextoFalloK8s;
 import io.synkra.kubernetes.api.DespliegueAusenteException;
 import io.synkra.kubernetes.api.EstadoPais;
 import io.synkra.kubernetes.api.FaseDespliegue;
+import io.synkra.kubernetes.api.LecturaPais;
+import io.synkra.kubernetes.api.LecturaPaisInconsistenteException;
 import io.synkra.kubernetes.api.LecturaFallidaException;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
@@ -17,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -60,6 +64,23 @@ final class LectorPais {
         String razon = pods.stream().map(LectorPais::razonDeFallo).filter(Objects::nonNull).findFirst().orElse(null);
         return new EstadoPais(deseadas, listas, reinicios,
                 razon != null ? FaseDespliegue.FALLIDO : FaseDespliegue.EN_CURSO, razon);
+    }
+
+    /** Solo {@code get} del Deployment y del ConfigMap; vacío si no existe ninguno de los dos. */
+    Optional<LecturaPais> leerPais(String pais, String ns) {
+        Deployment d = envuelve("el Deployment " + ConstructorObjetosPais.NOMBRE_CORE, ns, () -> cliente.apps().deployments()
+                .inNamespace(ns).withName(ConstructorObjetosPais.NOMBRE_CORE).get());
+        ConfigMap c = envuelve("el ConfigMap " + ConstructorObjetosPais.NOMBRE_CONFIG, ns, () -> cliente.configMaps()
+                .inNamespace(ns).withName(ConstructorObjetosPais.NOMBRE_CONFIG).get());
+        if (d == null && c == null) {
+            return Optional.empty();
+        }
+        if (d == null || c == null) {
+            throw new LecturaPaisInconsistenteException(pais, "falta " + (d == null
+                    ? "el Deployment " + ConstructorObjetosPais.NOMBRE_CORE
+                    : "el ConfigMap " + ConstructorObjetosPais.NOMBRE_CONFIG));
+        }
+        return Optional.of(LectorConfigMapPais.leer(pais, d, c));
     }
 
     ContextoFalloK8s contexto(String ns) {

@@ -27,6 +27,8 @@ dependencies {
     implementation("org.apache.commons:commons-compress:1.27.1")
     // U05-T01: última 7.x (Jackson 2, igual que Spring Boot 3.5); la 8.x migra a Jackson 3.
     implementation("io.fabric8:kubernetes-client:7.9.0")
+    // U05-T06: lector seguro de plugins-activos.yaml; la misma versión que verificador y core.
+    implementation("org.snakeyaml:snakeyaml-engine:3.2")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation(testFixtures(project(":verificador")))
