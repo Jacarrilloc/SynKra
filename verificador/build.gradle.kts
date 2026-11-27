@@ -1,3 +1,5 @@
+import java.security.MessageDigest
+
 plugins {
     `java-library`
     `java-test-fixtures`
@@ -20,52 +22,98 @@ dependencies {
 }
 
 // H-10: la suite S1-S12 bloquea el build. `check` depende de verificarSuite, que lee el XML de
-// SuiteCombinacionesTest y falla en cuatro casos, cada uno con un mensaje que nombra la causa:
+// SuiteCombinacionesTest y falla, con un mensaje que nombra la causa, si:
 //   1. el XML no existe;
-//   2. tests < PRUEBAS_MINIMAS_SUITE;
+//   2. tests < pruebasMinimasSuite;
 //   3. skipped != 0;
-//   4. el XML es más viejo que las clases compiladas de test o de testFixtures (no se compara con la
-//      hora del build: un `test` UP-TO-DATE deja un XML válido y más viejo que el build).
+//   4. failures o errors != 0 (por ejemplo con ignoreFailures = true);
+//   5. el XML no corresponde a las clases actuales (o falta la huella).
 //
-// PRUEBAS_MINIMAS_SUITE = 17: son los 10 casos ejecutables de la suite (S1 a S10, el @ParameterizedTest;
+// Frescura (desviación de la decisión 1, mtime -> contenido): al terminar, `test` escribe una huella
+// (SHA-256 de las rutas relativas ordenadas y los bytes de las clases compiladas de main, testFixtures y
+// test) en test-results/test/huella-suite.txt, salida declarada de `test`. verificarSuite recalcula la
+// huella. Un `test` UP-TO-DATE conserva XML y huella; recompilar con el mismo bytecode (un comentario) no
+// los invalida; cambiar cualquier clase sin volver a correr `test` sí.
+//
+// pruebasMinimasSuite = 17: son los 10 casos ejecutables de la suite (S1 a S10, el @ParameterizedTest;
 // S11 y S12 son FueraDeU01 y no se ejecutan aquí) más las 7 pruebas de forma de SuiteCombinacionesTest
 // (@Test). Si se añade o quita una prueba de SuiteCombinacionesTest, este número se cambia a propósito
 // en el mismo cambio.
 val pruebasMinimasSuite = 17
 val xmlSuite = layout.buildDirectory.file("test-results/test/TEST-io.synkra.verificador.SuiteCombinacionesTest.xml")
-val clasesCompiladas = files(sourceSets["test"].output.classesDirs, sourceSets["testFixtures"].output.classesDirs)
+val huellaSuite = layout.buildDirectory.file("test-results/test/huella-suite.txt")
+val clasesDeLaSuite = listOf(
+    files(sourceSets["main"].output.classesDirs),
+    files(sourceSets["testFixtures"].output.classesDirs),
+    files(sourceSets["test"].output.classesDirs),
+)
 
-val verificarSuite by tasks.registering {
+// Sin referencias al proyecto: solo recibe colecciones de archivos (compatible con la caché de configuración).
+val calcularHuella: (List<FileCollection>) -> String = { grupos ->
+    val md = MessageDigest.getInstance("SHA-256")
+    grupos.forEachIndexed { n, grupo ->
+        val entradas = grupo.files.filter { it.isDirectory }.flatMap { raiz ->
+            raiz.walkTopDown().filter { it.isFile }.map { it.relativeTo(raiz).invariantSeparatorsPath to it }.toList()
+        }.sortedBy { it.first }
+        for ((ruta, archivo) in entradas) {
+            md.update("$n:$ruta\n".toByteArray())
+            md.update(archivo.readBytes())
+        }
+    }
+    md.digest().joinToString("") { "%02x".format(it) }
+}
+
+tasks.named<Test>("test") {
+    val salida = huellaSuite.map { it.asFile }
+    val grupos = clasesDeLaSuite
+    val huella = calcularHuella
+    outputs.file(huellaSuite)
+    doLast {
+        salida.get().writeText(huella(grupos) + "\n")
+    }
+}
+
+tasks.register("verificarSuite") {
     group = "verification"
-    description = "Falla si SuiteCombinacionesTest no corrió completa, o si su XML es de antes de un cambio."
+    description = "Falla si SuiteCombinacionesTest no corrió completa, con fallos, o si su XML no corresponde a las clases actuales."
     dependsOn(tasks.named("test"))
-    inputs.files(clasesCompiladas)
-    // Siempre se evalúa: depende de un archivo que puede borrarse o envejecer sin que cambien las entradas.
+    inputs.files(clasesDeLaSuite)
+    // Siempre se evalúa: depende de un archivo que puede borrarse sin que cambien las entradas.
     outputs.upToDateWhen { false }
     val xml = xmlSuite.map { it.asFile }
+    val archivoHuella = huellaSuite.map { it.asFile }
     val minimo = pruebasMinimasSuite
-    val clases = clasesCompiladas
+    val grupos = clasesDeLaSuite
+    val huella = calcularHuella
     doLast {
         val f = xml.get()
         if (!f.isFile) {
             throw GradleException("verificarSuite: el XML de SuiteCombinacionesTest no existe: $f (la suite no corrió)")
         }
         val raiz = javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(f).documentElement
-        val tests = raiz.getAttribute("tests").toIntOrNull()
-            ?: throw GradleException("verificarSuite: el XML no trae el atributo tests: $f")
-        val skipped = raiz.getAttribute("skipped").toIntOrNull()
-            ?: throw GradleException("verificarSuite: el XML no trae el atributo skipped: $f")
+        fun atributo(nombre: String) = raiz.getAttribute(nombre).toIntOrNull()
+            ?: throw GradleException("verificarSuite: el XML no trae el atributo $nombre: $f")
+        val tests = atributo("tests")
+        val skipped = atributo("skipped")
+        val failures = atributo("failures")
+        val errors = atributo("errors")
         if (tests < minimo) {
-            throw GradleException("verificarSuite: corrieron $tests pruebas de SuiteCombinacionesTest y se exigen al menos $minimo (10 casos S1-S10 más 7 de forma)")
+            throw GradleException("verificarSuite: corrieron $tests pruebas de SuiteCombinacionesTest y se exigen al menos $minimo (los 10 casos S1-S10 más las pruebas de forma)")
         }
         if (skipped != 0) {
             throw GradleException("verificarSuite: $skipped pruebas de SuiteCombinacionesTest se saltaron (skipped debe ser 0)")
         }
-        val ultimaClase = clases.asFileTree.files.maxOfOrNull { it.lastModified() } ?: 0L
-        if (f.lastModified() < ultimaClase) {
-            throw GradleException("verificarSuite: el XML de SuiteCombinacionesTest es más viejo que las clases compiladas de test o testFixtures (resultado de una corrida anterior a un cambio)")
+        if (failures != 0 || errors != 0) {
+            throw GradleException("verificarSuite: SuiteCombinacionesTest tiene failures=$failures y errors=$errors (deben ser 0)")
+        }
+        val h = archivoHuella.get()
+        if (!h.isFile) {
+            throw GradleException("verificarSuite: el XML no corresponde a las clases actuales: falta la huella $h")
+        }
+        if (h.readText().trim() != huella(grupos)) {
+            throw GradleException("verificarSuite: el XML no corresponde a las clases actuales (la huella de main, testFixtures y test cambió desde que corrió test)")
         }
     }
 }
 
-tasks.named("check") { dependsOn(verificarSuite) }
+tasks.named("check") { dependsOn("verificarSuite") }
