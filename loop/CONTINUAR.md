@@ -61,7 +61,7 @@ Orden de fusión: #77, luego #78 (U05-T04), luego #79 (U02-T04).
 
 **U05-T05 despachada** (ola 31): worktree `../wt-m6r-U05-T05`, rama `m6r/U05-T05` desde `0a52e2e`; ronda 1 del codificador hecha (`594f240`). **Revisor de la ronda 1 despachado**; si la sesión se corta, repetirlo.
 
-**U02-T05 despachada** (ola 31): worktree `../wt-m6r-U02-T05`, rama `m6r/U02-T05` desde `ff3f184`; el codificador de la ronda 1 está corriendo. Igual que arriba si la sesión se corta.
+**U02-T05 despachada** (ola 31): worktree `../wt-m6r-U02-T05`, rama `m6r/U02-T05` desde `ff3f184`; ronda 1 del codificador hecha (`0aadf63`). **Revisor de la ronda 1 despachado**; si la sesión se corta, repetirlo.
 
 ### Ola 31 (U05-T05 ∥ U02-T05), escrita, sin despachar
 
