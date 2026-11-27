@@ -640,3 +640,10 @@
 **Context**: CONSTRUCTION, Code Generation Parte 2, U04 Catálogo, ola 14.
 
 ---
+
+## Decisión: quién fusiona los PRs de U04
+**Timestamp**: 2026-11-27T11:15:35Z
+**User Input**: Tarjeta «¿Quién fusiona el PR #41 de U04-T01 (migración del catálogo)?». Opción elegida: «Fusiona tú todos los de U04».
+**AI Response**: Fusioné el #41 (8fd9e30). De aquí en adelante fusiono cada PR verde de U04 sin preguntar y corro la unidad hasta el final.
+
+---
