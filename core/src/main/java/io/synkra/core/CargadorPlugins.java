@@ -11,12 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
+import org.springframework.stereotype.Component;
 
 /**
  * Carga un plugin por JAR, cada uno en su propio {@link URLClassLoader}. El padre es el cargador de
  * {@code plugin-api}, así {@link SynkraPlugin} es el mismo tipo en el core y en el plugin.
  */
-@org.springframework.stereotype.Component
+@Component
 public class CargadorPlugins {
 
     public PluginCargado cargar(Path jar) {

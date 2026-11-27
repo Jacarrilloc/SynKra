@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.snakeyaml.engine.v2.api.Load;
 import org.snakeyaml.engine.v2.api.LoadSettings;
+import org.snakeyaml.engine.v2.common.ScalarStyle;
+import org.snakeyaml.engine.v2.composer.Composer;
+import org.snakeyaml.engine.v2.events.CollectionEndEvent;
+import org.snakeyaml.engine.v2.events.CollectionStartEvent;
+import org.snakeyaml.engine.v2.nodes.MappingNode;
+import org.snakeyaml.engine.v2.nodes.Node;
+import org.snakeyaml.engine.v2.nodes.NodeTuple;
+import org.snakeyaml.engine.v2.nodes.ScalarNode;
+import org.snakeyaml.engine.v2.nodes.SequenceNode;
+import org.snakeyaml.engine.v2.nodes.Tag;
+import org.snakeyaml.engine.v2.parser.ParserImpl;
 import org.snakeyaml.engine.v2.schema.CoreSchema;
+import org.snakeyaml.engine.v2.scanner.StreamReader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -41,10 +54,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class ArranquePlugins {
 
+    // Única fuente de estas constantes dentro del core. Los límites replican los de LectorDescriptor (U01);
+    // ese lector no es público, así que no se pueden compartir sin tocar verificador/ (candidata registrada).
     /** Nombre del core al que pertenecen los plugins de esta instalación. */
     static final String CORE = "synkra-core";
     static final String ARCHIVO_ACTIVOS = "plugins-activos.yaml";
-    private static final int MAX_BYTES = 64 * 1024;
+    /** Tamaño máximo de plugins-activos.yaml, igual que LectorDescriptor.MAX_BYTES. */
+    static final int MAX_BYTES = 64 * 1024;
+    /** Alias máximos por colección, igual que LectorDescriptor.MAX_ALIAS. */
+    static final int MAX_ALIAS = 10;
+    /** Anidación máxima, igual que LectorDescriptor.MAX_PROFUNDIDAD. */
+    static final int MAX_PROFUNDIDAD = 32;
     private static final Logger LOG = LoggerFactory.getLogger(ArranquePlugins.class);
 
     private final VersionCore versionCore;
@@ -185,11 +205,25 @@ public class ArranquePlugins {
                     .onUnmappableCharacter(CodingErrorAction.REPORT)
                     .decode(java.nio.ByteBuffer.wrap(bytes))
                     .toString();
-            raiz = new Load(LoadSettings.builder()
-                            .setSchema(new CoreSchema())
-                            .setMaxAliasesForCollections(10)
-                            .build())
-                    .loadFromString(texto);
+            var ajustes = LoadSettings.builder()
+                    .setSchema(new CoreSchema())
+                    .setMaxAliasesForCollections(MAX_ALIAS)
+                    .build();
+            var excesiva = profundidadExcesiva(ajustes, texto);
+            if (excesiva != null) {
+                throw new ArranqueRechazado(ARCHIVO_ACTIVOS + ": " + excesiva);
+            }
+            var nodo = new Composer(ajustes, new ParserImpl(ajustes, new StreamReader(ajustes, texto)))
+                    .getSingleNode()
+                    .orElse(null);
+            if (nodo != null) {
+                var etiqueta = etiquetaNoPermitida(nodo, new IdentityHashMap<>(), ajustes);
+                if (etiqueta != null) {
+                    throw new ArranqueRechazado(ARCHIVO_ACTIVOS + ": etiqueta de tipo '" + etiqueta.getValue()
+                            + "' no permitida");
+                }
+            }
+            raiz = new Load(ajustes).loadFromString(texto);
         } catch (CharacterCodingException e) {
             throw new ArranqueRechazado(ARCHIVO_ACTIVOS + " no es UTF-8 válido");
         } catch (IOException e) {
@@ -198,8 +232,7 @@ public class ArranquePlugins {
             if (e instanceof ArranqueRechazado a) {
                 throw a;
             }
-            throw new ArranqueRechazado(ARCHIVO_ACTIVOS + " no es válido o no es seguro (etiquetas de tipo no permitidas): "
-                    + e.getMessage());
+            throw new ArranqueRechazado(ARCHIVO_ACTIVOS + " no es válido o no es seguro: " + e.getMessage());
         }
         if (raiz == null) {
             return List.of();
@@ -226,6 +259,72 @@ public class ArranquePlugins {
             activos.add(presente.orElseGet(() -> provisional(nombre, v.valor())));
         }
         return activos;
+    }
+
+    /** Cuenta la anidación con los eventos del parser (iterativo) antes de componer, que es recursivo. */
+    private static String profundidadExcesiva(LoadSettings ajustes, String yaml) {
+        var parser = new ParserImpl(ajustes, new StreamReader(ajustes, yaml));
+        int profundidad = 0;
+        while (parser.hasNext()) {
+            var ev = parser.next();
+            if (ev instanceof CollectionStartEvent) {
+                if (++profundidad > MAX_PROFUNDIDAD) {
+                    return "supera la anidación máxima de " + MAX_PROFUNDIDAD + " niveles";
+                }
+            } else if (ev instanceof CollectionEndEvent) {
+                profundidad--;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Primera etiqueta que no es mapa, secuencia ni la que el YAML resolvería solo para un escalar (como en
+     * LectorDescriptor: se rechaza cualquier etiqueta explícita que no sea la implícita, p. ej. {@code !!int}).
+     */
+    private static Tag etiquetaNoPermitida(Node nodo, IdentityHashMap<Node, Boolean> vistos, LoadSettings ajustes) {
+        if (vistos.put(nodo, Boolean.TRUE) != null) {
+            return null;
+        }
+        switch (nodo) {
+            case MappingNode m -> {
+                if (!nodo.getTag().equals(Tag.MAP)) {
+                    return nodo.getTag();
+                }
+                for (NodeTuple t : m.getValue()) {
+                    var r = etiquetaNoPermitida(t.getKeyNode(), vistos, ajustes);
+                    if (r == null) {
+                        r = etiquetaNoPermitida(t.getValueNode(), vistos, ajustes);
+                    }
+                    if (r != null) {
+                        return r;
+                    }
+                }
+            }
+            case SequenceNode s -> {
+                if (!nodo.getTag().equals(Tag.SEQ)) {
+                    return nodo.getTag();
+                }
+                for (Node hijo : s.getValue()) {
+                    var r = etiquetaNoPermitida(hijo, vistos, ajustes);
+                    if (r != null) {
+                        return r;
+                    }
+                }
+            }
+            case ScalarNode e -> {
+                var implicita = e.getScalarStyle() == ScalarStyle.PLAIN
+                        ? ajustes.getSchema().getScalarResolver().resolve(e.getValue(), true)
+                        : Tag.STR;
+                if (!e.getTag().equals(implicita)) {
+                    return e.getTag();
+                }
+            }
+            default -> {
+                return nodo.getTag();
+            }
+        }
+        return null;
     }
 
     private static Descriptor provisional(String nombre, Version version) {

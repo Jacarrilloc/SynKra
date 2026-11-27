@@ -121,16 +121,14 @@ class ArranquePluginsTest {
         jar("kyc-pe-2.0.0.jar", "kyc-pe", "2.0.0", "synkra-core", "3.x");
         activos("- nombre: kyc-pe\n  version: 2.0.0\n");
         assertThrows(RuntimeException.class, this::arrancar);
-        assertTrue(salida.getAll().contains("VERSION_INCOMPATIBLE"), salida.getAll());
-        assertTrue(salida.getAll().contains("kyc-pe"));
+        assertTrue(salida.getAll().contains("VERSION_INCOMPATIBLE plugin=kyc-pe"), salida.getAll());
     }
 
     @Test
     void s6PluginActivoAusenteNoArranca(CapturedOutput salida) throws IOException {
         activos("- nombre: kyc-mx\n  version: 1.0.0\n");
         assertThrows(RuntimeException.class, this::arrancar);
-        assertTrue(salida.getAll().contains("PLUGIN_AUSENTE"), salida.getAll());
-        assertTrue(salida.getAll().contains("kyc-mx"));
+        assertTrue(salida.getAll().contains("PLUGIN_AUSENTE plugin=kyc-mx"), salida.getAll());
     }
 
     @Test
@@ -153,11 +151,52 @@ class ArranquePluginsTest {
         }
     }
 
+    private static Throwable raiz(Throwable t) {
+        while (t.getCause() != null) {
+            t = t.getCause();
+        }
+        return t;
+    }
+
+    private String motivoDeRechazo() {
+        var e = assertThrows(RuntimeException.class, this::arrancar);
+        var r = raiz(e);
+        assertInstanceOf(ArranqueRechazado.class, r, e.toString());
+        return r.getMessage();
+    }
+
     @Test
-    void yamlConEtiquetaDeTipoSeRechaza() throws IOException {
+    void yamlConEtiquetaDeTipoSeRechazaPorLaEtiqueta() throws IOException {
         jar("kyc-co-1.0.0.jar", "kyc-co", "1.0.0", "synkra-core", "2.x");
-        activos("- !!java.util.ArrayList [x]\n");
-        assertThrows(RuntimeException.class, this::arrancar);
+        // Control: sin la etiqueta el mismo documento es válido y arranca.
+        activos("- {nombre: kyc-co, version: 1.0.0}\n");
+        try (var ctx = arrancar()) {
+            assertEquals(1, ctx.getBean(ArranquePlugins.class).cargados().size());
+        }
+        activos("- !!java.util.HashMap {nombre: kyc-co, version: 1.0.0}\n");
+        var motivo = motivoDeRechazo();
+        assertTrue(motivo.contains("etiqueta de tipo 'tag:yaml.org,2002:java.util.HashMap' no permitida"), motivo);
+    }
+
+    @Test
+    void etiquetaExplicitaQueNoEsStrSeRechaza() throws IOException {
+        activos("- nombre: kyc-co\n  version: !!int 1.0.0\n");
+        var motivo = motivoDeRechazo();
+        assertTrue(motivo.contains("etiqueta de tipo 'tag:yaml.org,2002:int' no permitida"), motivo);
+    }
+
+    @Test
+    void yamlDemasiadoAnidadoSeRechaza() throws IOException {
+        activos("- " + "[".repeat(40) + "]".repeat(40) + "\n");
+        var motivo = motivoDeRechazo();
+        assertTrue(motivo.contains("anidación máxima de 32 niveles"), motivo);
+    }
+
+    @Test
+    void yamlDemasiadoGrandeSeRechaza() throws IOException {
+        activos("# " + "x".repeat(ArranquePlugins.MAX_BYTES) + "\n");
+        var motivo = motivoDeRechazo();
+        assertTrue(motivo.contains("tamaño máximo de " + ArranquePlugins.MAX_BYTES + " bytes"), motivo);
     }
 
     @Test
