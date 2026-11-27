@@ -24,9 +24,9 @@ Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cace
 Picked up _JAVA_OPTIONS: -XX:+UnlockDiagnosticVMOptions -XX:DisableIntrinsic=_base64_encodeBlock,_base64_decodeBlock
 
 EndpointsCoreTest > pluginQueLanzaDa500PluginFalloQueNombraElPluginSinFiltrarLaTraza() FAILED
-    org.opentest4j.AssertionFailedError at EndpointsCoreTest.java:250
+    org.opentest4j.AssertionFailedError at EndpointsCoreTest.java:256
 
-9 tests completed, 1 failed
+10 tests completed, 1 failed
 
 > Task :core:test FAILED
 

@@ -24,9 +24,9 @@ Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cace
 Picked up _JAVA_OPTIONS: -XX:+UnlockDiagnosticVMOptions -XX:DisableIntrinsic=_base64_encodeBlock,_base64_decodeBlock
 
 EndpointsCoreTest > getPluginsSoloListaLosIniciados() FAILED
-    org.opentest4j.AssertionFailedError at EndpointsCoreTest.java:183
+    org.opentest4j.AssertionFailedError at EndpointsCoreTest.java:189
 
-9 tests completed, 1 failed
+10 tests completed, 1 failed
 
 > Task :core:test FAILED
 
@@ -47,5 +47,5 @@ You can use '--warning-mode all' to show the individual deprecation warnings and
 
 For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD FAILED in 11s
+BUILD FAILED in 13s
 10 actionable tasks: 10 executed

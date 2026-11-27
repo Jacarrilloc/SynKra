@@ -1,5 +1,5 @@
 --- /home/user/wt-m6r-U02-T07/core/src/main/java/io/synkra/core/IniciadorPlugins.java	2026-11-27 21:22:45.965243148 +0000
-+++ /tmp/claude-0/-home-user/311bec3f-8f32-5470-935c-db8e1e6d6a2d/scratchpad/m-todos-los-cargados/core/src/main/java/io/synkra/core/IniciadorPlugins.java	2026-11-27 21:25:26.299217272 +0000
++++ /tmp/claude-0/-home-user/311bec3f-8f32-5470-935c-db8e1e6d6a2d/scratchpad/m-todos-los-cargados/core/src/main/java/io/synkra/core/IniciadorPlugins.java	2026-11-27 21:27:32.251722166 +0000
 @@ -44,7 +44,7 @@
  
      /** Los plugins iniciados con éxito, en orden de carga; vacía si el arranque falló o aún no terminó. */
