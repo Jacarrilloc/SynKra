@@ -30,7 +30,7 @@ public class IniciadorPlugins {
     private static final Logger LOG = LoggerFactory.getLogger(IniciadorPlugins.class);
 
     private final ArranquePlugins arranque;
-    private volatile boolean fallo;
+    private volatile String fallido;
 
     public IniciadorPlugins(ArranquePlugins arranque) {
         this.arranque = arranque;
@@ -38,7 +38,12 @@ public class IniciadorPlugins {
 
     /** True si algún plugin falló al iniciar; lo lee el indicador de salud de readiness. */
     boolean hayFallo() {
-        return fallo;
+        return fallido != null;
+    }
+
+    /** Nombre del plugin que falló al iniciar, o null si ninguno falló. */
+    String pluginFallido() {
+        return fallido;
     }
 
     /** Corre al terminar el arranque. */
@@ -53,7 +58,7 @@ public class IniciadorPlugins {
                 iniciados.add(c);
             } catch (Exception | LinkageError e) {
                 LOG.error(PREFIJO_FALLO + plugin.nombre() + ": " + e, e);
-                fallo = true;
+                fallido = plugin.nombre();
                 detener(iniciados);
                 return;
             }

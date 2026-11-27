@@ -74,10 +74,14 @@ public class FalloInicioPluginTest {
     }
 
     private int get(ConfigurableApplicationContext ctx, String ruta) throws Exception {
+        return respuesta(ctx, ruta).statusCode();
+    }
+
+    private HttpResponse<String> respuesta(ConfigurableApplicationContext ctx, String ruta) throws Exception {
         String puerto = ctx.getEnvironment().getProperty("local.server.port");
         assertNotNull(puerto, "el servidor debe estar en un puerto aleatorio");
         var peticion = HttpRequest.newBuilder(URI.create("http://localhost:" + puerto + ruta)).GET().build();
-        return http.send(peticion, HttpResponse.BodyHandlers.ofString()).statusCode();
+        return http.send(peticion, HttpResponse.BodyHandlers.ofString());
     }
 
     /** JAR con un plugin que registra iniciar/detener y, si {@code falla}, lanza IllegalStateException al iniciar. */
@@ -129,8 +133,14 @@ public class FalloInicioPluginTest {
         jar("kyc-malo", true);
         activos("- nombre: kyc-malo\n  version: 1.0.0\n");
         try (var ctx = vivo()) {
-            assertEquals(503, get(ctx, "/actuator/health/readiness"));
-            assertEquals(200, get(ctx, "/actuator/health/liveness"));
+            var readiness = respuesta(ctx, "/actuator/health/readiness");
+            assertEquals(503, readiness.statusCode());
+            assertTrue(readiness.body().contains("\"status\":\"OUT_OF_SERVICE\""), readiness.body());
+            var liveness = respuesta(ctx, "/actuator/health/liveness");
+            assertEquals(200, liveness.statusCode());
+            assertTrue(liveness.body().contains("\"status\":\"UP\""), liveness.body());
+            // El agregado también refleja el fallo (decisión del orquestador, ver PluginsHealthIndicator).
+            assertEquals(503, get(ctx, "/actuator/health"));
         }
         assertTrue(salida.getAll().contains("Plugin fallo al iniciar plugin=kyc-malo: "), salida.getAll());
         assertTrue(salida.getAll().contains("IllegalStateException: boom-kyc-malo"), salida.getAll());
@@ -141,6 +151,19 @@ public class FalloInicioPluginTest {
         jar("kyc-a", false);
         jar("kyc-b", true);
         activos("- nombre: kyc-a\n  version: 1.0.0\n- nombre: kyc-b\n  version: 1.0.0\n");
+        try (var ctx = vivo()) {
+            assertEquals(503, get(ctx, "/actuator/health/readiness"));
+            assertEquals(List.of("iniciar:kyc-a", "iniciar:kyc-b", "detener:kyc-a"), Eventos.LLAMADAS);
+        }
+    }
+
+    @Test
+    void siFallaElDelMedioNoSeIniciaElSiguiente() throws Exception {
+        jar("kyc-a", false);
+        jar("kyc-b", true);
+        jar("kyc-c", false);
+        activos("- nombre: kyc-a\n  version: 1.0.0\n- nombre: kyc-b\n  version: 1.0.0\n"
+                + "- nombre: kyc-c\n  version: 1.0.0\n");
         try (var ctx = vivo()) {
             assertEquals(503, get(ctx, "/actuator/health/readiness"));
             assertEquals(List.of("iniciar:kyc-a", "iniciar:kyc-b", "detener:kyc-a"), Eventos.LLAMADAS);
