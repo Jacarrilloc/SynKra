@@ -48,7 +48,7 @@ Para que eso no vuelva a pasar:
 ## Estado al corte (2026-11-27 22:10 UTC)
 
 - `main` en `9289073`. U01, U03 y U04 terminadas. PRs #54 a #83 fusionados (#77 a #83 los fusionó el orquestador a las 21:55 UTC, según la regla de David).
-- `CANDIDATAS.md` llega hasta **C-92**. La siguiente libre es **C-93**.
+- `CANDIDATAS.md` llega hasta **C-95**. La siguiente libre es **C-96**.
 - **Nadie corre en este momento** (pausa de David a las 22:08 UTC). No hay agentes en vuelo.
 
 ### PRs abiertos
@@ -63,7 +63,8 @@ El #6 es antiguo y no se toca.
 
 | Tarea | Worktree / rama | Desde | Estado | Siguiente paso |
 |---|---|---|---|---|
-| U05-T07 script de descarga (ola 33) | `../wt-m6r-U05-T07`, `m6r/U05-T07` | `5e7a45e` | Ronda 1 NO-VERDE (`b6039e9`). Codificador de la ronda 2 hecho y subido, `72b0abf` (código en `2dc76a9`). **En vuelo (23:45 UTC, sesión local de Julian):** revisor de la ronda 2. Si no hay `revisiones/U05-T07/ronda-2.md`, se perdió: repetirlo. | Repetir el revisor de la ronda 2 con base `5e7a45e` y HEAD `72b0abf`. Si VERDE: PR a `main` y fusionar junto con #84 |
+| U05-T07 script de descarga (ola 33) | `../wt-m6r-U05-T07`, `m6r/U05-T07` | `5e7a45e` | **VERDE en la ronda 2** (informe en `696eecc`, local, sin push). | Julian sube la rama y abre el PR a `main` cuando lo apruebe |
+| U05-T08 imagen del init (ola 34) | `../wt-m6r-U05-T08`, `m6r/U05-T08` | `696eecc` (punta VERDE de U05-T07) | **En vuelo (00:00 UTC del 28-nov):** codificador de la ronda 1, tarea con hash `7dd3928`. Docker local funciona sin arrancar `dockerd`. | Si la rama no tiene commits del codificador, redespacharlo; si los tiene, revisor ronda 1 |
 
 | U02-T08 el core no conoce países (ola 34) | `../wt-m6r-U02-T08`, `m6r/U02-T08` | `9d84b4c` (punta VERDE de U02-T07, #84 sin fusionar) | Codificador ronda 1 hecho, `2ec73a3` (código en `94d846b`), sin push. **En vuelo (23:55 UTC):** revisor de la ronda 1. | Si no hay `revisiones/U02-T08/ronda-1.md`, repetir el revisor ronda 1 (base `9d84b4c`, HEAD `2ec73a3`) |
 
