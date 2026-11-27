@@ -1,23 +1,35 @@
- .../io/synkra/kubernetes/AdaptadorFabric8.java     |  32 ++++---
- .../synkra/kubernetes/ConfiguracionKubernetes.java |  32 +++----
+ .../io/synkra/kubernetes/AdaptadorFabric8.java     |  32 +++---
+ .../synkra/kubernetes/ConfiguracionKubernetes.java |  32 +++---
  .../synkra/kubernetes/ConstructorObjetosPais.java  |   5 +-
  .../java/io/synkra/kubernetes/CuentaServicio.java  |   4 +-
- .../io/synkra/kubernetes/ObjetosPaisFabric8.java   |  55 +++++++++++
+ .../io/synkra/kubernetes/ObjetosPaisFabric8.java   |  55 ++++++++++
  .../synkra/kubernetes/api/AdaptadorKubernetes.java |   8 +-
  .../java/io/synkra/kubernetes/api/ObjetosPais.java |  20 +++-
  .../api/ObjetosPaisIncompletosException.java       |   9 ++
- .../test/java/io/synkra/FronterasModulosTest.java  | 103 +++++++++++++++++++++
- backend/src/test/java/io/synkra/SynkraAppTest.java |   7 ++
+ .../test/java/io/synkra/FronterasModulosTest.java  | 116 +++++++++++++++++++++
  .../RegistroPermitidoCaracterizacionTest.java      |  30 ++++++
  .../java/io/synkra/juguetek8s/FueraUsaFabric8.java |   9 ++
+ .../java/io/synkra/juguetek8s/api/ApiAnotada.java  |   7 ++
  .../io/synkra/juguetek8s/api/ApiFiltraFabric8.java |  15 +++
+ .../synkra/juguetek8s/api/ApiInterfazGenerica.java |   7 ++
+ .../java/io/synkra/juguetek8s/api/ApiLimite.java   |   6 ++
  .../java/io/synkra/juguetek8s/api/ApiLimpia.java   |  15 +++
- .../java/io/synkra/kubernetes/AplicarTest.java     |  33 ++++++-
- .../synkra/kubernetes/ClienteKubernetesTest.java   |  31 ++++---
- .../kubernetes/ConfiguracionKubernetesTest.java    |  44 +++++++++
+ .../io/synkra/juguetek8s/api/ApiSuperGenerica.java |   7 ++
+ .../java/io/synkra/juguetek8s/api/ApiThrows.java   |   9 ++
+ .../java/io/synkra/kubernetes/AplicarTest.java     |  33 +++++-
+ .../synkra/kubernetes/ClienteKubernetesTest.java   |  45 +++++---
+ .../kubernetes/ConfiguracionKubernetesTest.java    |  44 ++++++++
  .../kubernetes/ConstruirObjetosPaisTest.java       |   3 +-
  .../kubernetes/ImagenInitCaracterizacionTest.java  |  35 +++++++
  .../kubernetes/ImagenInitConfiguradaTest.java      |   2 +-
  .../java/io/synkra/kubernetes/LeerPaisTest.java    |   9 +-
- bitacoras/U05-T09-evidencia/rojo-r1.txt            |  40 ++++++++
- 22 files changed, 474 insertions(+), 67 deletions(-)
+ .../io/synkra/kubernetes/YamlObjetosPaisTest.java  |  67 ++++++++++++
+ bitacoras/U05-T09-evidencia/ca1.txt                |   2 +
+ bitacoras/U05-T09-evidencia/ca2.txt                |   2 +
+ bitacoras/U05-T09-evidencia/ca3-build.txt          |   1 +
+ bitacoras/U05-T09-evidencia/ca3-resultados.txt     |  32 ++++++
+ bitacoras/U05-T09-evidencia/ca4-stat.txt           |  23 ++++
+ bitacoras/U05-T09-evidencia/rojo-r1.txt            |  40 +++++++
+ bitacoras/U05-T09.md                               |  26 +++++
+ revisiones/U05-T09/ronda-1.md                      |  71 +++++++++++++
+ 34 files changed, 754 insertions(+), 67 deletions(-)

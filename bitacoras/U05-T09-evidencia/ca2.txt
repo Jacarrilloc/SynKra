@@ -1,2 +1,2 @@
-BUILD SUCCESSFUL in 2s
+BUILD SUCCESSFUL in 1s
 tests="2" skipped="0" failures="0" errors="0"
