@@ -1,5 +1,6 @@
 package io.synkra.catalogo;
 
+import io.synkra.catalogo.api.ArtefactoAbierto;
 import io.synkra.catalogo.api.CatalogoApi;
 import io.synkra.catalogo.api.CoreRegistrado;
 import io.synkra.catalogo.api.PluginSubido;
@@ -44,12 +45,14 @@ class CatalogoServicio implements CatalogoApi {
     private final VersionCoreRepositorio versiones;
     private final SubidaPlugin subida;
     private final ListadoPlugins listado;
+    private final ArtefactosPorHash porHash;
     private final io.synkra.verificador.Catalogo catalogoSqlite;
 
     CatalogoServicio(JdbcAggregateTemplate plantilla, CoreRepositorio cores, VersionCoreRepositorio versiones,
-            SubidaPlugin subida, ListadoPlugins listado, PluginRepositorio plugins, EtiquetaRepositorio etiquetas) {
+            SubidaPlugin subida, ListadoPlugins listado, ArtefactosPorHash porHash, PluginRepositorio plugins, EtiquetaRepositorio etiquetas) {
         this.catalogoSqlite = new CatalogoSqlite(versiones, plugins, etiquetas);
         this.listado = listado;
+        this.porHash = porHash;
         this.plantilla = plantilla;
         this.cores = cores;
         this.versiones = versiones;
@@ -121,6 +124,11 @@ class CatalogoServicio implements CatalogoApi {
     public List<PluginSubido> listarPlugins(String core, Map<String, String> filtro) {
         obtenerCore(core);
         return listado.listar(core, filtro);
+    }
+
+    @Override
+    public ArtefactoAbierto abrirArtefacto(String sha256) throws IOException {
+        return porHash.abrir(sha256);
     }
 
     private CoreRegistrado leer(String nombre) {

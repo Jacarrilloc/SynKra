@@ -57,6 +57,11 @@ final class MotivosCatalogo {
     /** Último detalle cuando hay más de {@code SubidaPlugin.MAX_DETALLES} (C-19); se completa con los omitidos. */
     static final String MOTIVOS_OMITIDOS = "Se omitieron %d motivos más";
 
+    /** R-C13: motivos constantes (sin rutas) de los 500 al servir un artefacto. */
+    static final String ARTEFACTO_RUTA_FUERA = "La ruta guardada del artefacto no es válida";
+    static final String ARTEFACTO_AUSENTE = "El archivo del artefacto no está en disco";
+    static final String ARTEFACTO_TAMANO = "El archivo del artefacto no tiene el tamaño guardado";
+
     private MotivosCatalogo() {
     }
 }
