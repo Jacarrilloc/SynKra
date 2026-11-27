@@ -770,3 +770,11 @@
 **Context**: Loop del módulo 6, ola 25, fuera de las etapas de AI-DLC.
 
 ---
+
+## Cierre de U04 (catálogo)
+**Timestamp**: 2026-11-27T20:10:00Z
+**User Input**: (sin mensaje nuevo; se aplica la regla de fusión de David de 2026-11-27T16:14:07Z)
+**AI Response**: U04-T12 salió VERDE en la ronda 2 y se fusionó en el PR #66. Con eso U04 queda terminada: U04-T01 a T13 están fusionadas y el plan está marcado. Las candidatas C-38, C-44, C-45, C-47 y C-50 quedan como resueltas en las tareas que las tuvieron en su alcance, todas con veredicto VERDE del revisor. Se registra C-67. Las candidatas C-05, C-08, C-12, C-13, C-19 y C-20, de otras unidades y que nombran U04, quedan pendientes de la decisión del responsable, junto con la tarea de pulido de U04 (C-57, C-60, C-61, C-63, C-65, C-66 y C-67).
+**Context**: Loop del módulo 6, ola 26, fuera de las etapas de AI-DLC.
+
+---
