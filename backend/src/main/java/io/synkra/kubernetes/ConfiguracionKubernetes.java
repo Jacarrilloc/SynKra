@@ -5,12 +5,13 @@ import io.fabric8.kubernetes.client.ConfigBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClientBuilder;
 import io.synkra.kubernetes.api.AdaptadorKubernetes;
+import java.nio.file.Files;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Condition;
 import org.springframework.core.env.Environment;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
@@ -25,19 +26,19 @@ class ConfiguracionKubernetes {
     static class HayCuentaDeServicio implements Condition {
         @Override
         public boolean matches(ConditionContext contexto, AnnotatedTypeMetadata metadatos) {
-            return CuentaServicio.de(contexto.getEnvironment()).completa();
+            return CuentaServicio.de(contexto.getEnvironment(), VariablesPod.de(contexto)).completa();
         }
     }
 
     @Bean(destroyMethod = "close")
     @Conditional(HayCuentaDeServicio.class)
-    KubernetesClient clienteKubernetes(Environment env) {
-        var cuenta = CuentaServicio.de(env);
+    KubernetesClient clienteKubernetes(Environment env, ObjectProvider<VariablesPod> variables) {
+        var cuenta = CuentaServicio.de(env, variables.getIfAvailable(VariablesPod::delProceso));
         var config = new ConfigBuilder(Config.empty())
                 .withAutoConfigure(false)
                 .withMasterUrl(cuenta.url())
                 .withOauthTokenProvider(cuenta::token)
-                .withCaCertFile(java.nio.file.Files.isReadable(cuenta.archivoCa()) ? cuenta.archivoCa().toString() : null)
+                .withCaCertFile(Files.isReadable(cuenta.archivoCa()) ? cuenta.archivoCa().toString() : null)
                 .build();
         return new KubernetesClientBuilder().withConfig(config).build();
     }

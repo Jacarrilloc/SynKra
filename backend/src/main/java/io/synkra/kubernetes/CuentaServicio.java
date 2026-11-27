@@ -1,7 +1,6 @@
 package io.synkra.kubernetes;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.springframework.core.env.Environment;
@@ -11,14 +10,15 @@ record CuentaServicio(Path directorio, String url) {
 
     static final String RUTA_POR_DEFECTO = "/var/run/secrets/kubernetes.io/serviceaccount";
 
-    static CuentaServicio de(Environment env) {
+    /**
+     * La ruta de la cuenta es configurable (pruebas); la URL sale solo de KUBERNETES_SERVICE_HOST y
+     * KUBERNETES_SERVICE_PORT del entorno del proceso, siempre por https.
+     */
+    static CuentaServicio de(Environment env, VariablesPod variables) {
         var directorio = Path.of(env.getProperty("synkra.kubernetes.cuenta", RUTA_POR_DEFECTO));
-        String url = env.getProperty("synkra.kubernetes.url", "");
-        if (url.isBlank()) {
-            String host = env.getProperty("KUBERNETES_SERVICE_HOST", "");
-            String puerto = env.getProperty("KUBERNETES_SERVICE_PORT", "443");
-            url = host.isBlank() ? "" : "https://" + (host.contains(":") ? "[" + host + "]" : host) + ":" + puerto;
-        }
+        String host = variables.valores().getOrDefault("KUBERNETES_SERVICE_HOST", "");
+        String puerto = variables.valores().getOrDefault("KUBERNETES_SERVICE_PORT", "443");
+        String url = host.isBlank() ? "" : "https://" + (host.contains(":") ? "[" + host + "]" : host) + ":" + puerto;
         return new CuentaServicio(directorio, url);
     }
 
@@ -39,8 +39,8 @@ record CuentaServicio(Path directorio, String url) {
     String token() {
         try {
             return Files.isReadable(archivoToken()) ? Files.readString(archivoToken()).strip() : "";
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
+        } catch (IOException | RuntimeException e) {
+            return ""; // un error al leer cuenta como «sin token»: el arranque no debe fallar
         }
     }
 }
