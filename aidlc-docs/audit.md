@@ -647,3 +647,10 @@
 **AI Response**: Fusioné el #41 (8fd9e30). De aquí en adelante fusiono cada PR verde de U04 sin preguntar y corro la unidad hasta el final.
 
 ---
+
+## U04-T02 — VERDE en la ronda 2, PR #43 fusionado
+**Timestamp**: 2026-11-27T11:45:00Z
+**AI Response**: La ronda 1 salió NO-VERDE por cuatro NARANJA: imagen laxa, mutantes sin atar, frontera del paquete base y motivos literales. La ronda 2 salió VERDE. Fusioné el PR #43 por la autorización de U04. Candidatas C-33 a C-37. C-31 sigue abierta (R-C2 se resolvió leyendo antes de insertar; con un pool de 1, la carrera dentro del proceso da 409 y no 500).
+**Context**: CONSTRUCTION, U04, ola 15.
+
+---
