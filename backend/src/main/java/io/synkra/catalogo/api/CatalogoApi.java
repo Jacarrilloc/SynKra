@@ -26,4 +26,11 @@ public interface CatalogoApi {
 
     /** El plugin {@code nombre} en la versión {@code version} del core; 404 si no existe. */
     PluginSubido obtenerPlugin(String core, String nombre, String version);
+
+    /**
+     * R-C12: los plugins de la carpeta de {@code core} que cumplen todas las parejas {@code clave=valor} del filtro
+     * (cualquier origen, comparación exacta). Un filtro nulo o vacío devuelve todos. Orden: nombre y versión
+     * semántica. 404 si el core no existe; 422 si una clave no cumple el patrón de U01 o un valor es nulo.
+     */
+    List<PluginSubido> listarPlugins(String core, Map<String, String> filtro);
 }

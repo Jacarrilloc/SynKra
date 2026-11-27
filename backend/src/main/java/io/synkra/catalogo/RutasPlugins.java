@@ -73,6 +73,27 @@ class RutasPlugins {
         return ResponseEntity.created(ubicacion).body(dto(p));
     }
 
+    /** H-05, H-06: cada parámetro de consulta es una pareja del filtro; una clave repetida es un 422 con su campo. */
+    @GetMapping
+    List<PluginDto> listar(@PathVariable String nombre, HttpServletRequest peticion) {
+        var filtro = new TreeMap<String, String>();
+        var repetidas = new ArrayList<DetalleError>();
+        peticion.getParameterMap().forEach((clave, valores) -> {
+            if (valores.length > 1) {
+                var corta = RecepcionArtefacto.recortar(clave);
+                repetidas.add(new DetalleError(corta, MotivosCatalogo.ETIQUETA_REPETIDA.formatted(corta)));
+            } else {
+                filtro.put(clave, valores[0]);
+            }
+        });
+        if (!repetidas.isEmpty()) {
+            throw new ExcepcionApi(HttpStatus.UNPROCESSABLE_ENTITY, new ErrorApi(CodigosError.ENTIDAD_NO_PROCESABLE,
+                    CodigosError.MSG_ENTIDAD_NO_PROCESABLE, repetidas.size() > SubidaPlugin.MAX_DETALLES
+                            ? repetidas.subList(0, SubidaPlugin.MAX_DETALLES) : repetidas));
+        }
+        return api.listarPlugins(nombre, filtro).stream().map(RutasPlugins::dto).toList();
+    }
+
     @GetMapping("/{plugin}/{version}")
     PluginDto obtener(@PathVariable String nombre, @PathVariable String plugin, @PathVariable String version) {
         return dto(api.obtenerPlugin(nombre, plugin, version));

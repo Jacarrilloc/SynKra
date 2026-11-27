@@ -199,7 +199,7 @@ class RutasCoresTest {
     }
 
     @Test
-    void pluginsDeUnCoreExistenteEsVacioYDeUnoInexistenteDa404() {
+    void pluginsDeUnCoreSinPluginsEsVacioYDeUnoInexistenteDa404() {
         post(cuerpo("synkra-core", "2.1.0"));
         var ok = http.getForEntity("/api/cores/synkra-core/plugins", List.class);
         assertThat(ok.getStatusCode()).isEqualTo(HttpStatus.OK);
