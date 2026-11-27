@@ -746,3 +746,11 @@
 **Context**: Loop del módulo 6, ola 22, fuera de las etapas de AI-DLC.
 
 ---
+
+## U04-T10 cerrada por el loop
+**Timestamp**: 2026-11-27T17:35:00Z
+**User Input**: (sin mensaje nuevo; se aplica la regla de fusión de David de 2026-11-27T16:14:07Z)
+**AI Response**: U04-T10 salió VERDE en la ronda 2. La ronda 1 fue NO-VERDE por un ROJO: la raíz de la comprobación era `$SYNKRA_DATA` y no `artefactos/`, así que una fila alterada servía `synkra.db` con 200. Se registran C-64 y C-65. Son dos PRs, el de `m6r/U04-T10` y el de esta rama, y el orquestador los fusiona en ese orden.
+**Context**: Loop del módulo 6, ola 23, fuera de las etapas de AI-DLC.
+
+---
