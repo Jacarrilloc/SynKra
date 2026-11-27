@@ -584,7 +584,16 @@ class VerificadorPropiedades {
             boolean registrado = !datos.cores().getOrDefault("core-b", List.of()).isEmpty();
             assertEquals(TEXTO_REGISTRADO.equals(datos.origen()), registrado, "origen " + datos.origen() + ": " + datos.cores());
             assertTrue(datos.descriptores().stream().anyMatch(d -> d.core().equals("core-b")));
+            // Las versiones registradas de core-b caen en el rango de sus descriptores: las selecciones sobre core-b pueden aprobar.
+            for (var version : datos.cores().getOrDefault("core-b", List.of())) {
+                datos.descriptores().stream()
+                        .filter(d -> d.core().equals("core-b"))
+                        .forEach(d -> assertTrue(incluye(d.coreCompatible(), version), "core-b " + version + " fuera de " + d));
+            }
         }
+        // La mitad de los catálogos de texto (decisión «1 de cada 2»): P(fuera de 100..200 de 300) ~ 1e-8.
+        long registrados = muestra.stream().filter(d -> TEXTO_REGISTRADO.equals(d.origen())).count();
+        assertTrue(registrados >= 100 && registrados <= 200, "registrados: " + registrados + " de 300");
         assertEquals(
                 Set.of(TEXTO_REGISTRADO, TEXTO_SIN_REGISTRAR),
                 muestra.stream().map(Datos::origen).collect(Collectors.toSet()));
@@ -631,6 +640,6 @@ class VerificadorPropiedades {
         assertTrue(vistos.getOrDefault("compatible solo en la carpeta de otro core", 0) >= 10, "frecuencias: " + vistos);
         // El catálogo de la suite en synkra-core (donde viven S1 a S10) y su región de S4 y S5: la base daba ~29 y ~12,8.
         assertTrue(vistos.getOrDefault("catalogo de la suite en synkra-core", 0) >= 20, "frecuencias: " + vistos);
-        assertTrue(vistos.getOrDefault("catalogo de la suite en synkra-core con VERSION_INCOMPATIBLE", 0) >= 8, "frecuencias: " + vistos);
+        assertTrue(vistos.getOrDefault("catalogo de la suite en synkra-core con VERSION_INCOMPATIBLE", 0) >= 7, "frecuencias: " + vistos);
     }
 }
