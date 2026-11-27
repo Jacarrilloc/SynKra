@@ -7,3 +7,4 @@ rootProject.name = "synkra"
 include("verificador")
 include("backend")
 include("plugin-api")
+include("core")
