@@ -66,7 +66,7 @@
 
 - [ ] **CA-4**: el resto del build sigue pasando y el diff queda acotado
   ```bash
-  ./gradlew :verificador:check :plugin-api:check :backend:check :core:check --rerun
+  ./gradlew :verificador:test --rerun :verificador:check :plugin-api:test --rerun :plugin-api:check :backend:test --rerun :backend:check :core:test --rerun :core:check
   git diff --stat origin/main...HEAD
   ```
   Esperado: `BUILD SUCCESSFUL`; el diff toca `core/**`, una línea de `settings.gradle.kts`, la bitácora y `revisiones/U02-T02/`.
