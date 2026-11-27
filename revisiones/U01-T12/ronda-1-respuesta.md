@@ -1,0 +1,7 @@
+# Respuesta a la ronda 1 (U01-T12)
+
+F-01: Corregido: `Datos` lleva un `principal` explícito (`synkra-core` en el catálogo de la suite, `core-a` en los de texto, el primero de la lista en los generados) y `selecciones()` le da peso 8; ya no depende del orden de un `TreeSet`. El comentario habla del core principal. Medición (100 lotes de 1000, `.jqwik-database` borrada): catálogo de la suite con `synkra-core` 69,6 (mín 51; base ~29), con VERSION_INCOMPATIBLE 29,3 (mín 15; base ~12,8). Dos aserciones nuevas en `generadorCubreLosCodigos` (>= 20 y >= 8).
+F-02: Corregido: `catalogosDeTexto` registra `core-b` en 3 de cada 4 catálogos y en el resto no; contador nuevo «compatible solo en la carpeta de otro core NO registrado» (media 8,74, mín 2; solo se exige que aparezca); el de «registrado» queda en media 30,21 (umbral 8, 3,8x).
+F-03: Corregido: el JAR escribe la entrada con el literal `"synkra-plugin.yaml"`. Mutación `ARCHIVO = "plugin.yaml"` en copia `git archive`: fallan S8 y S9 (`DESCRIPTOR_SIN_ARCHIVO`).
+F-04: Corregido: `Esperado` lleva `origen` (`VEREDICTO`, `LECTOR`, `FUERA_DE_U01`) con `rechazaElLector()` y `esFueraDeU01()`; `remiteA` de S11 y S12 dice que la prueba está pendiente en U04/U05 y U02. La prueba de forma lo afirma.
+F-05: Corregido: «mismo contenido» compara también `descriptor(core, plugin, versión)`; `catalogoDeLaSuiteCubreTodoElCatalogo` afirma los 2 cores y los 4 descriptores del catálogo de la suite.
