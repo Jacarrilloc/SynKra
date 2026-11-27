@@ -654,3 +654,10 @@
 **Context**: CONSTRUCTION, U04, ola 15.
 
 ---
+
+## Tareas U04-T04 a U04-T06 escritas
+**Timestamp**: 2026-11-27T11:55:00Z
+**AI Response**: Escribí, sin código, las tareas U04-T04 (recepción segura del JAR), U04-T05 (propiedad PBT-03) y U04-T06 (subir un plugin), y las olas 17 y 18 en `loop/README.md`. Según la autorización de U04 (11:15:35Z), fusiono el PR y despacho las tareas.
+**Context**: CONSTRUCTION, U04.
+
+---

@@ -56,6 +56,8 @@ U01 y U03 no dependen entre sí en el grafo, pero **U03-T01 necesita la raíz de
 | Ola 14 | U04-T01 | 1 | Migración `V2__catalogo.sql`, repositorios y PRAGMA (C-04). Primera tarea de U04. Sale de `main` después de cerrar U01 |
 | Ola 15 | U04-T02 | 1 | `CatalogoApi.registrarCore`; `backend` pasa a depender de `:verificador`. Sale de `main` después de la ola 14 |
 | Ola 16 | U04-T03 | 1 | Rutas de cores y C-07. Sale de `main` después de la ola 15 |
+| Ola 17 | U04-T04 | 1 | `RecepcionArtefacto`: límite, SHA-256 en flujo y rutas del JAR; agrega commons-compress. Sale de `main` después de la ola 16 |
+| Ola 18 | U04-T05 ∥ U04-T06 | 2 | Las dos dependen solo de U04-T04. T05 es solo `src/test` (más jqwik en `build.gradle.kts`); T06 toca `catalogo/` main. Salen de `main` después de la ola 17 |
 
 Lo previsto era que cada ola saliera de la punta de `modulo-6-rehecho` después de fusionar los PRs de
 la anterior. El responsable pidió avanzar sin abrir PRs todavía, así que **las ramas quedaron
