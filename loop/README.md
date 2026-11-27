@@ -71,6 +71,7 @@ U01 y U03 no dependen entre sí en el grafo, pero **U03-T01 necesita la raíz de
 | Ola 29 | U05-T03 y U02-T03 | 2 | `construir` los objetos del país (`kubernetes/`) y `CargadorPlugins` (`core/`). Sale de `main` después de la ola 28 |
 | Ola 30 | U05-T04 y U02-T04 | 2 | `aplicar` con server-side apply (`kubernetes/`) y `ArranquePlugins` (`core/`). Sale de la rama de tareas después de la ola 29 |
 | Ola 31 | U05-T05 y U02-T05 | 2 | `estado` y `contextoFallo` (`kubernetes/`) y la suite de U01 contra el arranque (`core/src/test`). Cada una sale de la punta en VERDE de su T04 (`m6r/U05-T04` y `m6r/U02-T04`), porque esos PRs siguen sin fusionar; sus PRs apuntan a esas ramas |
+| Ola 32 | U05-T06 y U02-T06 | 2 | `leerPais` (`kubernetes/`) y fallo al iniciar con readiness (`core/` y el *fixture*). Salen de la punta en VERDE de U05-T05 y U02-T05 si sus PRs no se han fusionado |
 
 Lo previsto era que cada ola saliera de la punta de `modulo-6-rehecho` después de fusionar los PRs de
 la anterior. El responsable pidió avanzar sin abrir PRs todavía, así que **las ramas quedaron
