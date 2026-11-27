@@ -68,6 +68,11 @@ public class FalloInicioPluginTest {
                 .run();
     }
 
+    /** El core debe seguir vivo aunque falle un plugin (decisión 1): el arranque no lanza. */
+    private ConfigurableApplicationContext vivo() {
+        return assertDoesNotThrow(this::arrancar, "el core debe seguir vivo aunque falle un plugin");
+    }
+
     private int get(ConfigurableApplicationContext ctx, String ruta) throws Exception {
         String puerto = ctx.getEnvironment().getProperty("local.server.port");
         assertNotNull(puerto, "el servidor debe estar en un puerto aleatorio");
@@ -77,6 +82,10 @@ public class FalloInicioPluginTest {
 
     /** JAR con un plugin que registra iniciar/detener y, si {@code falla}, lanza IllegalStateException al iniciar. */
     private void jar(String nombre, boolean falla) throws IOException {
+        jar(nombre, falla, false);
+    }
+
+    private void jar(String nombre, boolean falla, boolean detenerLanza) throws IOException {
         String archivo = nombre + "-1.0.0.jar";
         String yaml = "nombre: " + nombre + "\nversion: 1.0.0\ncore: synkra-core\ncoreCompatible: 2.x\n";
         String clase = "Plugin" + nombre.replace("-", "");
@@ -87,7 +96,9 @@ public class FalloInicioPluginTest {
                 + "    " + ev + ".registrar(\"iniciar:" + nombre + "\");\n"
                 + (falla ? "    throw new IllegalStateException(\"boom-" + nombre + "\");\n" : "")
                 + "  }\n"
-                + "  public void detener() { " + ev + ".registrar(\"detener:" + nombre + "\"); }\n}\n";
+                + "  public void detener() { " + ev + ".registrar(\"detener:" + nombre + "\"); "
+                + (detenerLanza ? "throw new IllegalStateException(\"boom-detener-" + nombre + "\"); " : "")
+                + "}\n}\n";
         Path src = Files.createDirectories(tmp.resolve(archivo + "-src"));
         Path out = Files.createDirectories(tmp.resolve(archivo + "-out"));
         Files.writeString(src.resolve(clase + ".java"), fuente);
@@ -117,7 +128,7 @@ public class FalloInicioPluginTest {
             throws Exception {
         jar("kyc-malo", true);
         activos("- nombre: kyc-malo\n  version: 1.0.0\n");
-        try (var ctx = arrancar()) {
+        try (var ctx = vivo()) {
             assertEquals(503, get(ctx, "/actuator/health/readiness"));
             assertEquals(200, get(ctx, "/actuator/health/liveness"));
         }
@@ -130,10 +141,45 @@ public class FalloInicioPluginTest {
         jar("kyc-a", false);
         jar("kyc-b", true);
         activos("- nombre: kyc-a\n  version: 1.0.0\n- nombre: kyc-b\n  version: 1.0.0\n");
-        try (var ctx = arrancar()) {
+        try (var ctx = vivo()) {
             assertEquals(503, get(ctx, "/actuator/health/readiness"));
             assertEquals(List.of("iniciar:kyc-a", "iniciar:kyc-b", "detener:kyc-a"), Eventos.LLAMADAS);
         }
+    }
+
+    @Test
+    void conTresPluginsYElTerceroFallandoSeDetienenEnOrdenInverso() throws Exception {
+        jar("kyc-a", false);
+        jar("kyc-b", false);
+        jar("kyc-c", true);
+        activos("- nombre: kyc-a\n  version: 1.0.0\n- nombre: kyc-b\n  version: 1.0.0\n"
+                + "- nombre: kyc-c\n  version: 1.0.0\n");
+        try (var ctx = vivo()) {
+            assertEquals(503, get(ctx, "/actuator/health/readiness"));
+            assertEquals(
+                    List.of("iniciar:kyc-a", "iniciar:kyc-b", "iniciar:kyc-c", "detener:kyc-b", "detener:kyc-a"),
+                    Eventos.LLAMADAS);
+        }
+    }
+
+    @Test
+    void unDetenerQueLanzaNoTapaLaCausaNiSaltaLosDemasDetener(CapturedOutput salida) throws Exception {
+        jar("kyc-a", false);
+        jar("kyc-b", false, true);
+        jar("kyc-c", true);
+        activos("- nombre: kyc-a\n  version: 1.0.0\n- nombre: kyc-b\n  version: 1.0.0\n"
+                + "- nombre: kyc-c\n  version: 1.0.0\n");
+        try (var ctx = vivo()) {
+            assertEquals(503, get(ctx, "/actuator/health/readiness"));
+            assertEquals(200, get(ctx, "/actuator/health/liveness"));
+            assertEquals(
+                    List.of("iniciar:kyc-a", "iniciar:kyc-b", "iniciar:kyc-c", "detener:kyc-b", "detener:kyc-a"),
+                    Eventos.LLAMADAS);
+        }
+        String log = salida.getAll();
+        assertTrue(log.contains(IniciadorPlugins.PREFIJO_FALLO + "kyc-c: "), log);
+        assertTrue(log.contains("IllegalStateException: boom-kyc-c"), log);
+        assertTrue(log.contains(IniciadorPlugins.PREFIJO_FALLO_DETENER + "kyc-b: "), log);
     }
 
     @Test
@@ -141,7 +187,7 @@ public class FalloInicioPluginTest {
         jar("kyc-a", false);
         jar("kyc-b", false);
         activos("- nombre: kyc-a\n  version: 1.0.0\n- nombre: kyc-b\n  version: 1.0.0\n");
-        try (var ctx = arrancar()) {
+        try (var ctx = vivo()) {
             assertEquals(200, get(ctx, "/actuator/health/readiness"));
             assertEquals(200, get(ctx, "/actuator/health/liveness"));
             assertEquals(List.of("iniciar:kyc-a", "iniciar:kyc-b"), Eventos.LLAMADAS);
@@ -151,7 +197,7 @@ public class FalloInicioPluginTest {
     @Test
     void sinPluginsActivosReadinessEs200() throws Exception {
         activos("[]\n");
-        try (var ctx = arrancar()) {
+        try (var ctx = vivo()) {
             assertEquals(200, get(ctx, "/actuator/health/readiness"));
         }
         assertTrue(Eventos.LLAMADAS.isEmpty());
