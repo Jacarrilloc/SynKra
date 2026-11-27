@@ -2,7 +2,7 @@
 
 > Pega este archivo completo al abrir una sesión nueva. Responde en español.
 > Lo mantiene al día el orquestador después de cada hito (ver «Puntos de continuidad»).
-> Última actualización: 2026-11-27 23:45 UTC (18:45 en Bogotá), sesión **local** de Julian en su máquina (`/home/julian/Escritorio/Proyectos/SynKra`). Desde ahora todo se hace en local: commits y ramas locales; el push y los PRs los hace Julian con su git cuando lo apruebe. Aquí no hay credenciales de push ni `gh`. Java 21: `JAVA_HOME=~/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2`.
+> Última actualización: 2026-11-27 23:45 UTC (18:45 en Bogotá), sesión **local** de Julian en su máquina (`/home/julian/Escritorio/Proyectos/SynKra`). Desde ahora todo se hace en local. Julian configuró `gh` (23:41 UTC) y aprobó (23:42 UTC) que el orquestador haga commit **y push** en cada hito y abra el PR de cada tarea VERDE, para que David pueda continuar si la sesión se queda sin tokens. El orquestador no fusiona. Java 21: `JAVA_HOME=~/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2`.
 
 ---
 
@@ -56,6 +56,8 @@ Para que eso no vuelva a pasar:
 | Orden | PR | Rama → base | Contenido |
 |---|---|---|---|
 | 1 | #84 | `m6r/U02-T07` → `main` | U02-T07 endpoints del core, VERDE ronda 2 |
+| 2 | #85 | `m6r/U05-T07` → `main` | U05-T07 script de descarga, VERDE ronda 2 |
+| 3 | #86 | `m6r/U02-T08` → `m6r/U02-T07` | U02-T08 el core no conoce países, VERDE ronda 1 (apilado sobre #84) |
 
 El #6 es antiguo y no se toca.
 
@@ -63,11 +65,11 @@ El #6 es antiguo y no se toca.
 
 | Tarea | Worktree / rama | Desde | Estado | Siguiente paso |
 |---|---|---|---|---|
-| U05-T07 script de descarga (ola 33) | `../wt-m6r-U05-T07`, `m6r/U05-T07` | `5e7a45e` | **VERDE en la ronda 2** (informe en `696eecc`, local, sin push). | Julian sube la rama y abre el PR a `main` cuando lo apruebe |
+| U05-T07 script de descarga (ola 33) | `../wt-m6r-U05-T07`, `m6r/U05-T07` | `5e7a45e` | **VERDE en la ronda 2** (informe en `696eecc`). PR #85. | Esperar fusión humana |
 | U05-T08 imagen del init (ola 34) | `../wt-m6r-U05-T08`, `m6r/U05-T08` | `696eecc` (punta VERDE de U05-T07) | Codificador ronda 1 hecho, `830997c` (código en `139881a`). **En vuelo (00:05 UTC del 28-nov):** revisor ronda 1. | Si no hay `revisiones/U05-T08/ronda-1.md`, repetir el revisor (base `696eecc`, HEAD `830997c`) |
 | U02-T09 plugin `kyc-co` (ola 35) | `../wt-m6r-U02-T09`, `m6r/U02-T09` | `d99cf36` (punta VERDE de U02-T08) | **En vuelo (00:05 UTC del 28-nov):** codificador ronda 1, tarea con hash `59a318c`. | Si la rama no tiene commits del codificador, redespacharlo; si los tiene, revisor ronda 1 |
 
-| U02-T08 el core no conoce países (ola 34) | `../wt-m6r-U02-T08`, `m6r/U02-T08` | `9d84b4c` (punta VERDE de U02-T07, #84 sin fusionar) | **VERDE en la ronda 1** (informe en la rama). | PR a `m6r/U02-T07` (apilado) cuando Julian apruebe el push; U02-T09 sale de esta punta |
+| U02-T08 el core no conoce países (ola 34) | `../wt-m6r-U02-T08`, `m6r/U02-T08` | `9d84b4c` (punta VERDE de U02-T07, #84 sin fusionar) | **VERDE en la ronda 1** (informe en `d99cf36`). PR #86, apilado. | Esperar fusión humana; U02-T09 sale de esta punta |
 
 ### Tareas escritas y sin despachar
 
