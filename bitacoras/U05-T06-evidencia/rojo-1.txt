@@ -1,0 +1,336 @@
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=42971 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+Picked up _JAVA_OPTIONS: -XX:+UnlockDiagnosticVMOptions -XX:DisableIntrinsic=_base64_encodeBlock,_base64_decodeBlock
+> Task :verificador:compileJava
+> Task :backend:compileJava
+> Task :backend:processResources
+> Task :backend:classes
+> Task :verificador:compileTestFixturesJava
+
+> Task :backend:compileTestJava FAILED
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:18: error: cannot find symbol
+import io.synkra.kubernetes.api.LecturaPais;
+                               ^
+  symbol:   class LecturaPais
+  location: package io.synkra.kubernetes.api
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:19: error: package io.synkra.kubernetes.api.LecturaPais does not exist
+import io.synkra.kubernetes.api.LecturaPais.PluginLeido;
+                                           ^
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:20: error: cannot find symbol
+import io.synkra.kubernetes.api.LecturaPaisInconsistenteException;
+                               ^
+  symbol:   class LecturaPaisInconsistenteException
+  location: package io.synkra.kubernetes.api
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:131: error: cannot find symbol
+        LecturaPais lectura = adaptador.leerPais("pe").orElseThrow();
+        ^
+  symbol:   class LecturaPais
+  location: class LeerPaisTest
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:131: error: cannot find symbol
+        LecturaPais lectura = adaptador.leerPais("pe").orElseThrow();
+                                       ^
+  symbol:   method leerPais(String)
+  location: variable adaptador of type AdaptadorFabric8
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:136: error: cannot find symbol
+                new PluginLeido("facturacion", "1.2.0", SHA_F), new PluginLeido("impuestos", "2.0.1", SHA_I));
+                    ^
+  symbol:   class PluginLeido
+  location: class LeerPaisTest
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:136: error: cannot find symbol
+                new PluginLeido("facturacion", "1.2.0", SHA_F), new PluginLeido("impuestos", "2.0.1", SHA_I));
+                                                                    ^
+  symbol:   class PluginLeido
+  location: class LeerPaisTest
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:141: error: cannot find symbol
+        assertThat(adaptador.leerPais("pe")).isEmpty();
+                            ^
+  symbol:   method leerPais(String)
+  location: variable adaptador of type AdaptadorFabric8
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:150: error: cannot find symbol
+        LecturaPais lectura = adaptador.leerPais("pe").orElseThrow();
+        ^
+  symbol:   class LecturaPais
+  location: class LeerPaisTest
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:150: error: cannot find symbol
+        LecturaPais lectura = adaptador.leerPais("pe").orElseThrow();
+                                       ^
+  symbol:   method leerPais(String)
+  location: variable adaptador of type AdaptadorFabric8
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:152: error: cannot find symbol
+        assertThat(lectura.plugins()).containsExactly(new PluginLeido("facturacion", "1.3.0", SHA_F));
+                                                          ^
+  symbol:   class PluginLeido
+  location: class LeerPaisTest
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:162: error: cannot find symbol
+                .isInstanceOf(LecturaPaisInconsistenteException.class)
+                              ^
+  symbol:   class LecturaPaisInconsistenteException
+  location: class LeerPaisTest
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:161: error: cannot find symbol
+        assertThatThrownBy(() -> adaptador.leerPais("pe"))
+                                          ^
+  symbol:   method leerPais(String)
+  location: variable adaptador of type AdaptadorFabric8
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:172: error: cannot find symbol
+                .isInstanceOf(LecturaPaisInconsistenteException.class).hasMessageContaining("facturacion");
+                              ^
+  symbol:   class LecturaPaisInconsistenteException
+  location: class LeerPaisTest
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:171: error: cannot find symbol
+        assertThatThrownBy(() -> adaptador.leerPais("pe"))
+                                          ^
+  symbol:   method leerPais(String)
+  location: variable adaptador of type AdaptadorFabric8
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:182: error: cannot find symbol
+                .isInstanceOf(LecturaPaisInconsistenteException.class).hasMessageContaining("pe");
+                              ^
+  symbol:   class LecturaPaisInconsistenteException
+  location: class LeerPaisTest
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:181: error: cannot find symbol
+        assertThatThrownBy(() -> adaptador.leerPais("pe"))
+                                          ^
+  symbol:   method leerPais(String)
+  location: variable adaptador of type AdaptadorFabric8
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:191: error: cannot find symbol
+                .isInstanceOf(LecturaPaisInconsistenteException.class).hasMessageContaining("facturacion");
+                              ^
+  symbol:   class LecturaPaisInconsistenteException
+  location: class LeerPaisTest
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:190: error: cannot find symbol
+        assertThatThrownBy(() -> adaptador.leerPais("pe"))
+                                          ^
+  symbol:   method leerPais(String)
+  location: variable adaptador of type AdaptadorFabric8
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:200: error: cannot find symbol
+                .isInstanceOf(LecturaPaisInconsistenteException.class)
+                              ^
+  symbol:   class LecturaPaisInconsistenteException
+  location: class LeerPaisTest
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:199: error: cannot find symbol
+        assertThatThrownBy(() -> adaptador.leerPais("pe"))
+                                          ^
+  symbol:   method leerPais(String)
+  location: variable adaptador of type AdaptadorFabric8
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:210: error: cannot find symbol
+                .isInstanceOf(LecturaPaisInconsistenteException.class)
+                              ^
+  symbol:   class LecturaPaisInconsistenteException
+  location: class LeerPaisTest
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:209: error: cannot find symbol
+        assertThatThrownBy(() -> adaptador.leerPais("pe"))
+                                          ^
+  symbol:   method leerPais(String)
+  location: variable adaptador of type AdaptadorFabric8
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:218: error: cannot find symbol
+            assertThatThrownBy(() -> adaptador.leerPais(pais)).isInstanceOf(NamespaceNoPermitidoException.class);
+                                              ^
+  symbol:   method leerPais(String)
+  location: variable adaptador of type AdaptadorFabric8
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:220: error: cannot find symbol
+        assertThatThrownBy(() -> new AdaptadorFabric8(null).leerPais("pe")).isInstanceOf(ClienteNoDisponibleException.class);
+                                                           ^
+  symbol:   method leerPais(String)
+  location: class AdaptadorFabric8
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:221: error: cannot find symbol
+        assertThatThrownBy(() -> new AdaptadorFabric8(null).leerPais("PE")).isInstanceOf(NamespaceNoPermitidoException.class);
+                                                           ^
+  symbol:   method leerPais(String)
+  location: class AdaptadorFabric8
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:230: error: cannot find symbol
+        adaptador.leerPais("pe");
+                 ^
+  symbol:   method leerPais(String)
+  location: variable adaptador of type AdaptadorFabric8
+/home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:246: error: method containsExactly in class AbstractIterableAssert<SELF,ACTUAL,ELEMENT,ELEMENT_ASSERT> cannot be applied to given types;
+        assertThat((List<?>) raiz).containsExactly(
+                                  ^
+  required: CAP#1[]
+  found:    Map<String,String>,Map<String,String>
+  reason: varargs mismatch; no instance(s) of type variable(s) K,V exist so that Map<K,V> conforms to CAP#1
+  where SELF,ACTUAL,ELEMENT,ELEMENT_ASSERT,K,V are type-variables:
+    SELF extends AbstractIterableAssert<SELF,ACTUAL,ELEMENT,ELEMENT_ASSERT> declared in class AbstractIterableAssert
+    ACTUAL extends Iterable<? extends ELEMENT> declared in class AbstractIterableAssert
+    ELEMENT extends Object declared in class AbstractIterableAssert
+    ELEMENT_ASSERT extends AbstractAssert<ELEMENT_ASSERT,ELEMENT> declared in class AbstractIterableAssert
+    K extends Object declared in method <K,V>of(K,V,K,V)
+    V extends Object declared in method <K,V>of(K,V,K,V)
+  where CAP#1 is a fresh type-variable:
+    CAP#1 extends Object from capture of ?
+Note: /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/catalogo/RutasCoresTest.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+28 errors
+
+[Incubating] Problems report is available at: file:///home/user/wt-m6r-U05-T06/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':backend:compileTestJava' (registered by plugin class 'org.gradle.api.plugins.JavaBasePlugin').
+> Compilation failed; see the compiler output below.
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:18: error: cannot find symbol
+  import io.synkra.kubernetes.api.LecturaPais;
+                                 ^
+    symbol:   class LecturaPais
+    location: package io.synkra.kubernetes.api
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:19: error: package io.synkra.kubernetes.api.LecturaPais does not exist
+  import io.synkra.kubernetes.api.LecturaPais.PluginLeido;
+                                             ^
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:20: error: cannot find symbol
+  import io.synkra.kubernetes.api.LecturaPaisInconsistenteException;
+                                 ^
+    symbol:   class LecturaPaisInconsistenteException
+    location: package io.synkra.kubernetes.api
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:131: error: cannot find symbol
+          LecturaPais lectura = adaptador.leerPais("pe").orElseThrow();
+          ^
+    symbol:   class LecturaPais
+    location: class LeerPaisTest
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:131: error: cannot find symbol
+          LecturaPais lectura = adaptador.leerPais("pe").orElseThrow();
+                                         ^
+    symbol:   method leerPais(String)
+    location: variable adaptador of type AdaptadorFabric8
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:136: error: cannot find symbol
+                  new PluginLeido("facturacion", "1.2.0", SHA_F), new PluginLeido("impuestos", "2.0.1", SHA_I));
+                      ^
+    symbol:   class PluginLeido
+    location: class LeerPaisTest
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:136: error: cannot find symbol
+                  new PluginLeido("facturacion", "1.2.0", SHA_F), new PluginLeido("impuestos", "2.0.1", SHA_I));
+                                                                      ^
+    symbol:   class PluginLeido
+    location: class LeerPaisTest
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:141: error: cannot find symbol
+          assertThat(adaptador.leerPais("pe")).isEmpty();
+                              ^
+    symbol:   method leerPais(String)
+    location: variable adaptador of type AdaptadorFabric8
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:150: error: cannot find symbol
+          LecturaPais lectura = adaptador.leerPais("pe").orElseThrow();
+          ^
+    symbol:   class LecturaPais
+    location: class LeerPaisTest
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:150: error: cannot find symbol
+          LecturaPais lectura = adaptador.leerPais("pe").orElseThrow();
+                                         ^
+    symbol:   method leerPais(String)
+    location: variable adaptador of type AdaptadorFabric8
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:152: error: cannot find symbol
+          assertThat(lectura.plugins()).containsExactly(new PluginLeido("facturacion", "1.3.0", SHA_F));
+                                                            ^
+    symbol:   class PluginLeido
+    location: class LeerPaisTest
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:162: error: cannot find symbol
+                  .isInstanceOf(LecturaPaisInconsistenteException.class)
+                                ^
+    symbol:   class LecturaPaisInconsistenteException
+    location: class LeerPaisTest
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:161: error: cannot find symbol
+          assertThatThrownBy(() -> adaptador.leerPais("pe"))
+                                            ^
+    symbol:   method leerPais(String)
+    location: variable adaptador of type AdaptadorFabric8
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:172: error: cannot find symbol
+                  .isInstanceOf(LecturaPaisInconsistenteException.class).hasMessageContaining("facturacion");
+                                ^
+    symbol:   class LecturaPaisInconsistenteException
+    location: class LeerPaisTest
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:171: error: cannot find symbol
+          assertThatThrownBy(() -> adaptador.leerPais("pe"))
+                                            ^
+    symbol:   method leerPais(String)
+    location: variable adaptador of type AdaptadorFabric8
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:182: error: cannot find symbol
+                  .isInstanceOf(LecturaPaisInconsistenteException.class).hasMessageContaining("pe");
+                                ^
+    symbol:   class LecturaPaisInconsistenteException
+    location: class LeerPaisTest
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:181: error: cannot find symbol
+          assertThatThrownBy(() -> adaptador.leerPais("pe"))
+                                            ^
+    symbol:   method leerPais(String)
+    location: variable adaptador of type AdaptadorFabric8
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:191: error: cannot find symbol
+                  .isInstanceOf(LecturaPaisInconsistenteException.class).hasMessageContaining("facturacion");
+                                ^
+    symbol:   class LecturaPaisInconsistenteException
+    location: class LeerPaisTest
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:190: error: cannot find symbol
+          assertThatThrownBy(() -> adaptador.leerPais("pe"))
+                                            ^
+    symbol:   method leerPais(String)
+    location: variable adaptador of type AdaptadorFabric8
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:200: error: cannot find symbol
+                  .isInstanceOf(LecturaPaisInconsistenteException.class)
+                                ^
+    symbol:   class LecturaPaisInconsistenteException
+    location: class LeerPaisTest
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:199: error: cannot find symbol
+          assertThatThrownBy(() -> adaptador.leerPais("pe"))
+                                            ^
+    symbol:   method leerPais(String)
+    location: variable adaptador of type AdaptadorFabric8
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:210: error: cannot find symbol
+                  .isInstanceOf(LecturaPaisInconsistenteException.class)
+                                ^
+    symbol:   class LecturaPaisInconsistenteException
+    location: class LeerPaisTest
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:209: error: cannot find symbol
+          assertThatThrownBy(() -> adaptador.leerPais("pe"))
+                                            ^
+    symbol:   method leerPais(String)
+    location: variable adaptador of type AdaptadorFabric8
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:218: error: cannot find symbol
+              assertThatThrownBy(() -> adaptador.leerPais(pais)).isInstanceOf(NamespaceNoPermitidoException.class);
+                                                ^
+    symbol:   method leerPais(String)
+    location: variable adaptador of type AdaptadorFabric8
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:220: error: cannot find symbol
+          assertThatThrownBy(() -> new AdaptadorFabric8(null).leerPais("pe")).isInstanceOf(ClienteNoDisponibleException.class);
+                                                             ^
+    symbol:   method leerPais(String)
+    location: class AdaptadorFabric8
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:221: error: cannot find symbol
+          assertThatThrownBy(() -> new AdaptadorFabric8(null).leerPais("PE")).isInstanceOf(NamespaceNoPermitidoException.class);
+                                                             ^
+    symbol:   method leerPais(String)
+    location: class AdaptadorFabric8
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:230: error: cannot find symbol
+          adaptador.leerPais("pe");
+                   ^
+    symbol:   method leerPais(String)
+    location: variable adaptador of type AdaptadorFabric8
+  /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java:246: error: method containsExactly in class AbstractIterableAssert<SELF,ACTUAL,ELEMENT,ELEMENT_ASSERT> cannot be applied to given types;
+          assertThat((List<?>) raiz).containsExactly(
+                                    ^
+    required: CAP#1[]
+    found:    Map<String,String>,Map<String,String>
+    reason: varargs mismatch; no instance(s) of type variable(s) K,V exist so that Map<K,V> conforms to CAP#1
+    where SELF,ACTUAL,ELEMENT,ELEMENT_ASSERT,K,V are type-variables:
+      SELF extends AbstractIterableAssert<SELF,ACTUAL,ELEMENT,ELEMENT_ASSERT> declared in class AbstractIterableAssert
+      ACTUAL extends Iterable<? extends ELEMENT> declared in class AbstractIterableAssert
+      ELEMENT extends Object declared in class AbstractIterableAssert
+      ELEMENT_ASSERT extends AbstractAssert<ELEMENT_ASSERT,ELEMENT> declared in class AbstractIterableAssert
+      K extends Object declared in method <K,V>of(K,V,K,V)
+      V extends Object declared in method <K,V>of(K,V,K,V)
+    where CAP#1 is a fresh type-variable:
+      CAP#1 extends Object from capture of ?
+  Note: /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java uses or overrides a deprecated API.
+  Note: Recompile with -Xlint:deprecation for details.
+  Note: /home/user/wt-m6r-U05-T06/backend/src/test/java/io/synkra/catalogo/RutasCoresTest.java uses unchecked or unsafe operations.
+  Note: Recompile with -Xlint:unchecked for details.
+  28 errors
+
+* Try:
+> Check your code and dependencies to fix the compilation error(s)
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 3s
+5 actionable tasks: 5 executed
