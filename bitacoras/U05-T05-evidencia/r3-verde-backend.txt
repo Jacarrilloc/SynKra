@@ -1,0 +1,4 @@
+$ ./gradlew :backend:test --rerun :backend:check
+BUILD SUCCESSFUL in 46s
+XML limpios: 28 de 28
+tests="20" skipped="0" failures="0" errors="0"

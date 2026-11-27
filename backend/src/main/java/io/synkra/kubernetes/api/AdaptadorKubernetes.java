@@ -30,4 +30,24 @@ public interface AdaptadorKubernetes {
      * @throws AplicacionFallidaException si la API falla; nombra el objeto
      */
     void aplicar(ObjetosPais objetos);
+
+    /**
+     * Una sola lectura (sin esperar ni sondear) de réplicas, reinicios y fase del Deployment {@code synkra-core}.
+     *
+     * @throws NamespaceNoPermitidoException si el namespace no pasa la guardia (sin peticiones)
+     * @throws ClienteNoDisponibleException si no hay cliente (sin peticiones)
+     * @throws DespliegueAusenteException si el Deployment no existe
+     * @throws LecturaFallidaException si la API falla
+     */
+    EstadoPais estado(String namespace);
+
+    /**
+     * Últimas 200 líneas del log de {@code core}, log del init {@code descarga} y eventos de los pods del país.
+     * Un log que aún no existe (pod {@code Pending}) queda vacío y no es un error.
+     *
+     * @throws NamespaceNoPermitidoException si el namespace no pasa la guardia (sin peticiones)
+     * @throws ClienteNoDisponibleException si no hay cliente (sin peticiones)
+     * @throws LecturaFallidaException si la API falla
+     */
+    ContextoFalloK8s contextoFallo(String namespace);
 }

@@ -5,6 +5,9 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.synkra.kubernetes.api.AdaptadorKubernetes;
 import io.synkra.kubernetes.api.AplicacionFallidaException;
+import io.synkra.kubernetes.api.ClienteNoDisponibleException;
+import io.synkra.kubernetes.api.ContextoFalloK8s;
+import io.synkra.kubernetes.api.EstadoPais;
 import io.synkra.kubernetes.api.ObjetosPais;
 import io.synkra.kubernetes.api.PlanPais;
 import java.util.List;
@@ -58,6 +61,25 @@ class AdaptadorFabric8 implements AdaptadorKubernetes {
                 throw new AplicacionFallidaException(objeto.getKind() + "/" + objeto.getMetadata().getName(), e);
             }
         }
+    }
+
+    @Override
+    public EstadoPais estado(String namespace) {
+        String ns = GuardiaNamespace.exigir(namespace);
+        return lector().estado(ns);
+    }
+
+    @Override
+    public ContextoFalloK8s contextoFallo(String namespace) {
+        String ns = GuardiaNamespace.exigir(namespace);
+        return lector().contexto(ns);
+    }
+
+    private LectorPais lector() {
+        if (cliente == null) {
+            throw new ClienteNoDisponibleException();
+        }
+        return new LectorPais(cliente);
     }
 
     /** El namespace único de los tres objetos, ya pasado por la guardia; sin ninguna petición. */

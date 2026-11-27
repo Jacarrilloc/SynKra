@@ -1,0 +1,5 @@
+$ mutante nullsFirst (copia temporal): ./gradlew :backend:test --rerun --tests *EstadoYContextoTest
+EstadoYContextoTest > losEventosSeOrdenanPorInstanteAunqueMezclenFormatosYLosSinMarcaVanAlFinal() FAILED
+20 tests completed, 1 failed
+> Task :backend:test FAILED
+BUILD FAILED in 18s
