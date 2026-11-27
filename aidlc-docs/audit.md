@@ -676,3 +676,10 @@
 **Context**: CONSTRUCTION, U04, ola 17.
 
 ---
+
+## U04-T06: VERDE en la ronda 2, PR #49 fusionado
+**Timestamp**: 2026-11-27T14:30:00Z
+**AI Response**: La ronda 1 salió NO-VERDE por un NARANJA: el patrón de claves de etiqueta de la petición no estaba atado al de U01, y sobrevivía una copia que admite guion final. Además había 4 AMARILLO: una subida perdedora podía borrar el archivo de la ganadora, `ATOMIC_MOVE` estaba sin atar, quedaban directorios huérfanos y un mapa nulo daba 500. Decisión del orquestador: colocar con `Files.createLink`, que no reemplaza, en vez de `ATOMIC_MOVE`. La ronda 2 salió VERDE, con 51 de 55 mutantes muertos, y fusioné el #49 según la autorización de U04. Candidatas nuevas: C-47 a C-50. C-47 va a U04-T05.
+**Context**: CONSTRUCTION, U04, ola 18.
+
+---

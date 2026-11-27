@@ -79,6 +79,7 @@
   - `RutasSegurasPropiedades.java`;
   - si apareció un contraejemplo, su corrección en `catalogo/**` y la prueba de ejemplo;
   - las pruebas de ejemplo de C-45 en `RecepcionArtefactoTest.java`;
+  - la prueba de C-47 en `SubirPluginTest.java`;
   - la bitácora y `revisiones/U04-T05/`.
 
 ---
@@ -99,3 +100,4 @@
   - el mismo conjunto de nombres en otro orden entre el índice y las cabeceras locales (C03);
   - nombres duplicados frente a `distinct()` (C21).
   Además, `@Timeout` en las pruebas del límite, para que un corte roto falle en vez de colgarse. Si para algún caso no se puede construir un ZIP, se explica en la bitácora.
+- **C-47.** Se agrega a `SubirPluginTest` una prueba en la que `<core>` (y, en otra, `<core>/<nombre>`) es un enlace simbólico a un directorio fuera de `$SYNKRA_DATA`, creado con `Files.createSymbolicLink`. Afirma que la subida falla y que fuera no se escribe nada. Debe matar los mutantes N08 (`isDirectory` sin `NOFOLLOW_LINKS`) y N13 (sin la comprobación de directorio) de la revisión de U04-T06. No cambia `SubidaPlugin`, salvo que la prueba encuentre un fallo real.
