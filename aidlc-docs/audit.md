@@ -585,3 +585,11 @@
 **Context**: Code Generation Parte 2 (loop de agentes) para U01.
 
 ---
+
+## U01-T12 - VERDE y fusión
+**Timestamp**: 2026-11-27T05:30:00Z
+**User Input**: (Sin nueva entrada. Rige la autorización del 2026-11-27T03:51:07Z: «corre todo hasta completar el modulo… elige siempre la opcion recomendada».)
+**AI Response**: Con esa autorización, el agente despachó las rondas 5 y 6. La ronda 5 salió NO-VERDE: un umbral daba P(fallo) por encima de 10⁻⁶ con la varianza medida. La ronda 6 salió VERDE: 178 pruebas del verificador, 0 saltadas, todas las mutaciones detectadas y las puertas nuevas por debajo de 10⁻⁶ con la varianza de 700 lotes. El agente abrió el PR #35 y lo fusionó con merge commit (main 08a251e). Registró la candidata C-27 (umbral 6 de U01-T11) y despachó U01-T13 (rama m6r/U01-T13).
+**Context**: Code Generation Parte 2 (loop de agentes) para U01.
+
+---
