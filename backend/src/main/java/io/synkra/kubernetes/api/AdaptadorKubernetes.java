@@ -12,4 +12,11 @@ public interface AdaptadorKubernetes {
      * @throws NamespaceNoPermitidoException si no es {@code synkra-<país>} (sin tocar la red)
      */
     boolean existeNamespace(String namespace);
+
+    /**
+     * Arma Deployment, ConfigMap y Service del país en {@code synkra-<país>}, sin hablar con la API.
+     *
+     * @throws NamespaceNoPermitidoException si el namespace derivado no pasa la guardia
+     */
+    ObjetosPais construir(PlanPais plan);
 }
