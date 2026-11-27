@@ -39,9 +39,9 @@ rc3="$(correr s3)"; echo "escenario 3 (suite @Disabled): check rc=$rc3 (esperado
 [ "$rc1" -eq 0 ] || ok=0
 [ "$rc2" -ne 0 ] || ok=0
 [ "$rc3" -ne 0 ] || ok=0
-# Causas: S4 en el escenario 2, verificarSuite en el 3.
-grep -q 'S4: ' "$tmp/s2.log" || { echo "escenario 2: el log no nombra S4"; ok=0; }
+# Causas: el caso S4 en el escenario 2; en el 3 el mensaje de verificarSuite (con la clase desactivada corren 8 pruebas, menos que el mínimo).
+grep -q '"S4" FAILED' "$tmp/s2.log" || { echo "escenario 2: el log no nombra S4"; ok=0; }
 grep -q 'verificarSuite:' "$tmp/s3.log" || { echo "escenario 3: el log no trae el mensaje de verificarSuite"; ok=0; }
-echo "causa 2: $(grep -m1 'S4: ' "$tmp/s2.log" || true)"
+echo "causa 2: $(grep -m1 '"S4" FAILED' "$tmp/s2.log" || true)"
 echo "causa 3: $(grep -m1 'verificarSuite:' "$tmp/s3.log" || true)"
 [ "$ok" -eq 1 ]
