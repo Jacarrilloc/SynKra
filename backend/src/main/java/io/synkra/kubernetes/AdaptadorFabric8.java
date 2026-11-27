@@ -2,6 +2,7 @@ package io.synkra.kubernetes;
 
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.synkra.kubernetes.api.AdaptadorKubernetes;
 import io.synkra.kubernetes.api.AplicacionFallidaException;
 import io.synkra.kubernetes.api.ObjetosPais;
@@ -46,11 +47,14 @@ class AdaptadorFabric8 implements AdaptadorKubernetes {
     public void aplicar(ObjetosPais objetos) {
         Objects.requireNonNull(objetos, "objetos");
         String ns = namespaceComun(objetos);
+        if (cliente == null) {
+            throw new IllegalStateException("No hay cliente de Kubernetes: el pod no tiene cuenta de servicio");
+        }
         // ConfigMap primero, luego Service, luego Deployment; el que falla corta, los anteriores se quedan.
         for (HasMetadata objeto : List.of(objetos.configMap(), objetos.service(), objetos.deployment())) {
             try {
-                cliente.resource(objeto).inNamespace(ns).fieldManager("synkra").forceConflicts().serverSideApply();
-            } catch (RuntimeException e) {
+                cliente.resource(objeto).inNamespace(ns).fieldManager(ConstructorObjetosPais.GESTOR).forceConflicts().serverSideApply();
+            } catch (KubernetesClientException e) {
                 throw new AplicacionFallidaException(objeto.getKind() + "/" + objeto.getMetadata().getName(), e);
             }
         }

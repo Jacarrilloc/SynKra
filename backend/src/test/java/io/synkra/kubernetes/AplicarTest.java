@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 /**
- * U05-T04: aplicar con server-side apply contra el servidor simulado en modo CRUD. Nunca se toca el
+ * U05-T04: aplicar con server-side apply contra el servidor simulado de Fabric8 en modo de expectativas (no CRUD: ver {@link #arranca()}). Nunca se toca el
  * kubeconfig real: {@code user.home} apunta a un directorio temporal y el cliente sale del servidor simulado.
  */
 class AplicarTest {
@@ -40,6 +40,7 @@ class AplicarTest {
     KubernetesMockServer servidor;
     KubernetesClient cliente;
     AdaptadorFabric8 adaptador;
+    private int leidas;
     private String propiedadCasa;
     private String propiedadKubeconfig;
 
@@ -54,11 +55,12 @@ class AplicarTest {
         // lee de vuelta el PATCH. Ver la bitácora.
         servidor = new KubernetesMockServer(false);
         servidor.init();
-        for (String r : List.of("configmaps", "services")) {
-            servidor.expect().patch().withPath(ruta("/api/v1", r, "synkra-core" + (r.equals("configmaps") ? "-config" : "")))
-                    .andReturn(200, "{}").always();
-        }
-        servidor.expect().patch().withPath(ruta("/apis/apps/v1", "deployments", "synkra-core")).andReturn(200, "{}").always();
+        servidor.expect().patch().withPath(ruta("/api/v1", "configmaps", ConstructorObjetosPais.NOMBRE_CONFIG))
+                .andReturn(200, "{}").always();
+        servidor.expect().patch().withPath(ruta("/api/v1", "services", ConstructorObjetosPais.NOMBRE_CORE))
+                .andReturn(200, "{}").always();
+        servidor.expect().patch().withPath(ruta("/apis/apps/v1", "deployments", ConstructorObjetosPais.NOMBRE_CORE))
+                .andReturn(200, "{}").always();
         cliente = servidor.createClient();
         adaptador = new AdaptadorFabric8(cliente);
     }
@@ -83,11 +85,12 @@ class AplicarTest {
         return new PlanPais("pe", imagen, List.of(new PluginPlan(plugin, version, "1".repeat(64))));
     }
 
+    /** Las peticiones nuevas desde la última lectura: exactamente las que cuenta el servidor, sin cortar por tiempo. */
     private List<RecordedRequest> peticiones() throws Exception {
         List<RecordedRequest> r = new ArrayList<>();
-        RecordedRequest p;
-        while ((p = servidor.takeRequest(10, TimeUnit.MILLISECONDS)) != null) {
-            r.add(p);
+        while (leidas < servidor.getRequestCount()) {
+            r.add(servidor.takeRequest(5, TimeUnit.SECONDS));
+            leidas++;
         }
         return r;
     }
@@ -109,7 +112,7 @@ class AplicarTest {
         assertThat(patches).hasSize(3);
         assertThat(patches).allSatisfy(r -> {
             assertThat(r.getHeader("Content-Type")).startsWith("application/apply-patch+yaml");
-            assertThat(r.getPath()).contains("fieldManager=synkra").contains("force=true");
+            assertThat(r.getPath()).contains("fieldManager=" + ConstructorObjetosPais.GESTOR).contains("force=true");
         });
         // El cuerpo enviado es exactamente el objeto construido, en synkra-pe.
         assertThat(cuerpo(patches.get(0))).isEqualTo(YAML.readTree(Serialization.asYaml(objetos.configMap())));
@@ -183,7 +186,7 @@ class AplicarTest {
         assertThat(patches).hasSize(3);
         assertThat(patches).allSatisfy(r -> {
             assertThat(r.getHeader("Content-Type")).startsWith("application/apply-patch+yaml");
-            assertThat(r.getPath()).contains("fieldManager=synkra").contains("force=true");
+            assertThat(r.getPath()).contains("fieldManager=" + ConstructorObjetosPais.GESTOR).contains("force=true");
         });
         assertThat(patches.get(0).getPath()).contains("/configmaps/");
         assertThat(patches.get(1).getPath()).contains("/services/");
@@ -195,6 +198,7 @@ class AplicarTest {
         servidor.destroy();
         servidor = new KubernetesMockServer(false);
         servidor.init();
+        leidas = 0;
         cliente.close();
         cliente = servidor.createClient();
         var adaptadorSimple = new AdaptadorFabric8(cliente);
@@ -207,9 +211,22 @@ class AplicarTest {
                 .isInstanceOf(AplicacionFallidaException.class)
                 .hasMessageContaining("Service")
                 .hasMessageContaining(o.service().getMetadata().getName());
-        var patches = peticiones().stream().filter(r -> r.getMethod().equals("PATCH")).toList();
-        assertThat(patches).hasSize(2);
-        assertThat(patches).noneMatch(r -> r.getPath().contains("/deployments/"));
+        // Exactamente dos PATCH y nada más: ni DELETE que deshaga el ConfigMap, ni petición al Deployment.
+        var reqs = peticiones();
+        assertThat(reqs).extracting(RecordedRequest::getMethod).containsExactly("PATCH", "PATCH");
+        assertThat(reqs.get(0).getPath()).contains("/configmaps/");
+        assertThat(reqs.get(1).getPath()).contains("/services/");
+    }
+
+    @Test
+    void sinClienteAplicarFallaConErrorPropioYSinAcusarALaApi() {
+        var sinCliente = new AdaptadorFabric8(null);
+        var o = sinCliente.construir(plan("facturacion", "1.2.0", IMAGEN));
+        assertThat(sinCliente.disponible()).isFalse();
+        assertThatThrownBy(() -> sinCliente.aplicar(o))
+                .isInstanceOf(IllegalStateException.class)
+                .isNotInstanceOf(AplicacionFallidaException.class)
+                .hasMessageContaining("cuenta de servicio");
     }
 
     private static String rutaDe(String recurso, String nombre) {
@@ -218,6 +235,6 @@ class AplicarTest {
     }
 
     private static String ruta(String base, String recurso, String nombre) {
-        return base + "/namespaces/synkra-pe/" + recurso + "/" + nombre + "?fieldManager=synkra&force=true";
+        return base + "/namespaces/synkra-pe/" + recurso + "/" + nombre + "?fieldManager=" + ConstructorObjetosPais.GESTOR + "&force=true";
     }
 }

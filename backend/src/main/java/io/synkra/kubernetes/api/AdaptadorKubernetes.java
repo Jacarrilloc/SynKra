@@ -26,6 +26,7 @@ public interface AdaptadorKubernetes {
      *
      * @throws IllegalArgumentException si los objetos no comparten namespace (sin peticiones)
      * @throws NamespaceNoPermitidoException si el namespace no pasa la guardia (sin peticiones)
+     * @throws IllegalStateException si no hay cliente (el pod no tiene cuenta de servicio); sin peticiones
      * @throws AplicacionFallidaException si la API falla; nombra el objeto
      */
     void aplicar(ObjetosPais objetos);
