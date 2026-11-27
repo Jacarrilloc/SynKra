@@ -68,6 +68,15 @@ public class EndpointsCore {
         if (solicitud == null) {
             return error(HttpStatus.BAD_REQUEST, ErrorCore.SOLICITUD_INVALIDA, ErrorCore.MENSAJE_SOLICITUD_INVALIDA);
         }
+        return invocar(nombre, cargado, punto, solicitud);
+    }
+
+    /**
+     * Llama al plugin con el context class loader del hilo puesto en el cargador del plugin y lo restaura en un
+     * {@code finally}. Visible en el paquete para probar la restauración sin depender de Tomcat, que ya restaura
+     * por su cuenta el cargador del hilo al terminar la petición.
+     */
+    ResponseEntity<?> invocar(String nombre, PluginCargado cargado, PuntoKyc punto, SolicitudKyc solicitud) {
         var hilo = Thread.currentThread();
         var anterior = hilo.getContextClassLoader();
         try {

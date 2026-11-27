@@ -5,7 +5,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import io.synkra.plugin.api.ResultadoKyc;
+import io.synkra.plugin.api.SolicitudKyc;
 import java.net.URI;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -256,7 +262,7 @@ public class EndpointsCoreTest {
     }
 
     @Test
-    void dentroDelPluginElContextClassLoaderEsElDelPluginYDespuesVuelveAlAnterior() throws Exception {
+    void dentroDelPluginElContextClassLoaderEsElDelPlugin() throws Exception {
         jar("kyc-a", "1.0.0", Tipo.CON_KYC);
         activos("- nombre: kyc-a\n  version: 1.0.0\n");
         try (var ctx = arrancar()) {
@@ -264,19 +270,50 @@ public class EndpointsCoreTest {
             assertNotNull(Eventos.CARGADOR_DEL_PLUGIN);
             assertNotSame(EndpointsCoreTest.class.getClassLoader(), Eventos.CARGADOR_DEL_PLUGIN);
             assertSame(Eventos.CARGADOR_DEL_PLUGIN, Eventos.TCCL_EN_PLUGIN, "dentro del plugin");
-            assertNotSame(Eventos.CARGADOR_DEL_PLUGIN, Eventos.HILO.getContextClassLoader(), "restaurado");
-            assertSame(EndpointsCoreTest.class.getClassLoader(), Eventos.HILO.getContextClassLoader());
+        }
+    }
+
+    // Tomcat restaura por su cuenta el cargador del hilo al terminar la petición, así que la restauración del
+    // core se prueba llamando a invocar() directamente en el hilo de la prueba.
+    @Test
+    void invocarPoneElCargadorDelPluginYLoRestauraAlTerminar() throws Exception {
+        var anterior = new URLClassLoader(new URL[0]);
+        var delPlugin = new URLClassLoader(new URL[0]);
+        var visto = new AtomicReference<ClassLoader>();
+        var hilo = Thread.currentThread();
+        var original = hilo.getContextClassLoader();
+        try {
+            hilo.setContextClassLoader(anterior);
+            var r = new EndpointsCore(null, JSON).invocar("p", new PluginCargado(null, delPlugin), s -> {
+                visto.set(Thread.currentThread().getContextClassLoader());
+                return new ResultadoKyc(true, "m");
+            }, new SolicitudKyc("d", Map.of()));
+            assertEquals(200, r.getStatusCode().value());
+            assertSame(delPlugin, visto.get(), "dentro del plugin");
+            assertSame(anterior, hilo.getContextClassLoader(), "restaurado tras volver");
+        } finally {
+            hilo.setContextClassLoader(original);
         }
     }
 
     @Test
-    void siElPluginLanzaElContextClassLoaderTambienSeRestaura() throws Exception {
-        jar("kyc-x", "1.0.0", Tipo.KYC_QUE_LANZA);
-        activos("- nombre: kyc-x\n  version: 1.0.0\n");
-        try (var ctx = arrancar()) {
-            assertEquals(500, post(ctx, "/kyc/kyc-x", SOLICITUD).statusCode());
-            assertSame(Eventos.CARGADOR_DEL_PLUGIN, Eventos.TCCL_EN_PLUGIN, "dentro del plugin");
-            assertNotSame(Eventos.CARGADOR_DEL_PLUGIN, Eventos.HILO.getContextClassLoader(), "restaurado tras lanzar");
+    void invocarRestauraElCargadorTambienSiElPluginLanza() throws Exception {
+        var anterior = new URLClassLoader(new URL[0]);
+        var delPlugin = new URLClassLoader(new URL[0]);
+        var visto = new AtomicReference<ClassLoader>();
+        var hilo = Thread.currentThread();
+        var original = hilo.getContextClassLoader();
+        try {
+            hilo.setContextClassLoader(anterior);
+            var r = new EndpointsCore(null, JSON).invocar("p", new PluginCargado(null, delPlugin), s -> {
+                visto.set(Thread.currentThread().getContextClassLoader());
+                throw new IllegalStateException("boom");
+            }, new SolicitudKyc("d", Map.of()));
+            assertEquals(500, r.getStatusCode().value());
+            assertSame(delPlugin, visto.get(), "dentro del plugin");
+            assertSame(anterior, hilo.getContextClassLoader(), "restaurado tras lanzar");
+        } finally {
+            hilo.setContextClassLoader(original);
         }
     }
 }
