@@ -69,7 +69,7 @@ El #6 es antiguo y no se toca.
 | U05-T07 script de descarga (ola 33) | `../wt-m6r-U05-T07`, `m6r/U05-T07` | `5e7a45e` | **VERDE en la ronda 2** (informe en `696eecc`). PR #85. | Esperar fusión humana |
 | U05-T08 imagen del init (ola 34) | `../wt-m6r-U05-T08`, `m6r/U05-T08` | `696eecc` | **VERDE en la ronda 1** (informe en `26b6124`). PR #87, apilado sobre #85. | Esperar fusión humana; U05-T09 sale de esta punta |
 | U05-T09 fronteras `kubernetes` (ola 35) | `../wt-m6r-U05-T09`, `m6r/U05-T09` | `26b6124` (punta VERDE de U05-T08) | **En vuelo (00:20 UTC del 28-nov):** codificador ronda 1, tarea con hash `0ffcc66`. | Si la rama no tiene commits del codificador, redespacharlo; si los tiene, revisor ronda 1 |
-| U02-T09 plugin `kyc-co` (ola 35) | `../wt-m6r-U02-T09`, `m6r/U02-T09` | `d99cf36` (punta VERDE de U02-T08) | Ronda 1 NO-VERDE (`bee9d42`: F-01 NARANJA, las pruebas de rechazo no miran el motivo). **En vuelo (00:25 UTC del 28-nov):** codificador ronda 2. | Si no hay `revisiones/U02-T09/ronda-1-respuesta.md`, redespachar el codificador ronda 2; si la hay, revisor ronda 2 |
+| U02-T09 plugin `kyc-co` (ola 35) | `../wt-m6r-U02-T09`, `m6r/U02-T09` | `d99cf36` (punta VERDE de U02-T08) | Ronda 1 NO-VERDE (`bee9d42`: F-01 NARANJA, las pruebas de rechazo no miran el motivo). Codificador ronda 2 hecho, `1687d65` (código en `d72da9a`). **En vuelo (00:35 UTC del 28-nov):** revisor ronda 2. | Si no hay `revisiones/U02-T09/ronda-2.md`, repetir el revisor ronda 2 (base `d99cf36`, HEAD `1687d65`) |
 
 | U02-T08 el core no conoce países (ola 34) | `../wt-m6r-U02-T08`, `m6r/U02-T08` | `9d84b4c` (punta VERDE de U02-T07, #84 sin fusionar) | **VERDE en la ronda 1** (informe en `d99cf36`). PR #86, apilado. | Esperar fusión humana; U02-T09 sale de esta punta |
 
