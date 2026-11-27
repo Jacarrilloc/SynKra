@@ -34,10 +34,18 @@ class BaseDeDatosTest {
     }
 
     @Test
-    void flywayAplicoLaVersion1() {
-        String version = jdbc.queryForObject(
-                "select version from flyway_schema_history where success = 1", String.class);
-        assertThat(version).isEqualTo("1");
+    void flywayAplicoLasVersiones1Y2() {
+        var versiones = jdbc.queryForList(
+                "select version from flyway_schema_history where success = 1 order by installed_rank",
+                String.class);
+        assertThat(versiones).containsExactly("1", "2");
+    }
+
+    @Test
+    void laConexionAbreConLosPragmaDeC04() {
+        assertThat(jdbc.queryForObject("pragma foreign_keys", Integer.class)).isEqualTo(1);
+        assertThat(jdbc.queryForObject("pragma busy_timeout", Integer.class)).isEqualTo(5000);
+        assertThat(jdbc.queryForObject("pragma journal_mode", String.class)).isEqualTo("wal");
     }
 
     @Test
