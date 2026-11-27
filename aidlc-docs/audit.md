@@ -738,3 +738,11 @@
 **Context**: Loop del módulo 6, ola 21, fuera de las etapas de AI-DLC.
 
 ---
+
+## U04-T09 cerrada por el loop
+**Timestamp**: 2026-11-27T17:20:00Z
+**User Input**: (sin mensaje nuevo; se aplica la regla de fusión de David de 2026-11-27T16:14:07Z)
+**AI Response**: U04-T09 salió VERDE en la ronda 2. La ronda 1 fue NO-VERDE: la prueba solo comparaba `verificar`, no las alternativas, y faltaba la prueba de una fila no parseable. Se registran C-62 y C-63. Son dos PRs, el de `m6r/U04-T09` y el de esta rama, y el orquestador los fusiona en ese orden.
+**Context**: Loop del módulo 6, ola 22, fuera de las etapas de AI-DLC.
+
+---
