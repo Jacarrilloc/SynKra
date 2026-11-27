@@ -7,6 +7,7 @@ import io.synkra.verificador.SuiteCombinaciones.Entrada;
 import io.synkra.verificador.SuiteCombinaciones.Esperado;
 import io.synkra.verificador.SuiteCombinaciones.Grupo;
 import io.synkra.verificador.SuiteCombinaciones.MotivoEsperado;
+import io.synkra.verificador.SuiteCombinaciones.Origen;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -73,11 +74,12 @@ class SuiteCombinacionesTest {
 
     private void porDescriptor(Caso caso, String yaml) throws IOException {
         var e = caso.esperado();
+        assertEquals(Origen.LECTOR, e.origen(), caso.id() + ": rechaza el lector");
         assertTrue(e.global().isEmpty(), caso.id() + ": el lector rechaza, no hay Global");
         var jar = tmp.resolve(caso.id() + ".jar");
         try (OutputStream o = Files.newOutputStream(jar);
                 var z = new ZipOutputStream(o)) {
-            z.putNextEntry(new ZipEntry(LectorDescriptor.ARCHIVO));
+            z.putNextEntry(new ZipEntry("synkra-plugin.yaml"));
             z.write(yaml.getBytes(StandardCharsets.UTF_8));
             z.closeEntry();
         }
@@ -142,9 +144,17 @@ class SuiteCombinacionesTest {
                 () -> assertEquals(Grupo.INTEGRIDAD, casos.get(10).grupo()),
                 () -> assertEquals(Grupo.PLUGIN_NO_ACTIVADO, casos.get(11).grupo()));
         // Solo S11 y S12 son FueraDeU01: los otros diez son los ejecutables.
+        assertAll(
+                () -> assertEquals(Origen.FUERA_DE_U01, casos.get(10).esperado().origen()),
+                () -> assertEquals(Origen.FUERA_DE_U01, casos.get(11).esperado().origen()),
+                () -> assertTrue(s11.remiteA().contains("pendiente"), s11.remiteA()),
+                () -> assertTrue(s12.remiteA().contains("pendiente"), s12.remiteA()));
         assertEquals(
                 10,
                 casos.stream().filter(c -> !(c.entrada() instanceof Entrada.FueraDeU01)).count());
+        assertEquals(
+                List.of("S8", "S9"),
+                casos.stream().filter(c -> c.esperado().rechazaElLector()).map(Caso::id).toList());
     }
 
     @Test
@@ -174,6 +184,17 @@ class SuiteCombinacionesTest {
                 a.versionesPlugin("synkra-core", "kyc-pe").stream().sorted().toList());
         assertEquals(a.versionesPlugin("otro-core", "kyc-xx"), b.versionesPlugin("otro-core", "kyc-xx"));
         assertEquals(List.of(new Version(1, 0, 0)), a.versionesPlugin("otro-core", "kyc-xx"));
+        for (var core : List.of("synkra-core", "otro-core")) {
+            for (var plugin : List.of("kyc-co", "kyc-pe", "kyc-xx", "kyc-mx")) {
+                for (var version : List.of(new Version(1, 0, 0), new Version(1, 3, 0), new Version(2, 0, 0))) {
+                    assertEquals(
+                            a.descriptor(core, plugin, version),
+                            b.descriptor(core, plugin, version),
+                            core + "/" + plugin + " " + version);
+                }
+            }
+        }
+        assertEquals("3.x", a.descriptor("synkra-core", "kyc-pe", new Version(2, 0, 0)).orElseThrow().coreCompatible().texto());
         assertTrue(a.versionesPlugin("synkra-core", "kyc-mx").isEmpty());
         assertTrue(a.versionesPlugin("synkra-core", "kyc-xx").isEmpty());
     }

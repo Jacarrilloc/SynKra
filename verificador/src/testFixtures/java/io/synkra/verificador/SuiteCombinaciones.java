@@ -55,14 +55,37 @@ public final class SuiteCombinaciones {
     /** Un motivo esperado; {@code enMensaje} es lo que el mensaje debe nombrar (el plugin o el campo). */
     public record MotivoEsperado(CodigoMotivo codigo, Optional<String> plugin, Optional<String> campo, String enMensaje) {}
 
+    /** Quién produce el resultado de un caso. */
+    public enum Origen {
+        /** {@link Verificador}: {@code global} está presente. */
+        VEREDICTO,
+        /** {@link LectorDescriptor}: rechaza el descriptor; {@code global} está vacío. */
+        LECTOR,
+        /** Lo cubre otra unidad: no hay resultado que afirmar en U01; {@code global} está vacío. */
+        FUERA_DE_U01
+    }
+
     /**
-     * Resultado exacto. {@code global} vacío significa que rechaza el lector de descriptores. {@code motivos} son
-     * los de cada plugin, en orden, y después los globales. {@code alternativas}, las de todos los plugins en orden.
+     * Resultado exacto. {@code origen} dice quién lo produce; no se deduce de {@code global} (vacío en {@code LECTOR}
+     * y en {@code FUERA_DE_U01}). {@code motivos} son los de cada plugin, en orden, y después los globales.
+     * {@code alternativas}, las de todos los plugins en orden.
      */
-    public record Esperado(Optional<Global> global, List<MotivoEsperado> motivos, List<Alternativa> alternativas) {
+    public record Esperado(Origen origen, Optional<Global> global, List<MotivoEsperado> motivos, List<Alternativa> alternativas) {
         public Esperado {
+            Objects.requireNonNull(origen, "origen");
             motivos = List.copyOf(motivos);
             alternativas = List.copyOf(alternativas);
+            if (origen == Origen.VEREDICTO != global.isPresent()) {
+                throw new IllegalArgumentException("global solo está presente cuando el origen es VEREDICTO");
+            }
+        }
+
+        public boolean rechazaElLector() {
+            return origen == Origen.LECTOR;
+        }
+
+        public boolean esFueraDeU01() {
+            return origen == Origen.FUERA_DE_U01;
         }
     }
 
@@ -102,16 +125,16 @@ public final class SuiteCombinaciones {
     }
 
     private static Esperado aprobada() {
-        return new Esperado(Optional.of(Global.APROBADA), List.of(), List.of());
+        return new Esperado(Origen.VEREDICTO, Optional.of(Global.APROBADA), List.of(), List.of());
     }
 
     private static Esperado rechazada(List<MotivoEsperado> motivos, List<Alternativa> alternativas) {
-        return new Esperado(Optional.of(Global.RECHAZADA), motivos, alternativas);
+        return new Esperado(Origen.VEREDICTO, Optional.of(Global.RECHAZADA), motivos, alternativas);
     }
 
     /** Para S11 y S12: no se ejecutan en U01, así que no hay resultado que afirmar. */
     private static Esperado sinResultado() {
-        return new Esperado(Optional.empty(), List.of(), List.of());
+        return new Esperado(Origen.FUERA_DE_U01, Optional.empty(), List.of(), List.of());
     }
 
     private static MotivoEsperado deplugin(CodigoMotivo codigo, String plugin, String campo) {
@@ -156,12 +179,14 @@ public final class SuiteCombinaciones {
                 new Caso("S8", Grupo.DESCRIPTOR_INCOMPLETO, "descriptor sin coreCompatible",
                         new Entrada.PorDescriptor(YAML_SIN_CORE_COMPATIBLE),
                         new Esperado(
+                                Origen.LECTOR,
                                 Optional.empty(),
                                 List.of(delcampo(CodigoMotivo.DESCRIPTOR_FALTA_CAMPO, "coreCompatible")),
                                 List.of())),
                 new Caso("S9", Grupo.DESCRIPTOR_INCOMPLETO, "descriptor con coreCompatibel en vez de coreCompatible",
                         new Entrada.PorDescriptor(YAML_CAMPO_MAL_ESCRITO),
                         new Esperado(
+                                Origen.LECTOR,
                                 Optional.empty(),
                                 List.of(
                                         delcampo(CodigoMotivo.DESCRIPTOR_CAMPO_DESCONOCIDO, "coreCompatibel"),
@@ -171,10 +196,10 @@ public final class SuiteCombinaciones {
                         sel(v(2, 1, 0), KYC_PE_13, KYC_PE_20),
                         rechazada(List.of(deplugin(CodigoMotivo.PLUGIN_REPETIDO, "kyc-pe", null)), List.of())),
                 new Caso("S11", Grupo.INTEGRIDAD, "el hash del artefacto no coincide",
-                        new Entrada.FueraDeU01("U04 (hash al subir) y U05 (hash al descargar en el init container)"),
+                        new Entrada.FueraDeU01("U04 (hash al subir) y U05 (hash al descargar en el init container); prueba de integridad pendiente en U04 y U05"),
                         sinResultado()),
                 new Caso("S12", Grupo.PLUGIN_NO_ACTIVADO, "plugin en el catálogo pero no elegido",
-                        new Entrada.FueraDeU01("U02 (el core no carga lo que no pide el ConfigMap)"),
+                        new Entrada.FueraDeU01("U02 (el core no carga lo que no pide el ConfigMap); prueba de plugin no activado pendiente en U02"),
                         sinResultado()));
     }
 }
