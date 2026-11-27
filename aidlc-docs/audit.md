@@ -633,3 +633,10 @@
 **Context**: Code Generation Parte 2 (loop de agentes) para U04.
 
 ---
+
+## U04-T01 — rondas 2 y 3 y PR #41
+**Timestamp**: 2026-11-27T11:20:00Z
+**AI Response**: Ronda 2 NO-VERDE (NARANJA: faltaban pruebas de RESTRICT en dos FK y de NOT NULL en las columnas de auditoría). Ronda 3 VERDE: las 29 mutaciones fallan y CA-1 a CA-4 pasan con la ejecución propia del revisor. PR #41 abierto. Se pregunta al responsable quién fusiona. Candidatas C-31 (traductor de excepciones de SQLite) y C-32 (claves compuestas).
+**Context**: CONSTRUCTION, Code Generation Parte 2, U04 Catálogo, ola 14.
+
+---
