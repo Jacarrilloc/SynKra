@@ -30,5 +30,7 @@ dependencies {
     // Solo los fixtures de C-07 usan @Valid y @Min; main no valida con Bean Validation.
     testImplementation("org.springframework.boot:spring-boot-starter-validation")
     testImplementation("org.springframework.modulith:spring-modulith-starter-test")
+    // PBT-03 (U04-T05): la misma versión que verificador.
+    testImplementation("net.jqwik:jqwik:1.10.2")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
