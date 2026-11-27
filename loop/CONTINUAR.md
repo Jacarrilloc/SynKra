@@ -47,17 +47,19 @@ Para que eso no vuelva a pasar:
 ## Estado al corte
 
 - `main` en `cf00671`. U01, U03 y U04 terminadas. PRs #54 a #76 fusionados.
-- `CANDIDATAS.md` llega hasta **C-78**. La siguiente libre es **C-79**.
+- `CANDIDATAS.md` llega hasta **C-79**. La siguiente libre es **C-80**.
 - PRs abiertos: **#77** (`orq/U05-U02-tareas`: tareas de las olas 30 y 31, candidatas C-75 a C-78, auditoría y este archivo) y el #6, antiguo, que no se toca.
 
 ### Ola 30 (U05-T04 ∥ U02-T04)
 
 | Tarea | Rama | Ronda | Estado |
 |---|---|---|---|
-| U05-T04 `aplicar` | `m6r/U05-T04` | 2 | Ronda 1 NO-VERDE (informe en `revisiones/U05-T04/ronda-1.md`, commit `e085e5f`): F-01 a F-03 NARANJA, F-04 y F-05 AMARILLO; todo se arregla. Ronda 2 del codificador hecha (`cd2ec6f`, respuesta en `ronda-1-respuesta.md`). **Revisor de la ronda 2 despachado**; si la sesión se corta, repetirlo |
+| U05-T04 `aplicar` | `m6r/U05-T04` | 2 | Ronda 1 NO-VERDE (informe en `revisiones/U05-T04/ronda-1.md`, commit `e085e5f`): F-01 a F-03 NARANJA, F-04 y F-05 AMARILLO; todo se arregla. **VERDE en la ronda 2** (`ronda-2.md`, rama en `0a52e2e`). **PR #78** abierto contra `main`, sin fusionar. AMARILLO F-06/F-07 → C-79 |
 | U02-T04 `ArranquePlugins` | `m6r/U02-T04` | 2 | Ronda 1 NO-VERDE (informe en `revisiones/U02-T04/ronda-1.md`, commit `6917a8c`): F-01 y F-02 NARANJA; F-03 es de la especificación; F-04 fuera de alcance (C-78); F-05 y F-06 se arreglan. F-02 se arregla dentro de `core/` igualando las salvaguardas de `LectorDescriptor` (profundidad 32, etiquetas explícitas) y con una sola fuente para nombre y límites; la extracción a `verificador/` es C-77. Ronda 2 del codificador hecha (`e726d03`, código en `7172570`). **Revisor de la ronda 2 despachado**; si la sesión se corta, repetirlo |
 
-Orden de fusión cuando las dos estén en VERDE: #77, luego U05-T04, luego U02-T04.
+Orden de fusión: #77, luego #78 (U05-T04), luego el PR de U02-T04.
+
+**U05-T05 despachada** (ola 31): worktree `../wt-m6r-U05-T05`, rama `m6r/U05-T05` desde `0a52e2e`; el codificador de la ronda 1 está corriendo. Si la sesión se corta, mirar si hay commits suyos en `origin/m6r/U05-T05` y redespacharlo para que continúe.
 
 ### Ola 31 (U05-T05 ∥ U02-T05), escrita, sin despachar
 
