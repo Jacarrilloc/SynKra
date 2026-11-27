@@ -49,7 +49,7 @@ import org.springframework.stereotype.Component;
  * Arranque del core (S8): lee {@code plugins-activos.yaml} y los JAR de plugins, verifica la selección con U01 y
  * la versión compilada, y carga solo los plugins activos. Con {@code RECHAZADA} lanza {@link ArranqueRechazado}:
  * el contexto de Spring falla y el proceso termina con código distinto de 0 (sin {@code System.exit}).
- * Aquí los plugins se cargan; no se inician (U02-T06).
+ * Aquí los plugins se cargan; {@link IniciadorPlugins} los inicia al terminar el arranque.
  */
 @Component
 public class ArranquePlugins {
