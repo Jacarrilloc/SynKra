@@ -1,0 +1,4 @@
+98c98
+<         } catch (Exception | LinkageError e) {
+---
+>         } catch (RuntimeException e) {

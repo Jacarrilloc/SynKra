@@ -107,14 +107,14 @@ public class EndpointsCoreTest {
         return HttpRequest.newBuilder(URI.create("http://localhost:" + puerto + ruta));
     }
 
-    private enum Tipo { SOLO_CICLO, CON_KYC, KYC_QUE_LANZA, FALLA_AL_INICIAR }
+    private enum Tipo { SOLO_CICLO, CON_KYC, KYC_QUE_LANZA, KYC_NULO, KYC_LINKAGE, FALLA_AL_INICIAR }
 
     private void jar(String nombre, String version, Tipo tipo) throws IOException {
         String archivo = nombre + "-" + version + ".jar";
         String yaml = "nombre: " + nombre + "\nversion: " + version + "\ncore: synkra-core\ncoreCompatible: 2.x\n";
         String clase = "Plugin" + nombre.replace("-", "");
         String ev = Eventos.class.getCanonicalName();
-        boolean kyc = tipo == Tipo.CON_KYC || tipo == Tipo.KYC_QUE_LANZA;
+        boolean kyc = tipo == Tipo.CON_KYC || tipo == Tipo.KYC_QUE_LANZA || tipo == Tipo.KYC_NULO || tipo == Tipo.KYC_LINKAGE;
         String fuente = "public class " + clase + " implements io.synkra.plugin.api.SynkraPlugin"
                 + (kyc ? ", io.synkra.plugin.api.PuntoKyc" : "") + " {\n"
                 + "  public String nombre() { return \"" + nombre + "\"; }\n"
@@ -127,6 +127,10 @@ public class EndpointsCoreTest {
                         + "    " + ev + ".registrar(\"validar:" + nombre + ":\" + s.documento() + \":\" + s.datos().get(\"clave\"));\n"
                         + (tipo == Tipo.KYC_QUE_LANZA
                                 ? "    throw new IllegalStateException(\"boom-secreto\");\n"
+                                : tipo == Tipo.KYC_NULO
+                                ? "    return null;\n"
+                                : tipo == Tipo.KYC_LINKAGE
+                                ? "    throw new NoClassDefFoundError(\"boom-enlace\");\n"
                                 : "    return new io.synkra.plugin.api.ResultadoKyc(s.documento().startsWith(\"OK\"), \"motivo-" + nombre + "\");\n")
                         + "  }\n"
                 : "")
@@ -153,6 +157,11 @@ public class EndpointsCoreTest {
 
     private void activos(String yaml) throws IOException {
         Files.writeString(config.resolve("plugins-activos.yaml"), yaml);
+    }
+
+    private static void esperarError(HttpResponse<String> r, int estado, String codigo, String nombre) throws Exception {
+        esperarError(r, estado, codigo);
+        assertTrue(JSON.readTree(r.body()).path("mensaje").asText().contains(nombre), r.body());
     }
 
     private static void esperarError(HttpResponse<String> r, int estado, String codigo) throws Exception {
@@ -188,7 +197,7 @@ public class EndpointsCoreTest {
             assertEquals(200, r.statusCode(), r.body());
             assertEquals(JSON.readTree("[]"), JSON.readTree(r.body()), r.body());
             // el que se inició y luego se detuvo por el fallo del vecino tampoco atiende KYC
-            esperarError(post(ctx, "/kyc/kyc-a", SOLICITUD), 404, ErrorCore.PLUGIN_NO_ACTIVO);
+            esperarError(post(ctx, "/kyc/kyc-a", SOLICITUD), 404, ErrorCore.PLUGIN_NO_ACTIVO, "kyc-a");
             assertTrue(Eventos.LLAMADAS.isEmpty(), Eventos.LLAMADAS.toString());
         }
     }
@@ -215,8 +224,10 @@ public class EndpointsCoreTest {
         jar("kyc-c", "3.0.0", Tipo.CON_KYC); // presente, no activo
         activos("- nombre: kyc-a\n  version: 1.0.0\n");
         try (var ctx = arrancar()) {
-            esperarError(post(ctx, "/kyc/kyc-c", SOLICITUD), 404, ErrorCore.PLUGIN_NO_ACTIVO);
-            esperarError(post(ctx, "/kyc/no-existe", SOLICITUD), 404, ErrorCore.PLUGIN_NO_ACTIVO);
+            esperarError(post(ctx, "/kyc/kyc-c", SOLICITUD), 404, ErrorCore.PLUGIN_NO_ACTIVO, "kyc-c");
+            esperarError(post(ctx, "/kyc/no-existe", SOLICITUD), 404, ErrorCore.PLUGIN_NO_ACTIVO, "no-existe");
+            // el nombre se busca exacto, sin distinguir nada de mayusculas
+            esperarError(post(ctx, "/kyc/KYC-A", SOLICITUD), 404, ErrorCore.PLUGIN_NO_ACTIVO, "KYC-A");
             assertTrue(Eventos.LLAMADAS.isEmpty(), Eventos.LLAMADAS.toString());
         }
     }
@@ -226,7 +237,7 @@ public class EndpointsCoreTest {
         jar("kyc-b", "2.1.0", Tipo.SOLO_CICLO);
         activos("- nombre: kyc-b\n  version: 2.1.0\n");
         try (var ctx = arrancar()) {
-            esperarError(post(ctx, "/kyc/kyc-b", SOLICITUD), 404, ErrorCore.PLUGIN_SIN_KYC);
+            esperarError(post(ctx, "/kyc/kyc-b", SOLICITUD), 404, ErrorCore.PLUGIN_SIN_KYC, "kyc-b");
         }
     }
 
@@ -236,7 +247,11 @@ public class EndpointsCoreTest {
         activos("- nombre: kyc-a\n  version: 1.0.0\n");
         try (var ctx = arrancar()) {
             for (String malo : List.of("no es json", "", "null", "{}", "{\"documento\":\"x\"}",
-                    "{\"datos\":{}}", "{\"documento\":5,\"datos\":{}}", "{\"documento\":\"x\",\"datos\":[1]}", "{\"documento\":true,\"datos\":{}}")) {
+                    "{\"datos\":{}}", "{\"documento\":5,\"datos\":{}}", "{\"documento\":\"x\",\"datos\":[1]}", "{\"documento\":true,\"datos\":{}}",
+                    "{\"documento\":\"NO\",\"documento\":\"OK-dup\",\"datos\":{}}",
+                    "{\"documento\":\"OK\",\"datos\":{}} basura",
+                    "{\"documento\":\"OK\",\"datos\":{}}{\"x\":1}",
+                    "{\"documento\":\"OK\",\"datos\":{},\"extra\":1}")) {
                 var r = post(ctx, "/kyc/kyc-a", malo);
                 assertEquals(400, r.statusCode(), "cuerpo enviado: " + malo + " -> " + r.body());
                 esperarError(r, 400, ErrorCore.SOLICITUD_INVALIDA);
@@ -258,6 +273,28 @@ public class EndpointsCoreTest {
             assertFalse(r.body().contains("Exception"), r.body());
             assertFalse(r.body().contains("boom-secreto"), r.body());
             assertEquals(List.of("validar:kyc-x:OK-123:valor"), Eventos.LLAMADAS);
+        }
+    }
+
+    @Test
+    void pluginQueDevuelveNullDa500PluginFalloQueNombraElPlugin() throws Exception {
+        jar("kyc-n", "1.0.0", Tipo.KYC_NULO);
+        activos("- nombre: kyc-n\n  version: 1.0.0\n");
+        try (var ctx = arrancar()) {
+            var r = post(ctx, "/kyc/kyc-n", SOLICITUD);
+            esperarError(r, 500, ErrorCore.PLUGIN_FALLO, "kyc-n");
+        }
+    }
+
+    @Test
+    void pluginQueLanzaUnErrorDeEnlaceDa500PluginFallo() throws Exception {
+        jar("kyc-l", "1.0.0", Tipo.KYC_LINKAGE);
+        activos("- nombre: kyc-l\n  version: 1.0.0\n");
+        try (var ctx = arrancar()) {
+            var r = post(ctx, "/kyc/kyc-l", SOLICITUD);
+            esperarError(r, 500, ErrorCore.PLUGIN_FALLO, "kyc-l");
+            assertFalse(r.body().contains("boom-enlace"), r.body());
+            assertFalse(r.body().contains("NoClassDefFoundError"), r.body());
         }
     }
 

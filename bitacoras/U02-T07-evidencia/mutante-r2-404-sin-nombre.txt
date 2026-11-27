@@ -1,0 +1,5 @@
+EndpointsCoreTest > pluginNoActivoDa404PluginNoActivo() FAILED
+EndpointsCoreTest > getPluginsSoloListaLosIniciados() FAILED
+12 tests completed, 2 failed
+> Task :core:test FAILED
+BUILD FAILED in 9s

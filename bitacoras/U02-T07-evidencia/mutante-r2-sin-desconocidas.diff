@@ -1,0 +1,2 @@
+48d47
+<         this.json.enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);

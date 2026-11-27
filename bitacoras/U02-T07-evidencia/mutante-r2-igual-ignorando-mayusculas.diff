@@ -1,0 +1,4 @@
+62c62
+<         var activo = iniciador.iniciados().stream().filter(p -> p.nombre().equals(nombre)).findFirst();
+---
+>         var activo = iniciador.iniciados().stream().filter(p -> p.nombre().equalsIgnoreCase(nombre)).findFirst();

@@ -1,5 +1,7 @@
 package io.synkra.core;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.cfg.CoercionAction;
 import com.fasterxml.jackson.databind.cfg.CoercionInputShape;
 import com.fasterxml.jackson.databind.type.LogicalType;
@@ -30,6 +32,8 @@ public class EndpointsCore {
     /** Elemento de {@code GET /plugins}: nombre y versión del descriptor del JAR. */
     public record InfoPlugin(String nombre, String version) {}
 
+    static final String PREFIJO_FALLO_KYC = "Plugin fallo al validar KYC plugin=";
+
     private static final Logger LOG = LoggerFactory.getLogger(EndpointsCore.class);
 
     private final IniciadorPlugins iniciador;
@@ -39,6 +43,10 @@ public class EndpointsCore {
         this.iniciador = iniciador;
         // Estricto: un número no pasa por texto ni al revés.
         this.json = json.copy();
+        // Cuerpo ambiguo o con basura no es una SolicitudKyc valida.
+        this.json.enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS);
+        this.json.enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        this.json.enable(JsonParser.Feature.STRICT_DUPLICATE_DETECTION);
         for (var forma : List.of(CoercionInputShape.Integer, CoercionInputShape.Float, CoercionInputShape.Boolean)) {
             this.json.coercionConfigFor(LogicalType.Textual).setCoercion(forma, CoercionAction.Fail);
         }
@@ -82,9 +90,13 @@ public class EndpointsCore {
         try {
             hilo.setContextClassLoader(cargado.cargador());
             ResultadoKyc resultado = punto.validar(solicitud);
+            if (resultado == null) {
+                LOG.error(PREFIJO_FALLO_KYC + nombre + ": el plugin devolvio null");
+                return error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCore.PLUGIN_FALLO, ErrorCore.MENSAJE_PLUGIN_FALLO + nombre);
+            }
             return ResponseEntity.ok(resultado);
         } catch (Exception | LinkageError e) {
-            LOG.error("Plugin fallo al validar KYC plugin=" + nombre + ": " + e, e);
+            LOG.error(PREFIJO_FALLO_KYC + nombre + ": " + e, e);
             return error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCore.PLUGIN_FALLO, ErrorCore.MENSAJE_PLUGIN_FALLO + nombre);
         } finally {
             hilo.setContextClassLoader(anterior);

@@ -1,0 +1,2 @@
+49d48
+<         this.json.enable(JsonParser.Feature.STRICT_DUPLICATE_DETECTION);
