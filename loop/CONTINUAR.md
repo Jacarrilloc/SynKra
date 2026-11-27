@@ -69,7 +69,7 @@ El #6 es antiguo y no se toca.
 |---|---|---|---|---|
 | U05-T07 script de descarga (ola 33) | `../wt-m6r-U05-T07`, `m6r/U05-T07` | `5e7a45e` | **VERDE en la ronda 2** (informe en `696eecc`). PR #85. | Esperar fusión humana |
 | U05-T08 imagen del init (ola 34) | `../wt-m6r-U05-T08`, `m6r/U05-T08` | `696eecc` | **VERDE en la ronda 1** (informe en `26b6124`). PR #87, apilado sobre #85. | Esperar fusión humana; U05-T09 sale de esta punta |
-| U05-T09 fronteras `kubernetes` (ola 35) | `../wt-m6r-U05-T09`, `m6r/U05-T09` | `26b6124` (punta VERDE de U05-T08) | Codificador ronda 1 hecho, `2060878` (código en `7b261c4`, rojo en `9f419f7`). **En vuelo (00:40 UTC del 28-nov):** revisor ronda 1. | Si no hay `revisiones/U05-T09/ronda-1.md`, repetir el revisor (base `26b6124`, HEAD `2060878`) |
+| U05-T09 fronteras `kubernetes` (ola 35) | `../wt-m6r-U05-T09`, `m6r/U05-T09` | `26b6124` (punta VERDE de U05-T08) | Ronda 1 NO-VERDE (`2e4e971`: F-01 la API `yaml*` sin prueba; F-02 el cierre del cliente sin lectura de vuelta). **En vuelo (01:05 UTC del 28-nov):** codificador ronda 2. | Si no hay `revisiones/U05-T09/ronda-1-respuesta.md`, redespachar el codificador ronda 2; si la hay, revisor ronda 2 |
 | U02-T09 plugin `kyc-co` (ola 35) | `../wt-m6r-U02-T09`, `m6r/U02-T09` | `d99cf36` | **VERDE en la ronda 2** (informe en `288e5c0`). PR #88, apilado sobre #86. | Esperar fusión humana; U02-T10 sale de esta punta |
 | U02-T10 plugin `kyc-pe` (ola 36) | `../wt-m6r-U02-T10`, `m6r/U02-T10` | `288e5c0` (punta VERDE de U02-T09) | Codificador ronda 1 hecho, `bae98f3` (código en `075fbc5`, rojo en `ed7042a`). **En vuelo (01:00 UTC del 28-nov):** revisor ronda 1. | Si no hay `revisiones/U02-T10/ronda-1.md`, repetir el revisor (base `288e5c0`, HEAD `bae98f3`) |
 
