@@ -70,6 +70,7 @@ U01 y U03 no dependen entre sí en el grafo, pero **U03-T01 necesita la raíz de
 | Ola 28 | U05-T02 y U02-T02 | 2 | Guardia de namespace (`kubernetes/`) y proyecto `core/`. Sale de `main` después de la ola 27 |
 | Ola 29 | U05-T03 y U02-T03 | 2 | `construir` los objetos del país (`kubernetes/`) y `CargadorPlugins` (`core/`). Sale de `main` después de la ola 28 |
 | Ola 30 | U05-T04 y U02-T04 | 2 | `aplicar` con server-side apply (`kubernetes/`) y `ArranquePlugins` (`core/`). Sale de la rama de tareas después de la ola 29 |
+| Ola 31 | U05-T05 y U02-T05 | 2 | `estado` y `contextoFallo` (`kubernetes/`) y la suite de U01 contra el arranque (`core/src/test`). Cada una sale de la punta en VERDE de su T04 (`m6r/U05-T04` y `m6r/U02-T04`), porque esos PRs siguen sin fusionar; sus PRs apuntan a esas ramas |
 
 Lo previsto era que cada ola saliera de la punta de `modulo-6-rehecho` después de fusionar los PRs de
 la anterior. El responsable pidió avanzar sin abrir PRs todavía, así que **las ramas quedaron
