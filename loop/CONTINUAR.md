@@ -61,7 +61,7 @@ Orden de fusión: #77, luego #78 (U05-T04), luego #79 (U02-T04).
 
 **U05-T05 despachada** (ola 31): worktree `../wt-m6r-U05-T05`, rama `m6r/U05-T05` desde `0a52e2e`; ronda 1 NO-VERDE (`revisiones/U05-T05/ronda-1.md`, `7c85e17`): F-01 a F-03 NARANJA, F-04 a F-06 AMARILLO se arreglan, F-07 no. **Codificador de la ronda 2 despachado**; si la sesión se corta, mirar sus commits en `origin/m6r/U05-T05` y redespacharlo.
 
-**U02-T05 despachada** (ola 31): worktree `../wt-m6r-U02-T05`, rama `m6r/U02-T05` desde `ff3f184`; ronda 1 NO-VERDE (`revisiones/U02-T05/ronda-1.md`, `9024ad6`): F-01 y F-02 NARANJA (aserción que acepta cualquier caída; salida pegada editada a mano), F-03 y F-04 AMARILLO. **Codificador de la ronda 2 despachado**; si la sesión se corta, mirar sus commits y redespacharlo.
+**U02-T05 despachada** (ola 31): worktree `../wt-m6r-U02-T05`, rama `m6r/U02-T05` desde `ff3f184`; ronda 1 NO-VERDE (`revisiones/U02-T05/ronda-1.md`, `9024ad6`): F-01 y F-02 NARANJA (aserción que acepta cualquier caída; salida pegada editada a mano), F-03 y F-04 AMARILLO. Ronda 2 del codificador hecha (`ad0948a`). **Revisor de la ronda 2 despachado**; si la sesión se corta, repetirlo.
 
 ### Ola 31 (U05-T05 ∥ U02-T05), escrita, sin despachar
 
