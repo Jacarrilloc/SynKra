@@ -47,7 +47,7 @@ Para que eso no vuelva a pasar:
 ## Estado al corte
 
 - `main` en `cf00671`. U01, U03 y U04 terminadas. PRs #54 a #76 fusionados.
-- `CANDIDATAS.md` llega hasta **C-86**. La siguiente libre es **C-87**.
+- `CANDIDATAS.md` llega hasta **C-88**. La siguiente libre es **C-89**.
 - PRs abiertos: **#77** (`orq/U05-U02-tareas`: tareas de las olas 30 y 31, candidatas C-75 a C-78, auditoría y este archivo) y el #6, antiguo, que no se toca.
 
 ### Ola 30 (U05-T04 ∥ U02-T04)
@@ -61,11 +61,11 @@ Orden de fusión: #77, luego #78 (U05-T04), luego #79 (U02-T04), luego #80 (U02-
 
 **U05-T05 despachada** (ola 31): worktree `../wt-m6r-U05-T05`, rama `m6r/U05-T05` desde `0a52e2e`; ronda 1 NO-VERDE (`revisiones/U05-T05/ronda-1.md`, `7c85e17`): F-01 a F-03 NARANJA, F-04 a F-06 AMARILLO se arreglan, F-07 no. Ronda 2 NO-VERDE (`ronda-2.md`, `7602fb8`): F-08 NARANJA (el evento «sin marca» de la prueba recibe `creationTimestamp` del simulado, así que `nullsLast` no se prueba). **VERDE en la ronda 3** (`547f8b8`). **PR #81** abierto contra `m6r/U05-T04` (apilado), sin fusionar.
 
-**U05-T06 despachada** (ola 32): worktree `../wt-m6r-U05-T06`, rama `m6r/U05-T06` desde `547f8b8`; ronda 1 del codificador hecha (`4b65649`; el orquestador aceptó `snakeyaml-engine` en `backend/build.gradle.kts`). **Revisor de la ronda 1 despachado**; si la sesión se corta, repetirlo. Si la ronda 3 sale NO-VERDE, la ronda 4 no se despacha: se para y se lleva al equipo.
+**U05-T06 despachada** (ola 32): worktree `../wt-m6r-U05-T06`, rama `m6r/U05-T06` desde `547f8b8`; ronda 1 NO-VERDE (`ronda-1.md`, `dce3464`; el orquestador aceptó `snakeyaml-engine` en `backend/build.gradle.kts`): F-01 y F-02 NARANJA (defensa de etiquetas sin prueba; claves y formato del JAR repetidos). **Codificador de la ronda 2 despachado**; si la sesión se corta, mirar sus commits y redespacharlo. Si la ronda 3 sale NO-VERDE, la ronda 4 no se despacha: se para y se lleva al equipo.
 
 **U02-T05 despachada** (ola 31): worktree `../wt-m6r-U02-T05`, rama `m6r/U02-T05` desde `ff3f184`; ronda 1 NO-VERDE (`revisiones/U02-T05/ronda-1.md`, `9024ad6`): F-01 y F-02 NARANJA (aserción que acepta cualquier caída; salida pegada editada a mano), F-03 y F-04 AMARILLO. **VERDE en la ronda 2** (`15ca50f`). **PR #80** abierto contra `m6r/U02-T04` (apilado), sin fusionar.
 
-**U02-T06 despachada** (ola 32): worktree `../wt-m6r-U02-T06`, rama `m6r/U02-T06` desde `15ca50f`; ronda 1 NO-VERDE (`ronda-1.md`, `742c7c3`): F-01 ROJO (CA-2 falla por excepción, no por aserción), F-02 NARANJA (orden inverso y `detener` que lanza sin prueba), F-03 a F-05 AMARILLO. En F-03 el orquestador precisó la decisión 2: se prefiere un `HealthIndicator` en el grupo readiness. Ronda 2 del codificador hecha (`f444036`, eligió el `HealthIndicator`). **Revisor de la ronda 2 despachado**; si la sesión se corta, repetirlo.
+**U02-T06 despachada** (ola 32): worktree `../wt-m6r-U02-T06`, rama `m6r/U02-T06` desde `15ca50f`; ronda 1 NO-VERDE (`ronda-1.md`, `742c7c3`): F-01 ROJO (CA-2 falla por excepción, no por aserción), F-02 NARANJA (orden inverso y `detener` que lanza sin prueba), F-03 a F-05 AMARILLO. En F-03 el orquestador precisó la decisión 2: se prefiere un `HealthIndicator` en el grupo readiness. Ronda 2 NO-VERDE (`ronda-2.md`, `c42f25f`): F-06 y F-07 NARANJA (falta el caso «a, b falla, c»; readiness da `DOWN` y no `OUT_OF_SERVICE`). **Codificador de la ronda 3 despachado** (última: si la ronda 3 sale NO-VERDE, se para y se lleva al equipo).
 
 ### Ola 31 (U05-T05 ∥ U02-T05), escrita, sin despachar
 
