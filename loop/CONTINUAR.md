@@ -47,7 +47,7 @@ Para que eso no vuelva a pasar:
 ## Estado al corte
 
 - `main` en `cf00671`. U01, U03 y U04 terminadas. PRs #54 a #76 fusionados.
-- `CANDIDATAS.md` llega hasta **C-84**. La siguiente libre es **C-85**.
+- `CANDIDATAS.md` llega hasta **C-85**. La siguiente libre es **C-86**.
 - PRs abiertos: **#77** (`orq/U05-U02-tareas`: tareas de las olas 30 y 31, candidatas C-75 a C-78, auditoría y este archivo) y el #6, antiguo, que no se toca.
 
 ### Ola 30 (U05-T04 ∥ U02-T04)
@@ -57,11 +57,13 @@ Para que eso no vuelva a pasar:
 | U05-T04 `aplicar` | `m6r/U05-T04` | 2 | Ronda 1 NO-VERDE (informe en `revisiones/U05-T04/ronda-1.md`, commit `e085e5f`): F-01 a F-03 NARANJA, F-04 y F-05 AMARILLO; todo se arregla. **VERDE en la ronda 2** (`ronda-2.md`, rama en `0a52e2e`). **PR #78** abierto contra `main`, sin fusionar. AMARILLO F-06/F-07 → C-79 |
 | U02-T04 `ArranquePlugins` | `m6r/U02-T04` | 2 | Ronda 1 NO-VERDE (informe en `revisiones/U02-T04/ronda-1.md`, commit `6917a8c`): F-01 y F-02 NARANJA; F-03 es de la especificación; F-04 fuera de alcance (C-78); F-05 y F-06 se arreglan. F-02 se arregla dentro de `core/` igualando las salvaguardas de `LectorDescriptor` (profundidad 32, etiquetas explícitas) y con una sola fuente para nombre y límites; la extracción a `verificador/` es C-77. **VERDE en la ronda 2** (`ronda-2.md`, rama en `ff3f184`). **PR #79** abierto contra `main`, sin fusionar. AMARILLO F-07/F-08 → C-80 |
 
-Orden de fusión: #77, luego #78 (U05-T04), luego #79 (U02-T04).
+Orden de fusión: #77, luego #78 (U05-T04), luego #79 (U02-T04), luego #80 (U02-T05, apilado sobre #79: al fusionar #79, GitHub cambia su base a `main`).
 
 **U05-T05 despachada** (ola 31): worktree `../wt-m6r-U05-T05`, rama `m6r/U05-T05` desde `0a52e2e`; ronda 1 NO-VERDE (`revisiones/U05-T05/ronda-1.md`, `7c85e17`): F-01 a F-03 NARANJA, F-04 a F-06 AMARILLO se arreglan, F-07 no. Ronda 2 del codificador hecha (`efcabf1`). **Revisor de la ronda 2 despachado**; si la sesión se corta, repetirlo.
 
-**U02-T05 despachada** (ola 31): worktree `../wt-m6r-U02-T05`, rama `m6r/U02-T05` desde `ff3f184`; ronda 1 NO-VERDE (`revisiones/U02-T05/ronda-1.md`, `9024ad6`): F-01 y F-02 NARANJA (aserción que acepta cualquier caída; salida pegada editada a mano), F-03 y F-04 AMARILLO. Ronda 2 del codificador hecha (`ad0948a`). **Revisor de la ronda 2 despachado**; si la sesión se corta, repetirlo.
+**U02-T05 despachada** (ola 31): worktree `../wt-m6r-U02-T05`, rama `m6r/U02-T05` desde `ff3f184`; ronda 1 NO-VERDE (`revisiones/U02-T05/ronda-1.md`, `9024ad6`): F-01 y F-02 NARANJA (aserción que acepta cualquier caída; salida pegada editada a mano), F-03 y F-04 AMARILLO. **VERDE en la ronda 2** (`15ca50f`). **PR #80** abierto contra `m6r/U02-T04` (apilado), sin fusionar.
+
+**U02-T06 despachada** (ola 32): worktree `../wt-m6r-U02-T06`, rama `m6r/U02-T06` desde `15ca50f`; codificador de la ronda 1 corriendo. Si la sesión se corta, mirar sus commits y redespacharlo.
 
 ### Ola 31 (U05-T05 ∥ U02-T05), escrita, sin despachar
 
@@ -84,13 +86,17 @@ Orden de fusión: #77, luego #78 (U05-T04), luego #79 (U02-T04).
 
 - `tareas/U05-T08-imagen-init.md` y `tareas/U02-T08-core-sin-paises.md`. U05-T08 necesita Docker: en el contenedor en la nube hay que arrancar `dockerd` a mano.
 
+### Olas 35 y 36, escritas en parte
+
+- `tareas/U02-T09-plugin-kyc-co.md` y `tareas/U02-T10-plugin-kyc-pe.md` escritas. Faltan U05-T09 (fronteras) y U05-T10 (resumen).
+
 ## Lo que sigue
 
 1. Terminar la ola 30: revisor de la ronda 2 de cada tarea, guardar su informe, más rondas si hace falta (una tarea que llega a la ronda 4 se para y se lleva al equipo), y abrir los PRs.
 2. Ola 31 como arriba.
 3. Escribir las tareas restantes en `orq/U05-U02-tareas` y añadir sus olas a `loop/README.md`:
    - **U05:** T09 fronteras, T10 resumen.
-   - **U02:** T09 y T10 plugins `kyc-co` y `kyc-pe`, T11 imagen del core, T12 prueba de humo, T13 resumen.
+   - **U02:** T11 imagen del core, T12 prueba de humo, T13 resumen.
    - Los planes están en `aidlc-docs/construction/plans/U05-*.md` y `U02-*.md`.
    - Candidatas que hay que meter: C-70, C-73 y C-68 en U05-T09; C-72 en U05-T07, U05-T08 y U02-T11 (script en `/usr/local/bin/descargar.sh`, `USER 10001` numérico); C-64 en U05-T07 (comprobar el sha256); C-71 y C-74 en las pruebas del core; C-76 en U07.
 4. Pendiente de decidir con el equipo: una tarea de pulido de U04 (C-57, C-60, C-61, C-63, C-65, C-66, C-67) y otra de U01/U02 (C-77, C-78).

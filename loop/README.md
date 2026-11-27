@@ -74,6 +74,8 @@ U01 y U03 no dependen entre sí en el grafo, pero **U03-T01 necesita la raíz de
 | Ola 32 | U05-T06 y U02-T06 | 2 | `leerPais` (`kubernetes/`) y fallo al iniciar con readiness (`core/` y el *fixture*). Salen de la punta en VERDE de U05-T05 y U02-T05 si sus PRs no se han fusionado |
 | Ola 33 | U05-T07 y U02-T07 | 2 | Script `init-descarga/descargar.sh` con su prueba (directorio nuevo) y endpoints del core (`core/`). Salen de la punta en VERDE de U05-T06 y U02-T06 si sus PRs no se han fusionado |
 | Ola 34 | U05-T08 y U02-T08 | 2 | Imagen del init (`init-descarga/Dockerfile`) y control «el core no conoce países» (`core/src/test` y `scripts/`). Salen de la punta en VERDE de U05-T07 y U02-T07 si sus PRs no se han fusionado |
+| Ola 35 | U05-T09 y U02-T09 | 2 | Fronteras del módulo `kubernetes` (C-68, C-70, C-73, C-79) y plugin `kyc-co` (`plugins/kyc-co/`). Salen de la punta en VERDE de U05-T08 y U02-T08 |
+| Ola 36 | U05-T10 y U02-T10 | 2 | Resumen de U05 (cierra la unidad) y plugin `kyc-pe` en dos versiones |
 
 Lo previsto era que cada ola saliera de la punta de `modulo-6-rehecho` después de fusionar los PRs de
 la anterior. El responsable pidió avanzar sin abrir PRs todavía, así que **las ramas quedaron
