@@ -22,9 +22,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 class CatalogoServicio implements CatalogoApi {
 
-    /** registro/repo[:tag]@sha256:&lt;64 hex en minúsculas&gt; */
+    /** Longitud máxima de la imagen completa (campo {@code imagen}). */
+    static final int IMAGEN_MAX = 255;
+
+    private static final String REGISTRO = "[0-9a-z]+([.-][0-9a-z]+)*(:[0-9]+)?";
+    private static final String REPO = "[0-9a-z]+([._-][0-9a-z]+)*";
+    private static final String TAG = "[A-Za-z0-9_][A-Za-z0-9._-]{0,127}";
+    /** registro[:puerto]/repo[/repo...][:tag]@sha256:64 hex en minúsculas; el tag solo al final. */
     private static final Pattern IMAGEN =
-            Pattern.compile("[^\\s@/]+(/[^\\s@/]+)+@sha256:[0-9a-f]{64}");
+            Pattern.compile(REGISTRO + "(/" + REPO + ")+(:" + TAG + ")?@sha256:[0-9a-f]{64}");
     private static final String AUTOR = "anonimo";
 
     private final JdbcAggregateTemplate plantilla;
@@ -42,17 +48,16 @@ class CatalogoServicio implements CatalogoApi {
     public CoreRegistrado registrarCore(String nombre, String version, String imagen) {
         var detalles = new ArrayList<DetalleError>();
         if (nombre == null || !Descriptor.NOMBRE.matcher(nombre).matches()) {
-            detalles.add(new DetalleError("nombre", "El nombre debe ser minúsculas, dígitos y guiones medios"));
+            detalles.add(new DetalleError("nombre", MotivosCatalogo.NOMBRE_INVALIDO));
         }
         Version v = null;
         switch (Version.parsear(version)) {
             case Resultado.Exito<Version> ok -> v = ok.valor();
             case Resultado.Fallo<Version> fallo ->
-                detalles.add(new DetalleError("version", "La versión debe ser MAYOR.MENOR.PARCHE (por ejemplo 2.1.0)"));
+                detalles.add(new DetalleError("version", fallo.motivos().get(0).mensaje()));
         }
-        if (imagen == null || !IMAGEN.matcher(imagen).matches()) {
-            detalles.add(new DetalleError("imagen",
-                    "La imagen debe ser registro/repo[:tag]@sha256:<64 hex en minúsculas>"));
+        if (imagen == null || imagen.length() > IMAGEN_MAX || !IMAGEN.matcher(imagen).matches()) {
+            detalles.add(new DetalleError("imagen", MotivosCatalogo.IMAGEN_INVALIDA));
         }
         if (!detalles.isEmpty()) {
             throw new ExcepcionApi(HttpStatus.UNPROCESSABLE_ENTITY,
@@ -63,7 +68,7 @@ class CatalogoServicio implements CatalogoApi {
         if (versiones.findByCoreAndVersion(nombre, texto).isPresent()) {
             throw new ExcepcionApi(HttpStatus.CONFLICT, new ErrorApi(CodigosError.CONFLICTO,
                     CodigosError.MSG_CONFLICTO,
-                    List.of(new DetalleError("version", "La versión " + texto + " del core ya está registrada"))));
+                    List.of(new DetalleError("version", MotivosCatalogo.VERSION_REPETIDA.formatted(texto)))));
         }
         if (cores.findByNombre(nombre).isEmpty()) {
             plantilla.insert(new Core(nombre));
@@ -84,9 +89,17 @@ class CatalogoServicio implements CatalogoApi {
 
     private CoreRegistrado leer(String nombre) {
         var ordenadas = versiones.findByCore(nombre).stream()
-                .map(f -> ((Resultado.Exito<Version>) Version.parsear(f.version())).valor())
+                .map(f -> leerVersion(nombre, f.version()))
                 .sorted()
                 .toList();
         return new CoreRegistrado(nombre, ordenadas);
+    }
+
+    private static Version leerVersion(String core, String texto) {
+        return switch (Version.parsear(texto)) {
+            case Resultado.Exito<Version> ok -> ok.valor();
+            case Resultado.Fallo<Version> fallo -> throw new IllegalStateException(
+                    "Versión no válida en la base para el core " + core + ": '" + texto + "'");
+        };
     }
 }

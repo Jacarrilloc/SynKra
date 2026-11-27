@@ -146,4 +146,90 @@ class RegistrarCoreTest {
         assertThat(e.error().codigo()).isEqualTo(CodigosError.NO_ENCONTRADO);
         assertThat(e.error().mensaje()).isEqualTo(CodigosError.MSG_NO_ENCONTRADO);
     }
+
+    private static final String H = "@sha256:" + HEX;
+
+    @Test
+    void lasImagenesHostilesDan422() {
+        var hostiles = new String[] {
+                "registro/repo@sha256:" + "a".repeat(65),
+                "basura registro/repo" + H,
+                "registro/repo" + H + "basura",
+                "registro/repo" + H + "\n",
+                "repo" + H,
+                "registro/repo:tag:otro" + H,
+                "registro:1:2/repo" + H,
+                "registro/repo:tag/sub" + H,
+                "registro/repo:" + H,
+                "../x" + H,
+                "../../etc/passwd" + H,
+                "registro/REPO" + H,
+                "REGISTRO/repo" + H,
+                "registro/rëpo" + H,
+                "registro/re\u00a0po" + H,
+                "registro/re\u2028po" + H,
+                "registro/re\u0085po" + H,
+                "registro/re\0po" + H,
+                "registro/" + "a".repeat(5000) + H,
+                "registro/" + "a".repeat(250) + H};
+        for (var imagen : hostiles) {
+            assertThat(camposDe(invalido("synkra-core", "1.0.0", imagen)))
+                    .as("imagen rechazada: %s", imagen.length() > 80 ? imagen.length() + " caracteres" : imagen)
+                    .containsExactly("imagen");
+        }
+    }
+
+    @Test
+    void lasImagenesValidasSeAceptan() {
+        var validas = new String[] {
+                "registro.local:5000/synkra/core:2.0.0" + H,
+                "localhost:5001/synkra-core" + H,
+                "registro/repo" + H,
+                "ghcr.io/org/sub.repo_x/core:v1.2-rc_1" + H};
+        for (int i = 0; i < validas.length; i++) {
+            var r = api.registrarCore("core-" + i, "1.0.0", validas[i]);
+            assertThat(r.versiones()).hasSize(1);
+        }
+    }
+
+    @Test
+    void nombreYVersionNulosDan422() {
+        assertThat(camposDe(invalido(null, "1.0.0", IMAGEN))).containsExactly("nombre");
+        assertThat(camposDe(invalido("synkra-core", null, IMAGEN))).containsExactly("version");
+        assertThat(camposDe(invalido(null, null, null))).containsExactlyInAnyOrder("nombre", "version", "imagen");
+    }
+
+    @Test
+    void siFallaLaVersionElCoreNuevoNoQueda() {
+        jdbc.execute("create trigger falla_version before insert on cat_version_core "
+                + "begin select raise(abort, 'falla simulada'); end");
+        try {
+            org.junit.jupiter.api.Assertions.assertThrows(RuntimeException.class,
+                    () -> api.registrarCore("synkra-core", "1.0.0", IMAGEN));
+        } finally {
+            jdbc.execute("drop trigger falla_version");
+        }
+        assertThat(jdbc.queryForObject("select count(*) from cat_core", Integer.class)).isZero();
+        assertThat(jdbc.queryForObject("select count(*) from cat_version_core", Integer.class)).isZero();
+    }
+
+    @Test
+    void losMotivosSonLosTextosFijados() {
+        var e = invalido("Mal_Nombre", "2.1", "sin-digest");
+        var motivos = e.error().detalles().stream()
+                .collect(java.util.stream.Collectors.toMap(DetalleError::campo, DetalleError::motivo));
+        assertThat(motivos.get("nombre")).isEqualTo(MotivosCatalogo.NOMBRE_INVALIDO)
+                .isEqualTo("El nombre debe llevar solo minúsculas, dígitos y guiones medios, "
+                        + "sin guion al principio ni al final");
+        assertThat(motivos.get("imagen")).isEqualTo(MotivosCatalogo.IMAGEN_INVALIDA)
+                .isEqualTo("La imagen debe tener la forma registro/repo[:tag]@sha256:<64 hex en minúsculas>, "
+                        + "de hasta 255 caracteres");
+        assertThat(motivos.get("version")).isEqualTo(
+                "La versión '2.1' no tiene la forma MAYOR.MENOR.PARCHE (por ejemplo 2.1.0)");
+
+        api.registrarCore("synkra-core", "1.0.0", IMAGEN);
+        var conflicto = falla(() -> api.registrarCore("synkra-core", "1.0.0", IMAGEN));
+        assertThat(conflicto.error().detalles()).containsExactly(
+                new DetalleError("version", "La versión 1.0.0 del core ya está registrada"));
+    }
 }
