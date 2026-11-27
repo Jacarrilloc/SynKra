@@ -57,7 +57,8 @@
    - Los metadatos se insertan en la misma transacción. Si el insert falla después de mover, se borra el archivo movido.
    - Si el movimiento falla, no se inserta nada.
    - La ruta final se calcula desde nombres ya validados y se comprueba con `normalize().startsWith(raiz)`.
-7. **Lo que devuelve.** `PluginSubido(core, nombre, version, coreCompatible, etiquetas, sha256, tamano)`. `obtenerPlugin` devuelve lo mismo, o 404.
+7. **Entradas duplicadas (C-44).** Un JAR con dos entradas del mismo nombre se rechaza con 422 `RUTA_NO_PERMITIDA` antes de leer el descriptor, con un motivo constante, porque `ZipFile.getEntry` y el lector en flujo pueden ver contenidos distintos. La comprobación vive en `RecepcionArtefacto` (U04-T04), y aquí se agrega con su prueba.
+8. **Lo que devuelve.** `PluginSubido(core, nombre, version, coreCompatible, etiquetas, sha256, tamano)`. `obtenerPlugin` devuelve lo mismo, o 404.
    - `subido_por` va como `'anonimo'`.
    - `descripcion` puede ser nula.
    - `ruta` es relativa a `$SYNKRA_DATA`.
@@ -71,7 +72,7 @@
   ./gradlew :backend:test --rerun --tests '*SubirPluginTest'
   grep -ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-*SubirPluginTest.xml
   ```
-  Esperado: `BUILD SUCCESSFUL`, `tests` ≥ 11, `skipped="0" failures="0" errors="0"`. Las pruebas cubren:
+  Esperado: `BUILD SUCCESSFUL`, `tests` ≥ 12, `skipped="0" failures="0" errors="0"`. Las pruebas cubren:
   - un plugin válido:
     - devuelve el descriptor y un `sha256` igual al de los bytes;
     - el archivo está en `artefactos/<core>/<nombre>/<version>.jar`;
@@ -87,6 +88,7 @@
   - la misma etiqueta con el mismo valor: se acepta y se guarda una vez;
   - atomicidad: con un trigger `raise(abort)` sobre `cat_etiqueta`, no queda ni la fila de `cat_plugin` ni el archivo final;
   - `obtenerPlugin` de uno inexistente: 404.
+  - JAR con dos `synkra-plugin.yaml` (o dos entradas con el mismo nombre): 422 `RUTA_NO_PERMITIDA` y nada en disco.
 
 - [ ] **CA-2**: el descriptor se lee con U01, sin copia
   ```bash

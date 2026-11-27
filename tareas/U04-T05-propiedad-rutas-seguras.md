@@ -78,6 +78,7 @@
   - `backend/build.gradle.kts`, solo con jqwik;
   - `RutasSegurasPropiedades.java`;
   - si apareció un contraejemplo, su corrección en `catalogo/**` y la prueba de ejemplo;
+  - las pruebas de ejemplo de C-45 en `RecepcionArtefactoTest.java`;
   - la bitácora y `revisiones/U04-T05/`.
 
 ---
@@ -93,3 +94,8 @@
 ## Notas
 
 - Si 1000 intentos tardan más de 60 s, se baja a 500 y se anota.
+- **C-45.** También se atan en `RecepcionArtefactoTest`, como pruebas de ejemplo, los mutantes que sobrevivieron en U04-T04:
+  - un JAR cuya lista de commons difiere de la del flujo (C02);
+  - el mismo conjunto de nombres en otro orden entre el índice y las cabeceras locales (C03);
+  - nombres duplicados frente a `distinct()` (C21).
+  Además, `@Timeout` en las pruebas del límite, para que un corte roto falle en vez de colgarse. Si para algún caso no se puede construir un ZIP, se explica en la bitácora.

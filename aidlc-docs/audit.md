@@ -668,3 +668,11 @@
 **Context**: CONSTRUCTION, U04, ola 16.
 
 ---
+
+## U04-T04: VERDE en la ronda 3, PR #47 fusionado
+**Timestamp**: 2026-11-27T13:50:00Z
+**User Input**: «continua» (13:26:36Z)
+**AI Response**: La ronda 1 salió NO-VERDE porque el extra 0x7075 tapaba `../`. La ronda 2 salió NO-VERDE porque el parser a mano dejaba pasar entradas ocultas y daba 500 en ZIP mal formados. Decisión del orquestador: quitar `EstructuraZip` y revisar por consenso de tres lectores (flujo con topes de descomprimido y de entradas, JDK `ZipFile` y commons). El codificador cortó por el límite de uso, pero el commit quedó completo. La ronda 3 salió VERDE: fuzz de 150.000 casos sin ningún 500, 130 JAR reales aceptados y la bomba rechazada. Fusioné el #47. Candidatas nuevas: C-44 a C-46.
+**Context**: CONSTRUCTION, U04, ola 17.
+
+---
