@@ -1,0 +1,30 @@
+KycCoTest > aprueba6a10Digitos(String) > [1] "123456" FAILED
+    org.opentest4j.AssertionFailedError at KycCoTest.java:31
+
+KycCoTest > aprueba6a10Digitos(String) > [2] "1234567890" FAILED
+    org.opentest4j.AssertionFailedError at KycCoTest.java:31
+
+KycCoTest > aprueba6a10Digitos(String) > [3] "1234567" FAILED
+    org.opentest4j.AssertionFailedError at KycCoTest.java:31
+
+14 tests completed, 5 failed
+
+[Incubating] Problems report is available at: file:///home/julian/Escritorio/Proyectos/wt-m6r-U02-T09/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':plugins:kyc-co:test'.
+> There were failing tests. See the report at: file:///home/julian/Escritorio/Proyectos/wt-m6r-U02-T09/plugins/kyc-co/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 2s
+8 actionable tasks: 8 executed
