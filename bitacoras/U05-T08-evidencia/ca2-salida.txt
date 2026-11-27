@@ -1,0 +1,18 @@
+servidor en 127.0.0.1:41729
+--- hash-correcto
+intento 1/5: http://127.0.0.1:41729/api/artefactos/862e4a1a490a5015535917ecc67d35093d548489fc539e951e50c964f3c545e3
+ok plugin.jar (862e4a1a490a5015535917ecc67d35093d548489fc539e951e50c964f3c545e3)
+salida=0
+$ ls -l plugins
+total 4
+drwxrwxrwx 2 julian julian 60 Nov 27 18:41 .
+drwxr-xr-x 4 julian julian 80 Nov 27 18:41 ..
+-rw-r--r-- 1 10001  10001  29 Nov 27 18:41 plugin.jar
+--- hash-alterado
+intento 1/5: http://127.0.0.1:41729/api/artefactos/062e4a1a490a5015535917ecc67d35093d548489fc539e951e50c964f3c545e3
+error: hash distinto para plugin.jar: esperado 062e4a1a490a5015535917ecc67d35093d548489fc539e951e50c964f3c545e3, recibido 862e4a1a490a5015535917ecc67d35093d548489fc539e951e50c964f3c545e3
+salida=6
+$ ls -l plugins
+total 0
+drwxrwxrwx 2 julian julian 40 Nov 27 18:41 .
+drwxr-xr-x 4 julian julian 80 Nov 27 18:41 ..
