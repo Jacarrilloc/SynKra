@@ -5,7 +5,7 @@ Este resumen lo escribe U01-T14 sin cambiar código, pruebas, build ni scripts. 
 
 ## Qué expone (API pública)
 
-Paquete `io.synkra.verificador`. Todo es inmutable y sin excepciones para entradas inválidas: los fallos de datos vuelven como `Resultado.Fallo` con una lista de `Motivo`. Las firmas de abajo se comprobaron con `grep` en el código.
+Paquete `io.synkra.verificador`. Todo es inmutable. Los fallos de datos (un descriptor, una versión o un rango mal escritos) vuelven como `Resultado.Fallo` con una lista de `Motivo`, sin excepción. Las precondiciones de programación sí lanzan `IllegalArgumentException`: los constructores de `Descriptor`, `Seleccion`, `Alternativa`, `Motivo`, `Version`, `RangoVersion`, `Veredicto`, `VeredictoPlugin` y `Resultado.Fallo` rechazan valores que rompen sus invariantes, y `Verificador.alternativas` lanza si el veredicto recibido no es el de `verificar(seleccion, catalogo)`. Las firmas de abajo se comprobaron con `grep` en el código.
 
 | Tipo | Firma pública | Qué hace |
 |---|---|---|
@@ -19,23 +19,25 @@ Paquete `io.synkra.verificador`. Todo es inmutable y sin excepciones para entrad
 | `Alternativa` | `record Alternativa(TipoAlternativa tipo, String nombre, Version version)`; `enum TipoAlternativa { PLUGIN, CORE }` | Versión del plugin o del core que sí sirve |
 | `Catalogo` | `interface Catalogo { List<Version> versionesCore(String nombre); List<Version> versionesPlugin(String core, String plugin); Optional<Descriptor> descriptor(String core, String plugin, Version version); }` | Vista de solo lectura de lo subido; la implementa quien tenga los datos |
 | `Verificador` | `static Veredicto verificar(Seleccion seleccion, Catalogo catalogo)`; `static Veredicto alternativas(Seleccion seleccion, Veredicto veredicto, Catalogo catalogo)` | `verificar` aplica R-V4 en orden; `alternativas` aplica R-V5 y devuelve un veredicto nuevo |
-| `Resultado<T>`, `Motivo`, `CodigoMotivo` | `sealed interface Resultado<T>` con `Exito<T>(T valor)` y `Fallo<T>(List<Motivo> motivos)`; `record Motivo(CodigoMotivo codigo, Optional<String> plugin, String mensaje, Optional<String> campo)`; `enum CodigoMotivo` (9 códigos) | Errores como valores |
+| `Resultado<T>`, `Motivo`, `CodigoMotivo` | `sealed interface Resultado<T>` con `Exito<T>(T valor)` y `Fallo<T>(List<Motivo> motivos)`; `record Motivo(CodigoMotivo codigo, Optional<String> plugin, String mensaje, Optional<String> campo)`; `enum CodigoMotivo` (10 códigos; el último, `DESCRIPTOR_INVALIDO`) | Errores como valores |
 
 En `testFixtures` (se consume con `testFixtures(project(":verificador"))`):
 
 | Tipo | Firma pública | Qué hace |
 |---|---|---|
-| `CatalogoEnMemoria` | `final class CatalogoEnMemoria implements Catalogo`; `CatalogoEnMemoria(Map<String, List<Version>> versionesCore, List<Descriptor> descriptores)` | `Catalogo` para pruebas de U02, U04 y U07 |
+| `CatalogoEnMemoria` | `final class CatalogoEnMemoria implements Catalogo`; `CatalogoEnMemoria(Map<String, List<Version>> versionesCore, List<Descriptor> descriptores)` | `Catalogo` en memoria para pruebas de U02 y U07 (fuente: `unidades-y-tareas.md`, responsabilidad de U01, y `tareas/U01-T09-verificador.md`) |
 | `SuiteCombinaciones` | `static CatalogoEnMemoria catalogo()`; `static List<Caso> casos()`; `static List<CoreDelCatalogo> contenido()`; `record Caso(String id, Grupo grupo, String descripcion, Entrada entrada, Esperado esperado)` | La suite S1-S12 del PRD: el catálogo fijo y cada caso con su resultado esperado exacto |
 
 `Entrada` es un `sealed interface` con tres formas: `PorSeleccion` (se corre `Verificador`), `PorDescriptor` (se corre `LectorDescriptor.desdeYaml`) y `FueraDeU01` (S11 y S12: no se ejecutan en U01, remiten a otra unidad).
 
 ## Quién lo usa y cómo
 
-- **U02 (core de ejemplo):** `ArranquePlugins` lee el descriptor con `LectorDescriptor.leer`, arma una `Seleccion` y llama `Verificador.verificar`. `ConcordanciaSuiteTest` corre `SuiteCombinaciones.casos()` contra el core y prueba que el core decide igual que U01. S12 (plugin en el catálogo pero no elegido) es `FueraDeU01`: lo prueba U02, porque el core no carga lo que el ConfigMap no pide.
-- **U04 (catálogo):** además, S11 (el hash del artefacto no coincide) queda pendiente en U04 y U05. la recepción del JAR llama `LectorDescriptor.leer` y devuelve los motivos por la API; el módulo implementa `Catalogo` sobre SQLite y lo prueba con los casos S1 a S7 de la suite. Aquí caen las candidatas C-13, C-19 y C-20.
-- **U07 (despliegue):** la verificación en vivo y la creación del plan llaman `Verificador.verificar` y, si hay `VERSION_INCOMPATIBLE`, `Verificador.alternativas` con el `Catalogo` de U04. Un plan inválido no se crea. Las pruebas usan `CatalogoEnMemoria` y `SuiteCombinaciones.catalogo()`.
-- **Regla de uso:** `Verificador` es una función pura; quien lo llama decide qué hacer con el veredicto (U01 no toca el clúster ni la base de datos).
+Cada afirmación lleva su fuente entre paréntesis. Lo que ningún documento dice no está aquí.
+
+- **U02 (core de ejemplo):** `ArranquePlugins` lee el descriptor, verifica con U01 y activa; `ConcordanciaSuiteTest` aplica los casos ejecutables de la suite de U01 al arranque (`unidades-y-tareas.md`, U02-T04 y U02-T05). S12 (plugin en el catálogo pero no elegido) es `FueraDeU01` y queda pendiente en U02 (`SuiteCombinaciones.java`, caso S12).
+- **U04 (catálogo):** implementa su propio `Catalogo` sobre SQLite y lo prueba con los casos S1 a S7 de `SuiteCombinaciones` (`unidades-y-tareas.md`, U04-T09; `U04-catalogo-code-generation-plan.md`, línea 48). S11 (el hash del artefacto no coincide) es `FueraDeU01` y queda pendiente en U04 y U05 (`SuiteCombinaciones.java`, caso S11). La recepción del JAR usará `LectorDescriptor`: de ahí salen C-13, C-19 y C-20 (`CANDIDATAS.md`).
+- **U07 (despliegue):** U07 depende de U01 y reutiliza la suite (`unidades-y-tareas.md`, responsabilidad de U01 y dependencias de U07). La verificación en vivo (U07-T03) prueba S4 con alternativas presentes, y la creación del plan (U07-T04) rechaza el plan inválido sin crear fila.
+- **Límite de U01:** no lee el catálogo, no conoce Spring, Kubernetes ni la red; recibe un `Catalogo` de solo lectura (`unidades-y-tareas.md`, «Qué no hace» de U01).
 
 ## Tareas
 
@@ -43,7 +45,7 @@ En `testFixtures` (se consume con `testFixtures(project(":verificador"))`):
 |---|---|---|---|
 | U01-T01 | Raíz Gradle multi-proyecto: toolchain Java 21, wrapper 9.9.2 con checksum, JVM del daemon fijada, `.gitignore` | #8 | 1 |
 | U01-T02 | `verificador/build.gradle.kts`: `java-library`, `java-test-fixtures`, snakeyaml-engine, JUnit y jqwik | #9 | 1 |
-| U01-T03 | `Version`, `Resultado`, `Motivo`, `CodigoMotivo` (9 códigos) | #11 | 2 |
+| U01-T03 | `Version`, `Resultado`, `Motivo`, `CodigoMotivo` (9 códigos en esta tarea; U01-T06 añadió `DESCRIPTOR_INVALIDO`, hoy son 10) | #11 | 2 |
 | U01-T04 | `RangoVersion` con las cuatro formas de R-V2 | #13 | 2 |
 | U01-T05 | `RangoVersionPropiedades` (jqwik, PBT-02 y PBT-03) | #18 | 1 |
 | U01-T06 | `Descriptor` y `LectorDescriptor` (`leer`, `desdeYaml`, `aYaml`) | #20 | 3 |
@@ -163,6 +165,7 @@ rc=0
 | io.synkra.verificador.SuiteCombinacionesTest | 17 | 0 | 0 | 0 | n/a |
 | io.synkra.verificador.VeredictoTest | 17 | 0 | 0 | 0 | n/a |
 | io.synkra.verificador.VerificadorPropiedades | 9 | 0 | 0 | 0 | `determinista`, `ordenYRepetidos`, `unMotivoPorPluginYGlobalEquivaleASinMotivos`, `alternativaAplicadaAprueba`, `completitud` y `minimoYMaximo`: 1000 cada una (las otras 3 son pruebas normales) |
+| io.synkra.verificador.VerificadorTest | 15 | 0 | 0 | 0 | n/a |
 | io.synkra.verificador.VersionTest | 16 | 0 | 0 | 0 | n/a |
 | **Total (12 clases)** | **178** | **0** | **0** | **0** | 10 propiedades, 1000 intentos cada una |
 
