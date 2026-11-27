@@ -44,11 +44,11 @@ class CatalogoServicio implements CatalogoApi {
     private final VersionCoreRepositorio versiones;
     private final SubidaPlugin subida;
     private final ListadoPlugins listado;
-    private final CatalogoSqlite catalogoSqlite;
+    private final io.synkra.verificador.Catalogo catalogoSqlite;
 
     CatalogoServicio(JdbcAggregateTemplate plantilla, CoreRepositorio cores, VersionCoreRepositorio versiones,
-            SubidaPlugin subida, ListadoPlugins listado, CatalogoSqlite catalogoSqlite) {
-        this.catalogoSqlite = catalogoSqlite;
+            SubidaPlugin subida, ListadoPlugins listado, PluginRepositorio plugins, EtiquetaRepositorio etiquetas) {
+        this.catalogoSqlite = new CatalogoSqlite(versiones, plugins, etiquetas);
         this.listado = listado;
         this.plantilla = plantilla;
         this.cores = cores;

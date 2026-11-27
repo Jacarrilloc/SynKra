@@ -8,17 +8,14 @@ import io.synkra.verificador.Version;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.springframework.stereotype.Component;
 
 /**
  * {@link Catalogo} de U01 leído de SQLite en cada llamada (sin caché). Una carpeta solo ve sus plugins porque toda
  * consulta lleva el core. Una fila que no se puede parsear es un error interno ({@link IllegalStateException}, 500):
- * no se oculta. El descriptor lleva solo las etiquetas de origen {@code descriptor}, como el del JAR.
+ * no se oculta. No es un bean: solo se obtiene por {@code CatalogoApi}, así que nadie puede inyectarlo como
+ * {@code Catalogo} saltándose {@code catalogo.api}. El descriptor lleva solo las etiquetas de origen {@code descriptor}, como el del JAR.
  */
-@Component
 class CatalogoSqlite implements Catalogo {
-
-    static final String ORIGEN_DESCRIPTOR = "descriptor";
 
     private final VersionCoreRepositorio versionesCore;
     private final PluginRepositorio plugins;
@@ -39,8 +36,7 @@ class CatalogoSqlite implements Catalogo {
 
     @Override
     public List<Version> versionesPlugin(String core, String plugin) {
-        return plugins.findByCore(core).stream()
-                .filter(p -> p.nombre().equals(plugin))
+        return plugins.findByCoreAndNombre(core, plugin).stream()
                 .map(p -> version(p.version(), "cat_plugin " + core + "/" + plugin))
                 .toList();
     }
@@ -49,7 +45,7 @@ class CatalogoSqlite implements Catalogo {
     public Optional<Descriptor> descriptor(String core, String plugin, Version version) {
         return plugins.findByCoreAndNombreAndVersion(core, plugin, version.toString()).map(p -> {
             var delDescriptor = etiquetas.findByCoreAndPluginAndVersion(core, plugin, p.version()).stream()
-                    .filter(e -> ORIGEN_DESCRIPTOR.equals(e.origen()))
+                    .filter(e -> SubidaPlugin.ORIGEN_DESCRIPTOR.equals(e.origen()))
                     .collect(Collectors.toMap(Etiqueta::clave, Etiqueta::valor));
             try {
                 return new Descriptor(p.nombre(), version(p.version(), "cat_plugin"), p.core(),

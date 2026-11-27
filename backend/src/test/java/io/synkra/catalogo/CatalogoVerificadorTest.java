@@ -47,6 +47,7 @@ class CatalogoVerificadorTest {
     }
 
     @Autowired CatalogoApi api;
+    @Autowired org.springframework.jdbc.core.JdbcTemplate jdbc;
 
     private static boolean cargada;
 
@@ -89,6 +90,11 @@ class CatalogoVerificadorTest {
         var enSqlite = Verificador.verificar(seleccion, api.catalogoParaVerificar());
         assertThat(enSqlite).isEqualTo(enMemoria);
         assertThat(enSqlite.global()).isEqualTo(caso.esperado().global().orElseThrow());
+        var altsMemoria = Verificador.alternativas(seleccion, enMemoria, SuiteCombinaciones.catalogo());
+        var altsSqlite = Verificador.alternativas(seleccion, enSqlite, api.catalogoParaVerificar());
+        assertThat(altsSqlite).isEqualTo(altsMemoria);
+        assertThat(altsSqlite.porPlugin().stream().flatMap(p -> p.alternativas().stream()).toList())
+                .isEqualTo(caso.esperado().alternativas());
     }
 
     @Test
@@ -148,5 +154,21 @@ class CatalogoVerificadorTest {
         assertThat(c.versionesCore("synkra-core")).containsExactlyInAnyOrderElementsOf(memoria.versionesCore("synkra-core"));
         assertThat(c.versionesPlugin("synkra-core", "kyc-pe"))
                 .containsExactlyInAnyOrderElementsOf(memoria.versionesPlugin("synkra-core", "kyc-pe"));
+    }
+
+    @Test
+    void unaFilaNoParseableEsErrorInternalYNoSeOculta() throws IOException {
+        cargar();
+        jdbc.update("insert into cat_core(nombre) values ('core-roto')");
+        jdbc.update("insert into cat_version_core values ('core-roto','no-es-version','img','x',0)");
+        jdbc.update("insert into cat_plugin values ('core-roto','malo','1.0.0','no-es-rango','h',0,'r',null,'x',0)");
+        jdbc.update("insert into cat_plugin values ('core-roto','malo','no-es-version','1.x','h',0,'r',null,'x',0)");
+        var c = api.catalogoParaVerificar();
+        org.assertj.core.api.Assertions.assertThatThrownBy(() -> c.versionesCore("core-roto"))
+                .isInstanceOf(IllegalStateException.class);
+        org.assertj.core.api.Assertions.assertThatThrownBy(() -> c.versionesPlugin("core-roto", "malo"))
+                .isInstanceOf(IllegalStateException.class);
+        org.assertj.core.api.Assertions.assertThatThrownBy(() -> c.descriptor("core-roto", "malo", new Version(1, 0, 0)))
+                .isInstanceOf(IllegalStateException.class);
     }
 }

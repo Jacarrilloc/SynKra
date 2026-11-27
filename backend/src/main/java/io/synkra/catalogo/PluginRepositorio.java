@@ -11,6 +11,8 @@ interface PluginRepositorio extends Repository<Plugin, String> {
 
     List<Plugin> findByCore(String core);
 
+    List<Plugin> findByCoreAndNombre(String core, String nombre);
+
     Optional<Plugin> findByCoreAndNombreAndVersion(String core, String nombre, String version);
 
     List<Plugin> findBySha256(String sha256);
