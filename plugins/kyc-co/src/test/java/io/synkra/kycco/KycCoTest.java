@@ -32,11 +32,19 @@ class KycCoTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"12345", "12345678901", "12ab", "١٢٣٤٥٦", "", "123 456", "-123456"})
-    void rechazaConMotivo(String d) {
+    @ValueSource(strings = {"12345", "12345678901", "", "1"})
+    void rechazaPorLongitud(String d) {
         var r = punto.validar(doc(d));
         assertFalse(r.aprobado());
-        assertFalse(r.motivo().isBlank());
+        assertEquals(PluginKycCo.MOTIVO_LONGITUD, r.motivo());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"12ab56", "١٢٣٤٥٦", "123 456", "-123456", "123456a"})
+    void rechazaPorNoAscii(String d) {
+        var r = punto.validar(doc(d));
+        assertFalse(r.aprobado());
+        assertEquals(PluginKycCo.MOTIVO_NO_DIGITOS, r.motivo());
     }
 
     /** SolicitudKyc no admite documento nulo (lo impide el record); queda la solicitud nula. */
@@ -44,7 +52,18 @@ class KycCoTest {
     void rechazaSolicitudNulaSinLanzar() {
         var r = punto.validar(null);
         assertFalse(r.aprobado());
-        assertFalse(r.motivo().isBlank());
+        assertEquals(PluginKycCo.MOTIVO_SOLICITUD_NULA, r.motivo());
+    }
+
+    @Test
+    void losMotivosSonDistintos() {
+        assertEquals(
+                3,
+                java.util.Set.of(
+                                PluginKycCo.MOTIVO_LONGITUD,
+                                PluginKycCo.MOTIVO_NO_DIGITOS,
+                                PluginKycCo.MOTIVO_SOLICITUD_NULA)
+                        .size());
     }
 
     @Test
@@ -69,6 +88,7 @@ class KycCoTest {
         assertEquals("kyc-co", d.nombre());
         assertEquals("1.0.0", d.version().toString());
         assertEquals("synkra-core", d.core());
+        assertEquals("2.x", d.coreCompatible().texto());
         assertEquals(Map.of("pais", "co"), d.etiquetas());
         try (var zip = new ZipFile(jar.toFile())) {
             assertTrue(zip.stream().noneMatch(e -> e.getName().startsWith("io/synkra/plugin/api/")));
