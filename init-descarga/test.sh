@@ -64,7 +64,8 @@ nuevo() {
 # Ejecuta el script; deja código en $COD y salida en $SAL.
 correr() { # url
     SAL=$T/salida.txt
-    env SYNKRA_URL="$1" SYNKRA_CONFIG="$C" SYNKRA_PLUGINS="$P" SYNKRA_ESPERA_BASE=0 \
+    env PATH="${PATH_EXTRA:+$PATH_EXTRA:}$PATH" \
+        SYNKRA_URL="$1" SYNKRA_CONFIG="$C" SYNKRA_PLUGINS="$P" SYNKRA_ESPERA_BASE="${BASE:-0}" \
         sh "$SCRIPT" >"$SAL" 2>&1
     COD=$?
 }
@@ -189,6 +190,97 @@ caso=sin-lista
 nuevo c8
 correr "$URL_OK"
 if [ "$COD" -ne 0 ] && vacio; then ok $caso; else falla $caso "cod=$COD"; fi
+
+# 9. espera creciente (decisión 5): sleep falso al frente del PATH que registra sus argumentos
+caso=espera-creciente
+nuevo c9
+mkdir -p "$T/falso"
+printf '#!/bin/sh\necho "$1" >>"%s/sleeps.log"\n' "$T" >"$T/falso/sleep"
+chmod +x "$T/falso/sleep"; : >"$T/sleeps.log"
+SHA=$(sha_de x)
+echo "$SHA plugin-a-1.0.jar" >"$C/artefactos.txt"
+PATH_EXTRA=$T/falso BASE=1 correr "$URL_CAIDA"
+ESP=$(tr '\n' ' ' <"$T/sleeps.log")
+if [ "$COD" -ne 0 ] && [ "$ESP" = "1 2 4 8 " ]; then ok $caso
+else falla $caso "cod=$COD esperas=$ESP"; fi
+
+# 10. SYNKRA_ESPERA_BASE debe ser entero no negativo
+for mal in 0.5 -1 abc; do
+    caso="espera-base-invalida($mal)"
+    nuevo c10
+    SHA=$(sha_de x); echo "$SHA a-1.jar" >"$C/artefactos.txt"
+    BASE=$mal correr "$URL_OK"
+    if [ "$COD" -eq 2 ] && grep -q 'SYNKRA_ESPERA_BASE' "$SAL" \
+        && [ "$(wc -l <"$T/peticiones.log")" -eq 0 ] && vacio; then ok "$caso"
+    else falla "$caso" "cod=$COD"; fi
+done
+
+# 11. línea vacía en medio de la lista: se salta (decisión ratificada)
+caso=linea-vacia-en-medio
+nuevo c11
+S1=$(sha_de uno); printf uno >"$T/srv/$S1"
+S2=$(sha_de dos); printf dos >"$T/srv/$S2"
+printf '%s a-1.jar\n\n%s b-1.jar\n' "$S1" "$S2" >"$C/artefactos.txt"
+correr "$URL_OK"
+if [ "$COD" -eq 0 ] && [ "$(ls -A "$P" | tr '\n' ' ')" = "a-1.jar b-1.jar " ]; then ok $caso
+else falla $caso "cod=$COD plugins=$(ls -A "$P")"; fi
+
+# 12. enlaces (F-01). A: temporal antiguo es enlace a un archivo de fuera
+caso=enlace-en-temporal-antiguo
+nuevo c12a
+mkdir "$T/c12a/fuera"; echo original >"$T/c12a/fuera/victima"
+ln -s "$T/c12a/fuera/victima" "$P/.a-1.jar.parcial"
+CONT=uno; SHA=$(sha_de "$CONT"); printf '%s' "$CONT" >"$T/srv/$SHA"
+echo "$SHA a-1.jar" >"$C/artefactos.txt"
+correr "$URL_OK"
+if [ "$(cat "$T/c12a/fuera/victima")" = original ] && [ -z "$(ls -A "$T/c12a/fuera" | grep -v '^victima$')" ] \
+    && { [ "$COD" -ne 0 ] || { [ -f "$P/a-1.jar" ] && [ ! -L "$P/a-1.jar" ]; }; }; then ok $caso
+else falla $caso "cod=$COD victima=$(cat "$T/c12a/fuera/victima")"; fi
+
+# 12b. B: el destino es un enlace a un directorio de fuera
+caso=enlace-en-destino
+nuevo c12b
+mkdir "$T/c12b/fuera"; ln -s "$T/c12b/fuera" "$P/a-1.jar"
+CONT=uno; SHA=$(sha_de "$CONT"); printf '%s' "$CONT" >"$T/srv/$SHA"
+echo "$SHA a-1.jar" >"$C/artefactos.txt"
+correr "$URL_OK"
+if [ "$COD" -ne 0 ] && [ -z "$(ls -A "$T/c12b/fuera")" ] && [ -L "$P/a-1.jar" ] \
+    && [ "$(wc -l <"$T/peticiones.log")" -eq 0 ]; then ok $caso
+else falla $caso "cod=$COD fuera=$(ls -A "$T/c12b/fuera")"; fi
+
+# 12c. destino enlace a archivo de fuera: se niega y no lo toca
+caso=enlace-a-archivo-en-destino
+nuevo c12c
+mkdir "$T/c12c/fuera"; echo original >"$T/c12c/fuera/victima"; ln -s "$T/c12c/fuera/victima" "$P/a-1.jar"
+CONT=uno; SHA=$(sha_de "$CONT"); printf '%s' "$CONT" >"$T/srv/$SHA"
+echo "$SHA a-1.jar" >"$C/artefactos.txt"
+correr "$URL_OK"
+if [ "$COD" -ne 0 ] && [ "$(cat "$T/c12c/fuera/victima")" = original ]; then ok $caso
+else falla $caso "cod=$COD"; fi
+
+# 12d. $PLUGINS mismo es un enlace: se niega sin escribir
+caso=plugins-es-enlace
+nuevo c12d
+mkdir "$T/c12d/real"; ln -s "$T/c12d/real" "$T/c12d/enlace"
+CONT=uno; SHA=$(sha_de "$CONT"); printf '%s' "$CONT" >"$T/srv/$SHA"
+echo "$SHA a-1.jar" >"$C/artefactos.txt"
+P=$T/c12d/enlace correr "$URL_OK"
+if [ "$COD" -ne 0 ] && [ -z "$(ls -A "$T/c12d/real")" ]; then ok $caso
+else falla $caso "cod=$COD"; fi
+
+# 12e. un archivo regular previo con el mismo nombre se reemplaza (el emptyDir sobrevive a reinicios)
+caso=archivo-previo-se-reemplaza
+nuevo c12e
+echo viejo >"$P/a-1.jar"
+CONT=uno; SHA=$(sha_de "$CONT"); printf '%s' "$CONT" >"$T/srv/$SHA"
+echo "$SHA a-1.jar" >"$C/artefactos.txt"
+correr "$URL_OK"
+if [ "$COD" -eq 0 ] && [ "$(sha256sum <"$P/a-1.jar" | cut -d' ' -f1)" = "$SHA" ]; then ok $caso
+else falla $caso "cod=$COD"; fi
+
+# 13. protege la línea set -eu del script (quitarla no rompe ningún otro caso)
+caso=set-eu-presente
+if grep -q '^set -eu$' "$SCRIPT"; then ok $caso; else falla $caso "falta set -eu"; fi
 
 if [ "$FALLOS" -ne 0 ]; then echo "$FALLOS caso(s) con FALLA"; exit 1; fi
 echo "todos los casos ok"
