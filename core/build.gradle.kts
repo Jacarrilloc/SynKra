@@ -17,6 +17,8 @@ dependencies {
     implementation(project(":plugin-api"))
     // VersionCore devuelve io.synkra.verificador.Version (U02-T04 la usará para verificar).
     implementation(project(":verificador"))
+    // Lee plugins-activos.yaml con el mismo motor seguro que U01 (sin etiquetas que instancien clases).
+    implementation("org.snakeyaml:snakeyaml-engine:3.2")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
