@@ -20,6 +20,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
+    implementation(project(":verificador"))
+    implementation("org.springframework.modulith:spring-modulith-api")
     implementation("org.xerial:sqlite-jdbc")
     implementation("org.flywaydb:flyway-core")
 
