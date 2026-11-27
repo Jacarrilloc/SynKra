@@ -2,7 +2,6 @@ package io.synkra.plataforma;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +11,6 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.method.ParameterErrors;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
@@ -56,43 +54,40 @@ public class ManejadorErrores extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
             HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         var detalles = ex.getBindingResult().getFieldErrors().stream()
-                .map(f -> new DetalleError(f.getField(), textoDe(f.getDefaultMessage()))).toList();
+                .map(f -> new DetalleError(f.getField(), f.getDefaultMessage())).toList();
         return respuesta(HttpStatus.UNPROCESSABLE_ENTITY, entidadNoProcesable(detalles), headers);
     }
 
-    /** C-07: validación de parámetros (Spring 6.1+). El campo es el nombre del parámetro o de la propiedad. */
+    /** C-07: validación de parámetros (Spring 6.1+). El campo es el nombre del parámetro. */
     @Override
     protected ResponseEntity<Object> handleHandlerMethodValidationException(HandlerMethodValidationException ex,
             HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         var detalles = new ArrayList<DetalleError>();
         for (var r : ex.getParameterValidationResults()) {
             var nombre = r.getMethodParameter().getParameterName();
-            if (r instanceof ParameterErrors pe) {
-                pe.getFieldErrors().forEach(f -> detalles.add(new DetalleError(f.getField(), textoDe(f.getDefaultMessage()))));
-            } else {
-                r.getResolvableErrors().forEach(e -> detalles.add(new DetalleError(
-                        nombre == null ? CodigosError.PARAMETRO_SIN_NOMBRE : nombre, textoDe(e.getDefaultMessage()))));
-            }
+            r.getResolvableErrors().forEach(e -> detalles.add(new DetalleError(
+                    nombre == null ? CodigosError.PARAMETRO_SIN_NOMBRE : nombre, e.getDefaultMessage())));
         }
         return respuesta(HttpStatus.UNPROCESSABLE_ENTITY, entidadNoProcesable(detalles), headers);
     }
 
-    /** C-07: un tipo equivocado en el JSON (array donde va texto...) es 422 con la ruta real del campo. */
+    /**
+     * C-07: un tipo equivocado en el JSON (array donde va texto, número donde va texto...) es un error de
+     * estructura, no de datos. Se informa solo el primer campo con tipo equivocado, en un 422 con su
+     * {@code campo}, y no se combina con las reglas de R-C1: el «todos los detalles» de R-C1 vale cuando
+     * todos los valores son texto o nulos. Un error de tipo en la raíz del cuerpo (por ejemplo {@code []})
+     * no tiene campo que nombrar y sigue siendo 400 {@code SOLICITUD_INVALIDA}.
+     */
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
             HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        if (ex.getCause() instanceof MismatchedInputException mie && !mie.getPath().isEmpty()) {
-            var campo = mie.getPath().stream()
-                    .map(r -> r.getFieldName() != null ? r.getFieldName() : "[" + r.getIndex() + "]")
-                    .collect(Collectors.joining("."));
+        if (ex.getCause() instanceof MismatchedInputException mie && !mie.getPath().isEmpty()
+                && mie.getPath().get(0).getFieldName() != null) {
+            var campo = mie.getPath().get(0).getFieldName();
             return respuesta(HttpStatus.UNPROCESSABLE_ENTITY, entidadNoProcesable(
                     List.of(new DetalleError(campo, CodigosError.MOTIVO_TIPO_INVALIDO))), headers);
         }
         return super.handleHttpMessageNotReadable(ex, headers, status, request);
-    }
-
-    private static String textoDe(String mensaje) {
-        return mensaje == null ? CodigosError.MOTIVO_SIN_TEXTO : mensaje;
     }
 
     private static ErrorApi entidadNoProcesable(List<DetalleError> detalles) {

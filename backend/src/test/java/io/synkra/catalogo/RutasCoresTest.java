@@ -129,6 +129,41 @@ class RutasCoresTest {
     }
 
     @Test
+    void unTipoEquivocadoNoSeCombinaConLasReglasDeR_C1() {
+        var r = post("{\"nombre\":\"Mal Nombre\",\"version\":\"x\",\"imagen\":5}");
+        assertThat(r.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
+        assertThat(r.getBody().get("codigo")).isEqualTo(CodigosError.ENTIDAD_NO_PROCESABLE);
+        assertThat(detalles(r.getBody())).hasSize(1);
+        assertThat(detalles(r.getBody()).get(0))
+                .isEqualTo(Map.of("campo", "imagen", "motivo", CodigosError.MOTIVO_TIPO_INVALIDO));
+    }
+
+    @Test
+    void sinNombreOSinVersionDa422ConEsteCampo() {
+        var sinNombre = post("{\"version\":\"1.0.0\",\"imagen\":\"" + IMAGEN + "\"}");
+        assertThat(sinNombre.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
+        assertThat(detalles(sinNombre.getBody())).extracting(d -> d.get("campo")).containsExactly("nombre");
+        var sinVersion = post("{\"nombre\":\"a\",\"imagen\":\"" + IMAGEN + "\"}");
+        assertThat(sinVersion.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
+        assertThat(detalles(sinVersion.getBody())).extracting(d -> d.get("campo")).containsExactly("version");
+    }
+
+    @Test
+    void unCuerpoVacioDa422ConLosTresDetalles() {
+        var r = post("{}");
+        assertThat(r.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
+        assertThat(detalles(r.getBody())).extracting(d -> d.get("campo"))
+                .containsExactlyInAnyOrder("nombre", "version", "imagen");
+    }
+
+    @Test
+    void unCuerpoQueNoEsObjetoDa400() {
+        var r = post("[]");
+        assertThat(r.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(r.getBody().get("codigo")).isEqualTo(CodigosError.SOLICITUD_INVALIDA);
+    }
+
+    @Test
     void unTipoEquivocadoDa422ConElCampoReal() {
         for (var c : List.of(
                 new String[] {"imagen", "{\"nombre\":\"a\",\"version\":\"1.0.0\",\"imagen\":[\"x\"]}"},

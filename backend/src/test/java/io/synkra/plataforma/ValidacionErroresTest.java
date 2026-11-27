@@ -39,7 +39,6 @@ class ValidacionErroresTest {
     @Test
     void losTextosDeRespaldoQuedanFijados() {
         org.assertj.core.api.Assertions.assertThat(CodigosError.MOTIVO_OBLIGATORIO).isEqualTo("El campo es obligatorio");
-        org.assertj.core.api.Assertions.assertThat(CodigosError.MOTIVO_SIN_TEXTO).isEqualTo("El valor no es válido");
         org.assertj.core.api.Assertions.assertThat(CodigosError.MOTIVO_TIPO_INVALIDO)
                 .isEqualTo("El valor no tiene el tipo esperado");
         org.assertj.core.api.Assertions.assertThat(CodigosError.PARAMETRO_SIN_NOMBRE).isEqualTo("parametro");
@@ -76,6 +75,15 @@ class ValidacionErroresTest {
         unico(json("{\"nombre\":[\"a\"]}"), "nombre", "El valor no tiene el tipo esperado");
         unico(json("{\"nombre\":{\"a\":1}}"), "nombre", "El valor no tiene el tipo esperado");
         unico(json("{\"nombre\":\"x\",\"cantidad\":\"abc\"}"), "cantidad", "El valor no tiene el tipo esperado");
+    }
+
+    @Test
+    void unErrorDeTipoEnLaRaizNoTieneCampoYDa400() throws Exception {
+        for (var cuerpo : new String[] {"[]", "\"x\"", "5"}) {
+            json(cuerpo).andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.codigo").value(CodigosError.SOLICITUD_INVALIDA))
+                    .andExpect(jsonPath("$.detalles", hasSize(0)));
+        }
     }
 
     @Test
