@@ -2,7 +2,7 @@
 
 > Pega este archivo completo al abrir una sesión nueva. Responde en español.
 > Lo mantiene al día el orquestador después de cada hito (ver «Puntos de continuidad»).
-> Última actualización: 2026-11-27 22:12 UTC (17:12 en Bogotá), sesión de David. **PAUSA pedida por David**: nadie trabaja ahora; retoma el compañero desde aquí.
+> Última actualización: 2026-11-27 23:45 UTC (18:45 en Bogotá), sesión **local** de Julian en su máquina (`/home/julian/Escritorio/Proyectos/SynKra`). Desde ahora todo se hace en local: commits y ramas locales; el push y los PRs los hace Julian con su git cuando lo apruebe. Aquí no hay credenciales de push ni `gh`. Java 21: `JAVA_HOME=~/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2`.
 
 ---
 
@@ -63,7 +63,7 @@ El #6 es antiguo y no se toca.
 
 | Tarea | Worktree / rama | Desde | Estado | Siguiente paso |
 |---|---|---|---|---|
-| U05-T07 script de descarga (ola 33) | `../wt-m6r-U05-T07`, `m6r/U05-T07` | `5e7a45e` | Ronda 1 NO-VERDE (`b6039e9`). Codificador de la ronda 2 hecho y subido, `72b0abf` (código en `2dc76a9`). **Pausado:** el revisor de la ronda 2 se detuvo sin terminar por la pausa (no hay informe). | Repetir el revisor de la ronda 2 con base `5e7a45e` y HEAD `72b0abf`. Si VERDE: PR a `main` y fusionar junto con #84 |
+| U05-T07 script de descarga (ola 33) | `../wt-m6r-U05-T07`, `m6r/U05-T07` | `5e7a45e` | Ronda 1 NO-VERDE (`b6039e9`). Codificador de la ronda 2 hecho y subido, `72b0abf` (código en `2dc76a9`). **En vuelo (23:45 UTC, sesión local de Julian):** revisor de la ronda 2. Si no hay `revisiones/U05-T07/ronda-2.md`, se perdió: repetirlo. | Repetir el revisor de la ronda 2 con base `5e7a45e` y HEAD `72b0abf`. Si VERDE: PR a `main` y fusionar junto con #84 |
 
 ### Tareas escritas y sin despachar
 
