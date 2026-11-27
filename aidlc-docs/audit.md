@@ -818,3 +818,103 @@
 **Context**: Loop del módulo 6, ola 29, fuera de las etapas de AI-DLC.
 
 ---
+
+## Tareas de la ola 30 (U05-T04 y U02-T04)
+**Timestamp**: 2026-11-27T21:15:00Z
+**User Input**: (sin mensaje nuevo; continúa la aprobación de 2026-11-27T19:08:35Z)
+**AI Response**: El orquestador escribe U05-T04 (`aplicar` con server-side apply) y U02-T04 (`ArranquePlugins`), y añade la ola 30 a `loop/README.md`.
+**Context**: Loop del módulo 6, fuera de las etapas de AI-DLC.
+
+---
+
+## Relevo de la sesión (Julian retoma el loop desde el estado de David)
+**Timestamp**: 2026-11-27T20:27:42Z
+**User Input**: "Neceito que primero revises en el repo el estado actual del proyecto, revisando las branches y los commit que hay hasta este momento, luego necesito que leas el md que te estoy pasando para que lo uses de contexto, ya que es el trabajo que realizó otra sesion de la otra cuenta del inteegrante del equipo, para que al final continues con el trabajo"
+**AI Response**: El orquestador comprueba que `main` está en `cf00671`, que el PR #77 y las ramas de la ola 30 están como las dejó `loop/CONTINUAR.md`, y que no hay actividad posterior. Como el informe del revisor de la ronda 1 de la ola 30 no se guardó, redespacha a los dos revisores. En esta sesión el orquestador no fusiona: los PRs quedan abiertos para que los fusione un humano del equipo.
+**Context**: Loop del módulo 6, ola 30, fuera de las etapas de AI-DLC.
+
+---
+
+## Ola 30, ronda 1 (U05-T04 y U02-T04)
+**Timestamp**: 2026-11-27T20:40:00Z
+**User Input**: (sin mensaje nuevo)
+**AI Response**: Las dos salen NO-VERDE, solo con hallazgos NARANJA. U05-T04: literal del *field manager*, error engañoso sin cliente y una prueba que no demuestra que el primer objeto se queda. U02-T04: la prueba de la etiqueta de tipo no distingue la causa, y el lector del core repite límites y es menos estricto que el de U01. El orquestador arbitra: se arreglan todos los NARANJA y los AMARILLO baratos; se registran C-75 a C-78. Se redespacha a los dos codificadores.
+**Context**: Loop del módulo 6, ola 30, fuera de las etapas de AI-DLC.
+
+---
+
+## Tareas de la ola 31 (U05-T05 y U02-T05)
+**Timestamp**: 2026-11-27T20:50:00Z
+**User Input**: (sin mensaje nuevo; continúa la petición de 2026-11-27T20:27:42Z)
+**AI Response**: El orquestador escribe U05-T05 (`estado` y `contextoFallo`) y U02-T05 (la suite de U01 contra el arranque), y añade la ola 31 a `loop/README.md`. Como los PRs de la ola 30 siguen sin fusionar, cada tarea sale de la punta en VERDE de su T04.
+**Context**: Loop del módulo 6, fuera de las etapas de AI-DLC.
+
+---
+
+## Ola 30 cerrada y tareas de la ola 32
+**Timestamp**: 2026-11-27T20:58:00Z
+**User Input**: (sin mensaje nuevo; continúa la petición de 2026-11-27T20:27:42Z. A las 2026-11-27T20:37:04Z Julian pidió: "Cuando estés llegando al 98% del uso, necesito que me generes un md con lo que llevas hecho y los pasos a seguir, con el fin de que una sesión nueva continué el trabajo, asume que esta pasando el mismo caso que la sesion de david, asi que ve generando varios commits para tener puntos de continuidad, en el proximo md incluye esta metodologia de varios commits como puntos de continuidad")
+**AI Response**: U05-T04 y U02-T04 salen VERDE en la ronda 2 (PRs #78 y #79, sin fusionar; orden #77, #78, #79). Se registran C-79 y C-80. La ola 31 se despacha apilada sobre las T04. El orquestador escribe U05-T06 (`leerPais`) y U02-T06 (fallo al iniciar y readiness) y añade la ola 32. `loop/CONTINUAR.md` pasa a actualizarse con commit en cada hito.
+**Context**: Loop del módulo 6, fuera de las etapas de AI-DLC.
+
+---
+
+## Tareas restantes de U05 y U02 (olas 33 a 39)
+**Timestamp**: 2026-11-27T21:15:00Z
+**User Input**: (sin mensaje nuevo; continúa la petición de 2026-11-27T20:27:42Z)
+**AI Response**: El orquestador escribe U05-T07 a U05-T10 y U02-T07 a U02-T13 y añade las olas 33 a 39. Al escribir U05-T06 encuentra un contrato roto entre U05 y U02 (C-81: formato de `plugins-activos.yaml`) y lo asigna a U05-T06. U02-T05 sale VERDE en la ronda 2 (PR #80, apilado sobre #79). U05-T05 va a la ronda 3.
+**Context**: Loop del módulo 6, fuera de las etapas de AI-DLC.
+
+---
+
+## Módulo 6, ola 32: U05-T06 ronda 2 NO-VERDE
+**Timestamp**: 2026-11-27T23:40:00Z
+**AI Response**: El revisor de la ronda 2 de U05-T06 da NO-VERDE (informe en `revisiones/U05-T06/ronda-2.md`, `46405a0`). F-01 a F-05 cerrados. F-06 NARANJA: el arreglo de F-03 acepta etiquetas explícitas de escalar y `!!null x` en la raíz se lee como cero plugins. F-07 AMARILLO: separador de `artefactos.txt` duplicado. Arbitraje: se arreglan los dos en la ronda 3 (última). C-88 ampliada.
+**Context**: CONSTRUCTION, Code Generation Parte 2, loop del módulo 6.
+
+---
+
+## Módulo 6, ola 32 cerrada en U05: U05-T06 VERDE; ola 33 sigue con U05-T07
+**Timestamp**: 2026-11-28T00:20:00Z
+**AI Response**: U05-T06 VERDE en la ronda 3 (`revisiones/U05-T06/ronda-3.md`, punta `5e7a45e`). F-08 AMARILLO (STR explícito aceptado, subcaso de la laxitud de `PlanPais`) se registra como C-90. PR #83 abierto contra `m6r/U05-T05`; lo fusiona un humano. Se despacha U05-T07 desde `5e7a45e`. U02-T07 sigue en revisión de la ronda 1.
+**Context**: CONSTRUCTION, Code Generation Parte 2, loop del módulo 6.
+
+---
+
+## Petición de Julian: markdown de continuidad
+**Timestamp**: 2026-11-27T21:34:11Z
+**User Input**: "gENERA EL MARKDOW PARA CONTINUAR EN  OTRA SESIÓN"
+**AI Response**: Se reescribe `loop/CONTINUAR.md` con el estado al corte: PRs #77 a #83 abiertos en orden de fusión, U02-T07 con el revisor de la ronda 1 en vuelo (a repetir), U05-T07 con el codificador de la ronda 1 hecho (`dd8a95f`) y el revisor sin despachar, y las olas 34 a 39 pendientes.
+**Context**: CONSTRUCTION, Code Generation Parte 2, loop del módulo 6.
+
+---
+
+## Módulo 6, ola 33: U02-T07 ronda 1 NO-VERDE; revisor de U05-T07 despachado
+**Timestamp**: 2026-11-27T21:50:00Z
+**AI Response**: U02-T07 ronda 1 NO-VERDE (`revisiones/U02-T07/ronda-1.md`, `3514245`): F-01 y F-02 NARANJA, F-03 a F-06 AMARILLO. Arbitraje: se arregla todo; las propiedades desconocidas en `SolicitudKyc` también dan 400, fijado con prueba. C-91 (límite de cuerpo) y C-92 (formato de error por defecto de Spring) registradas. Se despacha el codificador de la ronda 2. Se despacha el revisor de la ronda 1 de U05-T07; `shellcheck` no está disponible en el entorno.
+**Context**: CONSTRUCTION, Code Generation Parte 2, loop del módulo 6.
+
+---
+
+## Sesión de David retoma la de Julian
+**Timestamp**: 2026-11-27T21:45:49Z
+**User Input**: "Revisa el repositorio con base en lo que hizo la ultima sesión de julina, y continua trabajando"
+**AI Response**: Se revisa GitHub contra `loop/CONTINUAR.md` (21:40 UTC): coincide con el adjunto de David. Desde entonces hay un commit nuevo, el codificador de la ronda 2 de U02-T07 (`e69ef05`, 21:42). Se despachan en paralelo el revisor de la ronda 2 de U02-T07 y el de la ronda 1 de U05-T07, que se había perdido. Se sigue la metodología de la sesión de Julian: commit y push por hito, `CONTINUAR.md` al día, y los PRs los fusiona un humano.
+**Context**: Loop del módulo 6, ola 33, fuera de las etapas de AI-DLC.
+
+---
+
+## Ola 33: U05-T07 ronda 1 NO-VERDE y arbitraje
+**Timestamp**: 2026-11-27T22:00:00Z
+**User Input**: (sin mensaje nuevo; continúa la instrucción de 2026-11-27T21:45:49Z)
+**AI Response**: U05-T07 ronda 1 NO-VERDE (`revisiones/U05-T07/ronda-1.md`, `b6039e9`). Arbitraje del orquestador:
+- F-01: el script se niega (código distinto de 0, nada escrito) si el temporal o el destino son enlaces simbólicos. El temporal se crea nuevo dentro de `$PLUGINS` con `mktemp`. Un archivo regular previo con el mismo nombre se puede reemplazar, porque el emptyDir sobrevive a los reinicios del contenedor y negarse dejaría el pod bloqueado para siempre.
+- F-02: prueba de la espera creciente con un `sleep` falso en el `PATH` que registra sus argumentos y exige `1 2 4 8` con base 1.
+- F-03: se ratifica saltar las líneas vacías, con una prueba que lo fije.
+- F-04: `SYNKRA_ESPERA_BASE` tiene que ser un entero; si no, código 2 con mensaje claro.
+- F-05: se acepta, como consecuencia de F-01, y se documenta.
+- F-06 y F-07: se corrigen.
+Se despacha el codificador de la ronda 2.
+**Context**: Loop del módulo 6, ola 33, fuera de las etapas de AI-DLC.
+
+---

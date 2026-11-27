@@ -69,6 +69,16 @@ U01 y U03 no dependen entre sí en el grafo, pero **U03-T01 necesita la raíz de
 | Ola 27 | U05-T01 y U02-T01 | 2 | Cliente Fabric8 (`backend/`) y contrato `plugin-api/`: archivos distintos (`backend/build.gradle.kts` frente a `plugin-api/` y una línea de `settings.gradle.kts`). Sale de la rama de tareas `orq/U05-U02-tareas` |
 | Ola 28 | U05-T02 y U02-T02 | 2 | Guardia de namespace (`kubernetes/`) y proyecto `core/`. Sale de `main` después de la ola 27 |
 | Ola 29 | U05-T03 y U02-T03 | 2 | `construir` los objetos del país (`kubernetes/`) y `CargadorPlugins` (`core/`). Sale de `main` después de la ola 28 |
+| Ola 30 | U05-T04 y U02-T04 | 2 | `aplicar` con server-side apply (`kubernetes/`) y `ArranquePlugins` (`core/`). Sale de la rama de tareas después de la ola 29 |
+| Ola 31 | U05-T05 y U02-T05 | 2 | `estado` y `contextoFallo` (`kubernetes/`) y la suite de U01 contra el arranque (`core/src/test`). Cada una sale de la punta en VERDE de su T04 (`m6r/U05-T04` y `m6r/U02-T04`), porque esos PRs siguen sin fusionar; sus PRs apuntan a esas ramas |
+| Ola 32 | U05-T06 y U02-T06 | 2 | `leerPais` (`kubernetes/`) y fallo al iniciar con readiness (`core/` y el *fixture*). Salen de la punta en VERDE de U05-T05 y U02-T05 si sus PRs no se han fusionado |
+| Ola 33 | U05-T07 y U02-T07 | 2 | Script `init-descarga/descargar.sh` con su prueba (directorio nuevo) y endpoints del core (`core/`). Salen de la punta en VERDE de U05-T06 y U02-T06 si sus PRs no se han fusionado |
+| Ola 34 | U05-T08 y U02-T08 | 2 | Imagen del init (`init-descarga/Dockerfile`) y control «el core no conoce países» (`core/src/test` y `scripts/`). Salen de la punta en VERDE de U05-T07 y U02-T07 si sus PRs no se han fusionado |
+| Ola 35 | U05-T09 y U02-T09 | 2 | Fronteras del módulo `kubernetes` (C-68, C-70, C-73, C-79) y plugin `kyc-co` (`plugins/kyc-co/`). Salen de la punta en VERDE de U05-T08 y U02-T08 |
+| Ola 36 | U05-T10 y U02-T10 | 2 | Resumen de U05 (cierra la unidad) y plugin `kyc-pe` en dos versiones |
+| Ola 37 | U02-T11 | 1 | Imagen del core (`core/Dockerfile`) |
+| Ola 38 | U02-T12 | 1 | Prueba de humo `core/smoke.sh` con `docker run` |
+| Ola 39 | U02-T13 | 1 | Resumen de U02. Cierra la unidad |
 
 Lo previsto era que cada ola saliera de la punta de `modulo-6-rehecho` después de fusionar los PRs de
 la anterior. El responsable pidió avanzar sin abrir PRs todavía, así que **las ramas quedaron
