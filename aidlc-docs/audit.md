@@ -818,3 +818,11 @@
 **Context**: Loop del módulo 6, ola 29, fuera de las etapas de AI-DLC.
 
 ---
+
+## Tareas de la ola 30 (U05-T04 y U02-T04)
+**Timestamp**: 2026-11-27T21:15:00Z
+**User Input**: (sin mensaje nuevo; continúa la aprobación de 2026-11-27T19:08:35Z)
+**AI Response**: El orquestador escribe U05-T04 (`aplicar` con server-side apply) y U02-T04 (`ArranquePlugins`), y añade la ola 30 a `loop/README.md`.
+**Context**: Loop del módulo 6, fuera de las etapas de AI-DLC.
+
+---

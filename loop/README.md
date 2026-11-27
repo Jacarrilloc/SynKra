@@ -69,6 +69,7 @@ U01 y U03 no dependen entre sí en el grafo, pero **U03-T01 necesita la raíz de
 | Ola 27 | U05-T01 y U02-T01 | 2 | Cliente Fabric8 (`backend/`) y contrato `plugin-api/`: archivos distintos (`backend/build.gradle.kts` frente a `plugin-api/` y una línea de `settings.gradle.kts`). Sale de la rama de tareas `orq/U05-U02-tareas` |
 | Ola 28 | U05-T02 y U02-T02 | 2 | Guardia de namespace (`kubernetes/`) y proyecto `core/`. Sale de `main` después de la ola 27 |
 | Ola 29 | U05-T03 y U02-T03 | 2 | `construir` los objetos del país (`kubernetes/`) y `CargadorPlugins` (`core/`). Sale de `main` después de la ola 28 |
+| Ola 30 | U05-T04 y U02-T04 | 2 | `aplicar` con server-side apply (`kubernetes/`) y `ArranquePlugins` (`core/`). Sale de la rama de tareas después de la ola 29 |
 
 Lo previsto era que cada ola saliera de la punta de `modulo-6-rehecho` después de fusionar los PRs de
 la anterior. El responsable pidió avanzar sin abrir PRs todavía, así que **las ramas quedaron
