@@ -684,6 +684,42 @@ class SubirPluginTest {
         assertThat(directorios()).containsExactlyInAnyOrder(Path.of(".tmp"), Path.of(CORE), Path.of(CORE, "pago"));
     }
 
+    // ---------- C-47: <core> o <core>/<nombre> como enlace simbólico ----------
+
+    /** La subida falla sin escribir fuera: ni en el destino del enlace ni en la base; el enlace queda como estaba. */
+    private void enlaceNoSeSigue(Path enlace, Path fuera) throws Exception {
+        assertThat(enlace).isSymbolicLink();
+        assertThatThrownBy(() -> subir(pago(null), Map.of())).isInstanceOf(FileSystemException.class)
+                .isNotInstanceOf(ExcepcionApi.class);
+        try (Stream<Path> s = Files.walk(fuera)) {
+            assertThat(s.filter(p -> !p.equals(fuera)).toList()).as("nada fuera de $SYNKRA_DATA").isEmpty();
+        }
+        assertThat(enlace).isSymbolicLink();
+        assertThat(Files.readSymbolicLink(enlace)).isEqualTo(fuera);
+        assertThat(archivos(datos.resolve("artefactos"))).as("el temporal se borró").isEmpty();
+        assertThat(jdbc.queryForObject("select count(*) from cat_plugin", Integer.class)).isZero();
+        assertThat(jdbc.queryForObject("select count(*) from cat_etiqueta", Integer.class)).isZero();
+    }
+
+    @Test
+    void c47_laCarpetaDelCoreEsUnEnlaceAFuera_laSubidaFallaYFueraNoSeEscribeNada(@TempDir Path fuera)
+            throws Exception {
+        var artefactos = Files.createDirectories(datos.resolve("artefactos"));
+        var enlace = Files.createSymbolicLink(artefactos.resolve(CORE), fuera);
+        assertThat(fuera.startsWith(datos)).isFalse();
+        enlaceNoSeSigue(enlace, fuera);
+    }
+
+    @Test
+    void c47_laCarpetaDelPluginEsUnEnlaceAFuera_laSubidaFallaYFueraNoSeEscribeNada(@TempDir Path fuera)
+            throws Exception {
+        var delCore = Files.createDirectories(datos.resolve("artefactos").resolve(CORE));
+        var enlace = Files.createSymbolicLink(delCore.resolve("pago"), fuera);
+        assertThat(fuera.startsWith(datos)).isFalse();
+        enlaceNoSeSigue(enlace, fuera);
+        assertThat(delCore).isDirectory();
+    }
+
     @Test
     void laRutaFinalSeComprueba_dentroDeLaRaiz() {
         var raiz = datos.resolve("artefactos");

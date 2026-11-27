@@ -25,6 +25,7 @@ import org.apache.commons.compress.archivers.zip.UnicodePathExtraField;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -167,7 +168,11 @@ class RecepcionArtefactoTest {
 
     // ---------- R-C5: el límite ----------
 
+    // C-45: con @Timeout en un hilo aparte, un corte roto (que vuelve a pedir 0 bytes sin fin) falla en vez de colgarse.
+    // SEPARATE_THREAD porque el bucle no atiende interrupciones: en el mismo hilo, el timeout esperaría a que acabara.
+
     @Test
+    @Timeout(value = 20, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
     void flujoDe25MbConLimiteDe20Mb_da413_nombraElLimite_noLeeTodoYNoDejaNada() throws Exception {
         var leidos = new AtomicLong();
         var c = componente(VEINTE_MB);
@@ -183,6 +188,7 @@ class RecepcionArtefactoTest {
     }
 
     @Test
+    @Timeout(value = 20, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
     void exactamenteElLimiteSeAcepta_limiteMasUnoDa413() throws Exception {
         var bytes = zip(e("a"));
         var r = recibir(componente(DataSize.ofBytes(bytes.length)), bytes);
@@ -195,6 +201,7 @@ class RecepcionArtefactoTest {
     }
 
     @Test
+    @Timeout(value = 20, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
     void propiedadSynkraMaxArtefacto_seEnlazaDesdeSpring_conUnKb() throws Exception {
         var ex = (ExcepcionApi) catchThrowable(() -> desdeSpring.recibir(ceros(2048, new AtomicLong())));
         assertThat(ex.estado()).isEqualTo(HttpStatus.PAYLOAD_TOO_LARGE);
@@ -669,6 +676,7 @@ class RecepcionArtefactoTest {
     }
 
     @Test
+    @Timeout(value = 20, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
     void f06_noSeLeeMasQueLimiteMasUnByte() throws Exception {
         var leidos = new AtomicLong();
         var c = componente(DataSize.ofBytes(1000));
@@ -978,6 +986,91 @@ class RecepcionArtefactoTest {
         var cd = centralDe("a", 0, 0);
         var ex = rechazado422(Zb.build(malo, cd, 1, NADA));
         assertThat(ex.error().codigo()).isIn(CodigosCatalogo.ARTEFACTO_INVALIDO, CodigosCatalogo.RUTA_NO_PERMITIDA);
+    }
+
+    // ---------- C-45: la lista de commons, el orden y la multiplicidad, con dos índices ----------
+
+    /**
+     * Un ZIP con dos directorios centrales sobre las mismas cabeceras locales (una por nombre de {@code locales}, en
+     * ese orden). El de la JDK lo apunta el EOCD verdadero y lista {@code jdk}. El de commons, que lista
+     * {@code commons}, va dentro del comentario con su propio EOCD: la JDK lo descarta, porque su comentario no llega
+     * al final del archivo y su comprobación de respaldo no encuentra una cabecera local donde la espera (desplazada
+     * en 1 byte); commons toma la última firma de EOCD sin esa comprobación, suma ese byte a cada desplazamiento y lee
+     * el segundo directorio. Sus entradas apuntan todas a la segunda cabecera local (commons toma el nombre del
+     * directorio central, no de la cabecera). Así el flujo y la JDK pueden coincidir mientras commons ve otra lista
+     * (C02), y el flujo y commons pueden coincidir mientras la JDK ve otro orden (C03) o un nombre repetido (C21).
+     */
+    private static byte[] dosIndices(List<String> locales, List<String> jdk, List<String> commons) {
+        var offsets = new java.util.HashMap<String, Long>();
+        var cuerpo = new ByteArrayOutputStream();
+        for (var n : locales) {
+            offsets.put(n, (long) cuerpo.size());
+            cuerpo.writeBytes(unaEntrada(n));
+        }
+        var cdJdk = Zb.cat(jdk.stream().map(n -> centralDe(n, offsets.get(n), 0)).toArray(byte[][]::new));
+        long segunda = offsets.get(locales.get(1));
+        var cdCommons = Zb.cat(commons.stream().map(n -> centralDe(n, segunda - 1, 0)).toArray(byte[][]::new));
+        long inicioCommons = cuerpo.size() + cdJdk.length + 22L;
+        var finCommons = Zb.eocd(commons.size(), cdCommons.length, inicioCommons - 1, NADA);
+        var comentario = Zb.cat(cdCommons, finCommons, "fin".getBytes(StandardCharsets.UTF_8));
+        return Zb.build(cuerpo.toByteArray(), cdJdk, jdk.size(), comentario);
+    }
+
+    /** Lo que ve cada lector del ZIP: el andamiaje de las pruebas C-45 tiene que cumplir lo que dice. */
+    private List<List<String>> vistas(byte[] z) throws IOException {
+        var f = Files.write(Files.createTempFile(datos, "vista-", ".zip"), z);
+        try {
+            var flujo = new java.util.ArrayList<String>();
+            try (var in = new java.util.zip.ZipInputStream(new ByteArrayInputStream(z))) {
+                for (java.util.zip.ZipEntry en; (en = in.getNextEntry()) != null; ) {
+                    flujo.add(en.getName());
+                }
+            }
+            List<String> jdk;
+            try (var zf = new java.util.zip.ZipFile(f.toFile())) {
+                jdk = zf.stream().map(java.util.zip.ZipEntry::getName).toList();
+            }
+            List<String> commons;
+            try (var zf = org.apache.commons.compress.archivers.zip.ZipFile.builder().setPath(f)
+                    .setCharset(StandardCharsets.UTF_8).setUseUnicodeExtraFields(false).get()) {
+                commons = java.util.Collections.list(zf.getEntries()).stream().map(ZipArchiveEntry::getName).toList();
+            }
+            return List.of(flujo, jdk, commons);
+        } finally {
+            Files.delete(f);
+        }
+    }
+
+    @Test
+    void c45_c02_laListaDeCommonsDistintaDeLaDelFlujo_seRechaza() throws Exception {
+        // el flujo y la JDK ven ../../evil; commons, solo nombres inocentes: sus reglas no lo verían
+        var z = dosIndices(List.of("../../evil", "ok"), List.of("../../evil", "ok"), List.of("x", "ok"));
+        assertThat(vistas(z)).containsExactly(
+                List.of("../../evil", "ok"), List.of("../../evil", "ok"), List.of("x", "ok"));
+        noCoinciden(z);
+    }
+
+    @Test
+    void c45_c03_losMismosNombresEnOtroOrdenEntreElIndiceYLasCabeceras_seRechaza() throws Exception {
+        var z = dosIndices(List.of("a", "b"), List.of("b", "a"), List.of("a", "b"));
+        assertThat(vistas(z)).containsExactly(List.of("a", "b"), List.of("b", "a"), List.of("a", "b"));
+        noCoinciden(z);
+    }
+
+    @Test
+    void c45_c21_unNombreRepetidoSoloEnElIndiceDeLaJdk_seRechaza() throws Exception {
+        // frente a distinct(): la JDK lista b dos veces, el flujo y commons una
+        var z = dosIndices(List.of("a", "b"), List.of("a", "b", "b"), List.of("a", "b"));
+        assertThat(vistas(z)).containsExactly(List.of("a", "b"), List.of("a", "b", "b"), List.of("a", "b"));
+        noCoinciden(z);
+    }
+
+    @Test
+    void c45_dosIndicesQueDicenLoMismo_seAceptan() throws Exception {
+        // el control: el andamiaje no basta para rechazar; lo que rechaza es la diferencia de listas
+        var z = dosIndices(List.of("a", "b"), List.of("a", "b"), List.of("a", "b"));
+        assertThat(vistas(z)).containsExactly(List.of("a", "b"), List.of("a", "b"), List.of("a", "b"));
+        assertThat(recibir(componente(VEINTE_MB), z).temporal()).exists();
     }
 
     /** Proceso aparte con -Xmx256m: el EOCD que miente no puede cargar el directorio central en memoria. */
