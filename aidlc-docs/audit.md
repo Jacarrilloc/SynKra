@@ -593,3 +593,11 @@
 **Context**: Code Generation Parte 2 (loop de agentes) para U01.
 
 ---
+
+## U01-T13 - VERDE y fusión
+**Timestamp**: 2026-11-27T06:27:10Z
+**User Input**: (Sin nueva entrada. Rige la autorización del 2026-11-27T03:51:07Z.)
+**AI Response**: El agente despachó U01-T13. La ronda 1 salió NO-VERDE con dos NARANJA. Primero, la comparación por mtime daba falso rojo cuando `test` quedaba UP-TO-DATE. Segundo, no se miraban `failures` ni `errors`. Con la autorización vigente, el orquestador decidió cambiar la frescura a una huella SHA-256 del contenido de las clases de main, testFixtures y test. La ronda 2 salió VERDE: control 0 / ≠0 / ≠0 con rc=0, 213 pruebas en verificador y backend, ninguna saltada. Se abrió el PR #36 y se fusionó con merge commit (main c649eaf). Se registró la candidata C-28 y se pasa a U01-T14.
+**Context**: Code Generation Parte 2 (loop de agentes) para U01.
+
+---
