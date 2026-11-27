@@ -47,7 +47,7 @@ Para que eso no vuelva a pasar:
 ## Estado al corte
 
 - `main` en `cf00671`. U01, U03 y U04 terminadas. PRs #54 a #76 fusionados.
-- `CANDIDATAS.md` llega hasta **C-80**. La siguiente libre es **C-81**.
+- `CANDIDATAS.md` llega hasta **C-81**. La siguiente libre es **C-82**.
 - PRs abiertos: **#77** (`orq/U05-U02-tareas`: tareas de las olas 30 y 31, candidatas C-75 a C-78, auditoría y este archivo) y el #6, antiguo, que no se toca.
 
 ### Ola 30 (U05-T04 ∥ U02-T04)
@@ -71,7 +71,7 @@ Orden de fusión: #77, luego #78 (U05-T04), luego #79 (U02-T04).
 
 ### Ola 32 (U05-T06 ∥ U02-T06), escrita, sin despachar
 
-- `tareas/U05-T06-leer-pais.md` (hash `59bb199d68ab322d4249cf0c44b0f41c0957d690`).
+- `tareas/U05-T06-leer-pais.md` (hash `e94a10dc07aa29b842e2f2601efe3b0cfde155be`).
 - `tareas/U02-T06-fallo-inicio-readiness.md` (hash `c05f5ff56958720575de95a6a1fac0b9a0a59ecb`).
 - Cada una sale de la punta en VERDE de su T05.
 
