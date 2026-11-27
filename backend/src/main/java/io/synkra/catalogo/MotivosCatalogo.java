@@ -18,6 +18,19 @@ final class MotivosCatalogo {
     static final String ENTRADA_NO_PERMITIDA = "La entrada '%s' tiene una ruta no permitida";
     static final String ENTRADA_ENLACE = "La entrada '%s' es un enlace simbólico";
 
+    /** Unidades del límite en {@link #ARTEFACTO_GRANDE}. */
+    static final String UNIDAD_MB = "MB";
+    static final String UNIDAD_KB = "KB";
+    static final String UNIDAD_BYTES = "bytes";
+    /** Se completa con el tope de entradas configurado. */
+    static final String DEMASIADAS_ENTRADAS = "El artefacto tiene más de %d entradas";
+    static final String ENTRADA_UNICODE_DISTINTA =
+            "La entrada '%s' lleva un nombre Unicode distinto del nombre crudo";
+    static final String ENTRADA_LOCAL_DISTINTA =
+            "La entrada '%s' tiene una cabecera local distinta de la del directorio central";
+    static final String ESTRUCTURA_AMBIGUA =
+            "El JAR tiene datos o entradas locales fuera del directorio central";
+
     private MotivosCatalogo() {
     }
 }
