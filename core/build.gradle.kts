@@ -21,6 +21,8 @@ dependencies {
     implementation("org.snakeyaml:snakeyaml-engine:3.2")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    // La suite de combinaciones de U01 (S1 a S12), compartida como datos.
+    testImplementation(testFixtures(project(":verificador")))
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
