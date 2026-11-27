@@ -239,4 +239,83 @@ class ListarPluginsTest {
         assertThat(lista(get("/api/cores/synkra-core/plugins?nota=%27%20OR%20%271%27%3D%271"))).isEmpty();
         assertThat(api.listarPlugins("synkra-core", Map.of())).hasSize(2);
     }
+
+    private static String consulta(int n, String prefijo) {
+        var q = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            q.append(i == 0 ? "?" : "&").append(prefijo).append(i).append("=v");
+        }
+        return q.toString();
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<Map<String, String>> detallesDe(Map<String, Object> e) {
+        return (List<Map<String, String>>) e.get("detalles");
+    }
+
+    @Test
+    void masParejasQueElTopeDan422ConMotivoYElTopeSiPasa() throws Exception {
+        datosBase();
+        var justo = lista(get("/api/cores/synkra-core/plugins" + consulta(ListadoPlugins.MAX_PAREJAS, "k")));
+        assertThat(justo).isEmpty();
+        var e = error(get("/api/cores/synkra-core/plugins" + consulta(ListadoPlugins.MAX_PAREJAS + 1, "k")), 422);
+        assertThat(e.get("codigo")).isEqualTo(CodigosError.ENTIDAD_NO_PROCESABLE);
+        assertThat(camposDe(e)).containsExactly("filtro");
+        assertThat(detallesDe(e).get(0).get("motivo")).contains(String.valueOf(ListadoPlugins.MAX_PAREJAS));
+        var enorme = error(get("/api/cores/synkra-core/plugins" + consulta(1100, "k")), 422);
+        assertThat(camposDe(enorme)).containsExactly("filtro");
+        var mapa = new LinkedHashMap<String, String>();
+        for (int i = 0; i <= ListadoPlugins.MAX_PAREJAS; i++) {
+            mapa.put("k" + i, "v");
+        }
+        try {
+            api.listarPlugins("synkra-core", mapa);
+            throw new AssertionError("debía dar 422");
+        } catch (ExcepcionApi ex) {
+            assertThat(ex.estado().value()).isEqualTo(422);
+        }
+    }
+
+    @Test
+    void masDe50ClavesMalasAcotanLosDetallesConElAvisoDeOmitidos() throws Exception {
+        var e = error(get("/api/cores/synkra-core/plugins" + consulta(ListadoPlugins.MAX_PAREJAS, "K")), 422);
+        assertThat(detallesDe(e)).hasSize(SubidaPlugin.MAX_DETALLES);
+        var repetidas = new StringBuilder("?");
+        for (int i = 0; i < 60; i++) {
+            repetidas.append("r").append(i).append("=a&r").append(i).append("=b&");
+        }
+        var r = error(get("/api/cores/synkra-core/plugins" + repetidas), 422);
+        var det = detallesDe(r);
+        assertThat(det).hasSize(SubidaPlugin.MAX_DETALLES);
+        assertThat(det.get(det.size() - 1).get("motivo")).isEqualTo(MotivosCatalogo.MOTIVOS_OMITIDOS.formatted(11));
+    }
+
+    @Test
+    void elCoreInexistenteGanaSiempreAlOtros422() throws Exception {
+        assertThat(error(get("/api/cores/no-existe/plugins?pais=pe&pais=co"), 404).get("codigo"))
+                .isEqualTo(CodigosError.NO_ENCONTRADO);
+        assertThat(error(get("/api/cores/no-existe/plugins?Pais=pe"), 404).get("codigo"))
+                .isEqualTo(CodigosError.NO_ENCONTRADO);
+        assertThat(error(get("/api/cores/no-existe/plugins" + consulta(ListadoPlugins.MAX_PAREJAS + 1, "k")), 404)
+                .get("codigo")).isEqualTo(CodigosError.NO_ENCONTRADO);
+    }
+
+    @Test
+    void elFiltroSaleSoloDeLaConsultaYUnaClaveVaciaEsUn422() throws Exception {
+        datosBase();
+        var peticion = HttpRequest.newBuilder(URI.create("http://localhost:" + puerto
+                + "/api/cores/synkra-core/plugins?pais=pe"))
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .method("GET", HttpRequest.BodyPublishers.ofString("pais=co")).build();
+        var r = http.send(peticion, HttpResponse.BodyHandlers.ofByteArray());
+        assertThat(r.statusCode()).isEqualTo(200);
+        assertThat(lista(r)).hasSize(3);
+        assertThat(camposDe(error(get("/api/cores/synkra-core/plugins?=pe"), 422))).containsExactly("");
+        try (var socket = new java.net.Socket("localhost", puerto)) {
+            socket.getOutputStream().write(("GET /api/cores/synkra-core/plugins?pais=%zz HTTP/1.1\r\nHost: x\r\n"
+                    + "Connection: close\r\n\r\n").getBytes(StandardCharsets.US_ASCII));
+            var respuesta = new String(socket.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+            assertThat(respuesta).startsWith("HTTP/1.1 422");
+        }
+    }
 }

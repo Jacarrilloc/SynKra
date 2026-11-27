@@ -405,4 +405,20 @@ class RutasPluginsTest {
         var r = enviar("POST", BASE, "application/json", "{}".getBytes(StandardCharsets.UTF_8));
         assertErrorApi(r, 415, CodigosError.TIPO_NO_SOPORTADO);
     }
+
+    @Test
+    void masDe50ValoresLargosAcotanLosDetallesConElAvisoDeOmitidos() throws Exception {
+        var largo = "a".repeat(64);
+        var sb = new StringBuilder("{");
+        for (int i = 0; i < 60; i++) {
+            sb.append(i == 0 ? "" : ",").append("\"e").append(i).append("\":\"").append(largo).append("\"");
+        }
+        var r = subir(BASE, archivo(jar("1.3.0")), etiquetas(sb.append("}").toString()));
+        assertErrorApi(r, 422, CodigosError.ENTIDAD_NO_PROCESABLE);
+        @SuppressWarnings("unchecked")
+        var detalles = (List<Map<String, String>>) mapa(r).get("detalles");
+        assertThat(detalles).hasSize(SubidaPlugin.MAX_DETALLES);
+        assertThat(detalles.get(detalles.size() - 1).get("motivo"))
+                .isEqualTo(MotivosCatalogo.MOTIVOS_OMITIDOS.formatted(11));
+    }
 }

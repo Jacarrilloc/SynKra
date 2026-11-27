@@ -245,7 +245,7 @@ class SubidaPlugin {
     }
 
     /** Como mucho {@link #MAX_DETALLES}: si hay más, los primeros y uno que dice cuántos se omitieron (C-19). */
-    private static List<DetalleError> acotar(List<DetalleError> detalles, String campo) {
+    static List<DetalleError> acotar(List<DetalleError> detalles, String campo) {
         if (detalles.size() <= MAX_DETALLES) {
             return detalles;
         }

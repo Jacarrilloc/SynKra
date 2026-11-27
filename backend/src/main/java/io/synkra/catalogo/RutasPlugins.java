@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Part;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.util.UriUtils;
 
 /** H-02: subida y consulta de plugins sobre {@link CatalogoApi}. Paquete privado: la interfaz pública es {@code api}. */
 @RestController
@@ -73,23 +75,43 @@ class RutasPlugins {
         return ResponseEntity.created(ubicacion).body(dto(p));
     }
 
-    /** H-05, H-06: cada parámetro de consulta es una pareja del filtro; una clave repetida es un 422 con su campo. */
+    /**
+     * H-05, H-06: cada parámetro de la consulta (solo la consulta, no un cuerpo) es una pareja del filtro. El core
+     * inexistente (404) gana a cualquier 422; una clave repetida es un 422 con su campo.
+     */
     @GetMapping
     List<PluginDto> listar(@PathVariable String nombre, HttpServletRequest peticion) {
+        api.obtenerCore(nombre);
         var filtro = new TreeMap<String, String>();
         var repetidas = new ArrayList<DetalleError>();
-        peticion.getParameterMap().forEach((clave, valores) -> {
-            if (valores.length > 1) {
-                var corta = RecepcionArtefacto.recortar(clave);
-                repetidas.add(new DetalleError(corta, MotivosCatalogo.ETIQUETA_REPETIDA.formatted(corta)));
-            } else {
-                filtro.put(clave, valores[0]);
+        var consulta = peticion.getQueryString();
+        if (consulta != null && !consulta.isEmpty()) {
+            for (var trozo : consulta.split("&", -1)) {
+                if (trozo.isEmpty()) {
+                    continue;
+                }
+                var igual = trozo.indexOf('=');
+                String clave;
+                String valor;
+                try {
+                    clave = UriUtils.decode(igual < 0 ? trozo : trozo.substring(0, igual), StandardCharsets.UTF_8);
+                    valor = igual < 0 ? "" : UriUtils.decode(trozo.substring(igual + 1), StandardCharsets.UTF_8);
+                } catch (IllegalArgumentException e) {
+                    throw invalido("filtro", MotivosCatalogo.CONSULTA_INVALIDA);
+                }
+                if (filtro.containsKey(clave)) {
+                    var corta = RecepcionArtefacto.recortar(clave);
+                    if (repetidas.stream().noneMatch(d -> d.campo().equals(corta))) {
+                        repetidas.add(new DetalleError(corta, MotivosCatalogo.ETIQUETA_REPETIDA.formatted(corta)));
+                    }
+                } else {
+                    filtro.put(clave, valor);
+                }
             }
-        });
+        }
         if (!repetidas.isEmpty()) {
             throw new ExcepcionApi(HttpStatus.UNPROCESSABLE_ENTITY, new ErrorApi(CodigosError.ENTIDAD_NO_PROCESABLE,
-                    CodigosError.MSG_ENTIDAD_NO_PROCESABLE, repetidas.size() > SubidaPlugin.MAX_DETALLES
-                            ? repetidas.subList(0, SubidaPlugin.MAX_DETALLES) : repetidas));
+                    CodigosError.MSG_ENTIDAD_NO_PROCESABLE, SubidaPlugin.acotar(repetidas, "filtro")));
         }
         return api.listarPlugins(nombre, filtro).stream().map(RutasPlugins::dto).toList();
     }
@@ -134,8 +156,7 @@ class RutasPlugins {
         });
         if (!largos.isEmpty()) {
             throw new ExcepcionApi(HttpStatus.UNPROCESSABLE_ENTITY, new ErrorApi(CodigosError.ENTIDAD_NO_PROCESABLE,
-                    CodigosError.MSG_ENTIDAD_NO_PROCESABLE, largos.size() > SubidaPlugin.MAX_DETALLES
-                            ? largos.subList(0, SubidaPlugin.MAX_DETALLES) : largos));
+                    CodigosError.MSG_ENTIDAD_NO_PROCESABLE, SubidaPlugin.acotar(largos, PARTE_ETIQUETAS)));
         }
         return mapa;
     }
