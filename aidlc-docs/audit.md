@@ -661,3 +661,10 @@
 **Context**: CONSTRUCTION, U04.
 
 ---
+
+## U04-T03: VERDE en la ronda 3, PR #45 fusionado
+**Timestamp**: 2026-11-27T12:40:00Z
+**AI Response**: La ronda 1 salió NO-VERDE por seis NARANJA: `@NotNull` recortaba el 422, C-07 estaba sin pruebas, los tipos equivocados no se manejaban, había literales y faltaba la prueba de imagen por versión. La ronda 2 salió NO-VERDE porque un tipo equivocado seguía recortando el 422. Decisión del orquestador: un tipo equivocado es un error de estructura, así que se informa solo el primer campo; el «todos» de R-C1 rige con valores de texto o nulos. La ronda 3 salió VERDE y fusioné el #45. C-07 queda cerrada. Nuevas candidatas C-38 a C-43. C-34 se corrigió porque U04-T03 no acota el cuerpo, y C-14 tiene fecha en U04-T11.
+**Context**: CONSTRUCTION, U04, ola 16.
+
+---
