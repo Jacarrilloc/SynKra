@@ -26,6 +26,8 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    // Solo los fixtures de C-07 usan @Valid y @Min; main no valida con Bean Validation.
+    testImplementation("org.springframework.boot:spring-boot-starter-validation")
     testImplementation("org.springframework.modulith:spring-modulith-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
