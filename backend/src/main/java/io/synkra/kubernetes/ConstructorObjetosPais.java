@@ -67,6 +67,15 @@ final class ConstructorObjetosPais {
      */
     static final String CLAVE_PLUGINS = "plugins-activos.yaml";
     static final String CLAVE_ARTEFACTOS = "artefactos.txt";
+    /** Claves de cada entrada de {@link #CLAVE_PLUGINS}. */
+    static final String CLAVE_NOMBRE = "nombre";
+    static final String CLAVE_VERSION = "version";
+    static final String SUFIJO_JAR = ".jar";
+
+    /** Nombre del jar de un plugin: la clave que une una entrada de {@link #CLAVE_PLUGINS} con su línea de {@link #CLAVE_ARTEFACTOS}. */
+    static String nombreJar(String nombre, String version) {
+        return nombre + "-" + version + SUFIJO_JAR;
+    }
 
     private static final ResourceRequirements RECURSOS_CORE = recursos("256Mi", "512Mi", "250m", "500m");
     private static final ResourceRequirements RECURSOS_INIT = recursos("32Mi", "64Mi", "50m", "100m");
@@ -108,10 +117,10 @@ final class ConstructorObjetosPais {
         String activos = plugins.isEmpty()
                 ? "[]\n"
                 : plugins.stream()
-                        .map(p -> "- nombre: \"" + p.nombre() + "\"\n  version: \"" + p.version() + "\"\n")
+                        .map(p -> "- " + CLAVE_NOMBRE + ": \"" + p.nombre() + "\"\n  " + CLAVE_VERSION + ": \"" + p.version() + "\"\n")
                         .collect(Collectors.joining());
         String artefactos = plugins.stream()
-                .map(p -> p.sha256() + " " + p.nombre() + "-" + p.version() + ".jar\n")
+                .map(p -> p.sha256() + " " + nombreJar(p.nombre(), p.version()) + "\n")
                 .collect(Collectors.joining());
         return new ConfigMapBuilder()
                 .withNewMetadata().withName(NOMBRE_CONFIG).withNamespace(namespace).withLabels(etiquetaGestor()).endMetadata()

@@ -1,0 +1,3 @@
+$ ./gradlew :backend:test --rerun --tests *LeerPaisTest
+BUILD SUCCESSFUL in 8s
+tests="18" skipped="0" failures="0" errors="0"

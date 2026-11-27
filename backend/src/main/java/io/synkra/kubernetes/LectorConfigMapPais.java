@@ -41,7 +41,9 @@ final class LectorConfigMapPais {
     static final int MAX_BYTES = 64 * 1024;
     static final int MAX_ALIAS = 10;
     static final int MAX_PROFUNDIDAD = 32;
-    private static final Pattern LINEA_ARTEFACTO = Pattern.compile("([^ ]+) ([^ ]+\\.jar)");
+    private static final Pattern LINEA_ARTEFACTO = Pattern.compile("([^ ]+) ([^ ]+" + Pattern.quote(ConstructorObjetosPais.SUFIJO_JAR) + ")");
+
+    private static final java.util.Set<Tag> ESCALARES_IMPLICITOS = java.util.Set.of(Tag.INT, Tag.FLOAT, Tag.BOOL, Tag.NULL);
 
     private LectorConfigMapPais() {}
 
@@ -53,7 +55,7 @@ final class LectorConfigMapPais {
         Map<String, String> shaPorJar = artefactos(pais, txt);
         List<PluginPlan> plugins = new ArrayList<>();
         for (String[] a : activos) {
-            String jar = a[0] + "-" + a[1] + ".jar";
+            String jar = ConstructorObjetosPais.nombreJar(a[0], a[1]);
             String sha = shaPorJar.remove(jar);
             if (sha == null) {
                 throw new LecturaPaisInconsistenteException(pais, "el plugin " + a[0] + " " + a[1] + " está en "
@@ -146,7 +148,7 @@ final class LectorConfigMapPais {
         List<String[]> r = new ArrayList<>();
         for (Object o : lista) {
             if (!(o instanceof Map<?, ?> m) || m.size() != 2
-                    || !(m.get("nombre") instanceof String n) || !(m.get("version") instanceof String v)) {
+                    || !(m.get(ConstructorObjetosPais.CLAVE_NOMBRE) instanceof String n) || !(m.get(ConstructorObjetosPais.CLAVE_VERSION) instanceof String v)) {
                 throw new LecturaPaisInconsistenteException(pais,
                         clave + ": cada entrada debe ser {nombre, version} con ambos como texto");
             }
@@ -205,7 +207,9 @@ final class LectorConfigMapPais {
                 return null;
             }
             case ScalarNode e -> {
-                return t.equals(Tag.STR) ? null : t;
+                // Un escalar sin comillas que el esquema lee como número, booleano o nulo no es una etiqueta de
+                // tipo: se deja pasar para que falle por no ser texto, con el mensaje de "ambos como texto".
+                return t.equals(Tag.STR) || (e.isPlain() && ESCALARES_IMPLICITOS.contains(t)) ? null : t;
             }
             default -> {
                 return t;

@@ -179,7 +179,42 @@ class LeerPaisTest {
                 SHA_F + " facturacion-1.2.0.jar\n");
 
         assertThatThrownBy(() -> adaptador.leerPais("pe"))
-                .isInstanceOf(LecturaPaisInconsistenteException.class).hasMessageContaining("pe");
+                .isInstanceOf(LecturaPaisInconsistenteException.class).hasMessageContaining("pe")
+                .hasMessageContaining("etiqueta de tipo").hasMessageContaining("ScriptEngineManager");
+    }
+
+    /** Etiquetas estándar que el esquema del core sabe construir: solo la defensa de etiquetas las nombra. */
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(strings = {
+        "- !!set {a, b}\n", "- !!binary aGVsbG8=\n", "- nombre: !!binary aGVsbG8=\n  version: \"1.0.0\"\n"})
+    void etiquetaEstandarNoPermitidaSeNombra(String activos) {
+        siembra(PLAN);
+        cambiaConfigMap(activos, SHA_F + " facturacion-1.2.0.jar\n");
+
+        assertThatThrownBy(() -> adaptador.leerPais("pe"))
+                .isInstanceOf(LecturaPaisInconsistenteException.class).hasMessageContaining("pe")
+                .hasMessageContaining("etiqueta de tipo");
+    }
+
+    @Test
+    void versionSinComillasQueEsNumeroSeRechazaComoNoTextoNoComoEtiqueta() {
+        siembra(PLAN);
+        cambiaConfigMap("- nombre: \"facturacion\"\n  version: 1.0\n", SHA_F + " facturacion-1.0.jar\n");
+
+        assertThatThrownBy(() -> adaptador.leerPais("pe"))
+                .isInstanceOf(LecturaPaisInconsistenteException.class)
+                .hasMessageContaining("ambos como texto").hasMessageNotContaining("etiqueta");
+    }
+
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(ints = {403, 500})
+    void unaFalloDeLaApiAlLeerSaleComoLecturaFallida(int codigo) {
+        servidor.expect().get().withPath("/apis/apps/v1/namespaces/" + NS + "/deployments/" + ConstructorObjetosPais.NOMBRE_CORE)
+                .andReturn(codigo, "{\"kind\":\"Status\",\"code\":" + codigo + "}").always();
+
+        assertThatThrownBy(() -> adaptador.leerPais("pe"))
+                .isInstanceOf(io.synkra.kubernetes.api.LecturaFallidaException.class)
+                .hasMessageContaining("Deployment").hasMessageContaining(NS);
     }
 
     @Test
@@ -241,7 +276,7 @@ class LeerPaisTest {
     @SuppressWarnings("unchecked")
     void pluginsActivosQueEscribeConstruirEsUnaListaEnLaRaiz() {
         ConfigMap c = adaptador.construir(PLAN).configMap();
-        Object raiz = new Load(LoadSettings.builder().build()).loadFromString(c.getData().get(ConstructorObjetosPais.CLAVE_PLUGINS));
+        Object raiz = new Load(LoadSettings.builder().setSchema(new org.snakeyaml.engine.v2.schema.CoreSchema()).build()).loadFromString(c.getData().get(ConstructorObjetosPais.CLAVE_PLUGINS));
 
         assertThat(raiz).isInstanceOf(List.class);
         assertThat((List<Object>) raiz).containsExactly(
@@ -249,7 +284,7 @@ class LeerPaisTest {
                 java.util.Map.of("nombre", "impuestos", "version", "2.0.1"));
 
         ConfigMap vacio = adaptador.construir(new PlanPais("pe", CORE, List.of())).configMap();
-        Object raizVacia = new Load(LoadSettings.builder().build()).loadFromString(vacio.getData().get(ConstructorObjetosPais.CLAVE_PLUGINS));
+        Object raizVacia = new Load(LoadSettings.builder().setSchema(new org.snakeyaml.engine.v2.schema.CoreSchema()).build()).loadFromString(vacio.getData().get(ConstructorObjetosPais.CLAVE_PLUGINS));
         assertThat(raizVacia).isInstanceOf(List.class).asList().isEmpty();
     }
 }

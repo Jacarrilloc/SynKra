@@ -1,0 +1,5 @@
+$ [copia con main de la ronda 1 + LeerPaisTest nuevo] :backend:test --rerun --tests *LeerPaisTest
+LeerPaisTest > versionSinComillasQueEsNumeroSeRechazaComoNoTextoNoComoEtiqueta() FAILED
+18 tests completed, 1 failed
+> Task :backend:test FAILED
+BUILD FAILED in 15s

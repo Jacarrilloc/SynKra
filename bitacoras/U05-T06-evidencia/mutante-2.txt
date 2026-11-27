@@ -1,0 +1,8 @@
+$ [copia con mutante Tag etiqueta = null] :backend:test --rerun --tests *LeerPaisTest
+ FAILED
+ FAILED
+ FAILED
+LeerPaisTest > yamlConEtiquetaDeTipoJavaLanzaSinConstruirObjetos() FAILED
+18 tests completed, 4 failed
+> Task :backend:test FAILED
+BUILD FAILED in 12s
