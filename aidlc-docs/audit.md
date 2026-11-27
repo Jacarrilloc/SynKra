@@ -802,3 +802,11 @@
 **Context**: Loop del módulo 6, ola 28, fuera de las etapas de AI-DLC.
 
 ---
+
+## Tareas de la ola 29 (U05-T03 y U02-T03)
+**Timestamp**: 2026-11-27T20:10:00Z
+**User Input**: (sin mensaje nuevo; continúa la aprobación de 2026-11-27T19:08:35Z, «Dale, continua con el trabajo»)
+**AI Response**: El orquestador escribe U05-T03 (construir los objetos del país) y U02-T03 (`CargadorPlugins`), y añade la ola 29 a `loop/README.md`. Los criterios ya incorporan C-69 (`--rerun` por tarea `test`) y C-71 (anotar el sha del `--stat`).
+**Context**: Loop del módulo 6, fuera de las etapas de AI-DLC.
+
+---
