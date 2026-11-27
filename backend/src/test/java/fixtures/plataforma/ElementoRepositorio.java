@@ -1,4 +1,4 @@
-package io.synkra.plataforma.prueba;
+package fixtures.plataforma;
 
 import java.util.List;
 import org.springframework.data.repository.ListCrudRepository;

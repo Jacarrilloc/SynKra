@@ -1,4 +1,4 @@
-package io.synkra.plataforma.prueba;
+package fixtures.plataforma;
 
 import io.synkra.plataforma.CodigosError;
 import io.synkra.plataforma.DetalleError;

@@ -40,4 +40,11 @@ class SynkraAppTest {
                 .toList();
         assertThat(intrusos).isEmpty();
     }
+
+    /** C-14: los fixtures de plataforma no entran al contexto de los @SpringBootTest. */
+    @Test
+    void losFixturesDePruebaDePlataformaNoEntranAlContexto() {
+        assertThat(contexto.getBeanNamesForType(fixtures.plataforma.ControladorDePrueba.class)).isEmpty();
+        assertThat(contexto.getBeanNamesForType(fixtures.plataforma.ElementoRepositorio.class)).isEmpty();
+    }
 }

@@ -2,8 +2,8 @@ package io.synkra.plataforma;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.synkra.plataforma.prueba.Elemento;
-import io.synkra.plataforma.prueba.ElementoRepositorio;
+import fixtures.plataforma.Elemento;
+import fixtures.plataforma.ElementoRepositorio;
 import java.nio.file.Path;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,7 +22,14 @@ import org.springframework.test.context.DynamicPropertySource;
 
 /** Spring Data JDBC de punta a punta contra SQLite con el dialecto propio. Esquema solo de pruebas. */
 @SpringBootTest
+@Import(RepositorioSqliteTest.RepositoriosDePrueba.class)
 class RepositorioSqliteTest {
+
+    /** Los repositorios reales (io.synkra) y el de prueba; el escaneo automático no ve los fixtures (C-14). */
+    @TestConfiguration
+    @EnableJdbcRepositories(basePackageClasses = {io.synkra.SynkraApp.class, ElementoRepositorio.class})
+    static class RepositoriosDePrueba {
+    }
 
     @TempDir
     static Path datos;

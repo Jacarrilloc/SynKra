@@ -1,0 +1,2 @@
+F-07: Corregido en e88d651: `ningunTipoPublicoFueraDeApi` usa `resideInAPackage("io.synkra.catalogo.api..")`; M8 (`catalogo.apix.Interno` público) dio verde sin detectar antes y rojo después (bitácora, ronda 3).
+F-08: Corregido: M0, M1, M2, M3 y M8, más CA-1, CA-3 y CA-4, repetidos sobre e88d651 con la salida pegada en la bitácora (ronda 3); el primer intento de M1 no aplicó el sed del script y se repitió.
