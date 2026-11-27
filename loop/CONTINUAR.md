@@ -69,13 +69,19 @@ Orden de fusión: #77, luego #78 (U05-T04), luego #79 (U02-T04).
 - `tareas/U02-T05-concordancia-suite.md` (hash `f95311817e9138f94cf701f894d68d17d2519d5c`).
 - Se despachan cuando su T04 salga VERDE: `m6r/U05-T05` desde la punta VERDE de `m6r/U05-T04`, `m6r/U02-T05` desde la de `m6r/U02-T04`. El archivo de la tarea se lee desde `../wt-orq-U04` (la rama de tareas); la base del diff es la punta de la T04.
 
+### Ola 32 (U05-T06 ∥ U02-T06), escrita, sin despachar
+
+- `tareas/U05-T06-leer-pais.md` (hash `59bb199d68ab322d4249cf0c44b0f41c0957d690`).
+- `tareas/U02-T06-fallo-inicio-readiness.md` (hash `c05f5ff56958720575de95a6a1fac0b9a0a59ecb`).
+- Cada una sale de la punta en VERDE de su T05.
+
 ## Lo que sigue
 
 1. Terminar la ola 30: revisor de la ronda 2 de cada tarea, guardar su informe, más rondas si hace falta (una tarea que llega a la ronda 4 se para y se lleva al equipo), y abrir los PRs.
 2. Ola 31 como arriba.
 3. Escribir las tareas restantes en `orq/U05-U02-tareas` y añadir sus olas a `loop/README.md`:
-   - **U05:** T06 `leerPais`, T07 `init-descarga/descargar.sh`, T08 imagen del init, T09 fronteras, T10 resumen.
-   - **U02:** T06 fallo al iniciar y readiness, T07 endpoints, T08 el core no conoce países, T09 y T10 plugins `kyc-co` y `kyc-pe`, T11 imagen del core, T12 prueba de humo, T13 resumen.
+   - **U05:** T07 `init-descarga/descargar.sh`, T08 imagen del init, T09 fronteras, T10 resumen.
+   - **U02:** T07 endpoints, T08 el core no conoce países, T09 y T10 plugins `kyc-co` y `kyc-pe`, T11 imagen del core, T12 prueba de humo, T13 resumen.
    - Los planes están en `aidlc-docs/construction/plans/U05-*.md` y `U02-*.md`.
    - Candidatas que hay que meter: C-70, C-73 y C-68 en U05-T09; C-72 en U05-T07, U05-T08 y U02-T11 (script en `/usr/local/bin/descargar.sh`, `USER 10001` numérico); C-64 en U05-T07 (comprobar el sha256); C-71 y C-74 en las pruebas del core; C-76 en U07.
 4. Pendiente de decidir con el equipo: una tarea de pulido de U04 (C-57, C-60, C-61, C-63, C-65, C-66, C-67) y otra de U01/U02 (C-77, C-78).
