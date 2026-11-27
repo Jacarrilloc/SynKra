@@ -53,6 +53,9 @@ U01 y U03 no dependen entre sí en el grafo, pero **U03-T01 necesita la raíz de
 | Ola 11 | U01-T12 | 1 | `SuiteCombinaciones` en `testFixtures`; toca `VerificadorPropiedades` por C-26, así que va sola. Sale de `main` después de la ola 10 |
 | Ola 12 | U01-T13 | 1 | `verificador/build.gradle.kts` y `scripts/control-suite.sh`. Sale de `main` después de la ola 11 |
 | Ola 13 | U01-T14 | 1 | Solo el resumen de U01. Cierra la unidad. Sale de `main` después de la ola 12 |
+| Ola 14 | U04-T01 | 1 | Migración `V2__catalogo.sql`, repositorios y PRAGMA (C-04). Primera tarea de U04. Sale de `main` después de cerrar U01 |
+| Ola 15 | U04-T02 | 1 | `CatalogoApi.registrarCore`; `backend` pasa a depender de `:verificador`. Sale de `main` después de la ola 14 |
+| Ola 16 | U04-T03 | 1 | Rutas de cores y C-07. Sale de `main` después de la ola 15 |
 
 Lo previsto era que cada ola saliera de la punta de `modulo-6-rehecho` después de fusionar los PRs de
 la anterior. El responsable pidió avanzar sin abrir PRs todavía, así que **las ramas quedaron

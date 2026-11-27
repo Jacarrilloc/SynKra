@@ -609,3 +609,19 @@
 **Context**: Code Generation Parte 2 (loop de agentes) para U01, cierre de la unidad.
 
 ---
+
+## Estado del módulo 6
+**Timestamp**: 2026-11-27T10:41:39Z
+**User Input**: "entonces, que es lo que falta para acabar el modulo?"
+**AI Response**: El agente comparó lo que hay en main con la lista «Qué entregas» de la guía del módulo 6. Lo técnico está completo. Quedan tres cosas: ampliar la nota de fusiones de `DECISIONES-LOOP.md`, porque los PR #8 a #39 los fusionó el agente a pedido del responsable; que el equipo revise ese archivo, cuyo punto 2 ahora debería hablar de U01-T12 con sus 6 rondas; y conocer el mecanismo y la fecha de entrega.
+**Context**: Módulo 6, estado de la entrega.
+
+---
+
+## Siguiente unidad - U04 (tareas T01 a T03)
+**Timestamp**: 2026-11-27T10:43:46Z
+**User Input**: "ok esta bien, continuemos con el proyecto, cuantas unidades son?, y depaso, sigamos con la siguiente unidad"
+**AI Response**: El agente respondió que son 11 unidades, U01 a U11, y que U01 y U03 ya están terminadas. Las que se pueden empezar son U02, U04 y U05. Eligió U04 (catálogo) porque está en el camino crítico hacia U07. Escribió sin código `tareas/U04-T01-migracion-repositorios.md`, `tareas/U04-T02-registrar-core.md` y `tareas/U04-T03-rutas-cores.md`, y añadió las olas 14 a 16 a `loop/README.md`. Las tareas cierran C-04 y, con recomendación, C-07, y aplican la regla de fechas de C-05. La autorización de U01 no se extiende a U04: hace falta el visto bueno del responsable para despachar.
+**Context**: Code Generation Parte 2 (loop de agentes) para U04.
+
+---
