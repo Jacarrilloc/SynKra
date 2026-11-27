@@ -903,3 +903,18 @@
 **Context**: Loop del módulo 6, ola 33, fuera de las etapas de AI-DLC.
 
 ---
+
+## Ola 33: U05-T07 ronda 1 NO-VERDE y arbitraje
+**Timestamp**: 2026-11-27T22:00:00Z
+**User Input**: (sin mensaje nuevo; continúa la instrucción de 2026-11-27T21:45:49Z)
+**AI Response**: U05-T07 ronda 1 NO-VERDE (`revisiones/U05-T07/ronda-1.md`, `b6039e9`). Arbitraje del orquestador:
+- F-01: el script se niega (código distinto de 0, nada escrito) si el temporal o el destino son enlaces simbólicos. El temporal se crea nuevo dentro de `$PLUGINS` con `mktemp`. Un archivo regular previo con el mismo nombre se puede reemplazar, porque el emptyDir sobrevive a los reinicios del contenedor y negarse dejaría el pod bloqueado para siempre.
+- F-02: prueba de la espera creciente con un `sleep` falso en el `PATH` que registra sus argumentos y exige `1 2 4 8` con base 1.
+- F-03: se ratifica saltar las líneas vacías, con una prueba que lo fije.
+- F-04: `SYNKRA_ESPERA_BASE` tiene que ser un entero; si no, código 2 con mensaje claro.
+- F-05: se acepta, como consecuencia de F-01, y se documenta.
+- F-06 y F-07: se corrigen.
+Se despacha el codificador de la ronda 2.
+**Context**: Loop del módulo 6, ola 33, fuera de las etapas de AI-DLC.
+
+---
