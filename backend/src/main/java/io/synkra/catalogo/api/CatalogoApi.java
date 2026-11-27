@@ -8,4 +8,7 @@ public interface CatalogoApi {
 
     /** Devuelve el core con sus versiones; 404 si no existe. */
     CoreRegistrado obtenerCore(String nombre);
+
+    /** Todos los cores con sus versiones, ordenados por nombre. */
+    java.util.List<CoreRegistrado> listarCores();
 }

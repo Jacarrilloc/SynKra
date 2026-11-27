@@ -87,12 +87,19 @@ class CatalogoServicio implements CatalogoApi {
         return leer(nombre);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<CoreRegistrado> listarCores() {
+        return cores.findAll().stream().map(Core::nombre).sorted().map(this::leer).toList();
+    }
+
     private CoreRegistrado leer(String nombre) {
-        var ordenadas = versiones.findByCore(nombre).stream()
-                .map(f -> leerVersion(nombre, f.version()))
-                .sorted()
-                .toList();
-        return new CoreRegistrado(nombre, ordenadas);
+        var imagenes = new java.util.HashMap<Version, String>();
+        for (var f : versiones.findByCore(nombre)) {
+            imagenes.put(leerVersion(nombre, f.version()), f.imagen());
+        }
+        var ordenadas = imagenes.keySet().stream().sorted().toList();
+        return new CoreRegistrado(nombre, ordenadas, imagenes);
     }
 
     private static Version leerVersion(String core, String texto) {

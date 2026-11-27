@@ -1,5 +1,6 @@
 package io.synkra.plataforma;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.method.ParameterErrors;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -42,6 +46,36 @@ public class ManejadorErrores extends ResponseEntityExceptionHandler {
             LOG.error("Error de Spring", ex);
         }
         return respuesta(estado, errorDe(estado), headers);
+    }
+
+    /** C-07: los fallos de {@code @Valid} en el cuerpo pasan a {@code detalles} con campo y motivo reales. */
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+            HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        var detalles = ex.getBindingResult().getFieldErrors().stream()
+                .map(f -> new DetalleError(f.getField(), f.getDefaultMessage())).toList();
+        return respuesta(HttpStatus.UNPROCESSABLE_ENTITY, entidadNoProcesable(detalles), headers);
+    }
+
+    /** C-07: validación de parámetros (Spring 6.1+). El campo es el nombre del parámetro o de la propiedad. */
+    @Override
+    protected ResponseEntity<Object> handleHandlerMethodValidationException(HandlerMethodValidationException ex,
+            HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        var detalles = new ArrayList<DetalleError>();
+        for (var r : ex.getParameterValidationResults()) {
+            var nombre = r.getMethodParameter().getParameterName();
+            if (r instanceof ParameterErrors pe) {
+                pe.getFieldErrors().forEach(f -> detalles.add(new DetalleError(f.getField(), f.getDefaultMessage())));
+            } else {
+                r.getResolvableErrors().forEach(e -> detalles.add(new DetalleError(
+                        nombre == null ? "parametro" : nombre, e.getDefaultMessage())));
+            }
+        }
+        return respuesta(HttpStatus.UNPROCESSABLE_ENTITY, entidadNoProcesable(detalles), headers);
+    }
+
+    private static ErrorApi entidadNoProcesable(List<DetalleError> detalles) {
+        return new ErrorApi(CodigosError.ENTIDAD_NO_PROCESABLE, CodigosError.MSG_ENTIDAD_NO_PROCESABLE, detalles);
     }
 
     private static ErrorApi errorDe(HttpStatus estado) {
