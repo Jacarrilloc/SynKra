@@ -1,0 +1,50 @@
+> Task :plugin-api:compileJava
+> Task :verificador:compileJava
+> Task :core:compileJava
+> Task :core:processResources
+> Task :core:classes
+> Task :verificador:compileTestFixturesJava
+> Task :core:compileTestJava
+> Task :core:processTestResources NO-SOURCE
+> Task :core:testClasses
+> Task :plugin-api:processResources NO-SOURCE
+> Task :plugin-api:classes
+> Task :plugin-api:jar
+> Task :verificador:processResources NO-SOURCE
+> Task :verificador:classes
+> Task :verificador:jar
+> Task :verificador:processTestFixturesResources NO-SOURCE
+> Task :verificador:testFixturesClasses
+> Task :verificador:testFixturesJar
+
+> Task :core:test
+
+FalloInicioPluginTest > siElSegundoFallaElPrimeroSeDetiene() FAILED
+    org.opentest4j.AssertionFailedError at FalloInicioPluginTest.java:134
+
+FalloInicioPluginTest > unPluginQueFallaDejaReadiness503LivenessEn200YElLogNombraPluginYCausa(CapturedOutput) FAILED
+    org.opentest4j.AssertionFailedError at FalloInicioPluginTest.java:121
+
+4 tests completed, 2 failed
+
+> Task :core:test FAILED
+
+[Incubating] Problems report is available at: file:///tmp/claude-0/-home-user/311bec3f-8f32-5470-935c-db8e1e6d6a2d/scratchpad/copia2/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':core:test'.
+> There were failing tests. See the report at: file:///tmp/claude-0/-home-user/311bec3f-8f32-5470-935c-db8e1e6d6a2d/scratchpad/copia2/core/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 7s
+10 actionable tasks: 10 executed

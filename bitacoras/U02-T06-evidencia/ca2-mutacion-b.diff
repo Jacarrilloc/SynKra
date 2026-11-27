@@ -1,0 +1,8 @@
+51,52d50
+<                 detener(iniciados);
+<                 publicador.publishEvent(new AvailabilityChangeEvent<>(this, ReadinessState.REFUSING_TRAFFIC));
+61,62c59
+<         if (fallo && evento.getState() == ReadinessState.ACCEPTING_TRAFFIC) {
+<             publicador.publishEvent(new AvailabilityChangeEvent<>(this, ReadinessState.REFUSING_TRAFFIC));
+---
+>         if (false) {
