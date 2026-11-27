@@ -20,22 +20,28 @@
 > Task :core:test
 
 FalloInicioPluginTest > siElSegundoFallaElPrimeroSeDetiene() FAILED
-    org.opentest4j.AssertionFailedError at FalloInicioPluginTest.java:134
+    org.opentest4j.AssertionFailedError at FalloInicioPluginTest.java:145
+
+FalloInicioPluginTest > conTresPluginsYElTerceroFallandoSeDetienenEnOrdenInverso() FAILED
+    org.opentest4j.AssertionFailedError at FalloInicioPluginTest.java:158
+
+FalloInicioPluginTest > unDetenerQueLanzaNoTapaLaCausaNiSaltaLosDemasDetener(CapturedOutput) FAILED
+    org.opentest4j.AssertionFailedError at FalloInicioPluginTest.java:173
 
 FalloInicioPluginTest > unPluginQueFallaDejaReadiness503LivenessEn200YElLogNombraPluginYCausa(CapturedOutput) FAILED
-    org.opentest4j.AssertionFailedError at FalloInicioPluginTest.java:121
+    org.opentest4j.AssertionFailedError at FalloInicioPluginTest.java:132
 
-4 tests completed, 2 failed
+6 tests completed, 4 failed
 
 > Task :core:test FAILED
 
-[Incubating] Problems report is available at: file:///tmp/claude-0/-home-user/311bec3f-8f32-5470-935c-db8e1e6d6a2d/scratchpad/copia2/build/reports/problems/problems-report.html
+[Incubating] Problems report is available at: file:///tmp/claude-0/-home-user/311bec3f-8f32-5470-935c-db8e1e6d6a2d/scratchpad/u02t06-r2/indicador-up/build/reports/problems/problems-report.html
 
 FAILURE: Build failed with an exception.
 
 * What went wrong:
 Execution failed for task ':core:test'.
-> There were failing tests. See the report at: file:///tmp/claude-0/-home-user/311bec3f-8f32-5470-935c-db8e1e6d6a2d/scratchpad/copia2/core/build/reports/tests/test/index.html
+> There were failing tests. See the report at: file:///tmp/claude-0/-home-user/311bec3f-8f32-5470-935c-db8e1e6d6a2d/scratchpad/u02t06-r2/indicador-up/core/build/reports/tests/test/index.html
 
 * Try:
 > Run with --scan to get full insights from a Build Scan (powered by Develocity).
@@ -46,5 +52,5 @@ You can use '--warning-mode all' to show the individual deprecation warnings and
 
 For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD FAILED in 7s
+BUILD FAILED in 12s
 10 actionable tasks: 10 executed
