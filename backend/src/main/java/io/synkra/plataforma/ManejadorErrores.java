@@ -81,6 +81,11 @@ public class ManejadorErrores extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
             HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        for (Throwable t = ex.getCause(); t != null && t.getCause() != t; t = t.getCause()) {
+            if (t instanceof CuerpoJsonDemasiadoGrande grande) {
+                return respuesta(HttpStatus.PAYLOAD_TOO_LARGE, grande.error(), headers);
+            }
+        }
         if (ex.getCause() instanceof MismatchedInputException mie && !mie.getPath().isEmpty()
                 && mie.getPath().get(0).getFieldName() != null) {
             var campo = mie.getPath().get(0).getFieldName();
