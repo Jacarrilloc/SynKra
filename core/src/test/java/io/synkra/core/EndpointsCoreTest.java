@@ -230,8 +230,10 @@ public class EndpointsCoreTest {
         activos("- nombre: kyc-a\n  version: 1.0.0\n");
         try (var ctx = arrancar()) {
             for (String malo : List.of("no es json", "", "null", "{}", "{\"documento\":\"x\"}",
-                    "{\"datos\":{}}", "{\"documento\":5,\"datos\":{}}", "{\"documento\":\"x\",\"datos\":[1]}")) {
-                esperarError(post(ctx, "/kyc/kyc-a", malo), 400, ErrorCore.SOLICITUD_INVALIDA);
+                    "{\"datos\":{}}", "{\"documento\":5,\"datos\":{}}", "{\"documento\":\"x\",\"datos\":[1]}", "{\"documento\":true,\"datos\":{}}")) {
+                var r = post(ctx, "/kyc/kyc-a", malo);
+                assertEquals(400, r.statusCode(), "cuerpo enviado: " + malo + " -> " + r.body());
+                esperarError(r, 400, ErrorCore.SOLICITUD_INVALIDA);
             }
             assertTrue(Eventos.LLAMADAS.isEmpty(), Eventos.LLAMADAS.toString());
         }

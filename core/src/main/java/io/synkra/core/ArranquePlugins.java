@@ -72,6 +72,7 @@ public class ArranquePlugins {
     private final Path config;
     private final Path plugins;
     private final List<PluginCargado> cargados = new ArrayList<>();
+    private final List<PluginActivo> activosCargados = new ArrayList<>();
 
     public ArranquePlugins(
             VersionCore versionCore,
@@ -102,7 +103,9 @@ public class ArranquePlugins {
         }
         try {
             for (var d : activos) {
-                cargados.add(cargador.cargar(jars.get(d)));
+                var c = cargador.cargar(jars.get(d));
+                cargados.add(c);
+                activosCargados.add(new PluginActivo(d.nombre(), d.version().toString(), c));
             }
         } catch (RuntimeException e) {
             cerrar();
@@ -116,6 +119,11 @@ public class ArranquePlugins {
         return List.copyOf(cargados);
     }
 
+    /** Los plugins activos ya cargados, con nombre y versión del descriptor, en orden de carga. */
+    public List<PluginActivo> activos() {
+        return List.copyOf(activosCargados);
+    }
+
     @PreDestroy
     void cerrar() {
         for (var c : cargados) {
@@ -126,6 +134,7 @@ public class ArranquePlugins {
             }
         }
         cargados.clear();
+        activosCargados.clear();
     }
 
     /** Descriptor de cada JAR de la carpeta; un JAR inválido se registra por nombre y no entra al catálogo. */
