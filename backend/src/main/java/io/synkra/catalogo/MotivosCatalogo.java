@@ -43,6 +43,10 @@ final class MotivosCatalogo {
     static final String ETIQUETA_CLAVE_INVALIDA =
             "La clave de etiqueta '%s' debe llevar solo minúsculas, dígitos y guiones medios, sin guion al "
                     + "principio ni al final";
+    /** Se completa con la clave recortada (C-50); el tope es {@code RutasPlugins.MAX_VALOR_ETIQUETA}. */
+    static final String ETIQUETA_VALOR_LARGO = "El valor de la etiqueta '%s' supera los 63 caracteres";
+    static final String ARCHIVO_OBLIGATORIO = "Falta la parte 'archivo' con el JAR del plugin";
+    static final String ETIQUETAS_NO_ES_OBJETO = "La parte 'etiquetas' debe ser un objeto JSON de texto a texto";
     static final String ETIQUETA_SIN_VALOR = "La etiqueta '%s' no tiene valor";
     /** Último detalle cuando hay más de {@code SubidaPlugin.MAX_DETALLES} (C-19); se completa con los omitidos. */
     static final String MOTIVOS_OMITIDOS = "Se omitieron %d motivos más";

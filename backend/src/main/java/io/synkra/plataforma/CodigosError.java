@@ -27,6 +27,10 @@ public final class CodigosError {
     /** Campo cuando un parámetro validado no tiene nombre. */
     public static final String PARAMETRO_SIN_NOMBRE = "parametro";
 
+    /** C-38: campo y motivo cuando el cuerpo JSON pasa el tope; se completa con el tope en bytes. */
+    public static final String CAMPO_CUERPO = "cuerpo";
+    public static final String MOTIVO_JSON_GRANDE = "El cuerpo JSON supera el límite de %d bytes";
+
     private CodigosError() {
     }
 }
