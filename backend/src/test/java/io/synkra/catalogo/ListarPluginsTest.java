@@ -260,10 +260,10 @@ class ListarPluginsTest {
         assertThat(justo).isEmpty();
         var e = error(get("/api/cores/synkra-core/plugins" + consulta(ListadoPlugins.MAX_PAREJAS + 1, "k")), 422);
         assertThat(e.get("codigo")).isEqualTo(CodigosError.ENTIDAD_NO_PROCESABLE);
-        assertThat(camposDe(e)).containsExactly("filtro");
+        assertThat(camposDe(e)).containsExactly(ListadoPlugins.CAMPO_FILTRO);
         assertThat(detallesDe(e).get(0).get("motivo")).contains(String.valueOf(ListadoPlugins.MAX_PAREJAS));
         var enorme = error(get("/api/cores/synkra-core/plugins" + consulta(1100, "k")), 422);
-        assertThat(camposDe(enorme)).containsExactly("filtro");
+        assertThat(camposDe(enorme)).containsExactly(ListadoPlugins.CAMPO_FILTRO);
         var mapa = new LinkedHashMap<String, String>();
         for (int i = 0; i <= ListadoPlugins.MAX_PAREJAS; i++) {
             mapa.put("k" + i, "v");
@@ -277,7 +277,8 @@ class ListarPluginsTest {
     }
 
     @Test
-    void masDe50ClavesMalasAcotanLosDetallesConElAvisoDeOmitidos() throws Exception {
+    void lasClavesMalasAlTopeDanUnDetalleCadaUnaYLasRepetidasMasDe50LlevanElAvisoDeOmitidos() throws Exception {
+        // Las claves malas nunca pasan de MAX_PAREJAS (= MAX_DETALLES): ahí acotar no recorta; las repetidas sí.
         var e = error(get("/api/cores/synkra-core/plugins" + consulta(ListadoPlugins.MAX_PAREJAS, "K")), 422);
         assertThat(detallesDe(e)).hasSize(SubidaPlugin.MAX_DETALLES);
         var repetidas = new StringBuilder("?");
@@ -316,6 +317,42 @@ class ListarPluginsTest {
                     + "Connection: close\r\n\r\n").getBytes(StandardCharsets.US_ASCII));
             var respuesta = new String(socket.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
             assertThat(respuesta).startsWith("HTTP/1.1 422");
+        }
+    }
+
+    private HttpResponse<byte[]> getCrudo(String ruta) throws IOException {
+        try (var socket = new java.net.Socket("localhost", puerto)) {
+            socket.getOutputStream().write(("GET " + ruta + " HTTP/1.0\r\n\r\n")
+                    .getBytes(StandardCharsets.US_ASCII));
+            var texto = new String(socket.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+            var estado = Integer.parseInt(texto.substring(9, 12));
+            var cuerpo = texto.substring(texto.indexOf("\r\n\r\n") + 4);
+            return new HttpResponse<byte[]>() {
+                public int statusCode() { return estado; }
+                public byte[] body() { return cuerpo.getBytes(StandardCharsets.UTF_8); }
+                public HttpRequest request() { return null; }
+                public java.util.Optional<HttpResponse<byte[]>> previousResponse() { return java.util.Optional.empty(); }
+                public java.net.http.HttpHeaders headers() { return null; }
+                public java.util.Optional<javax.net.ssl.SSLSession> sslSession() { return java.util.Optional.empty(); }
+                public URI uri() { return null; }
+                public HttpClient.Version version() { return HttpClient.Version.HTTP_1_1; }
+            };
+        }
+    }
+
+    @Test
+    void laConsultaSeDecodificaComoFormularioYUnaCodificacionRotaDa422() throws Exception {
+        subir("synkra-core", "dec-esp", "1.0.0", m(), m("cliente", "banco x"));
+        subir("synkra-core", "dec-mas", "1.0.0", m(), m("cliente", "a+b"));
+        subir("synkra-core", "dec-utf", "1.0.0", m(), m("cliente", "per\u00fa"));
+        var base = "/api/cores/synkra-core/plugins?cliente=";
+        for (var q : List.of("banco+x", "banco%20x")) {
+            assertThat(lista(getCrudo(base + q))).extracting(p -> p.get("nombre")).containsExactly("dec-esp");
+        }
+        assertThat(lista(getCrudo(base + "a%2Bb"))).extracting(p -> p.get("nombre")).containsExactly("dec-mas");
+        assertThat(lista(getCrudo(base + "per%C3%BA"))).extracting(p -> p.get("nombre")).containsExactly("dec-utf");
+        for (var rota : List.of("%zz", "%", "per%FA", "%C3")) {
+            assertThat(getCrudo(base + rota).statusCode()).as(rota).isEqualTo(422);
         }
     }
 }

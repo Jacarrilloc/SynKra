@@ -27,8 +27,13 @@ import org.springframework.stereotype.Component;
 @Component
 class ListadoPlugins {
 
-    /** Tope de parejas del filtro: cada una añade un EXISTS y SQLite limita la profundidad de la expresión a 1000. */
+    /** El {@code campo} de los 422 del filtro. */
+    static final String CAMPO_FILTRO = "filtro";
+
+    /**
+     * Tope de parejas del filtro: cada una añade un EXISTS y SQLite limita la profundidad de la expresión a 1000. */
     static final int MAX_PAREJAS = 50;
+    // Igual a SubidaPlugin.MAX_DETALLES a propósito: las claves malas caben todas y acotar no recorta en el servicio.
 
     private static final String SELECT = "SELECT p.nombre, p.version, p.core_compatible, p.sha256, p.tamano, "
             + "t.clave, t.valor FROM cat_plugin p LEFT JOIN cat_etiqueta t "
@@ -83,7 +88,7 @@ class ListadoPlugins {
         if (filtro.size() > MAX_PAREJAS) {
             throw new ExcepcionApi(HttpStatus.UNPROCESSABLE_ENTITY, new ErrorApi(CodigosError.ENTIDAD_NO_PROCESABLE,
                     CodigosError.MSG_ENTIDAD_NO_PROCESABLE,
-                    List.of(new DetalleError("filtro", MotivosCatalogo.FILTRO_LARGO.formatted(MAX_PAREJAS)))));
+                    List.of(new DetalleError(CAMPO_FILTRO, MotivosCatalogo.FILTRO_LARGO.formatted(MAX_PAREJAS)))));
         }
         var detalles = new ArrayList<DetalleError>();
         var parejas = new TreeMap<String, String>();
@@ -99,7 +104,7 @@ class ListadoPlugins {
         });
         if (!detalles.isEmpty()) {
             throw new ExcepcionApi(HttpStatus.UNPROCESSABLE_ENTITY, new ErrorApi(CodigosError.ENTIDAD_NO_PROCESABLE,
-                    CodigosError.MSG_ENTIDAD_NO_PROCESABLE, SubidaPlugin.acotar(detalles, "filtro")));
+                    CodigosError.MSG_ENTIDAD_NO_PROCESABLE, SubidaPlugin.acotar(detalles, CAMPO_FILTRO)));
         }
         return parejas;
     }
