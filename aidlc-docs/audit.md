@@ -730,3 +730,11 @@
 **Context**: Loop del módulo 6, ola 20, fuera de las etapas de AI-DLC.
 
 ---
+
+## U04-T08 cerrada por el loop
+**Timestamp**: 2026-11-27T17:10:00Z
+**User Input**: (sin mensaje nuevo; se aplica la regla de fusión de David de 2026-11-27T16:14:07Z)
+**AI Response**: U04-T08 salió VERDE en la ronda 3. La ronda 1 fue NO-VERDE (un 500 con más de unas 1000 parejas en el filtro, y detalles recortados sin el aviso de C-19). La ronda 2 también fue NO-VERDE (el `+` no se decodificaba como espacio y el campo `filtro` iba como literal). C-56 queda resuelta y C-61 se registra. Son dos PRs, el de `m6r/U04-T08` y el de esta rama, y el orquestador los fusiona en ese orden.
+**Context**: Loop del módulo 6, ola 21, fuera de las etapas de AI-DLC.
+
+---
