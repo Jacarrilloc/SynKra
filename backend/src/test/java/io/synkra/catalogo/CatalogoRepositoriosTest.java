@@ -121,6 +121,10 @@ class CatalogoRepositoriosTest {
                 PluginRepositorio.class, EtiquetaRepositorio.class)) {
             assertThat(org.springframework.data.repository.CrudRepository.class.isAssignableFrom(tipo))
                     .as(tipo.getSimpleName()).isFalse();
+            assertThat(java.util.Arrays.stream(tipo.getMethods()).map(java.lang.reflect.Method::getName))
+                    .as(tipo.getSimpleName() + " metodos")
+                    .noneMatch(n -> n.startsWith("save") || n.startsWith("delete")
+                            || n.equals("findById") || n.equals("existsById"));
         }
     }
 
@@ -173,7 +177,7 @@ class CatalogoRepositoriosTest {
     void borrarUnCoreConHijosSeRechazaPorRestrictYLaFilaSigue() {
         core("c");
         sql("insert into cat_version_core values ('c','1.0.0','i','anonimo',1)");
-        rechaza("delete from cat_core where nombre = 'c'", "FOREIGN KEY constraint failed");
+        rechaza("delete from cat_core where nombre = 'c'", "SQLITE_CONSTRAINT_TRIGGER");
         assertThat(jdbc.queryForObject("select count(*) from cat_core", Integer.class)).isEqualTo(1);
         assertThat(jdbc.queryForObject("select count(*) from cat_version_core", Integer.class)).isEqualTo(1);
     }
@@ -214,5 +218,45 @@ class CatalogoRepositoriosTest {
         core("c");
         rechaza("insert into cat_version_core values ('c','1.0.0',null,'anonimo',1)",
                 "SQLITE_CONSTRAINT_NOTNULL");
+    }
+
+    @Test
+    void lasTresFkDeclaranOnDeleteRestrict() {
+        for (var tabla : java.util.List.of("cat_version_core", "cat_plugin", "cat_etiqueta")) {
+            var fks = jdbc.queryForList("select on_delete from pragma_foreign_key_list('" + tabla + "')");
+            assertThat(fks).as(tabla).isNotEmpty();
+            assertThat(fks).as(tabla).allSatisfy(f -> assertThat(f.get("on_delete")).isEqualTo("RESTRICT"));
+        }
+    }
+
+    @Test
+    void borrarUnPluginConEtiquetasYUnCoreConPluginsSeRechaza() {
+        core("c");
+        pluginSql("c", "p", "1.0.0", "h");
+        sql("insert into cat_etiqueta values ('c','p','1.0.0','pais','co','descriptor')");
+        rechaza("delete from cat_plugin where nombre = 'p'", "SQLITE_CONSTRAINT_TRIGGER");
+        rechaza("delete from cat_core where nombre = 'c'", "SQLITE_CONSTRAINT_TRIGGER");
+        assertThat(jdbc.queryForObject("select count(*) from cat_etiqueta", Integer.class)).isEqualTo(1);
+    }
+
+    @Test
+    void lasColumnasDeAuditoriaSonNotNull() {
+        for (var par : java.util.List.of("cat_version_core:registrado_en", "cat_version_core:registrado_por",
+                "cat_version_core:imagen", "cat_plugin:subido_en", "cat_plugin:subido_por")) {
+            var t = par.split(":");
+            assertThat(jdbc.queryForObject("select \"notnull\" from pragma_table_info('" + t[0]
+                    + "') where name = ?", Integer.class, t[1])).as(par).isEqualTo(1);
+        }
+    }
+
+    @Test
+    void findAllDeLosRepositoriosDevuelveLoGuardado() {
+        plantilla.insert(new Core("c"));
+        plantilla.insert(version("c", "1.0.0", 1L));
+        plantilla.insert(plugin("c", "p", "1.0.0", "h"));
+        plantilla.insert(new Etiqueta("c", "p", "1.0.0", "pais", "co", "descriptor"));
+        assertThat(cores.findAll()).containsExactly(new Core("c"));
+        assertThat(versiones.findAll()).hasSize(1);
+        assertThat(etiquetas.findAll()).hasSize(1);
     }
 }
