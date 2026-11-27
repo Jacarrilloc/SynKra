@@ -1,72 +1,78 @@
 # Prompt para continuar SynKra (loop del módulo 6, olas de U05 y U02)
 
-> Pega este archivo completo al abrir una sesión nueva en `/home/casdav/Projects/Master/SynKra`.
-> Responde en español. Fecha del corte: 2026-11-27, 20:20 UTC.
+> Pega este archivo completo al abrir una sesión nueva. Responde en español.
+> Lo mantiene al día el orquestador después de cada hito (ver «Puntos de continuidad»).
+> Última actualización: 2026-11-27 ~20:55 UTC (sesión de Julian, que retomó la de David).
 
 ---
 
+## Puntos de continuidad (metodología de varios commits)
+
+La sesión anterior se cortó a mitad de una ronda y se perdió el informe del revisor, que no estaba guardado.
+Para que eso no vuelva a pasar:
+
+1. **Un commit y un push por hito, nunca al final.** Los hitos son:
+   - informe del revisor guardado en `revisiones/<tarea>/ronda-N.md`, en la rama de la tarea;
+   - codificador despachado o vuelto, con su sha;
+   - candidatas nuevas en `CANDIDATAS.md`;
+   - tareas nuevas escritas;
+   - PR abierto.
+2. **Este archivo se actualiza en cada hito** (tabla «Estado al corte»), con commit y push en `orq/U05-U02-tareas`. Así, si la sesión se corta, la tabla dice exactamente qué agente estaba corriendo y qué falta.
+3. **Lo que está en vuelo se anota antes de lanzarlo.** Si un agente estaba corriendo al cortarse la sesión, su resultado se perdió: la sesión nueva vuelve a despachar esa misma ronda (el codificador revisa primero si ya hay commits suyos en la rama; el revisor siempre se repite).
+4. **Antes de despachar nada, se revisa GitHub**: `git fetch` y la fecha del último commit de cada rama de la tabla. Si otra persona empujó después de la última actualización de este archivo, se avisa y no se pisa.
+5. **El informe del revisor se guarda tal cual.** Si llega como mensaje del subagente, se extrae del transcript (la última llamada de entrega) con un script, sin reescribirlo.
+
 ## Cómo se trabaja
 
-- **El loop** (módulo 6 del curso): el orquestador es la sesión principal y sigue `loop/orquestador.md`. El `codificador` (subagente sonnet, `.claude/agents/codificador.md`) implementa. El `revisor` (subagente opus, solo lectura, `.claude/agents/revisor.md`) juzga. El orden de las olas está en `loop/README.md`.
-- **Cada tarea:**
-  - Rama `m6r/<tarea>`, con su worktree en `../wt-m6r-<tarea>`.
-  - Despachar al codificador con la ruta y el hash de la tarea.
-  - Despachar al revisor.
-  - Guardar el informe del revisor **tal cual** en `revisiones/<tarea>/ronda-N.md`, en la rama de la tarea, con commit y push.
-  - Si sale NO-VERDE: arbitrar y redespachar al mismo codificador, que responde en `ronda-N-respuesta.md`.
-  - Si sale VERDE: abrir el PR contra `main`.
-- **El orquestador** solo escribe tareas, informes del revisor tal cual, `CANDIDATAS.md`, `aidlc-docs/audit.md` y `loop/README.md`. Lo hace en la rama `orq/U05-U02-tareas` (worktree `../wt-orq-U04`). Esa rama se reinicia sobre `origin/main` después de cada fusión, con `--force-with-lease` (solo lleva historial ya fusionado).
-- **Las olas** salen apiladas sobre la rama de tareas: primero se escriben las tareas en `orq/U05-U02-tareas`, después se crean los worktrees desde `origin/orq/U05-U02-tareas`, y la base del diff es esa rama.
-- **Regla de fusión de David (2026-11-27, 16:14Z):** si hay un solo PR, lo fusiona David con un clic. Si son varios, los fusiona el orquestador, en orden, y lo anota en `aidlc-docs/audit.md`. Se le advirtió que el curso penaliza que un agente fusione.
-- **Push.** Hay que subir cada ronda a GitHub, para que el compañero pueda seguir. Git no tiene credenciales propias:
+- **El loop**: el orquestador es la sesión principal y sigue `loop/orquestador.md`. El `codificador` (subagente sonnet, `.claude/agents/codificador.md`) implementa. El `revisor` (subagente opus, solo lectura, `.claude/agents/revisor.md`) juzga. El orden de las olas está en `loop/README.md`.
+- **Cada tarea:** rama `m6r/<tarea>` con su worktree en `../wt-m6r-<tarea>`; despachar al codificador con la ruta y el hash de la tarea; despachar al revisor; guardar su informe tal cual; si sale NO-VERDE, arbitrar y redespachar al mismo codificador, que responde en `ronda-N-respuesta.md`; si sale VERDE, abrir el PR.
+- **El orquestador** solo escribe tareas, informes del revisor tal cual, `CANDIDATAS.md`, `aidlc-docs/audit.md`, `loop/README.md` y este archivo. Lo hace en la rama `orq/U05-U02-tareas` (worktree `../wt-orq-U04`).
+- **Fusiones.** En la sesión de Julian **el orquestador no fusiona** (la guía del curso lo penaliza). Los PRs quedan abiertos y los fusiona un humano del equipo (Julian o David), en el orden que dice la tabla. Antes, David había acordado que el orquestador fusionara cuando hubiera varios PRs; esa regla no se usa aquí.
+- **Olas apiladas.** Mientras los PRs de una ola no se fusionen, la ola siguiente sale de la punta en VERDE de la tarea de la que depende, y su PR apunta a esa rama.
+- **Push** (git no tiene credenciales propias):
   ```bash
   git -c credential.helper= -c 'credential.helper=!gh auth git-credential' push origin <rama>
   ```
+  En el contenedor en la nube, `gh` solo sirve para la API REST (`gh api repos/...`), no GraphQL: los PRs se abren con `gh api repos/Jacarrilloc/SynKra/pulls -f title=... -f head=... -f base=... -f body=...`.
 
-## Reglas de esta máquina
+## Reglas del entorno
 
-- Solo hay JDK 25. Java 21 lo provisiona Gradle. No hay cliente `sqlite3`: se lee con `python3 -I -c "import sqlite3..."`.
-- `~/.kube/config` tiene contextos `kind` reales. **Nada de `kubectl` y ninguna prueba contra un clúster.** Solo se usa el servidor simulado de Fabric8, con `kubeconfig`, `KUBECONFIG`, `HOME` y `user.home` falsos.
-- Nada de `git stash` para el «rojo primero». Se usa una copia o un worktree temporal: un corte de red deja el worktree roto.
-- Pasar `</dev/null` a `git commit` y a `gh`. Pedir siempre la evidencia pegada tal cual, con el sha del `--stat` anotado.
-- Escribir los criterios de Gradle como `:X:test --rerun :X:check` (C-69).
+- **Nada de `kubectl` ni de clúster real.** Solo el servidor simulado de Fabric8, con `kubeconfig`, `KUBECONFIG`, `HOME` y `user.home` falsos (`mktemp -d`), y `GRADLE_USER_HOME` real para reutilizar cachés.
+- En la máquina de David solo hay JDK 25 (Java 21 lo provisiona Gradle). En el contenedor de Julian hay JDK 21. Maven Central a veces responde 429: esperar y reintentar.
+- No hay cliente `sqlite3`: se lee con `python3 -I -c "import sqlite3..."`.
+- Nada de `git stash` para el «rojo primero»: copia o worktree temporal.
+- Pasar `</dev/null` a `git commit` y a `gh`. Pedir la evidencia pegada tal cual, con el sha del `--stat` tomado después del último commit.
+- Criterios de Gradle como `:X:test --rerun :X:check` (C-69). En CA de diff acotado, la base es la del despacho, no `origin/main` (F-03 de U02-T04).
 
 ## Estado al corte
 
-- `main` está en `cf00671`. Las unidades U01, U03 y U04 están terminadas.
-- Hoy se fusionaron los PRs #54 a #76:
-  - U04-T07 a T13 y el cierre de U04 (#66 y #67).
-  - U05-T01 a T03 y U02-T01 a T03, en las olas 27, 28 y 29, dos tareas en paralelo por ola.
-- `CANDIDATAS.md` llega hasta C-74. La siguiente libre es **C-75**.
+- `main` en `cf00671`. U01, U03 y U04 terminadas. PRs #54 a #76 fusionados.
+- `CANDIDATAS.md` llega hasta **C-78**. La siguiente libre es **C-79**.
+- PRs abiertos: **#77** (`orq/U05-U02-tareas`: tareas de las olas 30 y 31, candidatas C-75 a C-78, auditoría y este archivo) y el #6, antiguo, que no se toca.
 
-### Ola 30, en curso (dos tareas en paralelo, sin fusionar)
+### Ola 30 (U05-T04 ∥ U02-T04)
 
-| Tarea | Rama y worktree | Estado |
-|---|---|---|
-| U05-T04 `aplicar` (server-side apply) | `m6r/U05-T04`, `../wt-m6r-U05-T04`, push en `a280041` | Ronda 1 hecha por el codificador. **El revisor de la ronda 1 se lanzó** y su informe no se ha guardado. Si no llegó, hay que redespachar al revisor. El codificador usó la vía alterna de la tarea: el modo CRUD no crea con apply, así que lee de vuelta el PATCH |
-| U02-T04 `ArranquePlugins` | `m6r/U02-T04`, `../wt-m6r-U02-T04`, push en `cfd660e` | Ronda 1 hecha por el codificador. **El revisor de la ronda 1 se lanzó** y su informe no se ha guardado. Puntos a juzgar: `CargadorPlugins` pasó a `@Component`, se añadió `snakeyaml-engine` al core y el rojo se hizo contra un stub |
+| Tarea | Rama | Ronda | Estado |
+|---|---|---|---|
+| U05-T04 `aplicar` | `m6r/U05-T04` | 2 | Ronda 1 NO-VERDE (informe en `revisiones/U05-T04/ronda-1.md`, commit `e085e5f`): F-01 a F-03 NARANJA, F-04 y F-05 AMARILLO; todo se arregla. Ronda 2 del codificador hecha (`cd2ec6f`, respuesta en `ronda-1-respuesta.md`). **Revisor de la ronda 2 despachado**; si la sesión se corta, repetirlo |
+| U02-T04 `ArranquePlugins` | `m6r/U02-T04` | 2 | Ronda 1 NO-VERDE (informe en `revisiones/U02-T04/ronda-1.md`, commit `6917a8c`): F-01 y F-02 NARANJA; F-03 es de la especificación; F-04 fuera de alcance (C-78); F-05 y F-06 se arreglan. F-02 se arregla dentro de `core/` igualando las salvaguardas de `LectorDescriptor` (profundidad 32, etiquetas explícitas) y con una sola fuente para nombre y límites; la extracción a `verificador/` es C-77. **Codificador de la ronda 2 despachado.** Falta: su respuesta, revisor ronda 2 |
 
-- Las tareas de la ola 30 están en el PR abierto **#77** (`orq/U05-U02-tareas`, en `ceb914c`), que hay que fusionar **antes** que los PRs de U05-T04 y U02-T04.
-- El PR #6 (`tarea/U03-T01`) es antiguo y está abierto. No se toca; que lo cierre David si quiere.
+Orden de fusión cuando las dos estén en VERDE: #77, luego U05-T04, luego U02-T04.
+
+### Ola 31 (U05-T05 ∥ U02-T05), escrita, sin despachar
+
+- `tareas/U05-T05-estado-contexto.md` (hash `65a449cecd38706d8a1f17df2d817a5e51150f09`).
+- `tareas/U02-T05-concordancia-suite.md` (hash `f95311817e9138f94cf701f894d68d17d2519d5c`).
+- Se despachan cuando su T04 salga VERDE: `m6r/U05-T05` desde la punta VERDE de `m6r/U05-T04`, `m6r/U02-T05` desde la de `m6r/U02-T04`. El archivo de la tarea se lee desde `../wt-orq-U04` (la rama de tareas); la base del diff es la punta de la T04.
 
 ## Lo que sigue
 
-1. Terminar la ola 30:
-   - guardar el informe de cada revisor;
-   - si sale NO-VERDE, hacer las rondas que hagan falta; una tarea que llega a la ronda 4 se para y se le lleva a David;
-   - con las dos en VERDE, abrir sus PRs y fusionar en orden: #77, U05-T04, U02-T04;
-   - cerrar con un PR de candidatas y auditoría desde `orq/U05-U02-tareas`, reiniciada sobre main.
-2. Escribir las siguientes tareas en `orq/U05-U02-tareas` y añadir las olas a `loop/README.md`.
-   - **U05:** T05 `estado` y `contextoFallo`, T06 `leerPais`, T07 `init-descarga/descargar.sh`, T08 imagen del init, T09 fronteras y T10 resumen.
-   - **U02:** T05 suite de U01 en el arranque, T06 fallo al iniciar y readiness, T07 endpoints, T08 el core no conoce países, T09 y T10 plugins `kyc-co` y `kyc-pe`, T11 imagen del core, T12 prueba de humo y T13 resumen.
+1. Terminar la ola 30: revisor de la ronda 2 de cada tarea, guardar su informe, más rondas si hace falta (una tarea que llega a la ronda 4 se para y se lleva al equipo), y abrir los PRs.
+2. Ola 31 como arriba.
+3. Escribir las tareas restantes en `orq/U05-U02-tareas` y añadir sus olas a `loop/README.md`:
+   - **U05:** T06 `leerPais`, T07 `init-descarga/descargar.sh`, T08 imagen del init, T09 fronteras, T10 resumen.
+   - **U02:** T06 fallo al iniciar y readiness, T07 endpoints, T08 el core no conoce países, T09 y T10 plugins `kyc-co` y `kyc-pe`, T11 imagen del core, T12 prueba de humo, T13 resumen.
    - Los planes están en `aidlc-docs/construction/plans/U05-*.md` y `U02-*.md`.
-   - Candidatas que hay que meter en esas tareas:
-     - C-70 y C-73 van en U05-T09.
-     - C-72 obliga a U05-T07, U05-T08 y U02-T11: el script en `/usr/local/bin/descargar.sh` y `USER 10001` numérico.
-     - C-64 va en U05-T07: comprobar el sha256 de lo descargado.
-     - C-71 y C-74 afectan a las pruebas del core.
-3. Pendiente de decidir con David: una tarea de pulido de U04 con C-57, C-60, C-61, C-63, C-65, C-66 y C-67, y las candidatas de otras unidades que nombran U04 (C-05, C-08, C-12, C-13, C-19 y C-20).
-4. Al cerrar cada unidad (U05 y U02):
-   - marcar su plan en `aidlc-docs/construction/plans/`;
-   - actualizar la línea de Code Generation Parte 2 en `aidlc-docs/aidlc-state.md`;
-   - dejar el resumen en `aidlc-docs/construction/<unidad>/code/summary.md`.
+   - Candidatas que hay que meter: C-70, C-73 y C-68 en U05-T09; C-72 en U05-T07, U05-T08 y U02-T11 (script en `/usr/local/bin/descargar.sh`, `USER 10001` numérico); C-64 en U05-T07 (comprobar el sha256); C-71 y C-74 en las pruebas del core; C-76 en U07.
+4. Pendiente de decidir con el equipo: una tarea de pulido de U04 (C-57, C-60, C-61, C-63, C-65, C-66, C-67) y otra de U01/U02 (C-77, C-78).
+5. Al cerrar cada unidad: marcar su plan en `aidlc-docs/construction/plans/`, actualizar la línea de Code Generation Parte 2 en `aidlc-docs/aidlc-state.md` y dejar `aidlc-docs/construction/<unidad>/code/summary.md`.
