@@ -78,6 +78,18 @@ public final class SuiteCombinaciones {
             if (origen == Origen.VEREDICTO != global.isPresent()) {
                 throw new IllegalArgumentException("global solo está presente cuando el origen es VEREDICTO");
             }
+            if (origen == Origen.FUERA_DE_U01 && !(motivos.isEmpty() && alternativas.isEmpty())) {
+                throw new IllegalArgumentException("FUERA_DE_U01 no lleva motivos ni alternativas");
+            }
+            if (origen == Origen.LECTOR && (motivos.isEmpty() || !alternativas.isEmpty())) {
+                throw new IllegalArgumentException("LECTOR rechaza con motivos y sin alternativas");
+            }
+            if (global.equals(Optional.of(Global.APROBADA)) && !(motivos.isEmpty() && alternativas.isEmpty())) {
+                throw new IllegalArgumentException("APROBADA no lleva motivos ni alternativas");
+            }
+            if (global.equals(Optional.of(Global.RECHAZADA)) && motivos.isEmpty()) {
+                throw new IllegalArgumentException("RECHAZADA lleva al menos un motivo");
+            }
         }
 
         public boolean rechazaElLector() {
@@ -89,7 +101,22 @@ public final class SuiteCombinaciones {
         }
     }
 
-    public record Caso(String id, Grupo grupo, String descripcion, Entrada entrada, Esperado esperado) {}
+    public record Caso(String id, Grupo grupo, String descripcion, Entrada entrada, Esperado esperado) {
+        public Caso {
+            Objects.requireNonNull(entrada, "entrada");
+            Objects.requireNonNull(esperado, "esperado");
+            var origen = switch (entrada) {
+                case Entrada.PorSeleccion p -> Origen.VEREDICTO;
+                case Entrada.PorDescriptor p -> Origen.LECTOR;
+                case Entrada.FueraDeU01 f -> Origen.FUERA_DE_U01;
+            };
+            if (esperado.origen() != origen) {
+                throw new IllegalArgumentException(
+                        id + ": la entrada " + entrada.getClass().getSimpleName() + " pide origen " + origen
+                                + " y el esperado dice " + esperado.origen());
+            }
+        }
+    }
 
     private static final String CORE = "synkra-core";
     private static final String OTRO = "otro-core";
@@ -113,11 +140,33 @@ public final class SuiteCombinaciones {
     /** No está en el catálogo: es el plugin ausente de S6. */
     private static final Descriptor KYC_MX = d("kyc-mx", v(1, 0, 0), CORE, "2.x");
 
-    /** El catálogo fijo de la suite; uno nuevo en cada llamada. */
+    /** Un core del catálogo de la suite: sus versiones y los descriptores de su carpeta de plugins. */
+    public record CoreDelCatalogo(String core, List<Version> versiones, List<Descriptor> plugins) {
+        public CoreDelCatalogo {
+            versiones = List.copyOf(versiones);
+            plugins = List.copyOf(plugins);
+        }
+    }
+
+    /**
+     * Todo lo que hay en el catálogo fijo de la suite, como datos: de aquí salen {@link #catalogo()} y el catálogo de
+     * las propiedades, de modo que una entrada nueva no se pierde. Inmutable; el primer core es el principal.
+     */
+    public static List<CoreDelCatalogo> contenido() {
+        return List.of(
+                new CoreDelCatalogo(CORE, List.of(v(2, 1, 0), v(3, 0, 0)), List.of(KYC_CO, KYC_PE_13, KYC_PE_20)),
+                new CoreDelCatalogo(OTRO, List.of(v(1, 0, 0)), List.of(KYC_XX)));
+    }
+
+    /** El catálogo fijo de la suite (ver {@link #contenido()}); uno nuevo en cada llamada. */
     public static CatalogoEnMemoria catalogo() {
-        return new CatalogoEnMemoria(
-                Map.of(CORE, List.of(v(2, 1, 0), v(3, 0, 0)), OTRO, List.of(v(1, 0, 0))),
-                List.of(KYC_CO, KYC_PE_13, KYC_PE_20, KYC_XX));
+        var versiones = new java.util.LinkedHashMap<String, List<Version>>();
+        var descriptores = new java.util.ArrayList<Descriptor>();
+        for (var c : contenido()) {
+            versiones.put(c.core(), c.versiones());
+            descriptores.addAll(c.plugins());
+        }
+        return new CatalogoEnMemoria(versiones, descriptores);
     }
 
     private static Entrada sel(Version core, Descriptor... plugins) {

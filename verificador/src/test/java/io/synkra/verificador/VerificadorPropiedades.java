@@ -181,9 +181,9 @@ class VerificadorPropiedades {
                                 .toList())
                         .as(ls -> ls.stream().flatMap(List::stream).toList()));
         // Una carpeta «core-b» con los mismos nombres de plugin y un rango que sirve: la versión compatible está solo en otra
-        // carpeta. «core-b» tiene una versión registrada en 3 de cada 4 catálogos y ninguna en el resto.
+        // carpeta. «core-b» tiene una versión registrada en la mitad de los catálogos y ninguna en la otra mitad.
         var abierto = new RangoVersion(new Version(1, 0, 0), Optional.empty(), ">=1.0.0");
-        return Combinators.combine(versionesCore, plugins, Arbitraries.of(true, true, true, false)).as((vs, ds, core_b_registrado) -> {
+        return Combinators.combine(versionesCore, plugins, Arbitraries.of(true, false)).as((vs, ds, core_b_registrado) -> {
             var todos = new ArrayList<>(ds);
             ds.stream().map(Descriptor::nombre).distinct().forEach(n -> todos.add(
                     new Descriptor(n, new Version(1, 0, 0), "core-b", abierto, Map.of(), Optional.empty())));
@@ -196,35 +196,16 @@ class VerificadorPropiedades {
         });
     }
 
-    /**
-     * El catálogo de la suite (S1 a S12) como uno de los posibles. Los datos salen de {@code SuiteCombinaciones}: los
-     * nombres se leen de sus selecciones y los descriptores y versiones, de su catálogo.
-     */
     /** El core sobre el que viven S1 a S10: el principal de este catálogo (no se deduce del orden de nada). */
     private static final String CORE_DE_LA_SUITE = "synkra-core";
 
+    /** El catálogo de la suite (S1 a S12) como uno de los posibles: todo {@code SuiteCombinaciones.contenido()}. */
     private static Datos catalogoDeLaSuite() {
-        var catalogo = SuiteCombinaciones.catalogo();
-        var cores = new java.util.TreeSet<String>();
-        var plugins = new java.util.TreeSet<String>();
-        for (var caso : SuiteCombinaciones.casos()) {
-            if (caso.entrada() instanceof SuiteCombinaciones.Entrada.PorSeleccion p) {
-                cores.add(p.seleccion().core());
-                p.seleccion().plugins().forEach(d -> {
-                    cores.add(d.core());
-                    plugins.add(d.nombre());
-                });
-            }
-        }
         var versionesCore = new LinkedHashMap<String, List<Version>>();
         var descriptores = new ArrayList<Descriptor>();
-        for (var core : cores) {
-            versionesCore.put(core, catalogo.versionesCore(core));
-            for (var plugin : plugins) {
-                for (var version : catalogo.versionesPlugin(core, plugin)) {
-                    descriptores.add(catalogo.descriptor(core, plugin, version).orElseThrow());
-                }
-            }
+        for (var c : SuiteCombinaciones.contenido()) {
+            versionesCore.put(c.core(), c.versiones());
+            descriptores.addAll(c.plugins());
         }
         return new Datos(CORE_DE_LA_SUITE, versionesCore, descriptores);
     }
@@ -586,13 +567,21 @@ class VerificadorPropiedades {
     @Test
     void catalogoDeLaSuiteCubreTodoElCatalogo() {
         var datos = catalogoDeLaSuite();
+        var catalogo = SuiteCombinaciones.catalogo();
         assertEquals(CORE_DE_LA_SUITE, datos.principal());
-        assertEquals(Set.of("synkra-core", "otro-core"), datos.cores().keySet());
-        assertEquals(
-                Set.of("synkra-core/kyc-co 1.0.0", "synkra-core/kyc-pe 1.3.0", "synkra-core/kyc-pe 2.0.0", "otro-core/kyc-xx 1.0.0"),
-                datos.descriptores().stream()
-                        .map(d -> d.core() + "/" + d.nombre() + " " + d.version())
-                        .collect(Collectors.toSet()));
+        assertEquals(CORE_DE_LA_SUITE, SuiteCombinaciones.contenido().get(0).core());
+        var cores = new LinkedHashMap<String, List<Version>>();
+        var descriptores = new ArrayList<Descriptor>();
+        for (var c : SuiteCombinaciones.contenido()) {
+            cores.put(c.core(), c.versiones());
+            descriptores.addAll(c.plugins());
+            assertEquals(c.versiones(), catalogo.versionesCore(c.core()));
+            for (var d : c.plugins()) {
+                assertEquals(java.util.Optional.of(d), catalogo.descriptor(c.core(), d.nombre(), d.version()));
+            }
+        }
+        assertEquals(cores, datos.cores());
+        assertEquals(descriptores, datos.descriptores());
     }
 
     @Test
@@ -613,8 +602,9 @@ class VerificadorPropiedades {
         assertTrue(vistos.getOrDefault("2 o más de plugin con texto distinto de número", 0) >= 15, "frecuencias: " + vistos);
         assertTrue(vistos.getOrDefault("2 o más de core con texto distinto de número", 0) >= 6, "frecuencias: " + vistos);
         assertTrue(vistos.getOrDefault("compatible solo en la carpeta de otro core", 0) >= 10, "frecuencias: " + vistos);
-        assertTrue(vistos.getOrDefault("compatible solo en la carpeta de otro core registrado", 0) >= 8, "frecuencias: " + vistos);
+        assertTrue(vistos.getOrDefault("compatible solo en la carpeta de otro core registrado", 0) >= 3, "frecuencias: " + vistos);
         // El catálogo de la suite en synkra-core (donde viven S1 a S10) y su región de S4 y S5: la base daba ~29 y ~12,8.
+        assertTrue(vistos.getOrDefault("compatible solo en la carpeta de otro core NO registrado", 0) >= 2, "frecuencias: " + vistos);
         assertTrue(vistos.getOrDefault("catalogo de la suite en synkra-core", 0) >= 20, "frecuencias: " + vistos);
         assertTrue(vistos.getOrDefault("catalogo de la suite en synkra-core con VERSION_INCOMPATIBLE", 0) >= 8, "frecuencias: " + vistos);
     }

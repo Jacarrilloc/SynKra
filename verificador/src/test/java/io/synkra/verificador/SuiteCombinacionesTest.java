@@ -198,4 +198,29 @@ class SuiteCombinacionesTest {
         assertTrue(a.versionesPlugin("synkra-core", "kyc-mx").isEmpty());
         assertTrue(a.versionesPlugin("synkra-core", "kyc-xx").isEmpty());
     }
+
+    @Test
+    void esperadoYEntradaIncoherentesSeRechazan() {
+        var motivo = new MotivoEsperado(CodigoMotivo.PLUGIN_AUSENTE, java.util.Optional.of("kyc-mx"), java.util.Optional.empty(), "kyc-mx");
+        var alternativa = new Alternativa(Alternativa.TipoAlternativa.CORE, "synkra-core", new Version(3, 0, 0));
+        var vacio = java.util.Optional.<Veredicto.Global>empty();
+        var aprobada = java.util.Optional.of(Veredicto.Global.APROBADA);
+        assertAll(
+                () -> assertThrows(IllegalArgumentException.class,
+                        () -> new Esperado(Origen.FUERA_DE_U01, vacio, List.of(motivo), List.of())),
+                () -> assertThrows(IllegalArgumentException.class,
+                        () -> new Esperado(Origen.FUERA_DE_U01, vacio, List.of(), List.of(alternativa))),
+                () -> assertThrows(IllegalArgumentException.class,
+                        () -> new Esperado(Origen.LECTOR, vacio, List.of(motivo), List.of(alternativa))),
+                () -> assertThrows(IllegalArgumentException.class,
+                        () -> new Esperado(Origen.LECTOR, vacio, List.of(), List.of())),
+                () -> assertThrows(IllegalArgumentException.class,
+                        () -> new Esperado(Origen.VEREDICTO, aprobada, List.of(motivo), List.of())),
+                () -> assertThrows(IllegalArgumentException.class, () -> new Caso(
+                        "X1", Grupo.INTEGRIDAD, "d", new Entrada.FueraDeU01("U04"),
+                        new Esperado(Origen.VEREDICTO, aprobada, List.of(), List.of()))),
+                () -> assertThrows(IllegalArgumentException.class, () -> new Caso(
+                        "X2", Grupo.DESCRIPTOR_INCOMPLETO, "d", new Entrada.PorDescriptor("nombre: x\n"),
+                        new Esperado(Origen.FUERA_DE_U01, vacio, List.of(), List.of()))));
+    }
 }
