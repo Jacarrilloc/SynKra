@@ -41,5 +41,5 @@
 - [ ] NFR Design - SKIP
 - [x] Infrastructure Design - EXECUTE solo en U08 (aprobado)
 - [x] Code Generation Parte 1 (planes de tareas) de cada unidad - EXECUTE (aprobados: U01 a U11). La Parte 2 NO se ejecuta en el módulo 5
-- [ ] Code Generation Parte 2 (loop de agentes, módulo 6 en adelante): U01 TERMINADA 2026-11-27 (U01-T01 a T14 fusionadas, la última en el PR #38; resumen en `aidlc-docs/construction/U01-verificador/code/summary.md`). U03 terminada antes (U03-T07). Faltan las demás unidades
+- [ ] Code Generation Parte 2 (loop de agentes, módulo 6 en adelante): U01 TERMINADA 2026-11-27 (U01-T01 a T14 fusionadas, la última en el PR #38; resumen en `aidlc-docs/construction/U01-verificador/code/summary.md`). U03 terminada antes (U03-T07). U04 TERMINADA 2026-11-27 (U04-T01 a T13 fusionadas, la última en el PR #66; resumen en `aidlc-docs/construction/U04-catalogo/code/summary.md`). Faltan las demás unidades
 - [ ] Build and Test - módulos 6 a 8
