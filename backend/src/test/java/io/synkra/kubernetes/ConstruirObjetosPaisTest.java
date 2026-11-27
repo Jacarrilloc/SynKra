@@ -21,6 +21,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /** U05-T03: construir no habla con la API; el YAML esperado está escrito a mano a partir de U08. */
 class ConstruirObjetosPaisTest {
@@ -115,7 +117,8 @@ class ConstruirObjetosPaisTest {
 
     @Test
     void laGuardiaRechazaUnPaisInvalidoSinPeticiones() {
-        // Un PlanPais válido no puede tener país malo; la guardia se ejerce sobre el namespace derivado.
+        // PlanPais ya garantiza [a-z]{2}, así que con un plan válido la guardia es inalcanzable desde construir:
+        // por eso se prueba la guardia que construir invoca (namespaceDe), no un plan con país malo.
         int antes = servidor.getRequestCount();
         assertThatThrownBy(() -> AdaptadorFabric8.namespaceDe("pe/../x"))
                 .isInstanceOf(NamespaceNoPermitidoException.class);
@@ -134,5 +137,45 @@ class ConstruirObjetosPaisTest {
     void laImagenDelCoreEsExactamenteLaDelPlan() {
         var core = adaptador.construir(planPe()).deployment().getSpec().getTemplate().getSpec().getContainers().get(0);
         assertThat(core.getImage()).isEqualTo(IMAGEN);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"../x", "a/b", "a\nb", "a b", "a: b", ""})
+    void planRechazaNombresDePluginPeligrosos(String nombre) {
+        assertThatThrownBy(() -> new PluginPlan(nombre, "1.0.0", "1".repeat(64)))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"1 0", "1/0", "../1", "1\n2", ""})
+    void planRechazaVersionesPeligrosas(String version) {
+        assertThatThrownBy(() -> new PluginPlan("x", version, "1".repeat(64)))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void planAceptaSemverConPrereleaseYBuild() {
+        assertThat(new PluginPlan("facturacion", "1.0.0-rc.1+b", "1".repeat(64)).version()).isEqualTo("1.0.0-rc.1+b");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"synkra-init-descarga", "synkra-init-descarga:latest", "localhost:5001/synkra-init-descarga",
+            "localhost:5001/synkra-init-descarga:latest", "localhost:5001/x@sha256:abc", "init:1.0.0", " ", ""})
+    void rechazaImagenDeInitSinRegistroOSinTagFijo(String imagen) {
+        assertThatThrownBy(() -> new AdaptadorFabric8(cliente, imagen)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void aceptaImagenDeInitConTagODigest() {
+        assertThat(new AdaptadorFabric8(cliente, "localhost:5001/synkra-init-descarga:1.0.0")).isNotNull();
+        assertThat(new AdaptadorFabric8(cliente, "registro.local/synkra/init@sha256:" + DIGEST)).isNotNull();
+    }
+
+    @Test
+    void usaLaImagenDeInitConfigurada() {
+        var a = new AdaptadorFabric8(cliente, "registro.local:5000/init:2.3.4");
+        var init = a.construir(planPe()).deployment().getSpec().getTemplate().getSpec().getInitContainers().get(0);
+        assertThat(init.getImage()).isEqualTo("registro.local:5000/init:2.3.4");
+        assertThat(init.getImagePullPolicy()).isEqualTo("IfNotPresent");
     }
 }

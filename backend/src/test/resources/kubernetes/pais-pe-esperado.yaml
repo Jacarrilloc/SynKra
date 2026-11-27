@@ -56,7 +56,8 @@ spec:
       automountServiceAccountToken: false
       initContainers:
         - name: descarga
-          image: synkra-init-descarga
+          image: localhost:5001/synkra-init-descarga:1.0.0
+          imagePullPolicy: IfNotPresent
           command: ["/usr/local/bin/descargar.sh"]
           env:
             - name: SYNKRA_URL
@@ -70,6 +71,8 @@ spec:
               cpu: 100m
           securityContext:
             runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
             allowPrivilegeEscalation: false
           volumeMounts:
             - name: plugins
@@ -96,6 +99,8 @@ spec:
               cpu: 500m
           securityContext:
             runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
             allowPrivilegeEscalation: false
           volumeMounts:
             - name: plugins

@@ -18,6 +18,7 @@ import io.synkra.kubernetes.api.PlanPais.PluginPlan;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /** Arma en memoria los objetos de un país según U08. No usa cliente: no puede hablar con la API. */
@@ -31,7 +32,15 @@ final class ConstructorObjetosPais {
 
     static final String CONTENEDOR_CORE = "core";
     static final String CONTENEDOR_INIT = "descarga";
-    static final String IMAGEN_INIT = "synkra-init-descarga";
+    /** Valor por defecto de {@code synkra.kubernetes.imagen-init}: la imagen que sube {@code make install}. */
+    static final String IMAGEN_INIT_POR_DEFECTO = "localhost:5001/synkra-init-descarga:1.0.0";
+    static final String POLITICA_PULL = "IfNotPresent";
+    /** UID/GID fijos de los dos contenedores; las imágenes deben usar este usuario numérico. */
+    static final long UID_CONTENEDORES = 10001L;
+    static final long GID_CONTENEDORES = 10001L;
+    private static final Pattern IMAGEN_INIT_VALIDA = Pattern.compile(
+            "[^\\s/@:]+(:[0-9]+)?(/[^\\s/@:]+)+(:[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}|@sha256:[0-9a-f]{64})");
+    private static final String TAG_PROHIBIDO = ":latest";
     static final String COMANDO_INIT = "/usr/local/bin/descargar.sh";
     static final String VAR_URL = "SYNKRA_URL";
     static final String URL_CATALOGO = "http://synkra-backend.synkra.svc:8080";
@@ -53,11 +62,20 @@ final class ConstructorObjetosPais {
 
     private ConstructorObjetosPais() {}
 
-    static ObjetosPais construir(PlanPais plan, String namespace) {
+    /** Exige registro y tag o digest; rechaza {@code :latest} y las referencias sin tag. */
+    static String exigirImagenInit(String imagen) {
+        if (imagen == null || !IMAGEN_INIT_VALIDA.matcher(imagen).matches() || imagen.endsWith(TAG_PROHIBIDO)) {
+            throw new IllegalArgumentException(
+                    "synkra.kubernetes.imagen-init debe llevar registro y tag o digest (nunca :latest): " + imagen);
+        }
+        return imagen;
+    }
+
+    static ObjetosPais construir(PlanPais plan, String namespace, String imagenInit) {
         List<PluginPlan> plugins = plan.plugins().stream()
                 .sorted(Comparator.comparing(PluginPlan::nombre).thenComparing(PluginPlan::version))
                 .toList();
-        return new ObjetosPais(deployment(plan, namespace), configMap(plugins, namespace), service(namespace));
+        return new ObjetosPais(deployment(plan, namespace, imagenInit), configMap(plugins, namespace), service(namespace));
     }
 
     private static Map<String, String> etiquetaGestor() {
@@ -103,12 +121,13 @@ final class ConstructorObjetosPais {
                 .build();
     }
 
-    private static Container init() {
+    private static Container init(String imagenInit) {
         return new ContainerBuilder()
-                .withName(CONTENEDOR_INIT).withImage(IMAGEN_INIT).withCommand(COMANDO_INIT)
+                .withName(CONTENEDOR_INIT).withImage(imagenInit).withImagePullPolicy(POLITICA_PULL).withCommand(COMANDO_INIT)
                 .addNewEnv().withName(VAR_URL).withValue(URL_CATALOGO).endEnv()
                 .withResources(RECURSOS_INIT)
-                .withNewSecurityContext().withRunAsNonRoot(true).withAllowPrivilegeEscalation(false).endSecurityContext()
+                .withNewSecurityContext().withRunAsNonRoot(true).withRunAsUser(UID_CONTENEDORES).withRunAsGroup(GID_CONTENEDORES)
+                .withAllowPrivilegeEscalation(false).endSecurityContext()
                 .addNewVolumeMount().withName(VOLUMEN_PLUGINS).withMountPath(RUTA_PLUGINS).endVolumeMount()
                 .addNewVolumeMount().withName(VOLUMEN_CONFIG).withMountPath(RUTA_CONFIG).endVolumeMount()
                 .build();
@@ -121,13 +140,14 @@ final class ConstructorObjetosPais {
                 .withNewReadinessProbe().withNewHttpGet()
                 .withPath(RUTA_READINESS).withPort(new IntOrString(PUERTO_NOMBRE)).endHttpGet().endReadinessProbe()
                 .withResources(RECURSOS_CORE)
-                .withNewSecurityContext().withRunAsNonRoot(true).withAllowPrivilegeEscalation(false).endSecurityContext()
+                .withNewSecurityContext().withRunAsNonRoot(true).withRunAsUser(UID_CONTENEDORES).withRunAsGroup(GID_CONTENEDORES)
+                .withAllowPrivilegeEscalation(false).endSecurityContext()
                 .addNewVolumeMount().withName(VOLUMEN_PLUGINS).withMountPath(RUTA_PLUGINS).endVolumeMount()
                 .addNewVolumeMount().withName(VOLUMEN_CONFIG).withMountPath(RUTA_CONFIG).endVolumeMount()
                 .build();
     }
 
-    private static Deployment deployment(PlanPais plan, String namespace) {
+    private static Deployment deployment(PlanPais plan, String namespace, String imagenInit) {
         return new DeploymentBuilder()
                 .withNewMetadata().withName(NOMBRE_CORE).withNamespace(namespace).withLabels(etiquetaGestor()).endMetadata()
                 .withNewSpec()
@@ -139,7 +159,7 @@ final class ConstructorObjetosPais {
                 .endMetadata()
                 .withNewSpec()
                 .withAutomountServiceAccountToken(false)
-                .withInitContainers(init())
+                .withInitContainers(init(imagenInit))
                 .withContainers(core(plan.imagenCore()))
                 .addNewVolume().withName(VOLUMEN_PLUGINS).withNewEmptyDir().endEmptyDir().endVolume()
                 .addNewVolume().withName(VOLUMEN_CONFIG).withNewConfigMap().withName(NOMBRE_CONFIG).endConfigMap().endVolume()
