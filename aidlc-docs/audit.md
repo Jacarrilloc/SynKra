@@ -762,3 +762,11 @@
 **Context**: Loop del módulo 6, ola 24, fuera de las etapas de AI-DLC.
 
 ---
+
+## U04-T11 cerrada por el loop
+**Timestamp**: 2026-11-27T19:40:00Z
+**User Input**: (sin mensaje nuevo; se aplica la regla de fusión de David de 2026-11-27T16:14:07Z)
+**AI Response**: U04-T11 salió VERDE en la ronda 3. La ronda 1 fue NO-VERDE porque la bitácora decía «25 XML» y el diff produce 22. La ronda 2 también, porque un tipo público en `catalogo.apix` pasaba por un filtro de prefijo de texto. C-14 y C-36 quedan cerradas. El orquestador corrige un error suyo: había asignado a U04-T11 las candidatas C-57, C-60, C-61, C-63, C-65 y C-66, pero U04-T11 prohíbe cambios de comportamiento, así que quedan para una tarea de pulido que se propondrá a David. Se fusionaron dos PRs, primero el de `m6r/U04-T11` y luego el de esta rama.
+**Context**: Loop del módulo 6, ola 25, fuera de las etapas de AI-DLC.
+
+---
