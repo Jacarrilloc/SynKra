@@ -12,7 +12,6 @@ import io.fabric8.kubernetes.client.server.mock.KubernetesMockServer;
 import io.fabric8.mockwebserver.http.RecordedRequest;
 import io.synkra.kubernetes.api.AplicacionFallidaException;
 import io.synkra.kubernetes.api.NamespaceNoPermitidoException;
-import io.synkra.kubernetes.api.ObjetosPais;
 import io.synkra.kubernetes.api.PlanPais;
 import io.synkra.kubernetes.api.PlanPais.PluginPlan;
 import java.nio.file.Path;
@@ -89,7 +88,11 @@ class AplicarTest {
     private List<RecordedRequest> peticiones() throws Exception {
         List<RecordedRequest> r = new ArrayList<>();
         while (leidas < servidor.getRequestCount()) {
-            r.add(servidor.takeRequest(5, TimeUnit.SECONDS));
+            RecordedRequest peticion = servidor.takeRequest(5, TimeUnit.SECONDS);
+            if (peticion == null) {
+                throw new AssertionError("El servidor contó " + servidor.getRequestCount() + " peticiones pero takeRequest agotó la espera tras " + leidas);
+            }
+            r.add(peticion);
             leidas++;
         }
         return r;
@@ -236,5 +239,31 @@ class AplicarTest {
 
     private static String ruta(String base, String recurso, String nombre) {
         return base + "/namespaces/synkra-pe/" + recurso + "/" + nombre + "?fieldManager=" + ConstructorObjetosPais.GESTOR + "&force=true";
+    }
+
+    /** C-79: un {@code ObjetosPais} incompleto falla con un error con nombre, sin peticiones. */
+    @Test
+    void objetosIncompletosFallanConErrorConNombreYSinPeticiones() throws Exception {
+        var completos = adaptador.construir(plan("facturacion", "1.2.0", IMAGEN));
+        var sinService = new ObjetosPaisFabric8(completos.deployment(), completos.configMap(), null);
+        assertThatThrownBy(() -> adaptador.aplicar(sinService))
+                .isInstanceOf(io.synkra.kubernetes.api.ObjetosPaisIncompletosException.class)
+                .hasMessageContaining("Service");
+        var sinMetadatos = new ObjetosPaisFabric8(new io.fabric8.kubernetes.api.model.apps.Deployment(), completos.configMap(), completos.service());
+        assertThatThrownBy(() -> adaptador.aplicar(sinMetadatos))
+                .isInstanceOf(io.synkra.kubernetes.api.ObjetosPaisIncompletosException.class)
+                .hasMessageContaining("Deployment");
+        assertThat(servidor.getRequestCount()).isZero();
+    }
+
+    @Test
+    void unObjetosPaisAjenoNoSeAplica() {
+        io.synkra.kubernetes.api.ObjetosPais ajeno = new io.synkra.kubernetes.api.ObjetosPais() {
+            public String yamlDeployment() { return ""; }
+            public String yamlConfigMap() { return ""; }
+            public String yamlService() { return ""; }
+        };
+        assertThatThrownBy(() -> adaptador.aplicar(ajeno)).isInstanceOf(IllegalArgumentException.class);
+        assertThat(servidor.getRequestCount()).isZero();
     }
 }

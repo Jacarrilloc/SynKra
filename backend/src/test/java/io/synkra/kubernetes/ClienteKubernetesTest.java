@@ -28,6 +28,8 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
  */
 class ClienteKubernetesTest {
 
+    private static final Class<? extends Throwable> EXCEPCION_TLS = io.fabric8.kubernetes.client.KubernetesClientException.class;
+
     private static final String VERSION = "{\"major\":\"1\",\"minor\":\"30\",\"gitVersion\":\"v1.30.0\"}";
 
     @TempDir
@@ -98,6 +100,11 @@ class ClienteKubernetesTest {
         Files.writeString(cuenta.resolve("ca.crt"), pem.toString());
     }
 
+    /** El cliente ya no es un bean (C-70): se lee del adaptador, desde el mismo paquete. */
+    private static KubernetesClient cliente(AdaptadorKubernetes adaptador) {
+        return ((AdaptadorFabric8) adaptador).cliente();
+    }
+
     private ApplicationContextRunner conCuenta() {
         return runner.withPropertyValues("synkra.kubernetes.cuenta=" + cuenta)
                 .withBean(VariablesPod.class, this::variablesDelServidor);
@@ -107,9 +114,8 @@ class ClienteKubernetesTest {
     void conTokenYCaDeLaCuentaLaPeticionLlevaElBearerPorTls() throws Exception {
         escribeCuenta("token-del-pod-123");
         conCuenta().run(ctx -> {
-            assertThat(ctx).hasSingleBean(KubernetesClient.class);
             assertThat(ctx.getBean(AdaptadorKubernetes.class).disponible()).isTrue();
-            var cliente = ctx.getBean(KubernetesClient.class);
+            var cliente = cliente(ctx.getBean(AdaptadorKubernetes.class));
             assertThat(cliente.getMasterUrl().toString()).startsWith("https://");
             cliente.getKubernetesVersion();
             RecordedRequest peticion = servidor.getLastRequest();
@@ -123,8 +129,8 @@ class ClienteKubernetesTest {
         escribeCuenta("t");
         Files.delete(cuenta.resolve("ca.crt"));
         conCuenta().run(ctx -> {
-            var cliente = ctx.getBean(KubernetesClient.class);
-            org.assertj.core.api.Assertions.assertThatThrownBy(cliente::getKubernetesVersion).isNotNull();
+            var cliente = cliente(ctx.getBean(AdaptadorKubernetes.class));
+            org.assertj.core.api.Assertions.assertThatThrownBy(cliente::getKubernetesVersion).isInstanceOf(EXCEPCION_TLS).hasRootCauseInstanceOf(java.security.cert.CertPathBuilderException.class);
         });
     }
 
@@ -151,7 +157,7 @@ class ClienteKubernetesTest {
         Files.copy(kubeconfig, casaFalsa.resolve(".kube/config"));
         System.setProperty("kubeconfig", kubeconfig.toString());
         conCuenta().run(ctx -> {
-            var cliente = ctx.getBean(KubernetesClient.class);
+            var cliente = cliente(ctx.getBean(AdaptadorKubernetes.class));
             var config = cliente.getConfiguration();
             assertThat(config.getFile()).as("archivo kubeconfig").isNull();
             assertThat(config.getCurrentContext()).as("contexto").isNull();
@@ -166,7 +172,8 @@ class ClienteKubernetesTest {
     void laUrlNoSaleDeLasPropiedadesDeSpring() throws Exception {
         escribeCuenta("token-del-pod");
         // Sin variables del pod en el proceso, ni la propiedad ni las claves de Spring dan clúster.
-        runner.withPropertyValues(
+        runner.withBean(VariablesPod.class, () -> new VariablesPod(Map.of())) // C-68: no depende del entorno del proceso
+                .withPropertyValues(
                         "synkra.kubernetes.cuenta=" + cuenta,
                         "synkra.kubernetes.url=http://127.0.0.1:1",
                         "SYNKRA_KUBERNETES_URL=http://127.0.0.1:1",
@@ -174,7 +181,7 @@ class ClienteKubernetesTest {
                         "KUBERNETES_SERVICE_PORT=1")
                 .run(ctx -> {
                     assertThat(ctx).hasNotFailed();
-                    assertThat(ctx).doesNotHaveBean(KubernetesClient.class);
+                    assertThat(cliente(ctx.getBean(AdaptadorKubernetes.class))).isNull();
                     assertThat(ctx.getBean(AdaptadorKubernetes.class).disponible()).isFalse();
                 });
     }
@@ -184,7 +191,7 @@ class ClienteKubernetesTest {
         escribeCuenta("token-del-pod");
         conCuenta().withPropertyValues("synkra.kubernetes.url=http://127.0.0.1:1", "SYNKRA_KUBERNETES_URL=http://127.0.0.1:1")
                 .run(ctx -> {
-                    var cliente = ctx.getBean(KubernetesClient.class);
+                    var cliente = cliente(ctx.getBean(AdaptadorKubernetes.class));
                     assertThat(cliente.getConfiguration().getMasterUrl())
                             .startsWith("https://" + servidor.getHostName() + ":" + servidor.getPort());
                 });
@@ -194,7 +201,7 @@ class ClienteKubernetesTest {
     void sinTokenElBackendArrancaYNoHayCliente() {
         conCuenta().run(ctx -> {
             assertThat(ctx).hasNotFailed();
-            assertThat(ctx).doesNotHaveBean(KubernetesClient.class);
+            assertThat(cliente(ctx.getBean(AdaptadorKubernetes.class))).isNull();
             assertThat(ctx.getBean(AdaptadorKubernetes.class).disponible()).isFalse();
             assertThat(servidor.getRequestCount()).isZero();
         });
@@ -207,7 +214,7 @@ class ClienteKubernetesTest {
                 .withBean(VariablesPod.class, () -> new VariablesPod(Map.of()))
                 .run(ctx -> {
                     assertThat(ctx).hasNotFailed();
-                    assertThat(ctx).doesNotHaveBean(KubernetesClient.class);
+                    assertThat(cliente(ctx.getBean(AdaptadorKubernetes.class))).isNull();
                     assertThat(ctx.getBean(AdaptadorKubernetes.class).disponible()).isFalse();
                 });
     }
@@ -218,7 +225,7 @@ class ClienteKubernetesTest {
         Files.createDirectory(cuenta.resolve("token"));
         conCuenta().run(ctx -> {
             assertThat(ctx).hasNotFailed();
-            assertThat(ctx).doesNotHaveBean(KubernetesClient.class);
+            assertThat(cliente(ctx.getBean(AdaptadorKubernetes.class))).isNull();
             assertThat(ctx.getBean(AdaptadorKubernetes.class).disponible()).isFalse();
         });
     }
@@ -227,7 +234,7 @@ class ClienteKubernetesTest {
     void elClienteNoHacePeticionesAlArrancar() throws Exception {
         escribeCuenta("t");
         conCuenta().run(ctx -> {
-            assertThat(ctx).hasSingleBean(KubernetesClient.class);
+            assertThat(cliente(ctx.getBean(AdaptadorKubernetes.class))).isNotNull();
             assertThat(servidor.getRequestCount()).isZero();
         });
     }

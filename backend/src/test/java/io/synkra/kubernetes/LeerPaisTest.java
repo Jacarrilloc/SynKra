@@ -19,7 +19,6 @@ import io.synkra.kubernetes.api.LecturaPais;
 import io.synkra.kubernetes.api.LecturaPais.PluginLeido;
 import io.synkra.kubernetes.api.LecturaPaisInconsistenteException;
 import io.synkra.kubernetes.api.NamespaceNoPermitidoException;
-import io.synkra.kubernetes.api.ObjetosPais;
 import io.synkra.kubernetes.api.PlanPais;
 import io.synkra.kubernetes.api.PlanPais.PluginPlan;
 import java.nio.file.Path;
@@ -91,8 +90,8 @@ class LeerPaisTest {
         }
     }
 
-    private ObjetosPais siembra(PlanPais plan) {
-        ObjetosPais o = adaptador.construir(plan);
+    private ObjetosPaisFabric8 siembra(PlanPais plan) {
+        var o = adaptador.construir(plan);
         cliente.apps().deployments().inNamespace(NS).resource(o.deployment()).create();
         cliente.configMaps().inNamespace(NS).resource(o.configMap()).create();
         return o;
@@ -243,7 +242,7 @@ class LeerPaisTest {
 
     @Test
     void deploymentSinConfigMapLanza() {
-        ObjetosPais o = adaptador.construir(PLAN);
+        var o = adaptador.construir(PLAN);
         cliente.apps().deployments().inNamespace(NS).resource(o.deployment()).create();
 
         assertThatThrownBy(() -> adaptador.leerPais("pe"))
@@ -253,7 +252,7 @@ class LeerPaisTest {
 
     @Test
     void configMapSinDeploymentLanza() {
-        ObjetosPais o = adaptador.construir(PLAN);
+        var o = adaptador.construir(PLAN);
         cliente.configMaps().inNamespace(NS).resource(o.configMap()).create();
 
         assertThatThrownBy(() -> adaptador.leerPais("pe"))

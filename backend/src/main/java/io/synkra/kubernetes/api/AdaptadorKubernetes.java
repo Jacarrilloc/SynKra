@@ -5,7 +5,10 @@ import java.util.Optional;
 /** Puerta del módulo Kubernetes. Los métodos de negocio llegan en U05-T02 a T06. */
 public interface AdaptadorKubernetes {
 
-    /** Verdadero solo si el pod tiene cuenta de servicio (token) y clúster al que hablar. */
+    /**
+     * Verdadero solo si el pod tiene cuenta de servicio (token) y clúster al que hablar. Se decide una vez al
+     * arrancar y no cambia durante la vida del proceso (C-68: un token que aparece después no se recoge).
+     */
     boolean disponible();
 
     /**
@@ -26,7 +29,8 @@ public interface AdaptadorKubernetes {
      * Aplica los tres objetos con server-side apply (field manager {@code synkra}), en el orden ConfigMap,
      * Service y Deployment. Si uno falla, los anteriores no se deshacen.
      *
-     * @throws IllegalArgumentException si los objetos no comparten namespace (sin peticiones)
+     * @throws ObjetosPaisIncompletosException si falta un objeto, sus metadatos o su namespace (sin peticiones)
+     * @throws IllegalArgumentException si los objetos no comparten namespace o no los armó {@link #construir} (sin peticiones)
      * @throws NamespaceNoPermitidoException si el namespace no pasa la guardia (sin peticiones)
      * @throws IllegalStateException si no hay cliente (el pod no tiene cuenta de servicio); sin peticiones
      * @throws AplicacionFallidaException si la API falla; nombra el objeto

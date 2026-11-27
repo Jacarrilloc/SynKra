@@ -1,8 +1,18 @@
 package io.synkra.kubernetes.api;
 
-import io.fabric8.kubernetes.api.model.ConfigMap;
-import io.fabric8.kubernetes.api.model.Service;
-import io.fabric8.kubernetes.api.model.apps.Deployment;
+/**
+ * Los tres objetos de un país, armados en memoria; aún no están en el clúster. Solo los entrega
+ * {@link AdaptadorKubernetes#construir(PlanPais)}: la API no expone tipos de Fabric8, así que quien necesite
+ * ver el contenido lo lee como texto YAML.
+ */
+public interface ObjetosPais {
 
-/** Los tres objetos de un país, armados en memoria; aún no están en el clúster. */
-public record ObjetosPais(Deployment deployment, ConfigMap configMap, Service service) {}
+    /** El Deployment del core, como YAML. */
+    String yamlDeployment();
+
+    /** El ConfigMap del país, como YAML. */
+    String yamlConfigMap();
+
+    /** El Service del core, como YAML. */
+    String yamlService();
+}
