@@ -1,0 +1,10 @@
+438a9a8
+ bitacoras/U05-T07-evidencia/ca1.txt          |  23 ++++
+ bitacoras/U05-T07-evidencia/ca2-mutantes.txt |  96 +++++++++++++
+ bitacoras/U05-T07-evidencia/rojo.txt         |  18 +++
+ bitacoras/U05-T07.md                         |  29 ++++
+ init-descarga/descargar.sh                   | 106 +++++++++++++++
+ init-descarga/test.sh                        | 194 +++++++++++++++++++++++++++
+ 6 files changed, 466 insertions(+)
+100755 910fc459d307ab48d0f2d5ae8a668cb7dea234e6 0	init-descarga/descargar.sh
+100755 71db29c910350cd334d0f21fd40fcc2d83e2d872 0	init-descarga/test.sh
