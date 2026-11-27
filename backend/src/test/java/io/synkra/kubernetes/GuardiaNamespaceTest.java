@@ -50,7 +50,7 @@ class GuardiaNamespaceTest {
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = {"default", "kube-system", "synkra", "synkra-", "synkra-PE", "synkra-per", "synkra-p",
-            "synkra-pe ", "synkra-pe/x", "../synkra-pe", "synkra-pe\n", "Synkra-pe", " synkra-pe", "synkra-p1"})
+            "synkra-pe ", "synkra-pe/x", "../synkra-pe", "synkra-pe\n", "Synkra-pe", " synkra-pe", "synkra-p1", "synkra-p\u00e9", "synkra-\u00f1u"})
     void rechazaSinPeticiones(String namespace) {
         int antes = servidor.getRequestCount();
         assertThatThrownBy(() -> adaptador.existeNamespace(namespace))
@@ -65,6 +65,16 @@ class GuardiaNamespaceTest {
                 .isInstanceOf(NamespaceNoPermitidoException.class)
                 .hasMessageContaining("x".repeat(63))
                 .hasMessageNotContaining("x".repeat(64));
+    }
+
+    @Test
+    void mensajeConNullYConNamespaceCorto() {
+        assertThatThrownBy(() -> adaptador.existeNamespace(null))
+                .isInstanceOf(NamespaceNoPermitidoException.class)
+                .hasMessage("Namespace no permitido: null");
+        assertThatThrownBy(() -> adaptador.existeNamespace("synkra-PE"))
+                .isInstanceOf(NamespaceNoPermitidoException.class)
+                .hasMessage("Namespace no permitido: synkra-PE");
     }
 
     @ParameterizedTest
