@@ -1,0 +1,4 @@
+F-01: Corregido en el commit de la ronda 2: los cuatro repositorios extienden `Repository<T, String>` con solo consultas derivadas y `findAll`; `losRepositoriosNoOfreceOperacionesCrud` afirma que `CrudRepository` no es asignable (rojo antes: FAILED; verde después, ver bitácora, Ronda 2).
+F-02: Corregido en el commit de la ronda 2: 8 pruebas de esquema con SQL directo en `CatalogoRepositoriosTest` (FK de versión, FK de etiqueta, CHECK, RESTRICT con la fila intacta, sha256 repetido con `unique=0`, mismo plugin en dos cores, `typeof(subido_en)`, `imagen` nula). Corrí en copia M02, M03, M05c, M06b, M08, M09, M11 y M12: todas fallan. M06a la cubre `pragma_index_list`.
+F-03: Corregido en el commit de la ronda 2: `BaseDeDatosTest` usa `startsWith("1", "2")`.
+F-04: Corregido en el commit de la ronda 2: CA-4 con comando y salida en la bitácora, sección Ronda 2.

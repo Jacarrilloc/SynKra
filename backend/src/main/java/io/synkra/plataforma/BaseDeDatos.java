@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Properties;
 import javax.sql.DataSource;
 import org.springframework.data.relational.core.dialect.Dialect;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +25,15 @@ public class BaseDeDatos {
         return "jdbc:sqlite:" + archivo(directorio);
     }
 
+    /** PRAGMA de C-04: sqlite-jdbc los aplica al abrir la conexion, sin un execute posterior. */
+    static Properties pragmas() {
+        var p = new Properties();
+        p.setProperty("foreign_keys", "true");
+        p.setProperty("busy_timeout", "5000");
+        p.setProperty("journal_mode", "WAL");
+        return p;
+    }
+
     @Bean
     DataSource dataSource(@Value("${synkra.data}") String directorio) {
         try {
@@ -34,6 +44,7 @@ public class BaseDeDatos {
         }
         var config = new HikariConfig();
         config.setJdbcUrl(urlJdbc(directorio));
+        config.setDataSourceProperties(pragmas());
         config.setMaximumPoolSize(1);
         config.setPoolName("synkra-sqlite");
         return new HikariDataSource(config);

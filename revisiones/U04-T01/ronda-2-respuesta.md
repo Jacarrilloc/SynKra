@@ -1,0 +1,3 @@
+F-05: Corregido en el commit de la ronda 3: `lasTresFkDeclaranOnDeleteRestrict` (`pragma_foreign_key_list` de las tres tablas), `borrarUnPluginConEtiquetasYUnCoreConPluginsSeRechaza` y el borrado de core con `SQLITE_CONSTRAINT_TRIGGER`; `lasColumnasDeAuditoriaSonNotNull` (`notnull=1` desde `pragma_table_info`). En copia, M09b, M09c, M09d, M11b, M12b, M12c y M12d hacen fallar `CatalogoRepositoriosTest` (salidas en la bitácora, Ronda 3).
+F-06: Corregido en el commit de la ronda 3: `losRepositoriosNoOfreceOperacionesCrud` recorre `getMethods()` y rechaza `save*`, `delete*`, `findById` y `existsById`; M17 lo hace fallar.
+F-07: Corregido en el commit de la ronda 3: `findAllDeLosRepositoriosDevuelveLoGuardado` ejerce `findAll` de Core, VersionCore y Etiqueta.
