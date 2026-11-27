@@ -778,3 +778,11 @@
 **Context**: Loop del módulo 6, ola 26, fuera de las etapas de AI-DLC.
 
 ---
+
+## Tareas de U05 y U02 (olas 27 y 28)
+**Timestamp**: 2026-11-27T19:08:35Z
+**User Input**: "Dale, continua con el trabajo"
+**AI Response**: Se toma como aprobación de la recomendación: escribir primero las tareas de U05 y U02 y dejar para después la tarea de pulido de U04. El orquestador escribe U05-T01, U05-T02, U02-T01 y U02-T02, con las olas 27 y 28 en `loop/README.md`. Las dos unidades no dependen entre sí, así que cada ola despacha dos tareas en paralelo.
+**Context**: Loop del módulo 6, fuera de las etapas de AI-DLC.
+
+---
