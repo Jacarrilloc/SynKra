@@ -2,6 +2,7 @@ package io.synkra.catalogo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.synkra.catalogo.api.CatalogoApi;
 import io.synkra.catalogo.api.PluginSubido;
@@ -35,7 +36,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("/api/cores/{nombre}/plugins")
 class RutasPlugins {
 
-    /** C-50: tope de caracteres del valor de una etiqueta de la subida. */
+    /** C-50: tope de caracteres (puntos de código Unicode) del valor de una etiqueta de la subida. */
     static final int MAX_VALOR_ETIQUETA = 63;
 
     private static final String PARTE_ARCHIVO = "archivo";
@@ -94,7 +95,8 @@ class RutasPlugins {
         }
         TreeMap<String, String> mapa;
         try {
-            mapa = json.readValue(bytes, MAPA_DE_TEXTO);
+            mapa = json.readerFor(MAPA_DE_TEXTO).with(DeserializationFeature.FAIL_ON_TRAILING_TOKENS)
+                    .readValue(bytes);
         } catch (JsonProcessingException e) {
             throw invalido(PARTE_ETIQUETAS, MotivosCatalogo.ETIQUETAS_NO_ES_OBJETO);
         }
@@ -103,7 +105,7 @@ class RutasPlugins {
         }
         var largos = new ArrayList<DetalleError>();
         mapa.forEach((clave, valor) -> {
-            if (valor != null && valor.length() > MAX_VALOR_ETIQUETA) {
+            if (valor != null && valor.codePointCount(0, valor.length()) > MAX_VALOR_ETIQUETA) {
                 var corta = RecepcionArtefacto.recortar(clave);
                 largos.add(new DetalleError(PARTE_ETIQUETAS + "." + corta,
                         MotivosCatalogo.ETIQUETA_VALOR_LARGO.formatted(corta)));
@@ -124,7 +126,7 @@ class RutasPlugins {
 
     private ExcepcionApi demasiadoGrande() {
         return new ExcepcionApi(HttpStatus.PAYLOAD_TOO_LARGE, new ErrorApi(CodigosError.DEMASIADO_GRANDE,
-                CodigosError.MSG_DEMASIADO_GRANDE, List.of(new DetalleError(PARTE_ETIQUETAS,
+                CodigosError.MSG_CUERPO_DEMASIADO_GRANDE, List.of(new DetalleError(PARTE_ETIQUETAS,
                         CodigosError.MOTIVO_JSON_GRANDE.formatted(maxEtiquetas)))));
     }
 

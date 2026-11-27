@@ -311,6 +311,76 @@ class RutasPluginsTest {
         assertErrorApi(r, 413, CodigosError.DEMASIADO_GRANDE);
     }
 
+    /** F-01: el tope no depende de cómo se escriba la ruta. */
+    @Test
+    void elTopeDeJsonValeConParametrosDeRutaYPercentEncoding() throws Exception {
+        for (var ruta : List.of("/api/cores;x=1", "/api/%63ores", "/api/cores/")) {
+            var r = enviar("POST", ruta, "application/json", jsonDeTamano(65 * 1024));
+            assertThat(r.statusCode()).as(ruta).isEqualTo(413);
+            var llena = enviar("POST", ruta, "application/json", jsonLleno(65 * 1024));
+            assertThat(llena.statusCode()).as(ruta).isEqualTo(413);
+        }
+    }
+
+    /** F-02: el relleno después del objeto también cuenta, aunque no haya Content-Length. */
+    @Test
+    void unJsonChunkedDe65KbConRellenoFinalDa413YNoSeRegistra() throws Exception {
+        InputStream flujo = new ByteArrayInputStream(jsonDeTamano(65 * 1024));
+        var r = enviar("POST", "/api/cores", "application/json", HttpRequest.BodyPublishers.ofInputStream(() -> flujo));
+        assertErrorApi(r, 413, CodigosError.DEMASIADO_GRANDE);
+        assertThat(mapa(obtener("/api/cores/synkra-core")).get("versiones").toString()).doesNotContain("2.2.0");
+    }
+
+    @Test
+    void unJsonChunkedDeExactamente64KbConRellenoSePasa() throws Exception {
+        InputStream flujo = new ByteArrayInputStream(jsonDeTamano(MAX_JSON));
+        var r = enviar("POST", "/api/cores", "application/json", HttpRequest.BodyPublishers.ofInputStream(() -> flujo));
+        assertThat(r.statusCode()).isEqualTo(201);
+    }
+
+    /** F-07: el 413 de un JSON habla de cuerpo, no de archivo. */
+    @Test
+    void elMensajeDelJsonGrandeHablaDelCuerpo() throws Exception {
+        var r = enviar("POST", "/api/cores", "application/json", jsonDeTamano(65 * 1024));
+        assertThat(mapa(r).get("mensaje").toString()).doesNotContain("archivo").contains("cuerpo");
+    }
+
+    /** F-04: los límites de multipart del contexto salen de synkra.max-artefacto. */
+    @Autowired jakarta.servlet.MultipartConfigElement multipart;
+
+    @Test
+    void losLimitesDeMultipartSalenDeMaxArtefacto() {
+        assertThat(multipart.getMaxFileSize()).isEqualTo(MAX_ARTEFACTO + 1024 * 1024L);
+        assertThat(multipart.getMaxRequestSize()).isGreaterThan(multipart.getMaxFileSize());
+        assertThat(multipart.getFileSizeThreshold()).isZero();
+    }
+
+    /** F-04: un archivo entre el límite del artefacto y el de Tomcat da el 413 de R-C5, con su motivo. */
+    @Test
+    void unArchivoPorEncimaDelArtefactoYDebajoDeTomcatDa413DeRC5() throws Exception {
+        var r = subir(BASE, archivo(new byte[500_000]));
+        assertErrorApi(r, 413, CodigosError.DEMASIADO_GRANDE);
+        assertThat(mapa(r).get("detalles").toString()).contains("16 KB");
+    }
+
+    /** F-05: el tope cuenta caracteres, no unidades UTF-16. */
+    @Test
+    void sesentaYTresEmojisSeAceptanYSesentaYCuatroNo() throws Exception {
+        var e = "\uD83D\uDE00";
+        assertThat(subir(BASE, archivo(jar("1.3.0")), etiquetas("{\"region\":\"" + e.repeat(63) + "\"}")).statusCode())
+                .isEqualTo(201);
+        var r = subir(BASE, archivo(jar("1.4.0")), etiquetas("{\"region\":\"" + e.repeat(64) + "\"}"));
+        assertThat(r.statusCode()).isEqualTo(422);
+    }
+
+    /** F-06: basura después del objeto de etiquetas. */
+    @Test
+    void etiquetasConBasuraAlFinalDan422() throws Exception {
+        var r = subir(BASE, archivo(jar("1.3.0")), etiquetas("{\"region\":\"x\"} basura"));
+        assertErrorApi(r, 422, CodigosError.ENTIDAD_NO_PROCESABLE);
+        assertThat(campos(r)).containsExactly("etiquetas");
+    }
+
     @Test
     void unCoreInexistenteDa404() throws Exception {
         var r = subir("/api/cores/no-existe/plugins", archivo(jar("1.3.0")));

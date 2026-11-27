@@ -22,14 +22,12 @@ import org.springframework.util.unit.DataSize;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
- * C-38: tope del cuerpo JSON de las rutas de {@code /api/cores}. El flujo se corta al leer el byte tope + 1, sin leer
+ * C-38: tope de todo cuerpo JSON de la API, sin mirar la ruta (la URI cruda admite {@code ;x=1} y percent-encoding). El flujo se corta al leer el byte tope + 1, sin leer
  * el resto, y {@link ManejadorErrores} lo traduce a un 413 con {@link ErrorApi}. No toca los cuerpos multipart, que
  * acota la configuración de multipart.
  */
 @Component
 class LimiteCuerpoJson extends OncePerRequestFilter {
-
-    private static final String PREFIJO = "/api/cores";
 
     private final long limite;
     private final ObjectMapper json;
@@ -41,7 +39,6 @@ class LimiteCuerpoJson extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        var ruta = request.getRequestURI();
         var tipo = request.getContentType();
         boolean json = false;
         if (tipo != null) {
@@ -52,7 +49,7 @@ class LimiteCuerpoJson extends OncePerRequestFilter {
                 json = false;
             }
         }
-        return !json || !(ruta.equals(PREFIJO) || ruta.startsWith(PREFIJO + "/"));
+        return !json;
     }
 
     @Override
@@ -96,7 +93,7 @@ class LimiteCuerpoJson extends OncePerRequestFilter {
         }
     }
 
-    private static final class FlujoAcotado extends ServletInputStream {
+    static final class FlujoAcotado extends ServletInputStream {
 
         private final ServletInputStream origen;
         private final long limite;

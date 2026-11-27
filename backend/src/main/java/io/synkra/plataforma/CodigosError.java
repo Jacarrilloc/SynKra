@@ -17,6 +17,8 @@ public final class CodigosError {
     public static final String MSG_METODO_NO_PERMITIDO = "Método no permitido";
     public static final String MSG_CONFLICTO = "La solicitud entra en conflicto con el estado actual";
     public static final String MSG_DEMASIADO_GRANDE = "El archivo supera el tamaño permitido";
+    /** C-38: el 413 de un cuerpo JSON (no es un archivo). */
+    public static final String MSG_CUERPO_DEMASIADO_GRANDE = "El cuerpo de la solicitud supera el tamaño permitido";
     public static final String MSG_TIPO_NO_SOPORTADO = "Tipo de contenido no soportado";
     public static final String MSG_ENTIDAD_NO_PROCESABLE = "La solicitud no se puede procesar";
     public static final String MSG_ERROR_INTERNO = "Error interno del servidor";

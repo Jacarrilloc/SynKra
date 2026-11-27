@@ -14,7 +14,7 @@ class CuerpoJsonDemasiadoGrande extends IOException {
     }
 
     ErrorApi error() {
-        return new ErrorApi(CodigosError.DEMASIADO_GRANDE, CodigosError.MSG_DEMASIADO_GRANDE,
+        return new ErrorApi(CodigosError.DEMASIADO_GRANDE, CodigosError.MSG_CUERPO_DEMASIADO_GRANDE,
                 List.of(new DetalleError(CodigosError.CAMPO_CUERPO, CodigosError.MOTIVO_JSON_GRANDE.formatted(limite))));
     }
 
