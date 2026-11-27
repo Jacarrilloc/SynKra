@@ -625,3 +625,25 @@
 **Context**: Code Generation Parte 2 (loop de agentes) para U04.
 
 ---
+
+## U04 - Despacho de U04-T01 (ola 14)
+**Timestamp**: 2026-11-27T10:47:35Z
+**User Input**: Primero eligió "Lo fusiono yo en GitHub" en la tarjeta «¿Apruebas las tareas U04-T01 a T03 del PR #40 y quién lo fusiona?» (10:46:56Z). Después escribió: "fusiona tu el pr y continuemos"
+**AI Response**: Por la orden explícita del responsable, el agente fusionó el PR #40 con merge commit (main 02d1e24). Luego despachó U04-T01 en la rama m6r/U04-T01, con hash de la tarea 19573bf…
+**Context**: Code Generation Parte 2 (loop de agentes) para U04.
+
+---
+
+## U04-T01 — rondas 2 y 3 y PR #41
+**Timestamp**: 2026-11-27T11:20:00Z
+**AI Response**: Ronda 2 NO-VERDE (NARANJA: faltaban pruebas de RESTRICT en dos FK y de NOT NULL en las columnas de auditoría). Ronda 3 VERDE: las 29 mutaciones fallan y CA-1 a CA-4 pasan con la ejecución propia del revisor. PR #41 abierto. Se pregunta al responsable quién fusiona. Candidatas C-31 (traductor de excepciones de SQLite) y C-32 (claves compuestas).
+**Context**: CONSTRUCTION, Code Generation Parte 2, U04 Catálogo, ola 14.
+
+---
+
+## Decisión: quién fusiona los PRs de U04
+**Timestamp**: 2026-11-27T11:15:35Z
+**User Input**: Tarjeta «¿Quién fusiona el PR #41 de U04-T01 (migración del catálogo)?». Opción elegida: «Fusiona tú todos los de U04».
+**AI Response**: Fusioné el #41 (8fd9e30). De aquí en adelante fusiono cada PR verde de U04 sin preguntar y corro la unidad hasta el final.
+
+---
