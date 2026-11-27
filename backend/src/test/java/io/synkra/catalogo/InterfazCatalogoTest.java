@@ -1,5 +1,7 @@
 package io.synkra.catalogo;
 
+import static com.tngtech.archunit.base.DescribedPredicate.not;
+import static com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAPackage;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,10 +30,10 @@ class InterfazCatalogoTest {
     @Test
     void ningunTipoPublicoFueraDeApi() {
         var publicos = clasesDelModulo().stream()
-                .filter(c -> c.getPackageName().equals("io.synkra.catalogo"))
+                .filter(c -> !c.getPackageName().startsWith("io.synkra.catalogo.api"))
                 .filter(c -> c.getModifiers().contains(JavaModifier.PUBLIC))
                 .map(c -> c.getName()).toList();
-        assertThat(publicos).as("tipos públicos en el paquete base de catalogo").isEmpty();
+        assertThat(publicos).as("tipos públicos de catalogo fuera de api").isEmpty();
     }
 
     @Test
@@ -51,9 +53,12 @@ class InterfazCatalogoTest {
 
     @Test
     void catalogoApiNoDependeDeTiposInternosDeCatalogo() {
-        // "io.synkra.catalogo" sin ".." es solo el paquete base: los tipos internos.
+        // Interno = todo lo de catalogo (base y subpaquetes) que no sea api.
+        // Límite de ArchUnit: no ve constantes en línea (static final String/primitivos), porque
+        // javac las copia al bytecode y la dependencia desaparece; la regla vigila tipos, no constantes.
         noClasses().that().resideInAPackage("io.synkra.catalogo.api..")
-                .should().dependOnClassesThat().resideInAPackage("io.synkra.catalogo")
+                .should().dependOnClassesThat(
+                        resideInAPackage("io.synkra.catalogo..").and(not(resideInAPackage("io.synkra.catalogo.api.."))))
                 .check(clasesDelModulo());
     }
 

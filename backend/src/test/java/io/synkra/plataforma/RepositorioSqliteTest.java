@@ -27,7 +27,7 @@ class RepositorioSqliteTest {
 
     /** Los repositorios reales (io.synkra) y el de prueba; el escaneo automático no ve los fixtures (C-14). */
     @TestConfiguration
-    @EnableJdbcRepositories(basePackages = "io.synkra", basePackageClasses = ElementoRepositorio.class)
+    @EnableJdbcRepositories(basePackageClasses = {io.synkra.SynkraApp.class, ElementoRepositorio.class})
     static class RepositoriosDePrueba {
     }
 
