@@ -1,0 +1,6 @@
+# Contexto mínimo: solo el JAR ejecutable (sin -plain) y el Dockerfile.
+**
+!build/libs/core-*.jar
+build/libs/*-plain.jar
+src/
+.gradle/
