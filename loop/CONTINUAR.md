@@ -59,7 +59,7 @@ Para que eso no vuelva a pasar:
 
 Orden de fusión: #77, luego #78 (U05-T04), luego #79 (U02-T04), luego #80 (U02-T05, apilado sobre #79: al fusionar #79, GitHub cambia su base a `main`).
 
-**U05-T05 despachada** (ola 31): worktree `../wt-m6r-U05-T05`, rama `m6r/U05-T05` desde `0a52e2e`; ronda 1 NO-VERDE (`revisiones/U05-T05/ronda-1.md`, `7c85e17`): F-01 a F-03 NARANJA, F-04 a F-06 AMARILLO se arreglan, F-07 no. Ronda 2 NO-VERDE (`ronda-2.md`, `7602fb8`): F-08 NARANJA (el evento «sin marca» de la prueba recibe `creationTimestamp` del simulado, así que `nullsLast` no se prueba). **Codificador de la ronda 3 despachado**; si la sesión se corta, mirar sus commits y redespacharlo. Si la ronda 3 sale NO-VERDE, la ronda 4 no se despacha: se para y se lleva al equipo.
+**U05-T05 despachada** (ola 31): worktree `../wt-m6r-U05-T05`, rama `m6r/U05-T05` desde `0a52e2e`; ronda 1 NO-VERDE (`revisiones/U05-T05/ronda-1.md`, `7c85e17`): F-01 a F-03 NARANJA, F-04 a F-06 AMARILLO se arreglan, F-07 no. Ronda 2 NO-VERDE (`ronda-2.md`, `7602fb8`): F-08 NARANJA (el evento «sin marca» de la prueba recibe `creationTimestamp` del simulado, así que `nullsLast` no se prueba). Ronda 3 del codificador hecha (`2919672`). **Revisor de la ronda 3 despachado**; si la sesión se corta, repetirlo. Si la ronda 3 sale NO-VERDE, la ronda 4 no se despacha: se para y se lleva al equipo.
 
 **U02-T05 despachada** (ola 31): worktree `../wt-m6r-U02-T05`, rama `m6r/U02-T05` desde `ff3f184`; ronda 1 NO-VERDE (`revisiones/U02-T05/ronda-1.md`, `9024ad6`): F-01 y F-02 NARANJA (aserción que acepta cualquier caída; salida pegada editada a mano), F-03 y F-04 AMARILLO. **VERDE en la ronda 2** (`15ca50f`). **PR #80** abierto contra `m6r/U02-T04` (apilado), sin fusionar.
 
