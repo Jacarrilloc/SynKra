@@ -2,7 +2,7 @@
 
 > Pega este archivo completo al abrir una sesión nueva. Responde en español.
 > Lo mantiene al día el orquestador después de cada hito (ver «Puntos de continuidad»).
-> Última actualización: 2026-11-27 21:50 UTC (16:50 en Bogotá), sesión de David, que retomó la de Julian.
+> Última actualización: 2026-11-27 22:10 UTC (17:10 en Bogotá), sesión de David, que retomó la de Julian.
 
 ---
 
@@ -28,7 +28,7 @@ Para que eso no vuelva a pasar:
 - **El loop**: el orquestador es la sesión principal y sigue `loop/orquestador.md`. El `codificador` (subagente sonnet, `.claude/agents/codificador.md`) implementa. El `revisor` (subagente opus, solo lectura, `.claude/agents/revisor.md`) juzga. El orden de las olas está en `loop/README.md`.
 - **Cada tarea:** rama `m6r/<tarea>` con su worktree en `../wt-m6r-<tarea>`; despachar al codificador con la ruta y el hash de la tarea; despachar al revisor; guardar su informe tal cual; si sale NO-VERDE, arbitrar y redespachar al mismo codificador, que responde en `ronda-N-respuesta.md`; si sale VERDE, abrir el PR.
 - **El orquestador** solo escribe tareas, informes del revisor tal cual, `CANDIDATAS.md`, `aidlc-docs/audit.md`, `loop/README.md` y este archivo. Lo hace en la rama `orq/U05-U02-tareas` (worktree `../wt-orq-U04`).
-- **Fusiones.** En la sesión de Julian **el orquestador no fusiona** (la guía del curso lo penaliza). Los PRs quedan abiertos y los fusiona un humano del equipo (Julian o David), en el orden que dice la tabla. Antes, David había acordado que el orquestador fusionara cuando hubiera varios PRs; esa regla no se usa aquí.
+- **Fusiones (regla de David, reafirmada el 2026-11-27 a las 21:51 UTC).** Si hay un solo PR listo, lo fusiona un humano con un clic. Si hay varios, los fusiona el orquestador, en orden, con merge commit, y lo anota en `aidlc-docs/audit.md`. En una pila, antes de fusionar cada PR apilado se cambia su base a `main` con `gh pr edit N --base main`. (En la sesión de Julian el orquestador no fusionaba.)
 - **Olas apiladas.** Mientras los PRs de una ola no se fusionen, la ola siguiente sale de la punta en VERDE de la tarea de la que depende, y su PR apunta a esa rama.
 - **Push** (git no tiene credenciales propias):
   ```bash
@@ -45,37 +45,25 @@ Para que eso no vuelva a pasar:
 - Pasar `</dev/null` a `git commit` y a `gh`. Pedir la evidencia pegada tal cual, con el sha del `--stat` tomado después del último commit.
 - Criterios de Gradle como `:X:test --rerun :X:check` (C-69). En CA de diff acotado, la base es la del despacho, no `origin/main` (F-03 de U02-T04).
 
-## Estado al corte (2026-11-27 21:40 UTC)
+## Estado al corte (2026-11-27 22:10 UTC)
 
-- `main` en `cf00671`. U01, U03 y U04 terminadas. PRs #54 a #76 fusionados.
+- `main` en `9289073`. U01, U03 y U04 terminadas. PRs #54 a #83 fusionados (#77 a #83 los fusionó el orquestador a las 21:55 UTC, según la regla de David).
 - `CANDIDATAS.md` llega hasta **C-92**. La siguiente libre es **C-93**.
-- **Nadie corre en este momento salvo lo que dice «en vuelo»**: al cortarse la sesión, ese agente se perdió y hay que repetirlo.
+- **Nadie corre en este momento salvo lo que dice «en vuelo»**: si la sesión se corta, ese agente se perdió y hay que repetirlo.
 
-### PRs abiertos (los fusiona un humano, con merge commit, en este orden)
+### PRs abiertos
 
 | Orden | PR | Rama → base | Contenido |
 |---|---|---|---|
-| 1 | #77 | `orq/U05-U02-tareas` → `main` | Tareas de las olas 30 a 39, candidatas C-75 a C-90, auditoría, `loop/README.md` y este archivo. Sigue recibiendo commits |
-| 2 | #78 | `m6r/U05-T04` → `main` | U05-T04 `aplicar`, VERDE ronda 2 |
-| 3 | #79 | `m6r/U02-T04` → `main` | U02-T04 `ArranquePlugins`, VERDE ronda 2 |
-| 4 | #80 | `m6r/U02-T05` → `m6r/U02-T04` | U02-T05 concordancia con la suite, VERDE ronda 2 |
-| 5 | #81 | `m6r/U05-T05` → `m6r/U05-T04` | U05-T05 `estado` y `contextoFallo`, VERDE ronda 3 |
-| 6 | #82 | `m6r/U02-T06` → `m6r/U02-T05` | U02-T06 fallo de inicio y readiness, VERDE ronda 3 |
-| 7 | #83 | `m6r/U05-T06` → `m6r/U05-T05` | U05-T06 `leerPais` y formato C-81, VERDE ronda 3 |
+| 1 | #84 | `m6r/U02-T07` → `main` | U02-T07 endpoints del core, VERDE ronda 2 |
 
-Al fusionar la base de un PR apilado, GitHub cambia su base a `main`. El #6 es antiguo y no se toca. Ninguno tiene CI (0 check runs) y todos estaban `clean` al corte.
+El #6 es antiguo y no se toca.
 
 ### Tareas en curso
 
 | Tarea | Worktree / rama | Desde | Estado | Siguiente paso |
 |---|---|---|---|---|
-| U02-T07 endpoints del core (ola 33) | `../wt-m6r-U02-T07`, `m6r/U02-T07` | `cb2096a` | Ronda 1 NO-VERDE (`3514245`). Codificador de la ronda 2 hecho, `e69ef05` (respuesta en `revisiones/U02-T07/ronda-2-respuesta.md`). **En vuelo: revisor de la ronda 2** (sesión de David, 21:50 UTC) | Si se corta: repetir el revisor de la ronda 2 con base `cb2096a` y HEAD `e69ef05`. Si VERDE: PR a `m6r/U02-T06` |
-| U05-T07 script de descarga (ola 33) | `../wt-m6r-U05-T07`, `m6r/U05-T07` | `5e7a45e` | Ronda 1 NO-VERDE (`revisiones/U05-T07/ronda-1.md`, `b6039e9`): F-01 NARANJA (escribe fuera de `/plugins` si el temporal o el destino son enlaces), F-02 NARANJA (la espera creciente no tiene prueba), F-03 a F-07 AMARILLO. **En vuelo: codificador de la ronda 2** (sesión de David, 22:00 UTC) | Si se corta: mirar commits del codificador después de `b6039e9` y redespacharlo o pasar al revisor de la ronda 2. Si VERDE: PR a `m6r/U05-T06` |
-
-Historia corta de lo terminado hoy (detalle en `revisiones/<tarea>/` de cada rama):
-- U05-T04 y U02-T04: NO-VERDE en ronda 1, VERDE en ronda 2.
-- U02-T05: VERDE en ronda 2. U05-T05 y U02-T06: VERDE en ronda 3.
-- U05-T06: NO-VERDE en rondas 1 y 2 (F-06: `!!null x` en la raíz se leía como cero plugins), VERDE en ronda 3; el AMARILLO F-08 pasó a C-90.
+| U05-T07 script de descarga (ola 33) | `../wt-m6r-U05-T07`, `m6r/U05-T07` | `5e7a45e` | Ronda 1 NO-VERDE (`b6039e9`). Codificador de la ronda 2 hecho y subido, `72b0abf` (código en `2dc76a9`). **En vuelo: revisor de la ronda 2** | Si se corta: repetir el revisor de la ronda 2 con base `5e7a45e` y HEAD `72b0abf`. Si VERDE: PR a `main` |
 
 ### Tareas escritas y sin despachar
 

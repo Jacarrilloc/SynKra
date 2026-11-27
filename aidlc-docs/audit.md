@@ -918,3 +918,11 @@ Se despacha el codificador de la ronda 2.
 **Context**: Loop del módulo 6, ola 33, fuera de las etapas de AI-DLC.
 
 ---
+
+## Vuelta a la regla de fusión de David; PRs #77 a #83 fusionados; U02-T07 VERDE
+**Timestamp**: 2026-11-27T21:51:06Z
+**User Input**: "Volvamos a la reggla y ademas si en algunmomento necesito que pausemos, podemos hacerlo??"
+**AI Response**: Se vuelve a la regla de 2026-11-27T16:14:07Z: si hay varios PRs, los fusiona el orquestador en orden. Se fusionan #77 a #83 (los apilados, después de cambiar su base a `main`). La red se cortó a mitad y se terminó al volver. U02-T07 sale VERDE en la ronda 2 (`revisiones/U02-T07/ronda-2.md`) y queda en el PR #84. U05-T07 ronda 2: el codificador terminó (`72b0abf`) y se despacha el revisor. Sobre la pausa: sí, en cualquier momento, ver `loop/CONTINUAR.md`.
+**Context**: Loop del módulo 6, ola 33, fuera de las etapas de AI-DLC.
+
+---
