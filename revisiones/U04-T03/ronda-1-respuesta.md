@@ -1,0 +1,11 @@
+# Respuesta a la ronda 1 — U04-T03
+
+F-01: Corregido en la ronda 2: se quitaron `@NotNull` y `@Valid` del DTO; el servicio trata los nulos y `RutasCoresTest.unJsonSinImagenDa422ConLosTresDetalles` fija `{"nombre":"Mal Nombre","version":"x"}` con tres detalles. La bitácora de ronda 1 era errónea al decir que ninguna regla chocó.
+F-02: Corregido en la ronda 2: sin `@Valid`, la prueba de «sin imagen» fija `campo=imagen` y `motivo=MotivosCatalogo.IMAGEN_INVALIDA` exactos (el servicio); C-07 se prueba en `ValidacionErroresTest`, que sí depende de `ManejadorErrores`.
+F-03: Corregido en la ronda 2: `ValidacionErroresTest` prueba `MethodArgumentNotValidException` (`@Valid` + `@NotNull`/`@Min` en `ControladorDePrueba`) y `HandlerMethodValidationException` (`@RequestParam @Min`, con mensaje propio y con el de Bean Validation), fijando `campo` y `motivo` exactos.
+F-04: Corregido en la ronda 2: `ManejadorErrores.handleHttpMessageNotReadable` traduce `MismatchedInputException` con ruta a 422 con `campo` igual a la ruta de Jackson; `ConfiguracionJson` impide que número/bool se conviertan a texto (la propiedad `ALLOW_COERCION_OF_SCALARS=false` no basta para texto, se probó). `application.properties` no cambió. Pruebas: imagen array/objeto y nombre número/bool en `RutasCoresTest`; JSON malformado sigue en 400.
+F-05: Corregido en la ronda 2: los textos de respaldo son constantes de `CodigosError` (`MOTIVO_OBLIGATORIO`, `MOTIVO_SIN_TEXTO`, `MOTIVO_TIPO_INVALIDO`, `PARAMETRO_SIN_NOMBRE`) y `ValidacionErroresTest.losTextosDeRespaldoQuedanFijados` los fija; el campo `parametro` queda constante (su rama solo se alcanza con parámetros sin nombre, sin prueba directa).
+F-06: Corregido en la ronda 2: `cadaVersionConservaSuPropiaImagenEnElPostYEnElGet` usa dos versiones con imágenes distintas y fija la de cada una en el POST y el GET.
+F-07: Corregido en la ronda 2: `CoreRegistrado` exige que `versiones` e `imagenes` tengan las mismas versiones, copia el mapa con `Map.copyOf`, e imports normales en `CatalogoApi` y `CatalogoServicio`.
+F-08: Fuera de alcance: tarea candidata propuesta (rechazar campos de más y claves repetidas en el JSON); no se cambió.
+F-09: Corregido en la ronda 2: la bitácora explica que 328 vs 344 son las 16 líneas de la propia bitácora y del informe añadido después.

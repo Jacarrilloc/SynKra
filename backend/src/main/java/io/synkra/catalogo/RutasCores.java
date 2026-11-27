@@ -2,8 +2,6 @@ package io.synkra.catalogo;
 
 import io.synkra.catalogo.api.CatalogoApi;
 import io.synkra.catalogo.api.CoreRegistrado;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/cores")
 class RutasCores {
 
-    static final String OBLIGATORIO = "El campo es obligatorio";
-
-    record SolicitudCore(
-            @NotNull(message = OBLIGATORIO) String nombre,
-            @NotNull(message = OBLIGATORIO) String version,
-            @NotNull(message = OBLIGATORIO) String imagen) {}
+    /** Sin {@code @Valid}: el servicio valida los tres campos y devuelve todos los detalles en un 422 (R-C1). */
+    record SolicitudCore(String nombre, String version, String imagen) {}
 
     record VersionDto(String version, String imagen) {}
 
@@ -37,7 +31,7 @@ class RutasCores {
     }
 
     @PostMapping
-    ResponseEntity<CoreDto> registrar(@Valid @RequestBody SolicitudCore s) {
+    ResponseEntity<CoreDto> registrar(@RequestBody SolicitudCore s) {
         var core = api.registrarCore(s.nombre(), s.version(), s.imagen());
         return ResponseEntity.created(URI.create("/api/cores/" + core.nombre())).body(dto(core));
     }

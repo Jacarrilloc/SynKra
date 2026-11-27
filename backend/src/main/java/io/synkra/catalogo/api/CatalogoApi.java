@@ -1,5 +1,7 @@
 package io.synkra.catalogo.api;
 
+import java.util.List;
+
 /** Interfaz pública del módulo Catálogo: lo único que ven los demás módulos. */
 public interface CatalogoApi {
 
@@ -10,5 +12,5 @@ public interface CatalogoApi {
     CoreRegistrado obtenerCore(String nombre);
 
     /** Todos los cores con sus versiones, ordenados por nombre. */
-    java.util.List<CoreRegistrado> listarCores();
+    List<CoreRegistrado> listarCores();
 }

@@ -111,14 +111,49 @@ class RutasCoresTest {
     }
 
     @Test
+    void unJsonSinImagenDa422ConLosTresDetalles() {
+        var r = post("{\"nombre\":\"Mal Nombre\",\"version\":\"x\"}");
+        assertThat(r.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
+        assertThat(r.getBody().get("codigo")).isEqualTo(CodigosError.ENTIDAD_NO_PROCESABLE);
+        assertThat(detalles(r.getBody())).extracting(d -> d.get("campo"))
+                .containsExactlyInAnyOrder("nombre", "version", "imagen");
+    }
+
+    @Test
     void unJsonSinImagenDa422ConCampoImagen() {
         var r = post("{\"nombre\":\"synkra-core\",\"version\":\"1.0.0\"}");
         assertThat(r.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
-        assertThat(r.getBody().get("codigo")).isEqualTo(CodigosError.ENTIDAD_NO_PROCESABLE);
         assertThat(detalles(r.getBody())).hasSize(1);
-        var d = detalles(r.getBody()).get(0);
-        assertThat(d.get("campo")).isEqualTo("imagen");
-        assertThat(d.get("motivo")).isNotBlank();
+        assertThat(detalles(r.getBody()).get(0).get("campo")).isEqualTo("imagen");
+        assertThat(detalles(r.getBody()).get(0).get("motivo")).isEqualTo(MotivosCatalogo.IMAGEN_INVALIDA);
+    }
+
+    @Test
+    void unTipoEquivocadoDa422ConElCampoReal() {
+        for (var c : List.of(
+                new String[] {"imagen", "{\"nombre\":\"a\",\"version\":\"1.0.0\",\"imagen\":[\"x\"]}"},
+                new String[] {"imagen", "{\"nombre\":\"a\",\"version\":\"1.0.0\",\"imagen\":{\"a\":1}}"},
+                new String[] {"nombre", "{\"nombre\":123,\"version\":\"1.0.0\",\"imagen\":\"" + IMAGEN + "\"}"},
+                new String[] {"nombre", "{\"nombre\":true,\"version\":\"1.0.0\",\"imagen\":\"" + IMAGEN + "\"}"})) {
+            var r = post(c[1]);
+            assertThat(r.getStatusCode()).as(c[1]).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
+            assertThat(r.getBody().get("codigo")).isEqualTo(CodigosError.ENTIDAD_NO_PROCESABLE);
+            assertThat(detalles(r.getBody())).extracting(d -> d.get("campo")).as(c[1]).containsExactly(c[0]);
+        }
+        assertThat(http.getForEntity("/api/cores", List.class).getBody()).isEmpty();
+    }
+
+    @Test
+    void cadaVersionConservaSuPropiaImagenEnElPostYEnElGet() {
+        var img1 = "localhost:5001/synkra-core@sha256:" + "1".repeat(64);
+        var img2 = "localhost:5001/synkra-core@sha256:" + "2".repeat(64);
+        var p1 = post("{\"nombre\":\"synkra-core\",\"version\":\"1.0.0\",\"imagen\":\"" + img1 + "\"}");
+        assertThat(p1.getBody().get("versiones")).isEqualTo(List.of(Map.of("version", "1.0.0", "imagen", img1)));
+        var p2 = post("{\"nombre\":\"synkra-core\",\"version\":\"2.0.0\",\"imagen\":\"" + img2 + "\"}");
+        var esperado = List.of(Map.of("version", "1.0.0", "imagen", img1), Map.of("version", "2.0.0", "imagen", img2));
+        assertThat(p2.getBody().get("versiones")).isEqualTo(esperado);
+        assertThat(http.getForEntity("/api/cores/synkra-core", Map.class).getBody().get("versiones"))
+                .isEqualTo(esperado);
     }
 
     @Test

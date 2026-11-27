@@ -21,6 +21,13 @@ public final class CodigosError {
     public static final String MSG_ENTIDAD_NO_PROCESABLE = "La solicitud no se puede procesar";
     public static final String MSG_ERROR_INTERNO = "Error interno del servidor";
 
+    /** Motivos de respaldo de las validaciones (C-07): se usan cuando la anotación no trae texto. */
+    public static final String MOTIVO_OBLIGATORIO = "El campo es obligatorio";
+    public static final String MOTIVO_SIN_TEXTO = "El valor no es válido";
+    public static final String MOTIVO_TIPO_INVALIDO = "El valor no tiene el tipo esperado";
+    /** Campo cuando un parámetro validado no tiene nombre. */
+    public static final String PARAMETRO_SIN_NOMBRE = "parametro";
+
     private CodigosError() {
     }
 }

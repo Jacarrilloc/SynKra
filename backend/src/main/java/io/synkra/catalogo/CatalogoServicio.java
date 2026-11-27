@@ -11,6 +11,7 @@ import io.synkra.verificador.Resultado;
 import io.synkra.verificador.Version;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
@@ -94,7 +95,7 @@ class CatalogoServicio implements CatalogoApi {
     }
 
     private CoreRegistrado leer(String nombre) {
-        var imagenes = new java.util.HashMap<Version, String>();
+        var imagenes = new HashMap<Version, String>();
         for (var f : versiones.findByCore(nombre)) {
             imagenes.put(leerVersion(nombre, f.version()), f.imagen());
         }

@@ -2,12 +2,15 @@ package io.synkra.plataforma;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.method.ParameterErrors;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -53,7 +56,7 @@ public class ManejadorErrores extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
             HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         var detalles = ex.getBindingResult().getFieldErrors().stream()
-                .map(f -> new DetalleError(f.getField(), f.getDefaultMessage())).toList();
+                .map(f -> new DetalleError(f.getField(), textoDe(f.getDefaultMessage()))).toList();
         return respuesta(HttpStatus.UNPROCESSABLE_ENTITY, entidadNoProcesable(detalles), headers);
     }
 
@@ -65,13 +68,31 @@ public class ManejadorErrores extends ResponseEntityExceptionHandler {
         for (var r : ex.getParameterValidationResults()) {
             var nombre = r.getMethodParameter().getParameterName();
             if (r instanceof ParameterErrors pe) {
-                pe.getFieldErrors().forEach(f -> detalles.add(new DetalleError(f.getField(), f.getDefaultMessage())));
+                pe.getFieldErrors().forEach(f -> detalles.add(new DetalleError(f.getField(), textoDe(f.getDefaultMessage()))));
             } else {
                 r.getResolvableErrors().forEach(e -> detalles.add(new DetalleError(
-                        nombre == null ? "parametro" : nombre, e.getDefaultMessage())));
+                        nombre == null ? CodigosError.PARAMETRO_SIN_NOMBRE : nombre, textoDe(e.getDefaultMessage()))));
             }
         }
         return respuesta(HttpStatus.UNPROCESSABLE_ENTITY, entidadNoProcesable(detalles), headers);
+    }
+
+    /** C-07: un tipo equivocado en el JSON (array donde va texto...) es 422 con la ruta real del campo. */
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
+            HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        if (ex.getCause() instanceof MismatchedInputException mie && !mie.getPath().isEmpty()) {
+            var campo = mie.getPath().stream()
+                    .map(r -> r.getFieldName() != null ? r.getFieldName() : "[" + r.getIndex() + "]")
+                    .collect(Collectors.joining("."));
+            return respuesta(HttpStatus.UNPROCESSABLE_ENTITY, entidadNoProcesable(
+                    List.of(new DetalleError(campo, CodigosError.MOTIVO_TIPO_INVALIDO))), headers);
+        }
+        return super.handleHttpMessageNotReadable(ex, headers, status, request);
+    }
+
+    private static String textoDe(String mensaje) {
+        return mensaje == null ? CodigosError.MOTIVO_SIN_TEXTO : mensaje;
     }
 
     private static ErrorApi entidadNoProcesable(List<DetalleError> detalles) {
