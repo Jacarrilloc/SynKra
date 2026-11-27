@@ -810,3 +810,11 @@
 **Context**: Loop del módulo 6, fuera de las etapas de AI-DLC.
 
 ---
+
+## Ola 29 cerrada (U05-T03 y U02-T03, en paralelo)
+**Timestamp**: 2026-11-27T21:10:00Z
+**User Input**: (sin mensaje nuevo; regla de fusión de David de 2026-11-27T16:14:07Z)
+**AI Response**: U02-T03 salió VERDE en la ronda 2; la ronda 1 fue NO-VERDE porque el cargador no se cerraba con un `LinkageError` y contaba proveedores del cargador padre. U05-T03 salió VERDE en la ronda 3; la imagen del init no salía del registro local (ronda 1) y la validación aceptaba imágenes sin registro (ronda 2). El orquestador precisó la decisión 3 de la tarea: la imagen del init es configurable y `runAsUser` es 10001. Se registran C-72 a C-74. Son tres PRs: las tareas (#74, que ya trae esta auditoría), U02-T03 y U05-T03. El orquestador los fusiona en ese orden.
+**Context**: Loop del módulo 6, ola 29, fuera de las etapas de AI-DLC.
+
+---
