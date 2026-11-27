@@ -39,4 +39,10 @@ public interface CatalogoApi {
      * (sin caché). Nunca devuelve {@code null}; una fila corrupta es un error interno.
      */
     io.synkra.verificador.Catalogo catalogoParaVerificar();
+
+    /**
+     * R-C13: abre el JAR cuyo SHA-256 es {@code sha256} (64 hex en minúsculas). Un hash mal formado o desconocido da
+     * 404; un archivo ausente, de otro tamaño o con ruta fuera de la raíz de datos da 500. Quien llama cierra el flujo.
+     */
+    ArtefactoAbierto abrirArtefacto(String sha256) throws IOException;
 }
