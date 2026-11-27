@@ -1,0 +1,7 @@
+nombre: kyc-co
+version: ${version}
+core: synkra-core
+coreCompatible: 2.x
+etiquetas:
+  pais: co
+descripcion: Validación KYC simulada para Colombia

@@ -1,4 +1,4 @@
-package io.synkra.plugin.kycco;
+package io.synkra.kycco;
 
 import static org.junit.jupiter.api.Assertions.*;
 
