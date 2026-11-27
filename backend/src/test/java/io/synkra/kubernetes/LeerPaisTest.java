@@ -196,6 +196,21 @@ class LeerPaisTest {
                 .hasMessageContaining("etiqueta de tipo");
     }
 
+    /** F-06: una etiqueta explícita sobre un escalar sin comillas no es la implícita del esquema, y se rechaza por etiqueta. */
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(strings = {
+        "!!null x\n", "!!null facturacion\n", "- nombre: facturacion\n  version: !!null 1.0.0\n",
+        "- nombre: facturacion\n  version: !!float x\n", "- nombre: facturacion\n  version: !!int x\n",
+        "- nombre: facturacion\n  version: !!bool x\n"})
+    void etiquetaExplicitaSobreEscalarSinComillasSeRechazaPorEtiqueta(String activos) {
+        siembra(PLAN);
+        cambiaConfigMap(activos, "");
+
+        assertThatThrownBy(() -> adaptador.leerPais("pe"))
+                .isInstanceOf(LecturaPaisInconsistenteException.class).hasMessageContaining("pe")
+                .hasMessageContaining("etiqueta de tipo").hasMessageContaining("tag:yaml.org,2002:");
+    }
+
     @Test
     void versionSinComillasQueEsNumeroSeRechazaComoNoTextoNoComoEtiqueta() {
         siembra(PLAN);

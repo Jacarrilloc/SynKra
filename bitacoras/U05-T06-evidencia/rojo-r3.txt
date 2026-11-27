@@ -1,0 +1,23 @@
+ FAILED
+    java.lang.AssertionError at LeerPaisTest.java:209
+--
+ FAILED
+    java.lang.AssertionError at LeerPaisTest.java:209
+--
+ FAILED
+    java.lang.AssertionError at LeerPaisTest.java:211
+--
+ FAILED
+    java.lang.AssertionError at LeerPaisTest.java:211
+--
+ FAILED
+    java.lang.AssertionError at LeerPaisTest.java:211
+--
+ FAILED
+    java.lang.AssertionError at LeerPaisTest.java:211
+--
+24 tests completed, 6 failed
+--
+> Task :backend:test FAILED
+--
+BUILD FAILED in 20s

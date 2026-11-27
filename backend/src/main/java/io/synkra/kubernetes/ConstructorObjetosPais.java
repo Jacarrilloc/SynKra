@@ -71,6 +71,8 @@ final class ConstructorObjetosPais {
     static final String CLAVE_NOMBRE = "nombre";
     static final String CLAVE_VERSION = "version";
     static final String SUFIJO_JAR = ".jar";
+    /** Separador entre el sha256 y el nombre del jar en cada línea de {@link #CLAVE_ARTEFACTOS}. */
+    static final String SEPARADOR_ARTEFACTO = " ";
 
     /** Nombre del jar de un plugin: la clave que une una entrada de {@link #CLAVE_PLUGINS} con su línea de {@link #CLAVE_ARTEFACTOS}. */
     static String nombreJar(String nombre, String version) {
@@ -120,7 +122,7 @@ final class ConstructorObjetosPais {
                         .map(p -> "- " + CLAVE_NOMBRE + ": \"" + p.nombre() + "\"\n  " + CLAVE_VERSION + ": \"" + p.version() + "\"\n")
                         .collect(Collectors.joining());
         String artefactos = plugins.stream()
-                .map(p -> p.sha256() + " " + nombreJar(p.nombre(), p.version()) + "\n")
+                .map(p -> p.sha256() + SEPARADOR_ARTEFACTO + nombreJar(p.nombre(), p.version()) + "\n")
                 .collect(Collectors.joining());
         return new ConfigMapBuilder()
                 .withNewMetadata().withName(NOMBRE_CONFIG).withNamespace(namespace).withLabels(etiquetaGestor()).endMetadata()

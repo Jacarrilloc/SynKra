@@ -41,9 +41,7 @@ final class LectorConfigMapPais {
     static final int MAX_BYTES = 64 * 1024;
     static final int MAX_ALIAS = 10;
     static final int MAX_PROFUNDIDAD = 32;
-    private static final Pattern LINEA_ARTEFACTO = Pattern.compile("([^ ]+) ([^ ]+" + Pattern.quote(ConstructorObjetosPais.SUFIJO_JAR) + ")");
-
-    private static final java.util.Set<Tag> ESCALARES_IMPLICITOS = java.util.Set.of(Tag.INT, Tag.FLOAT, Tag.BOOL, Tag.NULL);
+    private static final Pattern LINEA_ARTEFACTO = Pattern.compile("([^ ]+)" + Pattern.quote(ConstructorObjetosPais.SEPARADOR_ARTEFACTO) + "([^ ]+" + Pattern.quote(ConstructorObjetosPais.SUFIJO_JAR) + ")");
 
     private LectorConfigMapPais() {}
 
@@ -127,7 +125,7 @@ final class LectorConfigMapPais {
             exigeProfundidad(ajustes, yaml);
             var nodo = new Composer(ajustes, new ParserImpl(ajustes, new StreamReader(ajustes, yaml))).getSingleNode().orElse(null);
             if (nodo != null) {
-                Tag etiqueta = etiquetaNoPermitida(nodo, new IdentityHashMap<>());
+                Tag etiqueta = etiquetaNoPermitida(nodo, new IdentityHashMap<>(), ajustes);
                 if (etiqueta != null) {
                     throw new LecturaPaisInconsistenteException(pais, clave + ": etiqueta de tipo '" + etiqueta.getValue()
                             + "' no permitida");
@@ -173,7 +171,7 @@ final class LectorConfigMapPais {
     }
 
     /** Primera etiqueta que no sea mapa, secuencia o texto. */
-    private static Tag etiquetaNoPermitida(Node nodo, IdentityHashMap<Node, Boolean> vistos) {
+    private static Tag etiquetaNoPermitida(Node nodo, IdentityHashMap<Node, Boolean> vistos, LoadSettings ajustes) {
         if (vistos.put(nodo, Boolean.TRUE) != null) {
             return null;
         }
@@ -184,9 +182,9 @@ final class LectorConfigMapPais {
                     return t;
                 }
                 for (NodeTuple tupla : m.getValue()) {
-                    Tag r = etiquetaNoPermitida(tupla.getKeyNode(), vistos);
+                    Tag r = etiquetaNoPermitida(tupla.getKeyNode(), vistos, ajustes);
                     if (r == null) {
-                        r = etiquetaNoPermitida(tupla.getValueNode(), vistos);
+                        r = etiquetaNoPermitida(tupla.getValueNode(), vistos, ajustes);
                     }
                     if (r != null) {
                         return r;
@@ -199,7 +197,7 @@ final class LectorConfigMapPais {
                     return t;
                 }
                 for (Node hijo : s.getValue()) {
-                    Tag r = etiquetaNoPermitida(hijo, vistos);
+                    Tag r = etiquetaNoPermitida(hijo, vistos, ajustes);
                     if (r != null) {
                         return r;
                     }
@@ -207,9 +205,10 @@ final class LectorConfigMapPais {
                 return null;
             }
             case ScalarNode e -> {
-                // Un escalar sin comillas que el esquema lee como número, booleano o nulo no es una etiqueta de
-                // tipo: se deja pasar para que falle por no ser texto, con el mensaje de "ambos como texto".
-                return t.equals(Tag.STR) || (e.isPlain() && ESCALARES_IMPLICITOS.contains(t)) ? null : t;
+                // Un escalar sin comillas solo es válido si su etiqueta es la que el esquema le da a ese valor (la
+                // regla del core): "1.0" implícito (FLOAT) pasa y falla luego por no ser texto; "!!null x" no.
+                Tag implicita = e.isPlain() ? ajustes.getSchema().getScalarResolver().resolve(e.getValue(), true) : Tag.STR;
+                return t.equals(Tag.STR) || t.equals(implicita) ? null : t;
             }
             default -> {
                 return t;
