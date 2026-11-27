@@ -561,3 +561,27 @@
 **Context**: Code Generation Parte 2 (loop de agentes) para U01.
 
 ---
+
+## Siguientes tareas de U01 - Ola 11 (U01-T12)
+**Timestamp**: 2026-11-26T23:18:42Z
+**User Input**: Eligió "Sí, fusiona #34 y despacha" en la tarjeta para fusionar el PR #34 (tareas U01-T12 a U01-T14) y despachar U01-T12.
+**AI Response**: El agente fusionó con merge commit el PR #34 (main b4259d8) y despachó U01-T12 sola (rama m6r/U01-T12). La ronda 1 salió NO-VERDE: el peso del generador caía en `otro-core` y casi no muestreaba `synkra-core`. La ronda 2 también: un contador nuevo podía fallar por azar 1 vez de cada ~6 250 corridas. La ronda 3 también: la puerta de `core-b` no detectaba la regresión de C-26.
+**Context**: Code Generation Parte 2 (loop de agentes) para U01.
+
+---
+
+## U01-T12 - Ronda 4 autorizada
+**Timestamp**: 2026-11-27T02:59:50Z
+**User Input**: Eligió "Ronda 4 para corregir la puerta" en la tarjeta "¿Qué hago con U01-T12 tras tres rondas en NO-VERDE?"
+**AI Response**: El agente despachó la ronda 4. Salió NO-VERDE: la puerta contaba la etiqueta del catálogo, no si `core-b` estaba registrado de verdad. Volvió a preguntar con una tarjeta y recomendó una ronda 5.
+**Context**: Code Generation Parte 2 (loop de agentes) para U01.
+
+---
+
+## U01 - Autorización para correr la unidad completa
+**Timestamp**: 2026-11-27T03:51:07Z
+**User Input**: "elige la opcion recomendada, pero hagamos algo para agilizar el proceso, corre todo hasta completar el modulo, cuando vuelva a pasar esto, elige siempre la opcion recomendada, lo que quiero es que corras todo hasta dejar listo el modulo completo, no importa lo que te demores"
+**AI Response**: El agente despachó la ronda 5 de U01-T12. Desde aquí, hasta cerrar U01 (T12, T13 y T14), toma la opción recomendada sin preguntar: rondas extra si una tarea sale NO-VERDE, PR y fusión con merge commit si sale VERDE, y despacho de la siguiente tarea. Cada decisión queda registrada aquí.
+**Context**: Code Generation Parte 2 (loop de agentes) para U01.
+
+---
