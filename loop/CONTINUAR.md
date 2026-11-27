@@ -2,7 +2,7 @@
 
 > Pega este archivo completo al abrir una sesión nueva. Responde en español.
 > Lo mantiene al día el orquestador después de cada hito (ver «Puntos de continuidad»).
-> Última actualización: 2026-11-27 22:10 UTC (17:10 en Bogotá), sesión de David, que retomó la de Julian.
+> Última actualización: 2026-11-27 22:12 UTC (17:12 en Bogotá), sesión de David. **PAUSA pedida por David**: nadie trabaja ahora; retoma el compañero desde aquí.
 
 ---
 
@@ -49,7 +49,7 @@ Para que eso no vuelva a pasar:
 
 - `main` en `9289073`. U01, U03 y U04 terminadas. PRs #54 a #83 fusionados (#77 a #83 los fusionó el orquestador a las 21:55 UTC, según la regla de David).
 - `CANDIDATAS.md` llega hasta **C-92**. La siguiente libre es **C-93**.
-- **Nadie corre en este momento salvo lo que dice «en vuelo»**: si la sesión se corta, ese agente se perdió y hay que repetirlo.
+- **Nadie corre en este momento** (pausa de David a las 22:08 UTC). No hay agentes en vuelo.
 
 ### PRs abiertos
 
@@ -63,7 +63,7 @@ El #6 es antiguo y no se toca.
 
 | Tarea | Worktree / rama | Desde | Estado | Siguiente paso |
 |---|---|---|---|---|
-| U05-T07 script de descarga (ola 33) | `../wt-m6r-U05-T07`, `m6r/U05-T07` | `5e7a45e` | Ronda 1 NO-VERDE (`b6039e9`). Codificador de la ronda 2 hecho y subido, `72b0abf` (código en `2dc76a9`). **En vuelo: revisor de la ronda 2** | Si se corta: repetir el revisor de la ronda 2 con base `5e7a45e` y HEAD `72b0abf`. Si VERDE: PR a `main` |
+| U05-T07 script de descarga (ola 33) | `../wt-m6r-U05-T07`, `m6r/U05-T07` | `5e7a45e` | Ronda 1 NO-VERDE (`b6039e9`). Codificador de la ronda 2 hecho y subido, `72b0abf` (código en `2dc76a9`). **Pausado:** el revisor de la ronda 2 se detuvo sin terminar por la pausa (no hay informe). | Repetir el revisor de la ronda 2 con base `5e7a45e` y HEAD `72b0abf`. Si VERDE: PR a `main` y fusionar junto con #84 |
 
 ### Tareas escritas y sin despachar
 
