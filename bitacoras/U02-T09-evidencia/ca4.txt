@@ -1,0 +1,12 @@
+ bitacoras/U02-T09-evidencia/ca1.txt                | 13 ++++
+ bitacoras/U02-T09-evidencia/ca2.txt                |  4 ++
+ bitacoras/U02-T09-evidencia/ca3.txt                |  1 +
+ bitacoras/U02-T09-evidencia/rojo.txt               | 30 +++++++++
+ bitacoras/U02-T09.md                               | 35 ++++++++++
+ plugins/kyc-co/build.gradle.kts                    | 41 ++++++++++++
+ .../src/main/java/io/synkra/kycco/PluginKycCo.java | 47 +++++++++++++
+ .../services/io.synkra.plugin.api.SynkraPlugin     |  1 +
+ .../kyc-co/src/main/resources/synkra-plugin.yaml   |  7 ++
+ .../src/test/java/io/synkra/kycco/KycCoTest.java   | 78 ++++++++++++++++++++++
+ settings.gradle.kts                                |  1 +
+ 11 files changed, 258 insertions(+)
