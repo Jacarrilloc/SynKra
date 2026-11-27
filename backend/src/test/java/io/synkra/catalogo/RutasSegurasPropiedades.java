@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 import net.jqwik.api.Arbitraries;
 import net.jqwik.api.Arbitrary;
 import net.jqwik.api.Combinators;
+import net.jqwik.api.Example;
 import net.jqwik.api.ForAll;
 import net.jqwik.api.Property;
 import net.jqwik.api.Provide;
@@ -187,13 +188,12 @@ class RutasSegurasPropiedades {
      * resolver, cada carácter fuera de ASCII pasa a {@code u}: para la resolución léxica solo cuentan {@code /},
      * {@code \}, {@code .}, {@code :} y NUL, y así el oráculo no depende de la codificación de nombres de la JVM
      * ({@code sun.jnu.encoding}, que con la locale POSIX no admite {@code é}). Hace falta un descendiente estricto: el
-     * destino mismo ({@code ""}) no cuenta como dentro. La excepción son las referencias explícitas al destino, hechas
-     * solo de {@code .} y {@code /} ({@code "."}, {@code "./"}): el código las acepta, no salen del destino, y quedan
+     * destino mismo ({@code ""}) no cuenta como dentro. La excepción son las referencias explícitas al destino, que se
+     * miran en cada lectura: hechas solo de {@code .} y {@code /} ({@code "."}, {@code "./"} y, en la lectura con
+     * {@code \} como separador, {@code "./\"} o {@code ".\"}). El código las acepta, no salen del destino, y quedan
      * anotadas en la bitácora para que se decida.
      */
     static boolean dentroDelDestino(String nombre) {
-        // F-03: el destino mismo no es «dentro», salvo la referencia explícita a él (pendiente de decidir, ver bitácora)
-        boolean autoReferencia = !nombre.isEmpty() && nombre.chars().allMatch(c -> c == '.' || c == '/');
         var ascii = nombre.codePoints().map(c -> c < 0x80 ? c : 'u')
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
         var conBarras = ascii.replace('\\', '/');
@@ -207,6 +207,9 @@ class RutasSegurasPropiedades {
             } catch (java.nio.file.InvalidPathException noEsRuta) {
                 return false;
             }
+            // F-03 y F-05: el destino mismo no es «dentro», salvo la referencia explícita a él en esta lectura (no
+            // vacía, solo de . y /; en la lectura con \ como separador, la \ ya es /). Pendiente de decidir.
+            boolean autoReferencia = !lectura.isEmpty() && lectura.chars().allMatch(c -> c == '.' || c == '/');
             if (!ruta.startsWith(DESTINO) || (ruta.equals(DESTINO) && !autoReferencia)) {
                 return false;
             }
@@ -223,7 +226,26 @@ class RutasSegurasPropiedades {
      */
     private record Resultado(boolean aceptado, Path caja, Path datos) {}
 
+    /** F-06: los {@code recepcion-*} sueltos en el {@code java.io.tmpdir} de la JVM, por si algo sale de la caja. */
+    private static java.util.Set<String> sueltosEnTmp() throws IOException {
+        try (Stream<Path> s = Files.list(Path.of(System.getProperty("java.io.tmpdir")))) {
+            return s.map(p -> p.getFileName().toString()).filter(n -> n.startsWith("recepcion-"))
+                    .collect(java.util.stream.Collectors.toSet());
+        }
+    }
+
     private static Resultado recibir(Jar jar) throws IOException {
+        var antes = sueltosEnTmp();
+        try {
+            return recibirEnCaja(jar);
+        } finally {
+            var nuevos = new java.util.HashSet<>(sueltosEnTmp());
+            nuevos.removeAll(antes);
+            assertThat(nuevos).as("recepcion-* nuevos en java.io.tmpdir, fuera de la caja").isEmpty();
+        }
+    }
+
+    private static Resultado recibirEnCaja(Jar jar) throws IOException {
         var caja = Files.createTempDirectory("pbt03-caja-");
         var datos = Files.createDirectory(caja.resolve("datos"));
         var componente = new RecepcionArtefacto(datos.toString(), DataSize.ofMegabytes(20), 10000,
@@ -315,5 +337,31 @@ class RutasSegurasPropiedades {
         } finally {
             borrar(r.caja());
         }
+    }
+
+    // ---------------------------------------------------------------- casos de ejemplo (F-05)
+
+    /**
+     * F-05 de la ronda 2: referencias al destino mismo escritas con {@code \}. El código las acepta y en ninguna lectura
+     * salen del destino: el oráculo tiene que decir «dentro». La semilla -4345582717168822446 las encontraba.
+     */
+    @Example
+    void autoReferenciasConBarraInvertida_seAceptanYElOraculoLasDaDentro() throws IOException {
+        for (var nombre : List.of("./\\", ".\\", "./\\/")) {
+            var jar = new Jar(List.of(new Entrada(List.of(new Segmento("ejemplo", nombre)), false, null, null)));
+            var r = recibir(jar);
+            try {
+                assertThat(r.aceptado()).as("el código acepta '%s'", nombre).isTrue();
+                assertThat(dentroDelDestino(nombre)).as("el oráculo da dentro a '%s'", nombre).isTrue();
+            } finally {
+                borrar(r.caja());
+            }
+        }
+    }
+
+    /** P7: el nombre vacío resuelve al destino mismo y no es una referencia explícita: para el oráculo está fuera. */
+    @Example
+    void elNombreVacioNoEstaDentro() {
+        assertThat(dentroDelDestino("")).isFalse();
     }
 }
