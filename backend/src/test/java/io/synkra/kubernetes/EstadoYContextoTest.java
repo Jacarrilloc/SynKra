@@ -8,29 +8,34 @@ import io.fabric8.kubernetes.api.model.ContainerStatus;
 import io.fabric8.kubernetes.api.model.ContainerStatusBuilder;
 import io.fabric8.kubernetes.api.model.Event;
 import io.fabric8.kubernetes.api.model.EventBuilder;
+import io.fabric8.kubernetes.api.model.EventListBuilder;
+import io.fabric8.kubernetes.api.model.MicroTimeBuilder;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodBuilder;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClientException;
+import io.fabric8.kubernetes.client.server.mock.KubernetesMixedDispatcher;
 import io.fabric8.kubernetes.client.server.mock.KubernetesMockServer;
+import io.fabric8.kubernetes.client.utils.Serialization;
+import io.fabric8.mockwebserver.Context;
+import io.fabric8.mockwebserver.MockWebServer;
+import io.fabric8.mockwebserver.ServerRequest;
+import io.fabric8.mockwebserver.ServerResponse;
 import io.fabric8.mockwebserver.http.RecordedRequest;
 import io.synkra.kubernetes.api.ClienteNoDisponibleException;
 import io.synkra.kubernetes.api.DespliegueAusenteException;
 import io.synkra.kubernetes.api.FaseDespliegue;
 import io.synkra.kubernetes.api.LecturaFallidaException;
-import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.synkra.kubernetes.api.NamespaceNoPermitidoException;
-import io.fabric8.mockwebserver.Context;
-import io.fabric8.mockwebserver.MockWebServer;
-import io.fabric8.kubernetes.client.server.mock.KubernetesMixedDispatcher;
-import io.fabric8.mockwebserver.ServerRequest;
-import io.fabric8.mockwebserver.ServerResponse;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Queue;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -187,7 +192,7 @@ class EstadoYContextoTest {
                 .withType(tipo).withReason(razon).withMessage(mensaje).withLastTimestamp(hora)
                 .build();
         if (horaEventTime != null) {
-            e.setEventTime(new io.fabric8.kubernetes.api.model.MicroTimeBuilder().withTime(horaEventTime).build());
+            e.setEventTime(new MicroTimeBuilder().withTime(horaEventTime).build());
         }
         cliente.v1().events().inNamespace(NS).resource(e).create();
     }
@@ -378,7 +383,7 @@ class EstadoYContextoTest {
 
     private static final String RUTA_DEPLOYMENT = "/apis/apps/v1/namespaces/" + NS + "/deployments/" + CORE;
     private static final String RUTA_PODS = "/api/v1/namespaces/" + NS + "/pods?labelSelector="
-            + "app.kubernetes.io%2Fname%3Dsynkra-core";
+            + URLEncoder.encode(ConstructorObjetosPais.ETIQUETA_NOMBRE + "=" + CORE, StandardCharsets.UTF_8);
     private static final String RUTA_EVENTOS = "/api/v1/namespaces/" + NS + "/events";
 
     @Test
@@ -441,17 +446,34 @@ class EstadoYContextoTest {
         siembraDeployment(1, 0);
         siembraPod(POD, null, esperando(CONT_CORE, "CrashLoopBackOff", 1));
         // Como texto, "...:02.500000Z" < "...:02Z" (el '.' sale antes que la 'Z'): solo el Instant los ordena bien.
-        siembraEvento("e3", POD, "Warning", "R3", "tercero", "2026-01-01T00:00:03Z");
-        siembraEvento("e2", POD, "Warning", "R2", "segundo", null, "2026-01-01T00:00:02.500000Z");
-        siembraEvento("e1", POD, "Warning", "R1", "primero", "2026-01-01T00:00:02Z");
-        siembraEvento("e0", POD, "Warning", "R0", "sin marca", null);
+        // El simulado CRUD pone creationTimestamp a todo lo que se crea, asi que la lista se sirve con una expectativa
+        // para que e0 llegue sin ninguna marca y ebasura con una marca que no se puede analizar.
+        var lista = new EventListBuilder().withItems(
+                evento("e3", "tercero", "2026-01-01T00:00:03Z", null),
+                evento("e2", "segundo", null, "2026-01-01T00:00:02.500000Z"),
+                evento("e0", "sin marca", null, null),
+                evento("ebasura", "marca ilegible", "no-es-una-fecha", null),
+                evento("e1", "primero", "2026-01-01T00:00:02Z", null)).build();
+        servidor.expect().get().withPath(RUTA_EVENTOS).andReturn(200, Serialization.asJson(lista)).always();
         terminaSiembra();
         var lineas = adaptador.contextoFallo(NS).eventos().lines().toList();
-        assertThat(lineas).hasSize(4);
+        assertThat(lineas).hasSize(5);
         assertThat(lineas.get(0)).contains("primero");
         assertThat(lineas.get(1)).contains("segundo");
         assertThat(lineas.get(2)).contains("tercero");
         assertThat(lineas.get(3)).contains("sin marca");
+        assertThat(lineas.get(4)).contains("marca ilegible");
+    }
+
+    private static Event evento(String nombre, String mensaje, String ultima, String horaEventTime) {
+        Event e = new EventBuilder()
+                .withNewMetadata().withName(nombre).withNamespace(NS).endMetadata()
+                .withNewInvolvedObject().withKind("Pod").withName(POD).withNamespace(NS).endInvolvedObject()
+                .withType("Warning").withReason("R").withMessage(mensaje).withLastTimestamp(ultima).build();
+        if (horaEventTime != null) {
+            e.setEventTime(new MicroTimeBuilder().withTime(horaEventTime).build());
+        }
+        return e;
     }
 
     @Test

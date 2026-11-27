@@ -18,6 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -81,7 +82,7 @@ final class LectorPais {
     }
 
     /** Solo las {@link KubernetesClientException} se envuelven, nombrando lo que se leía; el resto sube tal cual. */
-    private static <T> T envuelve(String que, String ns, java.util.function.Supplier<T> lectura) {
+    private static <T> T envuelve(String que, String ns, Supplier<T> lectura) {
         try {
             return lectura.get();
         } catch (KubernetesClientException e) {
@@ -99,7 +100,7 @@ final class LectorPais {
     }
 
     /** Un log que aún no existe (400 o 404 de la API) es vacío; cualquier otro fallo sube. */
-    private static String leer(java.util.function.Supplier<String> lectura) {
+    private static String leer(Supplier<String> lectura) {
         try {
             String log = lectura.get();
             return log == null ? "" : log;
