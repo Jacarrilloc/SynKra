@@ -47,7 +47,7 @@ Para que eso no vuelva a pasar:
 ## Estado al corte
 
 - `main` en `cf00671`. U01, U03 y U04 terminadas. PRs #54 a #76 fusionados.
-- `CANDIDATAS.md` llega hasta **C-88**. La siguiente libre es **C-89**.
+- `CANDIDATAS.md` llega hasta **C-89**. La siguiente libre es **C-90**.
 - PRs abiertos: **#77** (`orq/U05-U02-tareas`: tareas de las olas 30 y 31, candidatas C-75 a C-78, auditoría y este archivo) y el #6, antiguo, que no se toca.
 
 ### Ola 30 (U05-T04 ∥ U02-T04)
@@ -57,7 +57,7 @@ Para que eso no vuelva a pasar:
 | U05-T04 `aplicar` | `m6r/U05-T04` | 2 | Ronda 1 NO-VERDE (informe en `revisiones/U05-T04/ronda-1.md`, commit `e085e5f`): F-01 a F-03 NARANJA, F-04 y F-05 AMARILLO; todo se arregla. **VERDE en la ronda 2** (`ronda-2.md`, rama en `0a52e2e`). **PR #78** abierto contra `main`, sin fusionar. AMARILLO F-06/F-07 → C-79 |
 | U02-T04 `ArranquePlugins` | `m6r/U02-T04` | 2 | Ronda 1 NO-VERDE (informe en `revisiones/U02-T04/ronda-1.md`, commit `6917a8c`): F-01 y F-02 NARANJA; F-03 es de la especificación; F-04 fuera de alcance (C-78); F-05 y F-06 se arreglan. F-02 se arregla dentro de `core/` igualando las salvaguardas de `LectorDescriptor` (profundidad 32, etiquetas explícitas) y con una sola fuente para nombre y límites; la extracción a `verificador/` es C-77. **VERDE en la ronda 2** (`ronda-2.md`, rama en `ff3f184`). **PR #79** abierto contra `main`, sin fusionar. AMARILLO F-07/F-08 → C-80 |
 
-Orden de fusión: #77, luego #78 (U05-T04), luego #79 (U02-T04), luego #80 (U02-T05, apilado sobre #79) y #81 (U05-T05, apilado sobre #78). Al fusionar la base de un PR apilado, GitHub cambia su base a `main`.
+Orden de fusión: #77, luego #78 (U05-T04), luego #79 (U02-T04), luego #80 (U02-T05, apilado sobre #79) #81 (U05-T05, apilado sobre #78) y #82 (U02-T06, apilado sobre #80). Al fusionar la base de un PR apilado, GitHub cambia su base a `main`.
 
 **U05-T05 despachada** (ola 31): worktree `../wt-m6r-U05-T05`, rama `m6r/U05-T05` desde `0a52e2e`; ronda 1 NO-VERDE (`revisiones/U05-T05/ronda-1.md`, `7c85e17`): F-01 a F-03 NARANJA, F-04 a F-06 AMARILLO se arreglan, F-07 no. Ronda 2 NO-VERDE (`ronda-2.md`, `7602fb8`): F-08 NARANJA (el evento «sin marca» de la prueba recibe `creationTimestamp` del simulado, así que `nullsLast` no se prueba). **VERDE en la ronda 3** (`547f8b8`). **PR #81** abierto contra `m6r/U05-T04` (apilado), sin fusionar.
 
@@ -65,7 +65,9 @@ Orden de fusión: #77, luego #78 (U05-T04), luego #79 (U02-T04), luego #80 (U02-
 
 **U02-T05 despachada** (ola 31): worktree `../wt-m6r-U02-T05`, rama `m6r/U02-T05` desde `ff3f184`; ronda 1 NO-VERDE (`revisiones/U02-T05/ronda-1.md`, `9024ad6`): F-01 y F-02 NARANJA (aserción que acepta cualquier caída; salida pegada editada a mano), F-03 y F-04 AMARILLO. **VERDE en la ronda 2** (`15ca50f`). **PR #80** abierto contra `m6r/U02-T04` (apilado), sin fusionar.
 
-**U02-T06 despachada** (ola 32): worktree `../wt-m6r-U02-T06`, rama `m6r/U02-T06` desde `15ca50f`; ronda 1 NO-VERDE (`ronda-1.md`, `742c7c3`): F-01 ROJO (CA-2 falla por excepción, no por aserción), F-02 NARANJA (orden inverso y `detener` que lanza sin prueba), F-03 a F-05 AMARILLO. En F-03 el orquestador precisó la decisión 2: se prefiere un `HealthIndicator` en el grupo readiness. Ronda 2 NO-VERDE (`ronda-2.md`, `c42f25f`): F-06 y F-07 NARANJA (falta el caso «a, b falla, c»; readiness da `DOWN` y no `OUT_OF_SERVICE`). Ronda 3 del codificador hecha (`8cfdb03`). **Revisor de la ronda 3 despachado** (si sale NO-VERDE, se para y se lleva al equipo); si la sesión se corta, repetirlo.
+**U02-T06 despachada** (ola 32): worktree `../wt-m6r-U02-T06`, rama `m6r/U02-T06` desde `15ca50f`; ronda 1 NO-VERDE (`ronda-1.md`, `742c7c3`): F-01 ROJO (CA-2 falla por excepción, no por aserción), F-02 NARANJA (orden inverso y `detener` que lanza sin prueba), F-03 a F-05 AMARILLO. En F-03 el orquestador precisó la decisión 2: se prefiere un `HealthIndicator` en el grupo readiness. Ronda 2 NO-VERDE (`ronda-2.md`, `c42f25f`): F-06 y F-07 NARANJA (falta el caso «a, b falla, c»; readiness da `DOWN` y no `OUT_OF_SERVICE`). **VERDE en la ronda 3** (`cb2096a`). **PR #82** abierto contra `m6r/U02-T05` (apilado), sin fusionar.
+
+**U02-T07 despachada** (ola 33): worktree `../wt-m6r-U02-T07`, rama `m6r/U02-T07` desde `cb2096a`; codificador de la ronda 1 corriendo. Si la sesión se corta, mirar sus commits y redespacharlo.
 
 ### Ola 31 (U05-T05 ∥ U02-T05), escrita, sin despachar
 
