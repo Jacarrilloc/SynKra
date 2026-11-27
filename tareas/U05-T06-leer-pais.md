@@ -17,7 +17,7 @@
 - Comparar con el registro de despliegues y calcular `concuerda` (U06 y U07). Aquí solo se lee el clúster.
 - El endpoint `GET /api/paises` (U07).
 - Escribir, borrar o reparar objetos, aunque estén inconsistentes.
-- Cambios fuera de `kubernetes/**`.
+- Cambios fuera de `kubernetes/**` (salvo el YAML esperado de `ConstruirObjetosPaisTest` en `src/test/resources/kubernetes/`, por la decisión 6).
 
 ---
 
@@ -38,6 +38,7 @@
 3. **Contenido hostil o inconsistente.** El ConfigMap lo puede cambiar alguien a mano (H-19), así que no se confía en él: el YAML se lee con un lector seguro (sin etiquetas de tipo, con tope de tamaño), y si falta uno de los dos objetos, si un plugin aparece en un archivo y no en el otro, o si un valor no cumple el formato de `PlanPais`, `leerPais` lanza una excepción propia del módulo que nombra el país y lo que no cuadra. No se inventa una lectura parcial.
 4. **País.** Se valida con la misma regla de `PlanPais` (dos letras minúsculas), se arma `synkra-<país>` y pasa por la guardia antes de la primera petición. Sin cliente, error propio y sin peticiones.
 5. **Verbos.** Solo `GET`.
+6. **Contrato de `plugins-activos.yaml` (C-81).** Hoy `construir` escribe un mapa con la clave `plugins:` y el core (U02-T04, decisión 2) exige una **lista en la raíz** de `{nombre, version}`; un pod real no arrancaría. El formato canónico es el del core: `construir` pasa a escribir la lista en la raíz (`[]` si no hay plugins), se actualiza el YAML esperado de `ConstruirObjetosPaisTest`, y `leerPais` lee ese mismo formato. El formato queda escrito en el Javadoc de `ConstructorObjetosPais.CLAVE_PLUGINS`.
 
 ---
 
@@ -56,7 +57,8 @@
   - YAML con etiqueta `!!java...`: excepción propia, sin construir objetos Java;
   - Deployment sin ConfigMap: excepción propia;
   - país inválido (`PE`, `p`, `../x`) y sin cliente: rechazo con cero peticiones;
-  - todas las peticiones registradas son `GET` a `/namespaces/synkra-<país>/`.
+  - todas las peticiones registradas son `GET` a `/namespaces/synkra-<país>/`;
+  - el `plugins-activos.yaml` que genera `construir` es una lista en la raíz con un mapa `{nombre, version}` por plugin (se lee con SnakeYAML Engine y se comprueba el tipo), y `[]` sin plugins.
 
 - [ ] **CA-2**: todo el backend sigue pasando
   ```bash
@@ -69,7 +71,7 @@
   ```bash
   git rev-parse --short HEAD; git diff --stat <base-del-despacho>...HEAD
   ```
-  Esperado: `kubernetes/**`, la bitácora y `revisiones/U05-T06/`. Se anota el sha.
+  Esperado: `kubernetes/**` (main, test y `src/test/resources/kubernetes/`), la bitácora y `revisiones/U05-T06/`. Se anota el sha.
 
 ---
 
