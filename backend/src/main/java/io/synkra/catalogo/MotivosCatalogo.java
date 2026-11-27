@@ -8,6 +8,8 @@ final class MotivosCatalogo {
     static final String IMAGEN_INVALIDA =
             "La imagen debe tener la forma registro/repo[:tag]@sha256:<64 hex en minúsculas>, de hasta "
                     + CatalogoServicio.IMAGEN_MAX + " caracteres";
+    /** R-C3; se completa con el registro permitido configurado (ya validado, corto). */
+    static final String REGISTRO_NO_PERMITIDO = "La imagen debe venir del registro permitido '%s'";
     /** Se completa con la versión repetida. */
     static final String VERSION_REPETIDA = "La versión %s del core ya está registrada";
 

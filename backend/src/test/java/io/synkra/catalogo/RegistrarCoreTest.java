@@ -192,6 +192,37 @@ class RegistrarCoreTest {
         }
     }
 
+    /** C-33: bordes de la longitud de la imagen (255 caracteres) y del tag (128). */
+    private static String imagenDeLongitud(int total) {
+        return "r.io/" + "a".repeat(total - 5 - H.length()) + H;
+    }
+
+    @Test
+    void laImagenDe255CaracteresSeAcepta() {
+        var imagen = imagenDeLongitud(255);
+        assertThat(imagen).hasSize(255);
+        assertThat(api.registrarCore("synkra-core", "1.0.0", imagen).versiones()).hasSize(1);
+    }
+
+    @Test
+    void laImagenDe256CaracteresDa422() {
+        var imagen = imagenDeLongitud(256);
+        assertThat(imagen).hasSize(256);
+        assertThat(camposDe(invalido("synkra-core", "1.0.0", imagen))).containsExactly("imagen");
+    }
+
+    @Test
+    void elTagDe128CaracteresSeAcepta() {
+        var imagen = "r.io/x:" + "t".repeat(128) + H;
+        assertThat(api.registrarCore("synkra-core", "1.0.0", imagen).versiones()).hasSize(1);
+    }
+
+    @Test
+    void elTagDe129CaracteresDa422() {
+        var imagen = "r.io/x:" + "t".repeat(129) + H;
+        assertThat(camposDe(invalido("synkra-core", "1.0.0", imagen))).containsExactly("imagen");
+    }
+
     @Test
     void nombreYVersionNulosDan422() {
         assertThat(camposDe(invalido(null, "1.0.0", IMAGEN))).containsExactly("nombre");
