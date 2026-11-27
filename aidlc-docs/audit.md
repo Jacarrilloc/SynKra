@@ -683,3 +683,10 @@
 **Context**: CONSTRUCTION, U04, ola 18.
 
 ---
+
+## Tareas U04-T07 a U04-T13 escritas
+**Timestamp**: 2026-11-27T14:45:00Z
+**AI Response**: Escribí, sin código, las tareas U04-T07 (ruta de subida, con C-38 y C-50), U04-T08 (listado y filtro), U04-T09 (`Catalogo` de U01 sobre SQLite), U04-T10 (artefactos por hash), U04-T11 (fronteras, C-14 y C-36), U04-T12 (resumen) y U04-T13 (Should, registro permitido y C-33), y las olas 20 a 26 en `loop/README.md`. Según la autorización de U04 (11:15:35Z), fusiono el PR de tareas y las despacho en orden.
+**Context**: CONSTRUCTION, U04.
+
+---

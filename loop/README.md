@@ -59,6 +59,13 @@ U01 y U03 no dependen entre sí en el grafo, pero **U03-T01 necesita la raíz de
 | Ola 17 | U04-T04 | 1 | `RecepcionArtefacto`: límite, SHA-256 en flujo y rutas del JAR; agrega commons-compress. Sale de `main` después de la ola 16 |
 | Ola 18 | U04-T06 | 1 | Subir un plugin (más C-44: duplicados en `RecepcionArtefacto`). Sale de `main` después de la ola 17 |
 | Ola 19 | U04-T05 | 1 | Propiedad PBT-03 y pruebas de C-45; va después de T06 porque las dos tocan `RecepcionArtefactoTest`. Sale de `main` después de la ola 18 |
+| Ola 20 | U04-T07 | 1 | Ruta de subida multipart y topes de C-38 y C-50. Sale de `main` después de la ola 19 |
+| Ola 21 | U04-T08 | 1 | Listado con filtro por etiquetas (R-C12); reemplaza el `[]` de U04-T03. Sale de `main` después de la ola 20 |
+| Ola 22 | U04-T09 | 1 | `Catalogo` de U01 sobre SQLite y los casos S1 a S7. Sale de `main` después de la ola 21 |
+| Ola 23 | U04-T10 | 1 | Artefactos por hash (R-C13). Toca `CatalogoApi`, igual que T09, así que va después. Sale de `main` después de la ola 22 |
+| Ola 24 | U04-T13 | 1 | *(Should)* Registro permitido (R-C3) y bordes de C-33. Sale de `main` después de la ola 23 |
+| Ola 25 | U04-T11 | 1 | Fronteras del módulo, C-14 y C-36; va al final porque revisa todo `catalogo`. Sale de `main` después de la ola 24 |
+| Ola 26 | U04-T12 | 1 | Resumen de U04. Cierra la unidad. Sale de `main` después de la ola 25 |
 
 Lo previsto era que cada ola saliera de la punta de `modulo-6-rehecho` después de fusionar los PRs de
 la anterior. El responsable pidió avanzar sin abrir PRs todavía, así que **las ramas quedaron
