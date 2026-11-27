@@ -27,6 +27,7 @@ dependencies {
     implementation("org.apache.commons:commons-compress:1.27.1")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation(testFixtures(project(":verificador")))
     // Solo los fixtures de C-07 usan @Valid y @Min; main no valida con Bean Validation.
     testImplementation("org.springframework.boot:spring-boot-starter-validation")
     testImplementation("org.springframework.modulith:spring-modulith-starter-test")

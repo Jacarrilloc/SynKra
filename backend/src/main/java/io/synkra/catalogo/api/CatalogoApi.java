@@ -33,4 +33,10 @@ public interface CatalogoApi {
      * semántica. 404 si el core no existe; 422 si una clave no cumple el patrón de U01 o un valor es nulo.
      */
     List<PluginSubido> listarPlugins(String core, Map<String, String> filtro);
+
+    /**
+     * La vista de solo lectura del catálogo que usa el {@code Verificador} de U01, leída de SQLite en cada llamada
+     * (sin caché). Nunca devuelve {@code null}; una fila corrupta es un error interno.
+     */
+    io.synkra.verificador.Catalogo catalogoParaVerificar();
 }

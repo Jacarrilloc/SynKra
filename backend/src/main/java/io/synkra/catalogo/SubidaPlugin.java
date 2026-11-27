@@ -45,7 +45,7 @@ class SubidaPlugin {
 
     private static final String DESCRIPTOR = "descriptor";
     private static final String ETIQUETAS = "etiquetas";
-    private static final String ORIGEN_DESCRIPTOR = "descriptor";
+    static final String ORIGEN_DESCRIPTOR = "descriptor";
     private static final String ORIGEN_SUBIDA = "subida";
 
     private final Path datos;
