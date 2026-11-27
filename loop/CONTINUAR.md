@@ -48,7 +48,7 @@ Para que eso no vuelva a pasar:
 ## Estado al corte (2026-11-27 22:10 UTC)
 
 - `main` en `9289073`. U01, U03 y U04 terminadas. PRs #54 a #83 fusionados (#77 a #83 los fusionó el orquestador a las 21:55 UTC, según la regla de David).
-- `CANDIDATAS.md` llega hasta **C-99**. La siguiente libre es **C-100**.
+- `CANDIDATAS.md` llega hasta **C-100**. La siguiente libre es **C-101**.
 - **Nadie corre en este momento** (pausa de David a las 22:08 UTC). No hay agentes en vuelo.
 
 ### PRs abiertos
@@ -60,6 +60,7 @@ Para que eso no vuelva a pasar:
 | 3 | #86 | `m6r/U02-T08` → `m6r/U02-T07` | U02-T08 el core no conoce países, VERDE ronda 1 (apilado sobre #84) |
 | 4 | #87 | `m6r/U05-T08` → `m6r/U05-T07` | U05-T08 imagen del init, VERDE ronda 1 (apilado sobre #85) |
 | 5 | #88 | `m6r/U02-T09` → `m6r/U02-T08` | U02-T09 plugin `kyc-co`, VERDE ronda 2 (apilado sobre #86) |
+| 6 | #89 | `m6r/U02-T10` → `m6r/U02-T09` | U02-T10 plugin `kyc-pe`, VERDE ronda 1 (apilado sobre #88) |
 
 El #6 es antiguo y no se toca.
 
@@ -71,7 +72,8 @@ El #6 es antiguo y no se toca.
 | U05-T08 imagen del init (ola 34) | `../wt-m6r-U05-T08`, `m6r/U05-T08` | `696eecc` | **VERDE en la ronda 1** (informe en `26b6124`). PR #87, apilado sobre #85. | Esperar fusión humana; U05-T09 sale de esta punta |
 | U05-T09 fronteras `kubernetes` (ola 35) | `../wt-m6r-U05-T09`, `m6r/U05-T09` | `26b6124` (punta VERDE de U05-T08) | Ronda 1 NO-VERDE (`2e4e971`: F-01 la API `yaml*` sin prueba; F-02 el cierre del cliente sin lectura de vuelta). **En vuelo (01:05 UTC del 28-nov):** codificador ronda 2. | Si no hay `revisiones/U05-T09/ronda-1-respuesta.md`, redespachar el codificador ronda 2; si la hay, revisor ronda 2 |
 | U02-T09 plugin `kyc-co` (ola 35) | `../wt-m6r-U02-T09`, `m6r/U02-T09` | `d99cf36` | **VERDE en la ronda 2** (informe en `288e5c0`). PR #88, apilado sobre #86. | Esperar fusión humana; U02-T10 sale de esta punta |
-| U02-T10 plugin `kyc-pe` (ola 36) | `../wt-m6r-U02-T10`, `m6r/U02-T10` | `288e5c0` (punta VERDE de U02-T09) | Codificador ronda 1 hecho, `bae98f3` (código en `075fbc5`, rojo en `ed7042a`). **En vuelo (01:00 UTC del 28-nov):** revisor ronda 1. | Si no hay `revisiones/U02-T10/ronda-1.md`, repetir el revisor (base `288e5c0`, HEAD `bae98f3`) |
+| U02-T10 plugin `kyc-pe` (ola 36) | `../wt-m6r-U02-T10`, `m6r/U02-T10` | `288e5c0` | **VERDE en la ronda 1** (informe en `3538d67`). PR #89, apilado sobre #88. | Esperar fusión humana; U02-T11 sale de esta punta |
+| U02-T11 imagen del core (ola 37) | `../wt-m6r-U02-T11`, `m6r/U02-T11` | `3538d67` (punta VERDE de U02-T10) | **En vuelo (01:15 UTC del 28-nov):** codificador ronda 1, tarea con hash `f913285`. | Si la rama no tiene commits del codificador, redespacharlo; si los tiene, revisor ronda 1 |
 
 | U02-T08 el core no conoce países (ola 34) | `../wt-m6r-U02-T08`, `m6r/U02-T08` | `9d84b4c` (punta VERDE de U02-T07, #84 sin fusionar) | **VERDE en la ronda 1** (informe en `d99cf36`). PR #86, apilado. | Esperar fusión humana; U02-T09 sale de esta punta |
 
