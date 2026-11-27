@@ -47,4 +47,11 @@ class SynkraAppTest {
         assertThat(contexto.getBeanNamesForType(fixtures.plataforma.ControladorDePrueba.class)).isEmpty();
         assertThat(contexto.getBeanNamesForType(fixtures.plataforma.ElementoRepositorio.class)).isEmpty();
     }
+
+    /** U05-T09 (C-70): en la aplicación real el cliente de Fabric8 no se puede inyectar desde otro módulo. */
+    @Test
+    void elClienteDeKubernetesNoEsUnBeanDeLaAplicacion() {
+        assertThat(contexto.getBeanNamesForType(io.fabric8.kubernetes.client.KubernetesClient.class)).isEmpty();
+        assertThat(contexto.getBeanNamesForType(io.synkra.kubernetes.api.AdaptadorKubernetes.class)).hasSize(1);
+    }
 }
