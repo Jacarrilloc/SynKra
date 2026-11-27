@@ -2,6 +2,7 @@ package io.synkra.catalogo;
 
 import io.synkra.catalogo.api.CatalogoApi;
 import io.synkra.catalogo.api.CoreRegistrado;
+import io.synkra.catalogo.api.PluginSubido;
 import io.synkra.plataforma.CodigosError;
 import io.synkra.plataforma.DetalleError;
 import io.synkra.plataforma.ErrorApi;
@@ -9,17 +10,20 @@ import io.synkra.plataforma.ExcepcionApi;
 import io.synkra.verificador.Descriptor;
 import io.synkra.verificador.Resultado;
 import io.synkra.verificador.Version;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** R-C1 y R-C2. La «carpeta» de un core es su fila de {@code cat_core}. */
+/** R-C1 y R-C2; la subida de plugins la hace {@link SubidaPlugin}. La «carpeta» de un core es su fila de {@code cat_core}. */
 @Service
 class CatalogoServicio implements CatalogoApi {
 
@@ -32,16 +36,20 @@ class CatalogoServicio implements CatalogoApi {
     /** registro[:puerto]/repo[/repo...][:tag]@sha256:64 hex en minúsculas; el tag solo al final. */
     private static final Pattern IMAGEN =
             Pattern.compile(REGISTRO + "(/" + REPO + ")+(:" + TAG + ")?@sha256:[0-9a-f]{64}");
-    private static final String AUTOR = "anonimo";
+    /** {@code registrado_por} y {@code subido_por} mientras no haya usuarios. */
+    static final String AUTOR = "anonimo";
 
     private final JdbcAggregateTemplate plantilla;
     private final CoreRepositorio cores;
     private final VersionCoreRepositorio versiones;
+    private final SubidaPlugin subida;
 
-    CatalogoServicio(JdbcAggregateTemplate plantilla, CoreRepositorio cores, VersionCoreRepositorio versiones) {
+    CatalogoServicio(JdbcAggregateTemplate plantilla, CoreRepositorio cores, VersionCoreRepositorio versiones,
+            SubidaPlugin subida) {
         this.plantilla = plantilla;
         this.cores = cores;
         this.versiones = versiones;
+        this.subida = subida;
     }
 
     @Override
@@ -92,6 +100,16 @@ class CatalogoServicio implements CatalogoApi {
     @Transactional(readOnly = true)
     public List<CoreRegistrado> listarCores() {
         return cores.findAll().stream().map(Core::nombre).sorted().map(this::leer).toList();
+    }
+
+    @Override
+    public PluginSubido subirPlugin(String core, InputStream jar, Map<String, String> etiquetas) throws IOException {
+        return subida.subir(core, jar, etiquetas);
+    }
+
+    @Override
+    public PluginSubido obtenerPlugin(String core, String nombre, String version) {
+        return subida.obtener(core, nombre, version);
     }
 
     private CoreRegistrado leer(String nombre) {

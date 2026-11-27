@@ -320,6 +320,42 @@ class RecepcionArtefactoTest {
         rutaNoPermitida(e("../x"), e("../x"));
     }
 
+    // ---------- C-44: entradas con el mismo nombre ----------
+
+    private void duplicadas(Entrada... entradas) throws IOException {
+        var ex = rechazo(componente(VEINTE_MB), zip(entradas));
+        assertThat(ex.estado()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
+        assertThat(ex.error().codigo()).isEqualTo(CodigosCatalogo.RUTA_NO_PERMITIDA);
+        assertThat(ex.error().mensaje()).isEqualTo(CodigosError.MSG_ENTIDAD_NO_PROCESABLE);
+        assertThat(ex.error().detalles())
+                .containsExactly(new DetalleError("archivo", MotivosCatalogo.ENTRADAS_DUPLICADAS));
+        nadaEnDisco();
+    }
+
+    @Test
+    void c44_dosEntradasConElMismoNombre_seRechazanConMotivoConstante() throws Exception {
+        var uno = new Entrada("synkra-plugin.yaml", null, "core: a\n".getBytes(StandardCharsets.UTF_8));
+        var dos = new Entrada("synkra-plugin.yaml", null, "core: b\n".getBytes(StandardCharsets.UTF_8));
+        duplicadas(e("META-INF/MANIFEST.MF"), uno, e("x.class"), dos);
+    }
+
+    @Test
+    void c44_directorioRepetidoYEntradaSeparada_tambien() throws Exception {
+        duplicadas(e("a/"), e("a/"));
+        duplicadas(e("lib/x.class"), e("c"), e("lib/x.class"));
+    }
+
+    @Test
+    void c44_nombresQueSoloDifierenEnMayusculas_noSonDuplicados() throws Exception {
+        var r = recibir(componente(VEINTE_MB), zip(e("A.class"), e("a.class")));
+        assertThat(r.temporal()).exists();
+    }
+
+    @Test
+    void c44_motivoFijado() {
+        assertThat(MotivosCatalogo.ENTRADAS_DUPLICADAS).isEqualTo("El JAR tiene entradas con el mismo nombre");
+    }
+
     // ---------- no es un ZIP ----------
 
     private void noEsZip(byte[] bytes) throws IOException {

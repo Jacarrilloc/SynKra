@@ -31,6 +31,22 @@ final class MotivosCatalogo {
     /** Se completa con el tope de bytes descomprimidos configurado. */
     static final String DESCOMPRIMIDO_EXCEDIDO = "El contenido descomprimido supera el límite de %s";
 
+    static final String ENTRADAS_DUPLICADAS = "El JAR tiene entradas con el mismo nombre";
+
+    /** Se completa con el core del descriptor y el de la carpeta (R-C8). */
+    static final String CORE_EQUIVOCADO = "El descriptor es del core '%s' y la carpeta es del core '%s'";
+    /** Se completa con el nombre y la versión del plugin (R-C9). */
+    static final String PLUGIN_REPETIDO = "El plugin %s ya tiene la versión %s en este core";
+    /** Se completa con la clave, el valor del descriptor y el de la petición, recortados (R-C10). */
+    static final String ETIQUETA_EN_CONFLICTO = "La etiqueta '%s' vale '%s' en el descriptor y '%s' en la petición";
+    /** Se completa con la clave recortada; el patrón es el de U01 ({@code Descriptor.NOMBRE}). */
+    static final String ETIQUETA_CLAVE_INVALIDA =
+            "La clave de etiqueta '%s' debe llevar solo minúsculas, dígitos y guiones medios, sin guion al "
+                    + "principio ni al final";
+    static final String ETIQUETA_SIN_VALOR = "La etiqueta '%s' no tiene valor";
+    /** Último detalle cuando hay más de {@code SubidaPlugin.MAX_DETALLES} (C-19); se completa con los omitidos. */
+    static final String MOTIVOS_OMITIDOS = "Se omitieron %d motivos más";
+
     private MotivosCatalogo() {
     }
 }

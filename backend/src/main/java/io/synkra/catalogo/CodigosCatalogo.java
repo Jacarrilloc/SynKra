@@ -5,6 +5,7 @@ final class CodigosCatalogo {
 
     static final String RUTA_NO_PERMITIDA = "RUTA_NO_PERMITIDA";
     static final String ARTEFACTO_INVALIDO = "ARTEFACTO_INVALIDO";
+    static final String ETIQUETA_EN_CONFLICTO = "ETIQUETA_EN_CONFLICTO";
 
     private CodigosCatalogo() {
     }
