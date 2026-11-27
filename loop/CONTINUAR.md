@@ -2,13 +2,13 @@
 
 > Pega este archivo completo al abrir una sesión nueva. Responde en español.
 > Lo mantiene al día el orquestador después de cada hito (ver «Puntos de continuidad»).
-> Última actualización: 2026-11-27 ~20:55 UTC (sesión de Julian, que retomó la de David).
+> Última actualización: 2026-11-27 21:40 UTC (16:40 en Bogotá), sesión de Julian, que retomó la de David.
 
 ---
 
 ## Puntos de continuidad (metodología de varios commits)
 
-La sesión anterior se cortó a mitad de una ronda y se perdió el informe del revisor, que no estaba guardado.
+La sesión de David se cortó a mitad de una ronda y se perdió el informe del revisor, que no estaba guardado. La de Julian (27-nov) siguió esta metodología: unos 20 commits de continuidad en `orq/U05-U02-tareas` y en cada rama de tarea.
 Para que eso no vuelva a pasar:
 
 1. **Un commit y un push por hito, nunca al final.** Los hitos son:
@@ -20,7 +20,8 @@ Para que eso no vuelva a pasar:
 2. **Este archivo se actualiza en cada hito** (tabla «Estado al corte»), con commit y push en `orq/U05-U02-tareas`. Así, si la sesión se corta, la tabla dice exactamente qué agente estaba corriendo y qué falta.
 3. **Lo que está en vuelo se anota antes de lanzarlo.** Si un agente estaba corriendo al cortarse la sesión, su resultado se perdió: la sesión nueva vuelve a despachar esa misma ronda (el codificador revisa primero si ya hay commits suyos en la rama; el revisor siempre se repite).
 4. **Antes de despachar nada, se revisa GitHub**: `git fetch` y la fecha del último commit de cada rama de la tabla. Si otra persona empujó después de la última actualización de este archivo, se avisa y no se pisa.
-5. **El informe del revisor se guarda tal cual.** Si llega como mensaje del subagente, se extrae del transcript (la última llamada de entrega) con un script, sin reescribirlo.
+5. **El informe del revisor se guarda tal cual.** Si llega como mensaje del subagente, se extrae del transcript con un script, sin reescribirlo: se toma la entrada de texto más larga de la llamada de entrega (`SubagentHandback`) en el archivo `.output` del agente. Si no hay script, se copia el texto del mensaje sin tocarlo.
+6. **Commit pequeño y frecuente en las ramas de tarea también**: el codificador hace push al terminar cada ronda, y el orquestador hace commit del informe del revisor en la rama de la tarea en cuanto llega.
 
 ## Cómo se trabaja
 
@@ -44,65 +45,56 @@ Para que eso no vuelva a pasar:
 - Pasar `</dev/null` a `git commit` y a `gh`. Pedir la evidencia pegada tal cual, con el sha del `--stat` tomado después del último commit.
 - Criterios de Gradle como `:X:test --rerun :X:check` (C-69). En CA de diff acotado, la base es la del despacho, no `origin/main` (F-03 de U02-T04).
 
-## Estado al corte
+## Estado al corte (2026-11-27 21:40 UTC)
 
 - `main` en `cf00671`. U01, U03 y U04 terminadas. PRs #54 a #76 fusionados.
-- `CANDIDATAS.md` llega hasta **C-89**. La siguiente libre es **C-90**.
-- PRs abiertos: **#77** (`orq/U05-U02-tareas`: tareas de las olas 30 y 31, candidatas C-75 a C-78, auditoría y este archivo) y el #6, antiguo, que no se toca.
+- `CANDIDATAS.md` llega hasta **C-90**. La siguiente libre es **C-91**.
+- **Nadie corre en este momento salvo lo que dice «en vuelo»**: al cortarse la sesión, ese agente se perdió y hay que repetirlo.
 
-### Ola 30 (U05-T04 ∥ U02-T04)
+### PRs abiertos (los fusiona un humano, con merge commit, en este orden)
 
-| Tarea | Rama | Ronda | Estado |
+| Orden | PR | Rama → base | Contenido |
 |---|---|---|---|
-| U05-T04 `aplicar` | `m6r/U05-T04` | 2 | Ronda 1 NO-VERDE (informe en `revisiones/U05-T04/ronda-1.md`, commit `e085e5f`): F-01 a F-03 NARANJA, F-04 y F-05 AMARILLO; todo se arregla. **VERDE en la ronda 2** (`ronda-2.md`, rama en `0a52e2e`). **PR #78** abierto contra `main`, sin fusionar. AMARILLO F-06/F-07 → C-79 |
-| U02-T04 `ArranquePlugins` | `m6r/U02-T04` | 2 | Ronda 1 NO-VERDE (informe en `revisiones/U02-T04/ronda-1.md`, commit `6917a8c`): F-01 y F-02 NARANJA; F-03 es de la especificación; F-04 fuera de alcance (C-78); F-05 y F-06 se arreglan. F-02 se arregla dentro de `core/` igualando las salvaguardas de `LectorDescriptor` (profundidad 32, etiquetas explícitas) y con una sola fuente para nombre y límites; la extracción a `verificador/` es C-77. **VERDE en la ronda 2** (`ronda-2.md`, rama en `ff3f184`). **PR #79** abierto contra `main`, sin fusionar. AMARILLO F-07/F-08 → C-80 |
+| 1 | #77 | `orq/U05-U02-tareas` → `main` | Tareas de las olas 30 a 39, candidatas C-75 a C-90, auditoría, `loop/README.md` y este archivo. Sigue recibiendo commits |
+| 2 | #78 | `m6r/U05-T04` → `main` | U05-T04 `aplicar`, VERDE ronda 2 |
+| 3 | #79 | `m6r/U02-T04` → `main` | U02-T04 `ArranquePlugins`, VERDE ronda 2 |
+| 4 | #80 | `m6r/U02-T05` → `m6r/U02-T04` | U02-T05 concordancia con la suite, VERDE ronda 2 |
+| 5 | #81 | `m6r/U05-T05` → `m6r/U05-T04` | U05-T05 `estado` y `contextoFallo`, VERDE ronda 3 |
+| 6 | #82 | `m6r/U02-T06` → `m6r/U02-T05` | U02-T06 fallo de inicio y readiness, VERDE ronda 3 |
+| 7 | #83 | `m6r/U05-T06` → `m6r/U05-T05` | U05-T06 `leerPais` y formato C-81, VERDE ronda 3 |
 
-Orden de fusión: #77, luego #78 (U05-T04), luego #79 (U02-T04), luego #80 (U02-T05, apilado sobre #79) #81 (U05-T05, apilado sobre #78) y #82 (U02-T06, apilado sobre #80). Al fusionar la base de un PR apilado, GitHub cambia su base a `main`.
+Al fusionar la base de un PR apilado, GitHub cambia su base a `main`. El #6 es antiguo y no se toca. Ninguno tiene CI (0 check runs) y todos estaban `clean` al corte.
 
-**U05-T05 despachada** (ola 31): worktree `../wt-m6r-U05-T05`, rama `m6r/U05-T05` desde `0a52e2e`; ronda 1 NO-VERDE (`revisiones/U05-T05/ronda-1.md`, `7c85e17`): F-01 a F-03 NARANJA, F-04 a F-06 AMARILLO se arreglan, F-07 no. Ronda 2 NO-VERDE (`ronda-2.md`, `7602fb8`): F-08 NARANJA (el evento «sin marca» de la prueba recibe `creationTimestamp` del simulado, así que `nullsLast` no se prueba). **VERDE en la ronda 3** (`547f8b8`). **PR #81** abierto contra `m6r/U05-T04` (apilado), sin fusionar.
+### Tareas en curso
 
-**U05-T06 despachada** (ola 32): worktree `../wt-m6r-U05-T06`, rama `m6r/U05-T06` desde `547f8b8`; ronda 1 NO-VERDE (`ronda-1.md`, `dce3464`; el orquestador aceptó `snakeyaml-engine` en `backend/build.gradle.kts`): F-01 y F-02 NARANJA (defensa de etiquetas sin prueba; claves y formato del JAR repetidos). Ronda 2 del codificador hecha (`59d03fd`); ronda 2 del revisor NO-VERDE (`ronda-2.md`, `46405a0`): F-06 NARANJA (la regla de etiquetas acepta `!!null x` en la raíz y lo lee como cero plugins; arreglo: misma regla que el core, etiqueta igual a `resolve(valor, true)`) y F-07 AMARILLO (separador de `artefactos.txt` duplicado); el orquestador manda arreglar los dos. Ronda 3 del codificador hecha (`07ed0ca`; 424 tests); **VERDE en la ronda 3** (`ronda-3.md`, punta `5e7a45e`), con F-08 AMARILLO pasado a C-90. **PR #83** a `m6r/U05-T05`, abierto, lo fusiona un humano después de #81.
+| Tarea | Worktree / rama | Desde | Estado | Siguiente paso |
+|---|---|---|---|---|
+| U02-T07 endpoints del core (ola 33) | `../wt-m6r-U02-T07`, `m6r/U02-T07` | `cb2096a` | Codificador ronda 1 hecho, `95719db` (4/4 CA; `EndpointsCoreTest` 10 pruebas; 7 mutantes). **En vuelo: revisor de la ronda 1** (su informe no está guardado) | Repetir el revisor de la ronda 1 con base `cb2096a` y HEAD `95719db`. Candidatas que propuso el codificador: límite de tamaño de cuerpo propio y C-86 (sin `detener()` al cerrar). Si VERDE: PR a `m6r/U02-T06` |
+| U05-T07 script de descarga (ola 33) | `../wt-m6r-U05-T07`, `m6r/U05-T07` | `5e7a45e` | Codificador ronda 1 hecho, `dd8a95f` (16 casos en `init-descarga/test.sh`; 5 mutantes; rojo 15/16). **No se ha despachado el revisor.** `shellcheck` no está instalado: esa parte de CA-1 no corrió | Instalar shellcheck sin root (`pip download shellcheck-py` ya funciona en el contenedor; el wheel trae el binario) o declararlo al revisor; despachar el revisor de la ronda 1 con base `5e7a45e`. Decisión del codificador a revisar: líneas vacías de `artefactos.txt` se saltan, el resto fuera de formato da código 3. Si VERDE: PR a `m6r/U05-T06` |
 
-**U05-T07 despachada** (ola 33): worktree `../wt-m6r-U05-T07`, rama `m6r/U05-T07` desde `5e7a45e`; codificador de la ronda 1 corriendo. Si la sesión se corta, mirar sus commits y redespacharlo. Si la ronda 3 sale NO-VERDE, la ronda 4 no se despacha: se para y se lleva al equipo.
+Historia corta de lo terminado hoy (detalle en `revisiones/<tarea>/` de cada rama):
+- U05-T04 y U02-T04: NO-VERDE en ronda 1, VERDE en ronda 2.
+- U02-T05: VERDE en ronda 2. U05-T05 y U02-T06: VERDE en ronda 3.
+- U05-T06: NO-VERDE en rondas 1 y 2 (F-06: `!!null x` en la raíz se leía como cero plugins), VERDE en ronda 3; el AMARILLO F-08 pasó a C-90.
 
-**U02-T05 despachada** (ola 31): worktree `../wt-m6r-U02-T05`, rama `m6r/U02-T05` desde `ff3f184`; ronda 1 NO-VERDE (`revisiones/U02-T05/ronda-1.md`, `9024ad6`): F-01 y F-02 NARANJA (aserción que acepta cualquier caída; salida pegada editada a mano), F-03 y F-04 AMARILLO. **VERDE en la ronda 2** (`15ca50f`). **PR #80** abierto contra `m6r/U02-T04` (apilado), sin fusionar.
+### Tareas escritas y sin despachar
 
-**U02-T06 despachada** (ola 32): worktree `../wt-m6r-U02-T06`, rama `m6r/U02-T06` desde `15ca50f`; ronda 1 NO-VERDE (`ronda-1.md`, `742c7c3`): F-01 ROJO (CA-2 falla por excepción, no por aserción), F-02 NARANJA (orden inverso y `detener` que lanza sin prueba), F-03 a F-05 AMARILLO. En F-03 el orquestador precisó la decisión 2: se prefiere un `HealthIndicator` en el grupo readiness. Ronda 2 NO-VERDE (`ronda-2.md`, `c42f25f`): F-06 y F-07 NARANJA (falta el caso «a, b falla, c»; readiness da `DOWN` y no `OUT_OF_SERVICE`). **VERDE en la ronda 3** (`cb2096a`). **PR #82** abierto contra `m6r/U02-T05` (apilado), sin fusionar.
+Están en `tareas/` de `orq/U05-U02-tareas`. Antes de despachar, sacar el hash con `git hash-object` y releer la tarea contra lo que dejaron las previas.
 
-**U02-T07 despachada** (ola 33): worktree `../wt-m6r-U02-T07`, rama `m6r/U02-T07` desde `cb2096a`; ronda 1 del codificador hecha (`95719db`; 4 de 4 criterios, candidatas: límite de cuerpo y C-86). **Revisor de la ronda 1 despachado**; si la sesión se corta, repetirlo.
+| Ola | Tareas | Sale de |
+|---|---|---|
+| 34 | U05-T08 imagen del init ∥ U02-T08 el core no conoce países | punta VERDE de U05-T07 y de U02-T07. U05-T08 necesita Docker: `dockerd` se arranca a mano en segundo plano |
+| 35 | U05-T09 fronteras `kubernetes` (C-68, C-70, C-73, C-79) ∥ U02-T09 plugin `kyc-co` | U05-T08 y U02-T08 |
+| 36 | U05-T10 resumen de U05 ∥ U02-T10 plugin `kyc-pe` | U05-T09 y U02-T09 |
+| 37 a 39 | U02-T11 imagen del core, U02-T12 humo del core, U02-T13 resumen de U02 | una tras otra |
 
-### Ola 31 (U05-T05 ∥ U02-T05), escrita, sin despachar
+## Lo que sigue (en orden)
 
-- `tareas/U05-T05-estado-contexto.md` (hash `65a449cecd38706d8a1f17df2d817a5e51150f09`).
-- `tareas/U02-T05-concordancia-suite.md` (hash `f95311817e9138f94cf701f894d68d17d2519d5c`).
-- Se despachan cuando su T04 salga VERDE: `m6r/U05-T05` desde la punta VERDE de `m6r/U05-T04`, `m6r/U02-T05` desde la de `m6r/U02-T04`. El archivo de la tarea se lee desde `../wt-orq-U04` (la rama de tareas); la base del diff es la punta de la T04.
-
-### Ola 32 (U05-T06 ∥ U02-T06), escrita, sin despachar
-
-- `tareas/U05-T06-leer-pais.md` (hash `e94a10dc07aa29b842e2f2601efe3b0cfde155be`).
-- `tareas/U02-T06-fallo-inicio-readiness.md` (hash `c05f5ff56958720575de95a6a1fac0b9a0a59ecb`).
-- Cada una sale de la punta en VERDE de su T05.
-
-### Ola 33 (U05-T07 ∥ U02-T07), escrita, sin despachar
-
-- `tareas/U05-T07-script-descarga.md` y `tareas/U02-T07-endpoints-core.md` (hash con `git hash-object` en la rama de tareas).
-- Cada una sale de la punta en VERDE de su T06.
-
-### Ola 34 (U05-T08 ∥ U02-T08), escrita, sin despachar
-
-- `tareas/U05-T08-imagen-init.md` y `tareas/U02-T08-core-sin-paises.md`. U05-T08 necesita Docker: en el contenedor en la nube hay que arrancar `dockerd` a mano.
-
-### Olas 35 y 36, escritas en parte
-
-- `tareas/U02-T09-plugin-kyc-co.md`, `tareas/U02-T10-plugin-kyc-pe.md`, `tareas/U05-T09-fronteras-kubernetes.md` y `tareas/U05-T10-resumen-unidad.md` escritas.
-- Olas 37 a 39 (una tarea cada una): `tareas/U02-T11-imagen-core.md`, `tareas/U02-T12-humo-core.md`, `tareas/U02-T13-resumen-unidad.md`.
-
-## Lo que sigue
-
-1. Terminar la ola 30: revisor de la ronda 2 de cada tarea, guardar su informe, más rondas si hace falta (una tarea que llega a la ronda 4 se para y se lleva al equipo), y abrir los PRs.
-2. Ola 31 como arriba.
-3. **Todas las tareas de U05 y U02 están escritas** (olas 31 a 39 en `loop/README.md`). Antes de despachar una, releerla contra lo que dejaron las tareas previas (por ejemplo, rutas y nombres de clases reales).
-   - Los planes están en `aidlc-docs/construction/plans/U05-*.md` y `U02-*.md`.
-   - Candidatas que hay que meter: C-70, C-73 y C-68 en U05-T09; C-72 en U05-T07, U05-T08 y U02-T11 (script en `/usr/local/bin/descargar.sh`, `USER 10001` numérico); C-64 en U05-T07 (comprobar el sha256); C-71 y C-74 en las pruebas del core; C-76 en U07.
-4. Pendiente de decidir con el equipo: una tarea de pulido de U04 (C-57, C-60, C-61, C-63, C-65, C-66, C-67) y otra de U01/U02 (C-77, C-78).
-5. Al cerrar cada unidad: marcar su plan en `aidlc-docs/construction/plans/`, actualizar la línea de Code Generation Parte 2 en `aidlc-docs/aidlc-state.md` y dejar `aidlc-docs/construction/<unidad>/code/summary.md`.
+1. Revisar GitHub (`git fetch`, último commit de cada rama de las tablas). Si alguien fusionó PRs o empujó, ajustar las bases antes de seguir.
+2. Repetir el revisor de U02-T07 ronda 1 y despachar el de U05-T07 ronda 1. Guardar cada informe en `revisiones/<tarea>/ronda-N.md` de su rama, commit y push, y actualizar este archivo.
+3. Seguir con las olas 34 a 39. Una tarea que llega a la ronda 4 se para y se lleva al equipo; las decisiones se toman con la opción recomendada (autorización de Julian del 27-nov).
+4. Al cerrar cada unidad (U05 con U05-T10, U02 con U02-T13), marcar su plan en `aidlc-docs/construction/plans/`, actualizar la línea de Code Generation Parte 2 en `aidlc-docs/aidlc-state.md` y dejar `aidlc-docs/construction/<unidad>/code/summary.md` (el plan y el estado los toca el orquestador, no el codificador).
+5. Pendiente de decidir con el equipo:
+   - una tarea de pulido de U04 (C-57, C-60, C-61, C-63, C-65, C-66, C-67);
+   - otra de U01/U02 (C-77, C-78, C-80, C-84, C-86, C-88, C-89);
+   - C-90 para U06/U07.
