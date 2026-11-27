@@ -513,6 +513,32 @@ class SubirPluginTest {
     }
 
     @Test
+    void mapaDeEtiquetasNulo_esUnMapaVacio() throws Exception {
+        var r = api.subirPlugin(CORE, new ByteArrayInputStream(pago(null)), null);
+        assertThat(r.etiquetas()).isEqualTo(Map.of("pais", "co", "region", "andina"));
+        assertThat(origenes("pago", "1.2.0")).isEqualTo(Map.of("pais", "co/descriptor", "region", "andina/descriptor"));
+    }
+
+    /** F-01: la clave de la petición se acepta si y solo si casa con el patrón de U01, no con una copia. */
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(strings = {"a-", "a--b", "á", "a_b", "-a", "A", "", " ", "a b",
+            "a-\n", "pais", "a-b", "a1", "1", "x-1-y"})
+    void claveDeLaPeticion_seAceptaSiYSoloSiCasaConElPatronDeU01(String clave) throws Exception {
+        var bytes = jarDe(descriptor("pago", "1.0.0", CORE, "2.x", Map.of(), null));
+        if (Descriptor.NOMBRE.matcher(clave).matches()) {
+            var r = api.subirPlugin(CORE, new ByteArrayInputStream(bytes), Map.of(clave, "v"));
+            assertThat(r.etiquetas()).isEqualTo(Map.of(clave, "v"));
+            assertThat(origenes("pago", "1.0.0")).isEqualTo(Map.of(clave, "v/subida"));
+        } else {
+            var ex = rechazo(CORE, bytes, Map.of(clave, "v"));
+            assertThat(ex.estado()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
+            assertThat(ex.error().detalles())
+                    .containsExactly(new DetalleError("etiquetas", MotivosCatalogo.ETIQUETA_CLAVE_INVALIDA.formatted(clave)));
+            nadaEnDisco();
+        }
+    }
+
+    @Test
     void unValorVacioEsValido_comoEnU01() throws Exception {
         var r = subir(pago(null), Map.of("cliente", ""));
         assertThat(r.etiquetas()).containsEntry("cliente", "");
@@ -536,14 +562,126 @@ class SubirPluginTest {
     }
 
     @Test
-    void siElMovimientoFalla_noSeInsertaNada_yElTemporalSeBorra() throws Exception {
-        var ocupado = ficheroFinal("pago", "1.2.0");
-        Files.createDirectories(ocupado.resolve("dentro"));
-        assertThatThrownBy(() -> subir(pago(null), Map.of())).isInstanceOf(FileSystemException.class);
+    void siNoSePuedeCrearLaCarpeta_noSeInsertaNada_elTemporalSeBorra_yLoQueHabiaQueda() throws Exception {
+        var estorbo = datos.resolve("artefactos").resolve(CORE).resolve("pago");
+        Files.createDirectories(estorbo.getParent());
+        Files.writeString(estorbo, "no soy un directorio");
+        assertThatThrownBy(() -> subir(pago(null), Map.of())).isInstanceOf(FileSystemException.class)
+                .isNotInstanceOf(ExcepcionApi.class);
         assertThat(jdbc.queryForObject("select count(*) from cat_plugin", Integer.class)).isZero();
         assertThat(jdbc.queryForObject("select count(*) from cat_etiqueta", Integer.class)).isZero();
-        assertThat(archivos(datos.resolve("artefactos"))).isEmpty();
-        assertThat(ocupado.resolve("dentro")).isDirectory();
+        assertThat(archivos(datos.resolve("artefactos"))).containsExactly(estorbo);
+        assertThat(Files.readString(estorbo)).isEqualTo("no soy un directorio");
+    }
+
+    // ---------- F-02 y F-04: la colocación nunca reemplaza ----------
+
+    @Test
+    void destinoYaOcupadoPorUnArchivoSinFila_da409_yNoSeReemplazaNiSeBorra() throws Exception {
+        // es lo que ve el perdedor de una carrera: el ganador ya colocó su JAR y aún no hizo commit
+        var delGanador = "bytes del ganador".getBytes(StandardCharsets.UTF_8);
+        var fin = ficheroFinal("pago", "1.2.0");
+        Files.createDirectories(fin.getParent());
+        Files.write(fin, delGanador);
+
+        var ex = rechazo(CORE, pago(null), Map.of());
+        assertThat(ex.estado()).isEqualTo(HttpStatus.CONFLICT);
+        assertThat(ex.error().codigo()).isEqualTo(CodigosError.CONFLICTO);
+        assertThat(ex.error().detalles())
+                .containsExactly(new DetalleError("version", MotivosCatalogo.PLUGIN_REPETIDO.formatted("pago", "1.2.0")));
+        assertThat(sha256(Files.readAllBytes(fin))).isEqualTo(sha256(delGanador));
+        assertThat(archivos(datos.resolve("artefactos"))).containsExactly(fin);
+        assertThat(jdbc.queryForObject("select count(*) from cat_plugin", Integer.class)).isZero();
+    }
+
+    @Test
+    void destinoOcupadoPorUnDirectorio_da409_yElDirectorioQueda() throws Exception {
+        var fin = ficheroFinal("pago", "1.2.0");
+        Files.createDirectories(fin.resolve("dentro"));
+        var ex = rechazo(CORE, pago(null), Map.of());
+        assertThat(ex.estado()).isEqualTo(HttpStatus.CONFLICT);
+        assertThat(fin.resolve("dentro")).isDirectory();
+        nadaEnDisco();
+    }
+
+    @Test
+    void dosSubidasSimultaneasDeLaMismaVersion_unaGanaYLaOtraDa409_yElArchivoEsElDelGanador() throws Exception {
+        for (int ronda = 0; ronda < 10; ronda++) {
+            limpiar();
+            var barrera = new java.util.concurrent.CyclicBarrier(2);
+            var bytes = List.of(pago("hilo a"), pago("hilo b"));
+            var hilos = java.util.concurrent.Executors.newFixedThreadPool(2);
+            try {
+                var futuros = bytes.stream().map(b -> hilos.submit(() -> {
+                    barrera.await();
+                    try {
+                        return (Object) subir(b, Map.of());
+                    } catch (ExcepcionApi e) {
+                        return e;
+                    }
+                })).toList();
+                var ganadores = new java.util.ArrayList<PluginSubido>();
+                var perdedores = new java.util.ArrayList<ExcepcionApi>();
+                for (var f : futuros) {
+                    var r = f.get(60, java.util.concurrent.TimeUnit.SECONDS);
+                    if (r instanceof PluginSubido p) {
+                        ganadores.add(p);
+                    } else {
+                        perdedores.add((ExcepcionApi) r);
+                    }
+                }
+                assertThat(ganadores).hasSize(1);
+                assertThat(perdedores).singleElement()
+                        .satisfies(e -> assertThat(e.estado()).isEqualTo(HttpStatus.CONFLICT));
+                var fin = ficheroFinal("pago", "1.2.0");
+                assertThat(sha256(Files.readAllBytes(fin))).isEqualTo(ganadores.get(0).sha256())
+                        .isEqualTo(jdbc.queryForObject("select sha256 from cat_plugin", String.class));
+                assertThat(archivos(datos.resolve("artefactos"))).containsExactly(fin);
+            } finally {
+                hilos.shutdownNow();
+            }
+        }
+    }
+
+    // ---------- F-03: sin directorios huérfanos ----------
+
+    private void conTriggerQueFalla(org.junit.jupiter.api.function.Executable cuerpo) throws Throwable {
+        jdbc.execute("create trigger sin_etiquetas before insert on cat_etiqueta begin "
+                + "select raise(abort, 'prueba de atomicidad'); end");
+        try {
+            cuerpo.execute();
+        } finally {
+            jdbc.execute("drop trigger if exists sin_etiquetas");
+        }
+    }
+
+    private List<Path> directorios() throws IOException {
+        var artefactos = datos.resolve("artefactos");
+        try (Stream<Path> s = Files.walk(artefactos)) {
+            return s.filter(Files::isDirectory).filter(p -> !p.equals(artefactos)).map(artefactos::relativize).toList();
+        }
+    }
+
+    @Test
+    void alFallar_seBorranLosDirectoriosQueCreoEstaSubida() throws Throwable {
+        conTriggerQueFalla(() -> assertThatThrownBy(() -> subir(pago(null), Map.of())));
+        assertThat(directorios()).containsExactly(Path.of(".tmp"));
+    }
+
+    @Test
+    void alFallar_noSeBorraElDirectorioDelCoreQueYaExistiaVacio() throws Throwable {
+        var delCore = datos.resolve("artefactos").resolve(CORE);
+        Files.createDirectories(delCore);
+        conTriggerQueFalla(() -> assertThatThrownBy(() -> subir(pago(null), Map.of())));
+        assertThat(directorios()).containsExactlyInAnyOrder(Path.of(".tmp"), Path.of(CORE));
+    }
+
+    @Test
+    void alFallar_noSeTocaLaCarpetaDelPluginConOtraVersion() throws Throwable {
+        subir(jarDe(descriptor("pago", "1.0.0", CORE, "2.x", Map.of(), null)), Map.of());
+        conTriggerQueFalla(() -> assertThatThrownBy(() -> subir(pago(null), Map.of())));
+        assertThat(archivos(datos.resolve("artefactos"))).containsExactly(ficheroFinal("pago", "1.0.0"));
+        assertThat(directorios()).containsExactlyInAnyOrder(Path.of(".tmp"), Path.of(CORE), Path.of(CORE, "pago"));
     }
 
     @Test

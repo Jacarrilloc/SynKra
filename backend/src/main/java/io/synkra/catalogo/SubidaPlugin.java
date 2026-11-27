@@ -14,9 +14,11 @@ import io.synkra.verificador.Version;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -32,8 +34,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  * R-C4 y R-C7 a R-C11: la subida de un plugin, en el orden de {@code business-logic-model.md}; el primer fallo corta.
- * La comprobación de repetido, el movimiento y los inserts van en una transacción: con un solo escritor (pool de una
- * conexión, RNF-07), dos subidas de la misma versión no pueden pisarse el archivo.
+ * La comprobación de repetido, la colocación y los inserts van en una transacción; además, la colocación es un enlace
+ * duro, que falla si el destino existe: dos subidas de la misma versión nunca se pisan el archivo, sea cual sea el pool.
  */
 @Component
 class SubidaPlugin {
@@ -110,27 +112,25 @@ class SubidaPlugin {
         };
     }
 
-    /** R-C9, R-C10 y R-C11 dentro de la transacción; si algo falla después de mover, se borra el archivo movido. */
+    /**
+     * R-C9, R-C10 y R-C11 dentro de la transacción. El JAR se coloca con un enlace duro, que nunca reemplaza: si el
+     * destino ya existe (otra subida de la misma versión), es un 409 y no se toca. Si algo falla después, se borran
+     * solo el enlace y los directorios que creó esta subida.
+     */
     private PluginSubido guardar(String core, Descriptor d, Map<String, String> deLaPeticion,
             ArtefactoRecibido recibido) throws IOException {
         var version = d.version().toString();
         var destino = rutaFinal(raiz, core, d.nombre(), version);
-        var movido = new boolean[1];
+        var creados = new ArrayList<Path>();
+        var colocado = new boolean[1];
         try {
             return transaccion.execute(estado -> {
                 if (plugins.findByCoreAndNombreAndVersion(core, d.nombre(), version).isPresent()) {
-                    throw error(HttpStatus.CONFLICT, CodigosError.CONFLICTO, CodigosError.MSG_CONFLICTO,
-                            List.of(new DetalleError("version",
-                                    MotivosCatalogo.PLUGIN_REPETIDO.formatted(d.nombre(), version))));
+                    throw repetido(d.nombre(), version);
                 }
                 var unidas = unir(d.etiquetas(), deLaPeticion);
-                try {
-                    Files.createDirectories(destino.getParent());
-                    Files.move(recibido.temporal(), destino, StandardCopyOption.ATOMIC_MOVE);
-                } catch (IOException e) {
-                    throw new UncheckedIOException(e);
-                }
-                movido[0] = true;
+                colocar(recibido.temporal(), destino, creados, d.nombre(), version);
+                colocado[0] = true;
                 plantilla.insert(new Plugin(core, d.nombre(), version, d.coreCompatible().texto(), recibido.sha256(),
                         recibido.tamano(), datos.relativize(destino).toString().replace('\\', '/'),
                         d.descripcion().orElse(null), CatalogoServicio.AUTOR, Instant.now().toEpochMilli()));
@@ -141,9 +141,18 @@ class SubidaPlugin {
                         recibido.sha256(), recibido.tamano());
             });
         } catch (RuntimeException fallo) {
-            if (movido[0]) {
+            if (colocado[0]) {
                 try {
                     Files.deleteIfExists(destino);
+                } catch (IOException e) {
+                    fallo.addSuppressed(e);
+                }
+            }
+            for (var dir : creados.reversed()) {
+                try {
+                    Files.delete(dir);
+                } catch (DirectoryNotEmptyException otraSubidaLoUsa) {
+                    // ya no es solo de esta subida
                 } catch (IOException e) {
                     fallo.addSuppressed(e);
                 }
@@ -155,12 +164,42 @@ class SubidaPlugin {
         }
     }
 
+    /** Crea {@code <core>/<nombre>} si falta (anotando lo creado) y enlaza el temporal en el destino. */
+    private static void colocar(Path temporal, Path destino, List<Path> creados, String nombre, String version) {
+        try {
+            for (var dir : List.of(destino.getParent().getParent(), destino.getParent())) {
+                try {
+                    Files.createDirectory(dir);
+                    creados.add(dir);
+                } catch (FileAlreadyExistsException existe) {
+                    if (!Files.isDirectory(dir, LinkOption.NOFOLLOW_LINKS)) {
+                        throw existe;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        try {
+            Files.createLink(destino, temporal);
+        } catch (FileAlreadyExistsException ocupado) {
+            throw repetido(nombre, version);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    private static ExcepcionApi repetido(String nombre, String version) {
+        return error(HttpStatus.CONFLICT, CodigosError.CONFLICTO, CodigosError.MSG_CONFLICTO,
+                List.of(new DetalleError("version", MotivosCatalogo.PLUGIN_REPETIDO.formatted(nombre, version))));
+    }
+
     /**
      * R-C10: las de la petición se validan con el patrón de U01; luego, una clave con dos valores es un choque. Da
      * clave → {valor, origen}, en orden de clave; la misma clave con el mismo valor queda una vez, del descriptor.
      */
     private static TreeMap<String, String[]> unir(Map<String, String> delDescriptor, Map<String, String> deLaPeticion) {
-        var ordenadas = deLaPeticion.entrySet().stream()
+        var ordenadas = (deLaPeticion == null ? Map.<String, String>of() : deLaPeticion).entrySet().stream()
                 .sorted(Map.Entry.comparingByKey(Comparator.nullsFirst(Comparator.naturalOrder()))).toList();
         var invalidas = new ArrayList<DetalleError>();
         for (var e : ordenadas) {

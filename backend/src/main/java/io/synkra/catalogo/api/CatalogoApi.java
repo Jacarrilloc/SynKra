@@ -18,9 +18,9 @@ public interface CatalogoApi {
     List<CoreRegistrado> listarCores();
 
     /**
-     * R-C4 a R-C11: sube el JAR de un plugin a la carpeta del core, con las etiquetas de la petición (claves y
-     * valores no nulos). {@link IOException} solo por fallos del servidor (disco); los rechazos son
-     * {@code ExcepcionApi}.
+     * R-C4 a R-C11: sube el JAR de un plugin a la carpeta del core, con las etiquetas de la petición. Un mapa nulo
+     * es un mapa vacío; una clave nula o fuera del patrón de U01, o un valor nulo, dan 422. {@link IOException} solo
+     * por fallos del servidor (disco); los rechazos son {@code ExcepcionApi}.
      */
     PluginSubido subirPlugin(String core, InputStream jar, Map<String, String> etiquetas) throws IOException;
 
