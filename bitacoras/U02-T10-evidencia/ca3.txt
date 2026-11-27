@@ -1,0 +1,4 @@
+BUILD SUCCESSFUL in 28s
+      3 core tests="10" skipped="0" failures="0" errors="0"
+      1 core tests="12" skipped="0" failures="0" errors="0"
+      1 core tests="1" skipped="0" failures="0" errors="0"
