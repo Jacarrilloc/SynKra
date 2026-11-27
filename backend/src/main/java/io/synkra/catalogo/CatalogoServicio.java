@@ -31,7 +31,7 @@ class CatalogoServicio implements CatalogoApi {
     /** Longitud máxima de la imagen completa (campo {@code imagen}). */
     static final int IMAGEN_MAX = 255;
 
-    private static final String REGISTRO = "[0-9a-z]+([.-][0-9a-z]+)*(:[0-9]+)?";
+    static final String REGISTRO = "[0-9a-z]+([.-][0-9a-z]+)*(:[0-9]+)?";
     private static final String REPO = "[0-9a-z]+([._-][0-9a-z]+)*";
     private static final String TAG = "[A-Za-z0-9_][A-Za-z0-9._-]{0,127}";
     /** registro[:puerto]/repo[/repo...][:tag]@sha256:64 hex en minúsculas; el tag solo al final. */
@@ -47,9 +47,12 @@ class CatalogoServicio implements CatalogoApi {
     private final ListadoPlugins listado;
     private final ArtefactosPorHash porHash;
     private final io.synkra.verificador.Catalogo catalogoSqlite;
+    private final RegistroPermitido registroPermitido;
 
     CatalogoServicio(JdbcAggregateTemplate plantilla, CoreRepositorio cores, VersionCoreRepositorio versiones,
-            SubidaPlugin subida, ListadoPlugins listado, ArtefactosPorHash porHash, PluginRepositorio plugins, EtiquetaRepositorio etiquetas) {
+            SubidaPlugin subida, ListadoPlugins listado, ArtefactosPorHash porHash, PluginRepositorio plugins, EtiquetaRepositorio etiquetas,
+            RegistroPermitido registroPermitido) {
+        this.registroPermitido = registroPermitido;
         this.catalogoSqlite = new CatalogoSqlite(versiones, plugins, etiquetas);
         this.listado = listado;
         this.porHash = porHash;
@@ -74,6 +77,9 @@ class CatalogoServicio implements CatalogoApi {
         }
         if (imagen == null || imagen.length() > IMAGEN_MAX || !IMAGEN.matcher(imagen).matches()) {
             detalles.add(new DetalleError("imagen", MotivosCatalogo.IMAGEN_INVALIDA));
+        } else if (!registroPermitido.permite(imagen)) {
+            detalles.add(new DetalleError("imagen",
+                    MotivosCatalogo.REGISTRO_NO_PERMITIDO.formatted(registroPermitido.valor())));
         }
         if (!detalles.isEmpty()) {
             throw new ExcepcionApi(HttpStatus.UNPROCESSABLE_ENTITY,
