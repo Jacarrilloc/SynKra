@@ -601,3 +601,11 @@
 **Context**: Code Generation Parte 2 (loop de agentes) para U01.
 
 ---
+
+## U01-T14 - VERDE, fusión y cierre de U01
+**Timestamp**: 2026-11-27T06:46:54Z
+**User Input**: (No hay entrada nueva. Rige la autorización del 2026-11-27T03:51:07Z.)
+**AI Response**: Se despachó U01-T14. La ronda 1 salió NO-VERDE con dos ROJO y un NARANJA: faltaba la fila de `VerificadorTest`, decía «9 códigos» cuando son 10 y presentaba a U04 como consumidor de `CatalogoEnMemoria` sin fuente. La ronda 2 salió VERDE. Se abrió el PR #38 y se fusionó con merge commit (main 2d916bd). Sobre main, `:verificador:test --rerun :backend:test --rerun :verificador:check :backend:check` da rc=0 con 213 pruebas, 0 saltadas, 0 fallos y 0 errores. Se marcaron U01-T01 a T14 en el plan de U01 y se anotó en `aidlc-state.md` que U01 terminó. Las candidatas C-29 (el CA-1 de los resúmenes se contradice) y C-30 (aparece un nombre de persona en el plan de U07) salieron de la revisión de U01-T14 y se registran después del resumen. U01 queda TERMINADA.
+**Context**: Code Generation Parte 2 (loop de agentes) para U01, cierre de la unidad.
+
+---
