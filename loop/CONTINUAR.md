@@ -89,14 +89,13 @@ Orden de fusión: #77, luego #78 (U05-T04), luego #79 (U02-T04), luego #80 (U02-
 ### Olas 35 y 36, escritas en parte
 
 - `tareas/U02-T09-plugin-kyc-co.md`, `tareas/U02-T10-plugin-kyc-pe.md`, `tareas/U05-T09-fronteras-kubernetes.md` y `tareas/U05-T10-resumen-unidad.md` escritas.
+- Olas 37 a 39 (una tarea cada una): `tareas/U02-T11-imagen-core.md`, `tareas/U02-T12-humo-core.md`, `tareas/U02-T13-resumen-unidad.md`.
 
 ## Lo que sigue
 
 1. Terminar la ola 30: revisor de la ronda 2 de cada tarea, guardar su informe, más rondas si hace falta (una tarea que llega a la ronda 4 se para y se lleva al equipo), y abrir los PRs.
 2. Ola 31 como arriba.
-3. Escribir las tareas restantes en `orq/U05-U02-tareas` y añadir sus olas a `loop/README.md`:
-   - **U05:** T09 fronteras, T10 resumen.
-   - **U02:** T11 imagen del core, T12 prueba de humo, T13 resumen.
+3. **Todas las tareas de U05 y U02 están escritas** (olas 31 a 39 en `loop/README.md`). Antes de despachar una, releerla contra lo que dejaron las tareas previas (por ejemplo, rutas y nombres de clases reales).
    - Los planes están en `aidlc-docs/construction/plans/U05-*.md` y `U02-*.md`.
    - Candidatas que hay que meter: C-70, C-73 y C-68 en U05-T09; C-72 en U05-T07, U05-T08 y U02-T11 (script en `/usr/local/bin/descargar.sh`, `USER 10001` numérico); C-64 en U05-T07 (comprobar el sha256); C-71 y C-74 en las pruebas del core; C-76 en U07.
 4. Pendiente de decidir con el equipo: una tarea de pulido de U04 (C-57, C-60, C-61, C-63, C-65, C-66, C-67) y otra de U01/U02 (C-77, C-78).

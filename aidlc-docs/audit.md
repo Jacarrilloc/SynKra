@@ -858,3 +858,11 @@
 **Context**: Loop del módulo 6, fuera de las etapas de AI-DLC.
 
 ---
+
+## Tareas restantes de U05 y U02 (olas 33 a 39)
+**Timestamp**: 2026-11-27T21:15:00Z
+**User Input**: (sin mensaje nuevo; continúa la petición de 2026-11-27T20:27:42Z)
+**AI Response**: El orquestador escribe U05-T07 a U05-T10 y U02-T07 a U02-T13 y añade las olas 33 a 39. Al escribir U05-T06 encuentra un contrato roto entre U05 y U02 (C-81: formato de `plugins-activos.yaml`) y lo asigna a U05-T06. U02-T05 sale VERDE en la ronda 2 (PR #80, apilado sobre #79). U05-T05 va a la ronda 3.
+**Context**: Loop del módulo 6, fuera de las etapas de AI-DLC.
+
+---
