@@ -794,3 +794,11 @@
 **Context**: Loop del módulo 6, ola 27, fuera de las etapas de AI-DLC.
 
 ---
+
+## Ola 28 cerrada (U05-T02 y U02-T02, en paralelo)
+**Timestamp**: 2026-11-27T20:05:00Z
+**User Input**: (sin mensaje nuevo; regla de fusión de David de 2026-11-27T16:14:07Z)
+**AI Response**: U05-T02 salió VERDE en la ronda 2; la ronda 1 fue NO-VERDE por evidencia de CA-2 que el diff no podía producir. U02-T02 salió VERDE en la ronda 2; la ronda 1 fue NO-VERDE porque la prueba de `SYNKRA_CORE_VERSION` no detectaba una lectura real de la variable de entorno. Se registran C-70 y C-71. Son tres PRs (U05-T02, U02-T02 y esta rama) y el orquestador los fusiona en ese orden.
+**Context**: Loop del módulo 6, ola 28, fuera de las etapas de AI-DLC.
+
+---
