@@ -1,0 +1,17 @@
+$ ./gradlew :core:bootJar
+BUILD SUCCESSFUL in 724ms
+8 actionable tasks: 8 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
+core-2.1.0.jar
+$ docker build
+#14 exporting manifest sha256:acc36747a34b07aba2068f2cb6447b7244eaa21bac4a1628452ab825327398b0 done
+#14 exporting config sha256:105de0c2b047fddd0de793d1f7b83400259012d17c8989f88f03d2161232c14f done
+#14 exporting attestation manifest sha256:e24b196e73c8cd6d0e45468e3ab733c8133c1a2b600fb5ea6e5927c3882567b4 done
+#14 exporting manifest list sha256:d264901b7087e5386efa4e93c5947f83d644270a059240ca02031d2d86ead1ab done
+#14 naming to docker.io/library/synkra-core:2.1.0 done
+#14 unpacking to docker.io/library/synkra-core:2.1.0
+#14 unpacking to docker.io/library/synkra-core:2.1.0 0.2s done
+#14 DONE 0.8s
+$ inspect
+10001:10001 {"/config":{},"/plugins":{}} {"8080/tcp":{}}
+uid=10001(synkra) gid=10001(synkra) groups=10001(synkra)

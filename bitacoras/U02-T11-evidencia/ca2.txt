@@ -1,0 +1,8 @@
+$ docker run -d
+cde2fd7d34e68468b856b42c8e2edd0583d7627151dd1a0226c836aec7654dd1
+tras 3s:
+200
+[]
+1
+uid=10001(synkra) gid=10001(synkra) groups=10001(synkra)
+core-t11
