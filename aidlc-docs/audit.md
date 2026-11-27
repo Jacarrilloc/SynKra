@@ -754,3 +754,11 @@
 **Context**: Loop del módulo 6, ola 23, fuera de las etapas de AI-DLC.
 
 ---
+
+## U04-T13 cerrada por el loop
+**Timestamp**: 2026-11-27T18:50:00Z
+**User Input**: "Sorry me fui y te deje sin internet, podemos continuar?? tenemos algun problema??" (2026-11-27T18:26:37Z). Se retomó el codificador de U04-T13, que había quedado a mitad de la ronda 1 por el corte de red sin perder cambios.
+**AI Response**: U04-T13 salió VERDE en la ronda 1. Arbitraje del orquestador: la insensibilidad a mayúsculas de R-C3 se aplica al valor configurado; una imagen con host en mayúsculas sigue dando 422 por R-C1. Se registra C-66. Son dos PRs, el de `m6r/U04-T13` y el de esta rama, y el orquestador los fusiona en ese orden con la regla de David.
+**Context**: Loop del módulo 6, ola 24, fuera de las etapas de AI-DLC.
+
+---
