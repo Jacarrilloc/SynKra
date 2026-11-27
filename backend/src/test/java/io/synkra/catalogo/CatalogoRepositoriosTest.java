@@ -56,7 +56,7 @@ class CatalogoRepositoriosTest {
         plantilla.insert(new Core("synkra-core"));
         plantilla.insert(version("synkra-core", "1.0.0", 1L));
         plantilla.insert(version("synkra-core", "1.1.0", 2L));
-        assertThat(cores.findById("synkra-core")).contains(new Core("synkra-core"));
+        assertThat(cores.findByNombre("synkra-core")).contains(new Core("synkra-core"));
         assertThat(versiones.findByCore("synkra-core")).extracting(VersionCore::version)
                 .containsExactlyInAnyOrder("1.0.0", "1.1.0");
         assertThat(versiones.findByCoreAndVersion("synkra-core", "1.1.0")).isPresent();
@@ -113,5 +113,106 @@ class CatalogoRepositoriosTest {
                 .hasRootCauseInstanceOf(org.sqlite.SQLiteException.class)
                 .rootCause().hasMessageContaining("SQLITE_CONSTRAINT_FOREIGNKEY");
         assertThat(plugins.findAll()).isEmpty();
+    }
+
+    @Test
+    void losRepositoriosNoOfreceOperacionesCrud() {
+        for (var tipo : java.util.List.of(CoreRepositorio.class, VersionCoreRepositorio.class,
+                PluginRepositorio.class, EtiquetaRepositorio.class)) {
+            assertThat(org.springframework.data.repository.CrudRepository.class.isAssignableFrom(tipo))
+                    .as(tipo.getSimpleName()).isFalse();
+        }
+    }
+
+    // --- Decisiones del esquema, con SQL directo y foreign_keys activo ---
+
+    private void sql(String s, Object... args) {
+        jdbc.update(s, args);
+    }
+
+    private void core(String n) {
+        sql("insert into cat_core(nombre) values (?)", n);
+    }
+
+    private void pluginSql(String core, String nombre, String v, String sha) {
+        sql("insert into cat_plugin(core,nombre,version,core_compatible,sha256,tamano,ruta,subido_por,subido_en)"
+                + " values (?,?,?,'>=1.0.0 <2.0.0',?,1,'/r','anonimo',1)", core, nombre, v, sha);
+    }
+
+    private void rechaza(String sqlTexto, String restriccion) {
+        assertThatThrownBy(() -> sql(sqlTexto))
+                .hasRootCauseInstanceOf(org.sqlite.SQLiteException.class)
+                .rootCause().hasMessageContaining(restriccion);
+    }
+
+    @Test
+    void laFkDeVersionCoreRechazaUnCoreInexistente() {
+        rechaza("insert into cat_version_core values ('no','1.0.0','i','anonimo',1)",
+                "SQLITE_CONSTRAINT_FOREIGNKEY");
+    }
+
+    @Test
+    void laFkCompuestaDeEtiquetaRechazaUnPluginInexistente() {
+        core("c");
+        pluginSql("c", "p", "1.0.0", "h");
+        rechaza("insert into cat_etiqueta values ('c','p','9.9.9','pais','co','descriptor')",
+                "SQLITE_CONSTRAINT_FOREIGNKEY");
+        sql("insert into cat_etiqueta values ('c','p','1.0.0','pais','co','descriptor')");
+    }
+
+    @Test
+    void elCheckDeOrigenRechazaValoresDistintosDeDescriptorYSubida() {
+        core("c");
+        pluginSql("c", "p", "1.0.0", "h");
+        rechaza("insert into cat_etiqueta values ('c','p','1.0.0','pais','co','otro')",
+                "SQLITE_CONSTRAINT_CHECK");
+        sql("insert into cat_etiqueta values ('c','p','1.0.0','pais','co','subida')");
+    }
+
+    @Test
+    void borrarUnCoreConHijosSeRechazaPorRestrictYLaFilaSigue() {
+        core("c");
+        sql("insert into cat_version_core values ('c','1.0.0','i','anonimo',1)");
+        rechaza("delete from cat_core where nombre = 'c'", "FOREIGN KEY constraint failed");
+        assertThat(jdbc.queryForObject("select count(*) from cat_core", Integer.class)).isEqualTo(1);
+        assertThat(jdbc.queryForObject("select count(*) from cat_version_core", Integer.class)).isEqualTo(1);
+    }
+
+    @Test
+    void dosPluginsConElMismoSha256SeAceptanYElIndiceNoEsUnico() {
+        core("c");
+        pluginSql("c", "p", "1.0.0", "igual");
+        pluginSql("c", "p", "1.1.0", "igual");
+        assertThat(jdbc.queryForObject("select count(*) from cat_plugin where sha256='igual'", Integer.class))
+                .isEqualTo(2);
+        var indices = jdbc.queryForList("select name, \"unique\" as u from pragma_index_list('cat_plugin')");
+        assertThat(indices).anySatisfy(f -> {
+            assertThat(f.get("name")).isEqualTo("cat_plugin_sha256");
+            assertThat(((Number) f.get("u")).intValue()).isZero();
+        });
+    }
+
+    @Test
+    void elMismoPluginYVersionEntranEnDosCores() {
+        core("a");
+        core("b");
+        pluginSql("a", "p", "1.0.0", "h1");
+        pluginSql("b", "p", "1.0.0", "h2");
+        assertThat(jdbc.queryForObject("select count(*) from cat_plugin", Integer.class)).isEqualTo(2);
+    }
+
+    @Test
+    void subidoEnSeGuardaComoInteger() {
+        core("c");
+        pluginSql("c", "p", "1.0.0", "h");
+        assertThat(jdbc.queryForObject("select typeof(subido_en) from cat_plugin", String.class))
+                .isEqualTo("integer");
+    }
+
+    @Test
+    void imagenNulaSeRechazaPorNotNull() {
+        core("c");
+        rechaza("insert into cat_version_core values ('c','1.0.0',null,'anonimo',1)",
+                "SQLITE_CONSTRAINT_NOTNULL");
     }
 }

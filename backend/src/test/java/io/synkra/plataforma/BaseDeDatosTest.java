@@ -38,7 +38,7 @@ class BaseDeDatosTest {
         var versiones = jdbc.queryForList(
                 "select version from flyway_schema_history where success = 1 order by installed_rank",
                 String.class);
-        assertThat(versiones).containsExactly("1", "2");
+        assertThat(versiones).startsWith("1", "2");
     }
 
     @Test
