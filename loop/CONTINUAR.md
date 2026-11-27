@@ -47,7 +47,7 @@ Para que eso no vuelva a pasar:
 ## Estado al corte
 
 - `main` en `cf00671`. U01, U03 y U04 terminadas. PRs #54 a #76 fusionados.
-- `CANDIDATAS.md` llega hasta **C-81**. La siguiente libre es **C-82**.
+- `CANDIDATAS.md` llega hasta **C-82**. La siguiente libre es **C-83**.
 - PRs abiertos: **#77** (`orq/U05-U02-tareas`: tareas de las olas 30 y 31, candidatas C-75 a C-78, auditoría y este archivo) y el #6, antiguo, que no se toca.
 
 ### Ola 30 (U05-T04 ∥ U02-T04)
@@ -59,7 +59,7 @@ Para que eso no vuelva a pasar:
 
 Orden de fusión: #77, luego #78 (U05-T04), luego #79 (U02-T04).
 
-**U05-T05 despachada** (ola 31): worktree `../wt-m6r-U05-T05`, rama `m6r/U05-T05` desde `0a52e2e`; el codificador de la ronda 1 está corriendo. Si la sesión se corta, mirar si hay commits suyos en `origin/m6r/U05-T05` y redespacharlo para que continúe.
+**U05-T05 despachada** (ola 31): worktree `../wt-m6r-U05-T05`, rama `m6r/U05-T05` desde `0a52e2e`; ronda 1 del codificador hecha (`594f240`). **Revisor de la ronda 1 despachado**; si la sesión se corta, repetirlo.
 
 **U02-T05 despachada** (ola 31): worktree `../wt-m6r-U02-T05`, rama `m6r/U02-T05` desde `ff3f184`; el codificador de la ronda 1 está corriendo. Igual que arriba si la sesión se corta.
 
