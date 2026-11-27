@@ -38,8 +38,13 @@ final class ConstructorObjetosPais {
     /** UID/GID fijos de los dos contenedores; las imágenes deben usar este usuario numérico. */
     static final long UID_CONTENEDORES = 10001L;
     static final long GID_CONTENEDORES = 10001L;
+    /** Registro según Docker: {@code localhost}, o un host con punto, o un host con puerto. */
+    private static final String REGISTRO =
+            "(?:localhost(?::[0-9]+)?|[A-Za-z0-9-]+(?:\\.[A-Za-z0-9-]+)+(?::[0-9]+)?|[A-Za-z0-9-]+:[0-9]+)";
+    /** Repositorio: uno o más componentes en minúsculas separados por {@code /}. */
+    private static final String REPOSITORIO = "[a-z0-9]+(?:[._-][a-z0-9]+)*(?:/[a-z0-9]+(?:[._-][a-z0-9]+)*)*";
     private static final Pattern IMAGEN_INIT_VALIDA = Pattern.compile(
-            "[^\\s/@:]+(:[0-9]+)?(/[^\\s/@:]+)+(:[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}|@sha256:[0-9a-f]{64})");
+            REGISTRO + "/" + REPOSITORIO + "(?::[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}|@sha256:[0-9a-f]{64})");
     private static final String TAG_PROHIBIDO = ":latest";
     static final String COMANDO_INIT = "/usr/local/bin/descargar.sh";
     static final String VAR_URL = "SYNKRA_URL";
@@ -66,7 +71,7 @@ final class ConstructorObjetosPais {
     static String exigirImagenInit(String imagen) {
         if (imagen == null || !IMAGEN_INIT_VALIDA.matcher(imagen).matches() || imagen.endsWith(TAG_PROHIBIDO)) {
             throw new IllegalArgumentException(
-                    "synkra.kubernetes.imagen-init debe llevar registro y tag o digest (nunca :latest): " + imagen);
+                    "synkra.kubernetes.imagen-init debe llevar registro (con punto, puerto o localhost) y tag o digest (nunca :latest): " + imagen);
         }
         return imagen;
     }

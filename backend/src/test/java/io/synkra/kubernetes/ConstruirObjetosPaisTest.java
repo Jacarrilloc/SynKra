@@ -160,7 +160,8 @@ class ConstruirObjetosPaisTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"synkra-init-descarga", "synkra-init-descarga:latest", "localhost:5001/synkra-init-descarga",
-            "localhost:5001/synkra-init-descarga:latest", "localhost:5001/x@sha256:abc", "init:1.0.0", " ", ""})
+            "localhost:5001/synkra-init-descarga:latest", "localhost:5001/x@sha256:abc", "init:1.0.0", " ", "",
+            "synkra/init:1.0.0", "library/synkra-init-descarga:1.0.0", "localhost:5001/X:1"})
     void rechazaImagenDeInitSinRegistroOSinTagFijo(String imagen) {
         assertThatThrownBy(() -> new AdaptadorFabric8(cliente, imagen)).isInstanceOf(IllegalArgumentException.class);
     }
@@ -169,6 +170,7 @@ class ConstruirObjetosPaisTest {
     void aceptaImagenDeInitConTagODigest() {
         assertThat(new AdaptadorFabric8(cliente, "localhost:5001/synkra-init-descarga:1.0.0")).isNotNull();
         assertThat(new AdaptadorFabric8(cliente, "registro.local/synkra/init@sha256:" + DIGEST)).isNotNull();
+        assertThat(new AdaptadorFabric8(cliente, "localhost/x:1")).isNotNull();
     }
 
     @Test

@@ -1,0 +1,3 @@
+F-01: Corregido en la ronda 3: el primer segmento debe ser registro (localhost, host con punto o host:puerto) y el repositorio va en minúsculas; rechazados `synkra/init:1.0.0`, `library/synkra-init-descarga:1.0.0` y `localhost:5001/X:1`, aceptado `localhost/x:1`.
+F-02: Corregido en la ronda 3: `ImagenInitConfiguradaTest` lee de vuelta la imagen del init desde el bean con `registro.local:5000/init:2.3.4` y comprueba que un valor inválido impide arrancar; la mutación que ignora la propiedad falla 2 pruebas (bitácora).
+F-03: Corregido en la ronda 3: se quitó el literal de `application.properties`; el defecto vive solo en `IMAGEN_INIT_POR_DEFECTO` y una prueba lo comprueba.
