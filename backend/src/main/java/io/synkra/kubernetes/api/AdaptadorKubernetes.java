@@ -19,4 +19,14 @@ public interface AdaptadorKubernetes {
      * @throws NamespaceNoPermitidoException si el namespace derivado no pasa la guardia
      */
     ObjetosPais construir(PlanPais plan);
+
+    /**
+     * Aplica los tres objetos con server-side apply (field manager {@code synkra}), en el orden ConfigMap,
+     * Service y Deployment. Si uno falla, los anteriores no se deshacen.
+     *
+     * @throws IllegalArgumentException si los objetos no comparten namespace (sin peticiones)
+     * @throws NamespaceNoPermitidoException si el namespace no pasa la guardia (sin peticiones)
+     * @throws AplicacionFallidaException si la API falla; nombra el objeto
+     */
+    void aplicar(ObjetosPais objetos);
 }
