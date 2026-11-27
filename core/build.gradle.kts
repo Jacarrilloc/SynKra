@@ -30,3 +30,8 @@ tasks.processResources {
         f.writeText("version=$v\n")
     }
 }
+
+// D4: variable de entorno real en la JVM de prueba; VersionCoreTest comprueba que no cambia la versión.
+tasks.test {
+    environment("SYNKRA_CORE_VERSION", "9.9.9")
+}

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -17,6 +18,9 @@ class VersionCoreTest {
 
     @Autowired
     VersionCore versionCore;
+
+    @Autowired
+    TestRestTemplate rest;
 
     @Test
     void daLaVersionCompilada() {
@@ -30,9 +34,15 @@ class VersionCoreTest {
 
     @Test
     void ignoraLaVariableDeEntornoSynkraCoreVersion() {
-        // Una variable de entorno entra al contexto como propiedad (systemEnvironment); se simula igual.
-        assertThat(versionConPropiedad("SYNKRA_CORE_VERSION=9.9.9", "synkra.core.version=9.9.9"))
-                .isEqualTo(ESPERADA);
+        // Precondición: la variable es real (la fija tasks.test en core/build.gradle.kts), no una propiedad.
+        assertThat(System.getenv("SYNKRA_CORE_VERSION")).isEqualTo("9.9.9");
+        assertThat(versionConPropiedad()).isEqualTo(ESPERADA);
+    }
+
+    @Test
+    void healthRespondeUp() {
+        var cuerpo = rest.getForObject("/actuator/health", String.class);
+        assertThat(cuerpo).contains("\"status\":\"UP\"");
     }
 
     private static Version versionConPropiedad(String... propiedades) {

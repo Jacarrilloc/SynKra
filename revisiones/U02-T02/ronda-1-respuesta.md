@@ -1,0 +1,3 @@
+F-01: Corregido en el commit de la ronda 2: tasks.test fija SYNKRA_CORE_VERSION=9.9.9 como variable real, la prueba comprueba System.getenv como precondición y el mutante con System.getenv hace fallar 3 de 4 pruebas (salida en la bitácora); afirmación falsa corregida en la bitácora.
+F-02: Corregido en el commit de la ronda 2: prueba healthRespondeUp pide /actuator/health con TestRestTemplate y espera "status":"UP".
+F-03: No es un defecto: un synkra-core.properties en src/main/resources queda sobrescrito siempre por el doLast con la versión de build, así que nunca prevalece un valor distinto de version del build.gradle.kts (la prueba daLaVersionCompilada lo verifica con 2.1.0 en el JAR); una tarea generadora propia añade complejidad sin cambiar el resultado.
