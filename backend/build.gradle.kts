@@ -24,6 +24,7 @@ dependencies {
     implementation("org.springframework.modulith:spring-modulith-api")
     implementation("org.xerial:sqlite-jdbc")
     implementation("org.flywaydb:flyway-core")
+    implementation("org.apache.commons:commons-compress:1.27.1")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     // Solo los fixtures de C-07 usan @Valid y @Min; main no valida con Bean Validation.
