@@ -18,6 +18,8 @@ import io.fabric8.mockwebserver.http.RecordedRequest;
 import io.synkra.kubernetes.api.ClienteNoDisponibleException;
 import io.synkra.kubernetes.api.DespliegueAusenteException;
 import io.synkra.kubernetes.api.FaseDespliegue;
+import io.synkra.kubernetes.api.LecturaFallidaException;
+import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.synkra.kubernetes.api.NamespaceNoPermitidoException;
 import io.fabric8.mockwebserver.Context;
 import io.fabric8.mockwebserver.MockWebServer;
@@ -47,6 +49,10 @@ class EstadoYContextoTest {
     private static final String NS = "synkra-pe";
     private static final String POD = "synkra-core-abc";
     private static final String RUTA_POD = "/api/v1/namespaces/" + NS + "/pods/";
+    private static final String CORE = ConstructorObjetosPais.NOMBRE_CORE;
+    private static final String CONT_CORE = ConstructorObjetosPais.CONTENEDOR_CORE;
+    private static final String CONT_INIT = ConstructorObjetosPais.CONTENEDOR_INIT;
+    private static final String TAIL = "&tailLines=" + LectorPais.LINEAS_LOG_CORE;
 
     @TempDir
     Path casaFalsa;
@@ -69,7 +75,12 @@ class EstadoYContextoTest {
         servidor = new KubernetesMockServer(new Context(), new MockWebServer(), respuestas,
                 new KubernetesMixedDispatcher(respuestas), false);
         servidor.init();
-        cliente = servidor.createClient();
+        // Sin reintentos: un 5xx sube de inmediato en lugar de esperar los backoffs del cliente.
+        try (var base = servidor.createClient()) {
+            cliente = new io.fabric8.kubernetes.client.KubernetesClientBuilder().withConfig(
+                    new io.fabric8.kubernetes.client.ConfigBuilder(base.getConfiguration())
+                            .withRequestRetryBackoffLimit(0).build()).build();
+        }
         adaptador = new AdaptadorFabric8(cliente);
     }
 
@@ -110,15 +121,29 @@ class EstadoYContextoTest {
 
     private void siembraDeployment(int deseadas, int listas) {
         Deployment d = new DeploymentBuilder()
-                .withNewMetadata().withName("synkra-core").withNamespace(NS).endMetadata()
+                .withNewMetadata().withName(CORE).withNamespace(NS).endMetadata()
                 .withNewSpec().withReplicas(deseadas).endSpec()
                 .withNewStatus().withReplicas(deseadas).withReadyReplicas(listas).endStatus()
                 .build();
         cliente.apps().deployments().inNamespace(NS).resource(d).create();
     }
 
+    /** Un Deployment sin {@code spec.replicas}: Kubernetes lo toma como una réplica. */
+    private void siembraDeploymentSinReplicas(int listas) {
+        Deployment d = new DeploymentBuilder()
+                .withNewMetadata().withName(CORE).withNamespace(NS).endMetadata()
+                .withNewSpec().endSpec()
+                .withNewStatus().withReadyReplicas(listas).endStatus()
+                .build();
+        cliente.apps().deployments().inNamespace(NS).resource(d).create();
+    }
+
     private Pod siembraPod(String nombre, ContainerStatus init, ContainerStatus core) {
-        var estado = new io.fabric8.kubernetes.api.model.PodStatusBuilder().withPhase("Running");
+        return siembraPod(nombre, "Running", init, core);
+    }
+
+    private Pod siembraPod(String nombre, String fase, ContainerStatus init, ContainerStatus core) {
+        var estado = new io.fabric8.kubernetes.api.model.PodStatusBuilder().withPhase(fase);
         if (init != null) {
             estado.withInitContainerStatuses(init);
         }
@@ -127,7 +152,7 @@ class EstadoYContextoTest {
         }
         Pod p = new PodBuilder()
                 .withNewMetadata().withName(nombre).withNamespace(NS)
-                .addToLabels("app.kubernetes.io/name", "synkra-core").endMetadata()
+                .addToLabels(ConstructorObjetosPais.ETIQUETA_NOMBRE, CORE).endMetadata()
                 .withStatus(estado.build())
                 .build();
         return cliente.pods().inNamespace(NS).resource(p).create();
@@ -150,37 +175,46 @@ class EstadoYContextoTest {
     }
 
     private void siembraEvento(String nombre, String pod, String tipo, String razon, String mensaje, String hora) {
+        siembraEvento(nombre, pod, tipo, razon, mensaje, hora, null);
+    }
+
+    /** {@code hora} va en {@code lastTimestamp}; {@code horaEventTime}, si existe, en {@code eventTime} (microsegundos). */
+    private void siembraEvento(String nombre, String pod, String tipo, String razon, String mensaje, String hora,
+            String horaEventTime) {
         Event e = new EventBuilder()
                 .withNewMetadata().withName(nombre).withNamespace(NS).endMetadata()
                 .withNewInvolvedObject().withKind("Pod").withName(pod).withNamespace(NS).endInvolvedObject()
                 .withType(tipo).withReason(razon).withMessage(mensaje).withLastTimestamp(hora)
                 .build();
+        if (horaEventTime != null) {
+            e.setEventTime(new io.fabric8.kubernetes.api.model.MicroTimeBuilder().withTime(horaEventTime).build());
+        }
         cliente.v1().events().inNamespace(NS).resource(e).create();
     }
 
     /** Sirve el log; el del core pide {@code tailLines=200}, el del init se lee entero. */
     private void sirveLog(String pod, String contenedor, boolean previo, String cuerpo) {
-        boolean core = contenedor.equals("core");
+        boolean core = contenedor.equals(CONT_CORE);
         servidor.expect().get()
                 .withPath(RUTA_POD + pod + "/log?pretty=false&container=" + contenedor + (previo ? "&previous=true" : "")
-                        + (core ? "&tailLines=200" : ""))
+                        + (core ? TAIL : ""))
                 .andReturn(200, cuerpo).always();
     }
 
     /** Un pod que aún no arrancó: la API responde 400 al pedir el log de un contenedor que no ha empezado. */
     private void logAunNoExiste(String pod) {
-        for (String c : List.of("core", "descarga")) {
+        for (String c : List.of(CONT_CORE, CONT_INIT)) {
             servidor.expect().get().withPath(RUTA_POD + pod + "/log?pretty=false&container=" + c
-                    + (c.equals("core") ? "&tailLines=200" : "")).andReturn(400, "container is waiting to start").always();
+                    + (c.equals(CONT_CORE) ? TAIL : "")).andReturn(400, "container is waiting to start").always();
         }
-        servidor.expect().get().withPath(RUTA_POD + pod + "/log?pretty=false&container=core&previous=true&tailLines=200")
+        servidor.expect().get().withPath(RUTA_POD + pod + "/log?pretty=false&container=" + CONT_CORE + "&previous=true" + TAIL)
                 .andReturn(400, "previous terminated container not found").always();
     }
 
     @Test
     void podListoEsListoConUnaReplicaYCeroReinicios() throws Exception {
         siembraDeployment(1, 1);
-        siembraPod(POD, terminado("descarga", 0), corriendo("core", 0));
+        siembraPod(POD, terminado(CONT_INIT, 0), corriendo(CONT_CORE, 0));
         terminaSiembra();
         var e = adaptador.estado(NS);
         assertThat(e.fase()).isEqualTo(FaseDespliegue.LISTO);
@@ -193,10 +227,10 @@ class EstadoYContextoTest {
     @Test
     void crashLoopBackOffEsFalladoConSusReiniciosYContextoConLasUltimas200Lineas() throws Exception {
         siembraDeployment(1, 0);
-        siembraPod(POD, terminado("descarga", 0), esperando("core", "CrashLoopBackOff", 4));
+        siembraPod(POD, terminado(CONT_INIT, 0), esperando(CONT_CORE, "CrashLoopBackOff", 4));
         var log = IntStream.rangeClosed(801, 1000).mapToObj(i -> "linea " + i).collect(Collectors.joining("\n"));
-        sirveLog(POD, "core", false, log);
-        sirveLog(POD, "descarga", false, "descarga ok");
+        sirveLog(POD, CONT_CORE, false, log);
+        sirveLog(POD, CONT_INIT, false, "descarga ok");
         siembraEvento("ev1", POD, "Warning", "BackOff", "Back-off restarting failed container", "2026-01-01T00:00:02Z");
         terminaSiembra();
 
@@ -213,15 +247,15 @@ class EstadoYContextoTest {
         assertThat(lineas.get(199)).isEqualTo("linea 1000");
         assertThat(c.logInit()).isEqualTo("descarga ok");
         assertThat(c.eventos()).contains("Warning BackOff: Back-off restarting failed container");
-        assertThat(peticiones()).anySatisfy(r -> assertThat(r.getPath()).contains("/log").contains("tailLines=200"));
+        assertThat(peticiones()).anySatisfy(r -> assertThat(r.getPath()).contains("/log").contains(TAIL.substring(1)));
     }
 
     @Test
     void sinLogActualSeTomaElDelIntentoAnterior() throws Exception {
         siembraDeployment(1, 0);
-        siembraPod(POD, null, esperando("core", "CrashLoopBackOff", 2));
-        sirveLog(POD, "core", false, "");
-        sirveLog(POD, "core", true, "murio por X");
+        siembraPod(POD, null, esperando(CONT_CORE, "CrashLoopBackOff", 2));
+        sirveLog(POD, CONT_CORE, false, "");
+        sirveLog(POD, CONT_CORE, true, "murio por X");
         terminaSiembra();
         assertThat(adaptador.contextoFallo(NS).logCore()).isEqualTo("murio por X");
     }
@@ -229,8 +263,8 @@ class EstadoYContextoTest {
     @Test
     void initTerminadoConCodigoUnoEsInitErrorYSuLogEstaEnElContexto() throws Exception {
         siembraDeployment(1, 0);
-        siembraPod(POD, terminado("descarga", 1), null);
-        sirveLog(POD, "descarga", false, "fallo la descarga: 404");
+        siembraPod(POD, terminado(CONT_INIT, 1), null);
+        sirveLog(POD, CONT_INIT, false, "fallo la descarga: 404");
         terminaSiembra();
         var e = adaptador.estado(NS);
         assertThat(e.fase()).isEqualTo(FaseDespliegue.FALLIDO);
@@ -241,7 +275,7 @@ class EstadoYContextoTest {
     @Test
     void initEnCrashLoopBackOffEsInitCrashLoopBackOff() throws Exception {
         siembraDeployment(1, 0);
-        siembraPod(POD, esperando("descarga", "CrashLoopBackOff", 3), null);
+        siembraPod(POD, esperando(CONT_INIT, "CrashLoopBackOff", 3), null);
         terminaSiembra();
         var e = adaptador.estado(NS);
         assertThat(e.fase()).isEqualTo(FaseDespliegue.FALLIDO);
@@ -251,7 +285,7 @@ class EstadoYContextoTest {
     @Test
     void imagePullBackOffEsFallido() throws Exception {
         siembraDeployment(1, 0);
-        siembraPod(POD, terminado("descarga", 0), esperando("core", "ImagePullBackOff", 0));
+        siembraPod(POD, terminado(CONT_INIT, 0), esperando(CONT_CORE, "ImagePullBackOff", 0));
         terminaSiembra();
         assertThat(adaptador.estado(NS).razon()).isEqualTo("ImagePullBackOff");
     }
@@ -259,7 +293,8 @@ class EstadoYContextoTest {
     @Test
     void podPendienteEsEnCursoYElContextoNoFallaConLogsVacios() throws Exception {
         siembraDeployment(1, 0);
-        siembraPod(POD, esperando("descarga", "PodInitializing", 0), null);
+        // Un Pending real: aún sin programar, sin estados de contenedor.
+        siembraPod(POD, "Pending", null, null);
         logAunNoExiste(POD);
         terminaSiembra();
         var e = adaptador.estado(NS);
@@ -275,13 +310,13 @@ class EstadoYContextoTest {
     void deploymentAusenteLanzaExcepcionPropiaQueNombraElNamespace() throws Exception {
         terminaSiembra();
         assertThatThrownBy(() -> adaptador.estado(NS))
-                .isInstanceOf(DespliegueAusenteException.class).hasMessageContaining(NS);
+                .isInstanceOf(DespliegueAusenteException.class).hasMessageContaining(NS).hasMessageContaining(CORE);
     }
 
     @Test
     void losEventosDeOtroPodDelMismoNamespaceNoAparecen() throws Exception {
         siembraDeployment(1, 0);
-        siembraPod(POD, null, esperando("core", "CrashLoopBackOff", 1));
+        siembraPod(POD, null, esperando(CONT_CORE, "CrashLoopBackOff", 1));
         siembraEvento("ev1", POD, "Warning", "BackOff", "mio", "2026-01-01T00:00:02Z");
         siembraEvento("ev0", POD, "Normal", "Pulled", "antes", "2026-01-01T00:00:01Z");
         siembraEvento("ev2", "otro-pod", "Warning", "Failed", "ajeno", "2026-01-01T00:00:03Z");
@@ -313,9 +348,9 @@ class EstadoYContextoTest {
     @Test
     void todasLasPeticionesSonGetYVanAlNamespaceDelPais() throws Exception {
         siembraDeployment(1, 0);
-        siembraPod(POD, terminado("descarga", 1), esperando("core", "CrashLoopBackOff", 4));
-        sirveLog(POD, "core", false, "x");
-        sirveLog(POD, "descarga", false, "y");
+        siembraPod(POD, terminado(CONT_INIT, 1), esperando(CONT_CORE, "CrashLoopBackOff", 4));
+        sirveLog(POD, CONT_CORE, false, "x");
+        sirveLog(POD, CONT_INIT, false, "y");
         siembraEvento("ev1", POD, "Warning", "BackOff", "m", "2026-01-01T00:00:02Z");
         terminaSiembra();
         adaptador.estado(NS);
@@ -326,5 +361,96 @@ class EstadoYContextoTest {
             assertThat(r.getMethod()).isEqualTo("GET");
             assertThat(r.getPath()).contains("/namespaces/" + NS + "/");
         });
+    }
+
+    @Test
+    void deploymentSinReplicasEspecificadasCuentaUnaReplicaPorDefecto() throws Exception {
+        siembraDeploymentSinReplicas(1);
+        terminaSiembra();
+        var e = adaptador.estado(NS);
+        assertThat(e.replicasDeseadas()).isEqualTo(LectorPais.REPLICAS_POR_DEFECTO_K8S).isEqualTo(1);
+        assertThat(e.fase()).isEqualTo(FaseDespliegue.LISTO);
+    }
+
+    private void falla(String ruta, int codigo) {
+        servidor.expect().get().withPath(ruta).andReturn(codigo, "{\"kind\":\"Status\",\"code\":" + codigo + "}").always();
+    }
+
+    private static final String RUTA_DEPLOYMENT = "/apis/apps/v1/namespaces/" + NS + "/deployments/" + CORE;
+    private static final String RUTA_PODS = "/api/v1/namespaces/" + NS + "/pods?labelSelector="
+            + "app.kubernetes.io%2Fname%3Dsynkra-core";
+    private static final String RUTA_EVENTOS = "/api/v1/namespaces/" + NS + "/events";
+
+    @Test
+    void unaFalloDeLaApiAlLeerElDeploymentSaleComoLecturaFallidaConNamespaceYCausa() throws Exception {
+        falla(RUTA_DEPLOYMENT, 500);
+        terminaSiembra();
+        assertThatThrownBy(() -> adaptador.estado(NS))
+                .isInstanceOf(LecturaFallidaException.class)
+                .hasMessageContaining("Deployment").hasMessageContaining(NS)
+                .hasCauseInstanceOf(KubernetesClientException.class);
+    }
+
+    @Test
+    void unFalloAlListarLosPodsNombraLosPodsYNoElDeployment() throws Exception {
+        siembraDeployment(1, 0);
+        falla(RUTA_PODS, 500);
+        terminaSiembra();
+        assertThatThrownBy(() -> adaptador.estado(NS))
+                .isInstanceOf(LecturaFallidaException.class)
+                .hasMessageContaining("pods").hasMessageContaining(NS).hasMessageNotContaining("Deployment")
+                .hasCauseInstanceOf(KubernetesClientException.class);
+        assertThatThrownBy(() -> adaptador.contextoFallo(NS))
+                .isInstanceOf(LecturaFallidaException.class).hasMessageContaining("pods").hasMessageContaining(NS);
+    }
+
+    @Test
+    void unFalloAlLeerLosEventosSaleComoLecturaFallida() throws Exception {
+        siembraPod(POD, null, esperando(CONT_CORE, "CrashLoopBackOff", 1));
+        sirveLog(POD, CONT_CORE, false, "x");
+        sirveLog(POD, CONT_INIT, false, "y");
+        falla(RUTA_EVENTOS, 500);
+        terminaSiembra();
+        assertThatThrownBy(() -> adaptador.contextoFallo(NS))
+                .isInstanceOf(LecturaFallidaException.class).hasMessageContaining("eventos").hasMessageContaining(NS);
+    }
+
+    @Test
+    void unLogConErrorDeServidorNoSeTragaComoVacio() throws Exception {
+        logFallaYNoSeTraga(500);
+    }
+
+    @Test
+    void unLogProhibidoNoSeTragaComoVacio() throws Exception {
+        logFallaYNoSeTraga(403);
+    }
+
+    private void logFallaYNoSeTraga(int codigo) throws Exception {
+        siembraPod(POD, null, esperando(CONT_CORE, "CrashLoopBackOff", 1));
+        falla(RUTA_POD + POD + "/log?pretty=false&container=" + CONT_CORE + TAIL, codigo);
+        terminaSiembra();
+        assertThatThrownBy(() -> adaptador.contextoFallo(NS))
+                .isInstanceOf(LecturaFallidaException.class)
+                .hasMessageContaining(CONT_CORE).hasMessageContaining(POD)
+                .cause().isInstanceOfSatisfying(KubernetesClientException.class,
+                        k -> assertThat(k.getCode()).isEqualTo(codigo));
+    }
+
+    @Test
+    void losEventosSeOrdenanPorInstanteAunqueMezclenFormatosYLosSinMarcaVanAlFinal() throws Exception {
+        siembraDeployment(1, 0);
+        siembraPod(POD, null, esperando(CONT_CORE, "CrashLoopBackOff", 1));
+        // Como texto, "...:02.500000Z" < "...:02Z" (el '.' sale antes que la 'Z'): solo el Instant los ordena bien.
+        siembraEvento("e3", POD, "Warning", "R3", "tercero", "2026-01-01T00:00:03Z");
+        siembraEvento("e2", POD, "Warning", "R2", "segundo", null, "2026-01-01T00:00:02.500000Z");
+        siembraEvento("e1", POD, "Warning", "R1", "primero", "2026-01-01T00:00:02Z");
+        siembraEvento("e0", POD, "Warning", "R0", "sin marca", null);
+        terminaSiembra();
+        var lineas = adaptador.contextoFallo(NS).eventos().lines().toList();
+        assertThat(lineas).hasSize(4);
+        assertThat(lineas.get(0)).contains("primero");
+        assertThat(lineas.get(1)).contains("segundo");
+        assertThat(lineas.get(2)).contains("tercero");
+        assertThat(lineas.get(3)).contains("sin marca");
     }
 }

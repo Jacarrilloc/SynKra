@@ -11,6 +11,8 @@ import io.synkra.kubernetes.api.DespliegueAusenteException;
 import io.synkra.kubernetes.api.EstadoPais;
 import io.synkra.kubernetes.api.FaseDespliegue;
 import io.synkra.kubernetes.api.LecturaFallidaException;
+import java.time.Instant;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -27,6 +29,8 @@ final class LectorPais {
     static final String RAZON_INIT_ERROR = PREFIJO_INIT + "Error";
     private static final Set<String> RAZONES_DE_FALLO =
             Set.of("CrashLoopBackOff", "ImagePullBackOff", "ErrImagePull");
+    /** Valor por defecto de {@code spec.replicas} en Kubernetes cuando el Deployment no lo fija. */
+    static final int REPLICAS_POR_DEFECTO_K8S = 1;
     private static final int HTTP_BAD_REQUEST = 400;
     private static final int HTTP_NOT_FOUND = 404;
 
@@ -37,44 +41,51 @@ final class LectorPais {
     }
 
     EstadoPais estado(String ns) {
-        try {
-            Deployment d = cliente.apps().deployments().inNamespace(ns).withName(ConstructorObjetosPais.NOMBRE_CORE).get();
-            if (d == null) {
-                throw new DespliegueAusenteException(ns);
-            }
-            int deseadas = d.getSpec() != null && d.getSpec().getReplicas() != null ? d.getSpec().getReplicas() : 1;
-            int listas = d.getStatus() != null && d.getStatus().getReadyReplicas() != null
-                    ? d.getStatus().getReadyReplicas() : 0;
-            List<Pod> pods = pods(ns);
-            int reinicios = pods.stream().flatMap(LectorPais::estados).mapToInt(LectorPais::reinicios).sum();
-            if (listas == deseadas && deseadas > 0) {
-                return new EstadoPais(deseadas, listas, reinicios, FaseDespliegue.LISTO, null);
-            }
-            String razon = pods.stream().map(LectorPais::razonDeFallo).filter(Objects::nonNull).findFirst().orElse(null);
-            return new EstadoPais(deseadas, listas, reinicios,
-                    razon != null ? FaseDespliegue.FALLIDO : FaseDespliegue.EN_CURSO, razon);
-        } catch (KubernetesClientException e) {
-            throw new LecturaFallidaException("el Deployment " + ConstructorObjetosPais.NOMBRE_CORE, ns, e);
+        String deployment = "el Deployment " + ConstructorObjetosPais.NOMBRE_CORE;
+        Deployment d = envuelve(deployment, ns, () -> cliente.apps().deployments().inNamespace(ns)
+                .withName(ConstructorObjetosPais.NOMBRE_CORE).get());
+        if (d == null) {
+            throw new DespliegueAusenteException(ConstructorObjetosPais.NOMBRE_CORE, ns);
         }
+        int deseadas = d.getSpec() != null && d.getSpec().getReplicas() != null
+                ? d.getSpec().getReplicas() : REPLICAS_POR_DEFECTO_K8S;
+        int listas = d.getStatus() != null && d.getStatus().getReadyReplicas() != null
+                ? d.getStatus().getReadyReplicas() : 0;
+        List<Pod> pods = envuelve("los pods de " + ConstructorObjetosPais.NOMBRE_CORE, ns, () -> pods(ns));
+        int reinicios = pods.stream().flatMap(LectorPais::estados).mapToInt(LectorPais::reinicios).sum();
+        if (listas == deseadas && deseadas > 0) {
+            return new EstadoPais(deseadas, listas, reinicios, FaseDespliegue.LISTO, null);
+        }
+        String razon = pods.stream().map(LectorPais::razonDeFallo).filter(Objects::nonNull).findFirst().orElse(null);
+        return new EstadoPais(deseadas, listas, reinicios,
+                razon != null ? FaseDespliegue.FALLIDO : FaseDespliegue.EN_CURSO, razon);
     }
 
     ContextoFalloK8s contexto(String ns) {
+        List<Pod> pods = envuelve("los pods de " + ConstructorObjetosPais.NOMBRE_CORE, ns, () -> pods(ns));
+        // Un solo pod cuenta el fallo: el de más reinicios y, a igualdad, el último en nombre.
+        Pod pod = pods.stream().max(Comparator.comparingInt((Pod p) -> estados(p).mapToInt(LectorPais::reinicios).sum())
+                .thenComparing(p -> p.getMetadata().getName())).orElse(null);
+        String core = "";
+        String init = "";
+        if (pod != null) {
+            String nombre = pod.getMetadata().getName();
+            core = envuelve("el log del contenedor " + ConstructorObjetosPais.CONTENEDOR_CORE + " del pod " + nombre,
+                    ns, () -> logCore(ns, nombre));
+            init = envuelve("el log del contenedor " + ConstructorObjetosPais.CONTENEDOR_INIT + " del pod " + nombre,
+                    ns, () -> leer(() -> cliente.pods().inNamespace(ns).withName(nombre)
+                            .inContainer(ConstructorObjetosPais.CONTENEDOR_INIT).getLog()));
+        }
+        String eventos = envuelve("los eventos de los pods", ns, () -> eventos(ns, pods));
+        return new ContextoFalloK8s(core, init, eventos);
+    }
+
+    /** Solo las {@link KubernetesClientException} se envuelven, nombrando lo que se leía; el resto sube tal cual. */
+    private static <T> T envuelve(String que, String ns, java.util.function.Supplier<T> lectura) {
         try {
-            List<Pod> pods = pods(ns);
-            // Un solo pod cuenta el fallo: el de más reinicios y, a igualdad, el último en nombre.
-            Pod pod = pods.stream().max(Comparator.comparingInt((Pod p) -> estados(p).mapToInt(LectorPais::reinicios).sum())
-                    .thenComparing(p -> p.getMetadata().getName())).orElse(null);
-            String core = "";
-            String init = "";
-            if (pod != null) {
-                String nombre = pod.getMetadata().getName();
-                core = logCore(ns, nombre);
-                init = leer(() -> cliente.pods().inNamespace(ns).withName(nombre)
-                        .inContainer(ConstructorObjetosPais.CONTENEDOR_INIT).getLog());
-            }
-            return new ContextoFalloK8s(core, init, eventos(ns, pods));
+            return lectura.get();
         } catch (KubernetesClientException e) {
-            throw new LecturaFallidaException("el contexto de fallo", ns, e);
+            throw new LecturaFallidaException(que, ns, e);
         }
     }
 
@@ -110,24 +121,32 @@ final class LectorPais {
         List<Event> eventos = new ArrayList<>(cliente.v1().events().inNamespace(ns).list().getItems());
         return eventos.stream()
                 .filter(e -> e.getInvolvedObject() != null && nombres.contains(e.getInvolvedObject().getName()))
-                .sorted(Comparator.comparing(LectorPais::hora))
+                // Los eventos sin marca de tiempo válida van al final.
+                .sorted(Comparator.comparing(LectorPais::hora, Comparator.nullsLast(Comparator.naturalOrder())))
                 .map(e -> e.getType() + " " + e.getReason() + ": " + e.getMessage())
                 .collect(Collectors.joining("\n"));
     }
 
-    /** Marca de tiempo ISO-8601 del evento; se ordena como texto. */
-    private static String hora(Event e) {
+    /** Instante del evento (se compara como {@link Instant}, no como texto); {@code null} si no tiene marca válida. */
+    private static Instant hora(Event e) {
+        String texto = null;
         if (e.getLastTimestamp() != null) {
-            return e.getLastTimestamp();
+            texto = e.getLastTimestamp();
+        } else if (e.getEventTime() != null && e.getEventTime().getTime() != null) {
+            texto = e.getEventTime().getTime();
+        } else if (e.getFirstTimestamp() != null) {
+            texto = e.getFirstTimestamp();
+        } else if (e.getMetadata() != null) {
+            texto = e.getMetadata().getCreationTimestamp();
         }
-        if (e.getEventTime() != null && e.getEventTime().getTime() != null) {
-            return e.getEventTime().getTime();
+        if (texto == null) {
+            return null;
         }
-        if (e.getFirstTimestamp() != null) {
-            return e.getFirstTimestamp();
+        try {
+            return Instant.parse(texto);
+        } catch (DateTimeParseException ex) {
+            return null;
         }
-        String creado = e.getMetadata() != null ? e.getMetadata().getCreationTimestamp() : null;
-        return creado != null ? creado : "";
     }
 
     private static Stream<ContainerStatus> estados(Pod p) {
