@@ -128,8 +128,10 @@ class ConcordanciaSuiteTest {
                 assertEquals(nombresEsperados, cargados, id);
             }
         } else {
-            assertThrows(RuntimeException.class, () -> arrancar(config, plugins).close(),
+            var caida = assertThrows(RuntimeException.class, () -> arrancar(config, plugins).close(),
                     id + ": el contexto debía no arrancar");
+            assertTrue(conCausa(caida, ArranqueRechazado.class),
+                    id + ": el arranque debía terminar en ArranqueRechazado y terminó en " + caida);
             var log = salida.getAll();
             for (var m : esperado.motivos()) {
                 var codigo = m.codigo().name();
@@ -142,9 +144,26 @@ class ConcordanciaSuiteTest {
                 }
             }
             if (esperado.rechazaElLector()) {
-                assertTrue(log.contains("descriptor.jar"), id + ": el log no nombra el descriptor\n" + log);
+                // el código del lector y el JAR salen en la misma línea
+                for (var m : esperado.motivos()) {
+                    assertTrue(log.lines().anyMatch(l -> l.contains("descriptor.jar") && l.contains(m.codigo().name())
+                                    && l.contains(m.enMensaje())),
+                            id + ": ninguna línea liga descriptor.jar con " + m.codigo() + "\n" + log);
+                }
+                // el rechazo real: el plugin activo se queda sin JAR en el catálogo
+                assertTrue(log.contains("PLUGIN_AUSENTE plugin=kyc-co"),
+                        id + ": falta el rechazo PLUGIN_AUSENTE plugin=kyc-co\n" + log);
             }
         }
+    }
+
+    private static boolean conCausa(Throwable t, Class<? extends Throwable> tipo) {
+        for (Throwable x = t; x != null; x = x.getCause() == x ? null : x.getCause()) {
+            if (tipo.isInstance(x)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     static Stream<org.junit.jupiter.params.provider.Arguments> ejecutablesConId() {
