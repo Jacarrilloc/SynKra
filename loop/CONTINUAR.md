@@ -80,13 +80,17 @@ Orden de fusión: #77, luego #78 (U05-T04), luego #79 (U02-T04).
 - `tareas/U05-T07-script-descarga.md` y `tareas/U02-T07-endpoints-core.md` (hash con `git hash-object` en la rama de tareas).
 - Cada una sale de la punta en VERDE de su T06.
 
+### Ola 34 (U05-T08 ∥ U02-T08), escrita, sin despachar
+
+- `tareas/U05-T08-imagen-init.md` y `tareas/U02-T08-core-sin-paises.md`. U05-T08 necesita Docker: en el contenedor en la nube hay que arrancar `dockerd` a mano.
+
 ## Lo que sigue
 
 1. Terminar la ola 30: revisor de la ronda 2 de cada tarea, guardar su informe, más rondas si hace falta (una tarea que llega a la ronda 4 se para y se lleva al equipo), y abrir los PRs.
 2. Ola 31 como arriba.
 3. Escribir las tareas restantes en `orq/U05-U02-tareas` y añadir sus olas a `loop/README.md`:
-   - **U05:** T08 imagen del init, T09 fronteras, T10 resumen.
-   - **U02:** T08 el core no conoce países, T09 y T10 plugins `kyc-co` y `kyc-pe`, T11 imagen del core, T12 prueba de humo, T13 resumen.
+   - **U05:** T09 fronteras, T10 resumen.
+   - **U02:** T09 y T10 plugins `kyc-co` y `kyc-pe`, T11 imagen del core, T12 prueba de humo, T13 resumen.
    - Los planes están en `aidlc-docs/construction/plans/U05-*.md` y `U02-*.md`.
    - Candidatas que hay que meter: C-70, C-73 y C-68 en U05-T09; C-72 en U05-T07, U05-T08 y U02-T11 (script en `/usr/local/bin/descargar.sh`, `USER 10001` numérico); C-64 en U05-T07 (comprobar el sha256); C-71 y C-74 en las pruebas del core; C-76 en U07.
 4. Pendiente de decidir con el equipo: una tarea de pulido de U04 (C-57, C-60, C-61, C-63, C-65, C-66, C-67) y otra de U01/U02 (C-77, C-78).
