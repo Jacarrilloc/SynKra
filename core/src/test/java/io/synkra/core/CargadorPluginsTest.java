@@ -11,6 +11,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import javax.tools.JavaCompiler;
@@ -26,8 +28,14 @@ class CargadorPluginsTest {
     Path tmp;
 
     /** Compila las fuentes (nombre de clase -> código) y empaqueta un JAR con los servicios dados. */
-    private Path armarJar(String nombreJar, java.util.Map<String, String> fuentes, List<String> servicios)
+    private Path armarJar(String nombreJar, Map<String, String> fuentes, List<String> servicios)
             throws IOException {
+        return armarJar(nombreJar, fuentes, servicios, Set.of());
+    }
+
+    /** Como el anterior, pero las clases de {@code excluir} se compilan y no se empaquetan. */
+    private Path armarJar(String nombreJar, Map<String, String> fuentes, List<String> servicios,
+            Set<String> excluir) throws IOException {
         Path src = Files.createDirectories(tmp.resolve(nombreJar + "-src"));
         Path out = Files.createDirectories(tmp.resolve(nombreJar + "-out"));
         List<String> archivos = new ArrayList<>();
@@ -44,6 +52,9 @@ class CargadorPluginsTest {
         Path jar = tmp.resolve(nombreJar + ".jar");
         try (JarOutputStream jos = new JarOutputStream(Files.newOutputStream(jar))) {
             for (String clase : fuentes.keySet()) {
+                if (excluir.contains(clase)) {
+                    continue;
+                }
                 jos.putNextEntry(new JarEntry(clase + ".class"));
                 jos.write(Files.readAllBytes(out.resolve(clase + ".class")));
                 jos.closeEntry();
@@ -57,7 +68,7 @@ class CargadorPluginsTest {
         return jar;
     }
 
-    private static String plugin(String clase, String valorComun) {
+    private static String plugin(String clase) {
         return "public class " + clase + " implements io.synkra.plugin.api.SynkraPlugin {\n"
                 + "  public String nombre() { return " + clase + ".class.getName() + \":\" + Comun.valor(); }\n"
                 + "  public void iniciar(io.synkra.plugin.api.ContextoPlugin c) {}\n"
@@ -69,12 +80,12 @@ class CargadorPluginsTest {
     }
 
     private Path jarA() throws IOException {
-        return armarJar("a", java.util.Map.of("PluginA", plugin("PluginA", "A"), "Comun", comun("A")),
+        return armarJar("a", Map.of("PluginA", plugin("PluginA"), "Comun", comun("A")),
                 List.of("PluginA"));
     }
 
     private Path jarB() throws IOException {
-        return armarJar("b", java.util.Map.of("PluginB", plugin("PluginB", "B"), "Comun", comun("B")),
+        return armarJar("b", Map.of("PluginB", plugin("PluginB"), "Comun", comun("B")),
                 List.of("PluginB"));
     }
 
@@ -109,7 +120,7 @@ class CargadorPluginsTest {
 
     @Test
     void jarSinImplementacionDaErrorQueNombraElJar() throws Exception {
-        Path jar = armarJar("vacio", java.util.Map.of("Comun", comun("V")), List.of());
+        Path jar = armarJar("vacio", Map.of("Comun", comun("V")), List.of());
         ErrorCargaPlugin e = assertThrows(ErrorCargaPlugin.class, () -> new CargadorPlugins().cargar(jar));
         assertTrue(e.getMessage().contains("vacio.jar"), e.getMessage());
     }
@@ -117,34 +128,79 @@ class CargadorPluginsTest {
     @Test
     void jarConDosImplementacionesDaErrorQueNombraElJar() throws Exception {
         Path jar = armarJar("doble",
-                java.util.Map.of("PluginA", plugin("PluginA", "A"), "PluginB", plugin("PluginB", "B"),
+                Map.of("PluginA", plugin("PluginA"), "PluginB", plugin("PluginB"),
                         "Comun", comun("D")),
                 List.of("PluginA", "PluginB"));
         ErrorCargaPlugin e = assertThrows(ErrorCargaPlugin.class, () -> new CargadorPlugins().cargar(jar));
         assertTrue(e.getMessage().contains("doble.jar"), e.getMessage());
     }
 
+    /** Cargador de pruebas que registra si cada URLClassLoader que crea fue cerrado. */
+    private static final class CargadorEspia extends CargadorPlugins {
+        final List<boolean[]> cerrados = new ArrayList<>();
+
+        @Override
+        URLClassLoader crearCargador(URL[] urls, ClassLoader padre) {
+            boolean[] cerrado = new boolean[1];
+            cerrados.add(cerrado);
+            return new URLClassLoader(urls, padre) {
+                @Override
+                public void close() throws IOException {
+                    cerrado[0] = true;
+                    super.close();
+                }
+            };
+        }
+
+        void afirmarCerrado() {
+            assertEquals(1, cerrados.size());
+            assertTrue(cerrados.get(0)[0], "el cargador debe cerrarse si la carga falla");
+        }
+    }
+
+    private void afirmarFalla(Path jar, String nombreJar) {
+        CargadorEspia c = new CargadorEspia();
+        ErrorCargaPlugin e = assertThrows(ErrorCargaPlugin.class, () -> c.cargar(jar));
+        assertTrue(e.getMessage().contains(nombreJar), e.getMessage());
+        c.afirmarCerrado();
+    }
+
     @Test
     void elCargadorQuedaCerradoTrasUnFallo() throws Exception {
-        Path jar = armarJar("vacio2", java.util.Map.of("Comun", comun("V")), List.of());
-        List<boolean[]> cerrados = new ArrayList<>();
-        CargadorPlugins c = new CargadorPlugins() {
-            @Override
-            protected URLClassLoader crearCargador(URL[] urls, ClassLoader padre) {
-                boolean[] cerrado = new boolean[1];
-                cerrados.add(cerrado);
-                return new URLClassLoader(urls, padre) {
-                    @Override
-                    public void close() throws IOException {
-                        cerrado[0] = true;
-                        super.close();
-                    }
-                };
+        afirmarFalla(armarJar("vacio2", Map.of("Comun", comun("V")), List.of()), "vacio2.jar");
+    }
+
+    @Test
+    void proveedorInexistenteDaErrorQueNombraElJarYCierra() throws Exception {
+        afirmarFalla(armarJar("fantasma", Map.of("Comun", comun("F")), List.of("NoExiste")), "fantasma.jar");
+    }
+
+    @Test
+    void claseFaltanteDaErrorQueNombraElJarYCierra() throws Exception {
+        String base = "public class Base {}\n";
+        String hijo = "public class PluginL extends Base implements io.synkra.plugin.api.SynkraPlugin {\n"
+                + "  public String nombre() { return \"L\"; }\n"
+                + "  public void iniciar(io.synkra.plugin.api.ContextoPlugin c) {}\n"
+                + "  public void detener() {}\n}\n";
+        Path jar = armarJar("sinbase", Map.of("Base", base, "PluginL", hijo), List.of("PluginL"), Set.of("Base"));
+        afirmarFalla(jar, "sinbase.jar");
+    }
+
+    @Test
+    void ignoraLosProveedoresDelCargadorPadre() throws Exception {
+        // Un proveedor visible solo desde el padre no cuenta ni se devuelve.
+        Path jarPadre = armarJar("padre", Map.of("PluginP", plugin("PluginP").replace(" + \":\" + Comun.valor()", "")),
+                List.of("PluginP"));
+        try (URLClassLoader padre = new URLClassLoader(new URL[] {jarPadre.toUri().toURL()},
+                SynkraPlugin.class.getClassLoader())) {
+            Path vacio = armarJar("vacio3", Map.of("Comun", comun("V")), List.of());
+            ErrorCargaPlugin e = assertThrows(ErrorCargaPlugin.class, () -> new CargadorPlugins().cargar(vacio, padre));
+            assertTrue(e.getMessage().contains("vacio3.jar"), e.getMessage());
+
+            try (PluginCargado b = new CargadorPlugins().cargar(jarB(), padre)) {
+                assertEquals("PluginB:B", b.plugin().nombre());
             }
-        };
-        assertThrows(ErrorCargaPlugin.class, () -> c.cargar(jar));
-        assertEquals(1, cerrados.size());
-        assertTrue(cerrados.get(0)[0], "el cargador debe cerrarse si la carga falla");
+        }
     }
 
     @Test
