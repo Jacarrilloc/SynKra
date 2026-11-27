@@ -16,4 +16,10 @@ class AdaptadorFabric8 implements AdaptadorKubernetes {
     public boolean disponible() {
         return cliente != null;
     }
+
+    @Override
+    public boolean existeNamespace(String namespace) {
+        String ns = GuardiaNamespace.exigir(namespace);
+        return cliente != null && cliente.namespaces().withName(ns).get() != null;
+    }
 }
