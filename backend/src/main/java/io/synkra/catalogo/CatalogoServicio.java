@@ -44,9 +44,11 @@ class CatalogoServicio implements CatalogoApi {
     private final VersionCoreRepositorio versiones;
     private final SubidaPlugin subida;
     private final ListadoPlugins listado;
+    private final CatalogoSqlite catalogoSqlite;
 
     CatalogoServicio(JdbcAggregateTemplate plantilla, CoreRepositorio cores, VersionCoreRepositorio versiones,
-            SubidaPlugin subida, ListadoPlugins listado) {
+            SubidaPlugin subida, ListadoPlugins listado, CatalogoSqlite catalogoSqlite) {
+        this.catalogoSqlite = catalogoSqlite;
         this.listado = listado;
         this.plantilla = plantilla;
         this.cores = cores;
@@ -136,5 +138,10 @@ class CatalogoServicio implements CatalogoApi {
             case Resultado.Fallo<Version> fallo -> throw new IllegalStateException(
                     "Versión no válida en la base para el core " + core + ": '" + texto + "'");
         };
+    }
+
+    @Override
+    public io.synkra.verificador.Catalogo catalogoParaVerificar() {
+        return catalogoSqlite;
     }
 }
