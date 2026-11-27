@@ -216,11 +216,52 @@ class SuiteCombinacionesTest {
                         () -> new Esperado(Origen.LECTOR, vacio, List.of(), List.of())),
                 () -> assertThrows(IllegalArgumentException.class,
                         () -> new Esperado(Origen.VEREDICTO, aprobada, List.of(motivo), List.of())),
+                () -> assertThrows(IllegalArgumentException.class,
+                        () -> new Esperado(Origen.VEREDICTO, java.util.Optional.of(Veredicto.Global.RECHAZADA), List.of(), List.of())),
+                () -> assertThrows(NullPointerException.class, () -> new Caso(
+                        null, Grupo.INTEGRIDAD, "d", new Entrada.FueraDeU01("U04"),
+                        new Esperado(Origen.FUERA_DE_U01, vacio, List.of(), List.of()))),
+                () -> assertThrows(NullPointerException.class,
+                        () -> new SuiteCombinaciones.CoreDelCatalogo(null, List.of(), List.of())),
+                () -> assertThrows(IllegalArgumentException.class, () -> new SuiteCombinaciones.CoreDelCatalogo(
+                        "synkra-core", List.of(), List.of(SuiteCombinaciones.contenido().get(1).plugins().get(0)))),
                 () -> assertThrows(IllegalArgumentException.class, () -> new Caso(
                         "X1", Grupo.INTEGRIDAD, "d", new Entrada.FueraDeU01("U04"),
                         new Esperado(Origen.VEREDICTO, aprobada, List.of(), List.of()))),
                 () -> assertThrows(IllegalArgumentException.class, () -> new Caso(
                         "X2", Grupo.DESCRIPTOR_INCOMPLETO, "d", new Entrada.PorDescriptor("nombre: x\n"),
                         new Esperado(Origen.FUERA_DE_U01, vacio, List.of(), List.of()))));
+    }
+
+    @Test
+    void elCatalogoNoTieneMasQueElContenido() {
+        var catalogo = SuiteCombinaciones.catalogo();
+        var contenido = SuiteCombinaciones.contenido();
+        var cores = new java.util.ArrayList<>(contenido.stream().map(SuiteCombinaciones.CoreDelCatalogo::core).toList());
+        cores.add("core-que-no-existe");
+        var nombres = contenido.stream()
+                .flatMap(c -> c.plugins().stream())
+                .map(Descriptor::nombre)
+                .distinct()
+                .toList();
+        for (var core : cores) {
+            var del = contenido.stream().filter(c -> c.core().equals(core)).findFirst();
+            assertEquals(
+                    del.map(SuiteCombinaciones.CoreDelCatalogo::versiones).orElse(List.of()),
+                    catalogo.versionesCore(core),
+                    "versiones de " + core);
+            for (var nombre : nombres) {
+                var esperadas = del.stream()
+                        .flatMap(c -> c.plugins().stream())
+                        .filter(d -> d.nombre().equals(nombre))
+                        .toList();
+                var reales = catalogo.versionesPlugin(core, nombre).stream()
+                        .map(v -> catalogo.descriptor(core, nombre, v).orElseThrow())
+                        .toList();
+                assertEquals(
+                        java.util.Set.copyOf(esperadas), java.util.Set.copyOf(reales), "plugins " + nombre + " de " + core);
+                assertEquals(esperadas.size(), reales.size(), "sin repetidos: " + nombre + " de " + core);
+            }
+        }
     }
 }

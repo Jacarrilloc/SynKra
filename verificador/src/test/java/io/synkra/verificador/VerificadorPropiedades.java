@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 class VerificadorPropiedades {
 
     /** Lo que hay subido, como datos: el oráculo recorre esto y nunca llama a {@code alternativas}. */
-    record Datos(String principal, Map<String, List<Version>> cores, List<Descriptor> descriptores) {
+    record Datos(String origen, String principal, Map<String, List<Version>> cores, List<Descriptor> descriptores) {
         CatalogoEnMemoria catalogo() {
             return new CatalogoEnMemoria(cores, descriptores);
         }
@@ -151,10 +151,14 @@ class VerificadorPropiedades {
                 for (int i = 0; i < cores.size(); i++) {
                     mapa.put(cores.get(i), vs.get(i));
                 }
-                return new Datos(cores.get(0), mapa, ds);
+                return new Datos("generado", cores.get(0), mapa, ds);
             });
         });
     }
+
+    /** Origen de los catálogos de texto: con una versión registrada para «core-b» o sin ninguna. */
+    private static final String TEXTO_REGISTRADO = "texto con core-b registrado";
+    private static final String TEXTO_SIN_REGISTRAR = "texto con core-b sin registrar";
 
     /**
      * Catálogos hechos para separar el texto del número: un core con 9.x, 10.x y 11.x entre sus versiones, y plugins
@@ -192,7 +196,7 @@ class VerificadorPropiedades {
             if (core_b_registrado) {
                 cores.put("core-b", List.of(new Version(1, 0, 0)));
             }
-            return new Datos("core-a", cores, todos);
+            return new Datos(core_b_registrado ? TEXTO_REGISTRADO : TEXTO_SIN_REGISTRAR, "core-a", cores, todos);
         });
     }
 
@@ -207,7 +211,7 @@ class VerificadorPropiedades {
             versionesCore.put(c.core(), c.versiones());
             descriptores.addAll(c.plugins());
         }
-        return new Datos(CORE_DE_LA_SUITE, versionesCore, descriptores);
+        return new Datos("suite", CORE_DE_LA_SUITE, versionesCore, descriptores);
     }
 
     private static Arbitrary<Datos> catalogos() {
@@ -358,7 +362,7 @@ class VerificadorPropiedades {
         conAlternativas(caso.otra(), caso.datos());
         // La misma selección contra otro catálogo (generado y vacío) no puede arrastrar nada del primero.
         afirmaMotivos(Verificador.verificar(s, otro.catalogo()), s, otro, "(otro catálogo generado)");
-        var vacio = new Datos("core-z", Map.of(), List.of());
+        var vacio = new Datos("vacio", "core-z", Map.of(), List.of());
         afirmaMotivos(Verificador.verificar(s, vacio.catalogo()), s, vacio, "(catálogo vacío)");
         assertEquals(primero, Verificador.verificar(s, c), "tras verificar otra selección y otros catálogos en medio");
     }
@@ -543,6 +547,11 @@ class VerificadorPropiedades {
                 if (!plugin && enOtraCarpeta) {
                     cuenta(vistos, "compatible solo en la carpeta de otro core");
                 }
+                // Por origen: solo los catálogos de texto registran (o no) «core-b» a propósito, así que estas dos claves
+                // detectan que se pierda una de las dos variantes aunque otros generadores aporten casos parecidos.
+                if (!plugin && enOtraCarpeta && datos.origen().startsWith("texto")) {
+                    cuenta(vistos, "otra carpeta: " + datos.origen());
+                }
                 boolean enOtraCarpetaSinCoreRegistrado = datos.descriptores().stream()
                         .anyMatch(d -> !d.core().equals(s.core())
                                 && d.nombre().equals(nombre)
@@ -594,7 +603,8 @@ class VerificadorPropiedades {
                 "seleccion vacia", "nombre repetido 3 veces", "alternativa de plugin y de core",
                 "alternativa solo de plugin", "alternativa solo de core", "sin ninguna alternativa",
                 "compatible solo en la carpeta de otro core", "compatible solo en la carpeta de otro core registrado",
-                "compatible solo en la carpeta de otro core NO registrado", "catalogo de la suite en synkra-core",
+                "compatible solo en la carpeta de otro core NO registrado", "otra carpeta: " + TEXTO_REGISTRADO,
+                "otra carpeta: " + TEXTO_SIN_REGISTRAR, "catalogo de la suite en synkra-core",
                 "catalogo de la suite en synkra-core con VERSION_INCOMPATIBLE");
         assertTrue(vistos.keySet().containsAll(esperados), "faltan: " + esperados.stream().filter(e -> !vistos.containsKey(e)).toList());
         // Los casos que separan el máximo del mínimo, el texto del número y una carpeta de otra: que no dependan de la
@@ -602,9 +612,7 @@ class VerificadorPropiedades {
         assertTrue(vistos.getOrDefault("2 o más de plugin con texto distinto de número", 0) >= 15, "frecuencias: " + vistos);
         assertTrue(vistos.getOrDefault("2 o más de core con texto distinto de número", 0) >= 6, "frecuencias: " + vistos);
         assertTrue(vistos.getOrDefault("compatible solo en la carpeta de otro core", 0) >= 10, "frecuencias: " + vistos);
-        assertTrue(vistos.getOrDefault("compatible solo en la carpeta de otro core registrado", 0) >= 3, "frecuencias: " + vistos);
         // El catálogo de la suite en synkra-core (donde viven S1 a S10) y su región de S4 y S5: la base daba ~29 y ~12,8.
-        assertTrue(vistos.getOrDefault("compatible solo en la carpeta de otro core NO registrado", 0) >= 2, "frecuencias: " + vistos);
         assertTrue(vistos.getOrDefault("catalogo de la suite en synkra-core", 0) >= 20, "frecuencias: " + vistos);
         assertTrue(vistos.getOrDefault("catalogo de la suite en synkra-core con VERSION_INCOMPATIBLE", 0) >= 8, "frecuencias: " + vistos);
     }

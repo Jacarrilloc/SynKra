@@ -103,6 +103,8 @@ public final class SuiteCombinaciones {
 
     public record Caso(String id, Grupo grupo, String descripcion, Entrada entrada, Esperado esperado) {
         public Caso {
+            Objects.requireNonNull(id, "id");
+            Objects.requireNonNull(grupo, "grupo");
             Objects.requireNonNull(entrada, "entrada");
             Objects.requireNonNull(esperado, "esperado");
             var origen = switch (entrada) {
@@ -143,8 +145,16 @@ public final class SuiteCombinaciones {
     /** Un core del catálogo de la suite: sus versiones y los descriptores de su carpeta de plugins. */
     public record CoreDelCatalogo(String core, List<Version> versiones, List<Descriptor> plugins) {
         public CoreDelCatalogo {
+            Objects.requireNonNull(core, "core");
             versiones = List.copyOf(versiones);
             plugins = List.copyOf(plugins);
+            for (var d : plugins) {
+                if (!d.core().equals(core)) {
+                    throw new IllegalArgumentException(
+                            "El descriptor " + d.nombre() + " " + d.version() + " es del core '" + d.core()
+                                    + "', no de '" + core + "'");
+                }
+            }
         }
     }
 
