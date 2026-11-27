@@ -1,5 +1,6 @@
 package io.synkra.catalogo;
 
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.tngtech.archunit.core.domain.JavaModifier;
@@ -39,5 +40,30 @@ class InterfazCatalogoTest {
         var sinNombre = modulo.getNamedInterfaces().stream().filter(i -> i.isUnnamed()).toList();
         assertThat(sinNombre).allSatisfy(i -> assertThat(i.asJavaClasses()
                 .filter(c -> c.getModifiers().contains(JavaModifier.PUBLIC)).toList()).isEmpty());
+    }
+
+    @Test
+    void catalogoEsUnModuloDeModulith() {
+        var modulo = ApplicationModules.of(SynkraApp.class).getModuleByName("catalogo");
+        assertThat(modulo).isPresent();
+        assertThat(modulo.get().getBasePackage().getName()).isEqualTo("io.synkra.catalogo");
+    }
+
+    @Test
+    void catalogoApiNoDependeDeTiposInternosDeCatalogo() {
+        // "io.synkra.catalogo" sin ".." es solo el paquete base: los tipos internos.
+        noClasses().that().resideInAPackage("io.synkra.catalogo.api..")
+                .should().dependOnClassesThat().resideInAPackage("io.synkra.catalogo")
+                .check(clasesDelModulo());
+    }
+
+    @Test
+    void plataformaNoDependeDeCatalogo() {
+        var plataforma = new ClassFileImporter().withImportOption(new ImportOption.DoNotIncludeTests())
+                .importPackages("io.synkra.plataforma");
+        assertThat(plataforma).isNotEmpty();
+        noClasses().that().resideInAPackage("io.synkra.plataforma..")
+                .should().dependOnClassesThat().resideInAPackage("io.synkra.catalogo..")
+                .check(plataforma);
     }
 }

@@ -43,4 +43,18 @@ class FronterasModulosTest {
                 .isInstanceOf(Violations.class)
                 .hasMessageContaining("dos.interno");
     }
+
+    /** C-36: verificador es una biblioteca compartida, no un módulo con fronteras propias. */
+    @Test
+    void verificadorEsModuloCompartido() {
+        var compartidos = backendReal().getSharedModules().stream().map(m -> m.getIdentifier().toString()).toList();
+        assertThat(compartidos).containsExactly("verificador");
+    }
+
+    @Test
+    void laDocumentacionGeneradaNoSeVersiona() throws Exception {
+        var p = new ProcessBuilder("git", "check-ignore", "-q", "backend/build/spring-modulith-docs/module-plataforma.adoc")
+                .directory(Path.of("..").toFile()).start();
+        assertThat(p.waitFor()).as("git check-ignore (0 = ignorado)").isZero();
+    }
 }

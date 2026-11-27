@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import io.synkra.plataforma.prueba.ControladorDePrueba;
+import fixtures.plataforma.ControladorDePrueba;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 /** C-07: las validaciones de Spring pasan a {@code detalles} con campo y motivo reales. */
 @WebMvcTest(ControladorDePrueba.class)
-@Import(ManejadorErrores.class)
+@Import({ManejadorErrores.class, ControladorDePrueba.class})
 class ValidacionErroresTest {
 
     @Autowired

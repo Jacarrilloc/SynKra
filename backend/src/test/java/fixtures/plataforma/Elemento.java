@@ -1,4 +1,4 @@
-package io.synkra.plataforma.prueba;
+package fixtures.plataforma;
 
 import java.math.BigDecimal;
 import org.springframework.data.annotation.Id;
