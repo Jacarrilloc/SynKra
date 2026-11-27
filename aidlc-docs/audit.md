@@ -697,3 +697,36 @@
 **Context**: CONSTRUCTION, U04, ola 19.
 
 ---
+
+## Sesión de David: estado del repo y continuación de U04
+**Timestamp**: 2026-11-27T16:06:07Z
+**User Input**: "Revisa el repo, commits, branches y etc.. revisa los ultimos cambios, y en donde estamos?? si es posible vayamos a lo más avanzado y revisemos is podemos trabajar y desde que parte lo dejó mi compañero, no se si ya estas conectado a github de forma directa a ver si tyrabajas derectamente desde GH"
+**AI Response**: La rama más avanzada es `origin/main` (3efc6cb, PR #53). `modulo-6-rehecho` ya está en main (PR #16). U01 y U03 cerradas, U04 hasta U04-T05 (ola 19). Siguiente: U04-T07 (ola 20). `gh` autenticado con scope `repo`. Cambié la copia local a `main` con fast-forward.
+**Context**: CONSTRUCTION, U04.
+
+---
+
+## Continuar lo pendiente y subir cambios a GitHub
+**Timestamp**: 2026-11-27T16:10:40Z
+**User Input**: "Ya hice pull, lo ideal seria que tabajarass directamnte en el repo en github, adicinalmnete revisa bien todas las ramasy el histroial de commits y PRS, creoq ue muchas tareas ya se han terminado incluyiendo lo ultimo que ralizamos desde mis sesión, intenemos continuar lo que mi compañero dejo pendinete, y si es posible subamos los cambios cada vez que podamos así si no puedo continuar mi compañero deberia de poder acceder a los cambios"
+**AI Response**: Confirmé que todo lo de la sesión de David está en main. Despaché U04-T07 en `m6r/U04-T07` desde main. Las ramas se suben en cada ronda.
+**Context**: CONSTRUCTION, U04, ola 20.
+
+---
+
+## Decisión: quién fusiona los PRs de U04 (sesión de David)
+**Timestamp**: 2026-11-27T16:12:50Z
+**User Input**: "Tienes permisos de fusionarlos PRs tal com aautorizo Julian"
+**User Input** (16:14:07Z): "Dependera si son muchos cambios en un solo pr y solo es dar el cclic esta bein, pero si son multiples prs para muchos cambiosn¿ entonces fusiona tu"
+**AI Response**: Lo leo así: si queda un solo PR pendiente, David da el clic; si hay varios PRs en cadena (tarea más documentos del orquestador, olas seguidas), los fusiono yo cuando estén VERDES. En la continuación de U04 hay varios PRs por ola, así que los fusiono yo y lo dejo anotado aquí.
+**Context**: CONSTRUCTION, U04.
+
+---
+
+## U04-T07 cerrada por el loop
+**Timestamp**: 2026-11-27T17:00:00Z
+**User Input**: (sin mensaje nuevo; se aplica la regla de fusión que David dio a las 2026-11-27T16:14:07Z)
+**AI Response**: U04-T07 salió VERDE en la ronda 2 (ronda 1 NO-VERDE: dos ROJO en el tope de C-38 por la ruta cruda y por chunked). Se abren dos PRs, el de `m6r/U04-T07` y el de esta rama con las candidatas C-55 a C-60. Como son varios, el orquestador los fusiona en ese orden con la autorización de David.
+**Context**: Loop del módulo 6, ola 20, fuera de las etapas de AI-DLC.
+
+---
