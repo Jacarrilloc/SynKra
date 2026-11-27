@@ -690,3 +690,10 @@
 **Context**: CONSTRUCTION, U04.
 
 ---
+
+## U04-T05: VERDE en la ronda 3, PR #52 fusionado
+**Timestamp**: 2026-11-27T15:40:00Z
+**AI Response**: La ronda 1 salió NO-VERDE porque la propiedad de disco vacío no veía directorios ni escrituras fuera de `datos`. La ronda 2 salió NO-VERDE porque el oráculo, ya estricto, marcaba `./\` como fuga y CA-1 fallaba según la semilla. Decisión del orquestador: las autorreferencias se aceptan como candidata (C-51) y no se cambian las reglas de U04-T04. La ronda 3 salió VERDE, con 25 corridas limpias, 40000 intentos y un barrido exhaustivo sin permisividad, y fusioné el #52. Candidatas nuevas: C-51 a C-54.
+**Context**: CONSTRUCTION, U04, ola 19.
+
+---
