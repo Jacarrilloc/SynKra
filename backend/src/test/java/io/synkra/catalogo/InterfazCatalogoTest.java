@@ -30,7 +30,7 @@ class InterfazCatalogoTest {
     @Test
     void ningunTipoPublicoFueraDeApi() {
         var publicos = clasesDelModulo().stream()
-                .filter(c -> !c.getPackageName().startsWith("io.synkra.catalogo.api"))
+                .filter(c -> !resideInAPackage("io.synkra.catalogo.api..").test(c))
                 .filter(c -> c.getModifiers().contains(JavaModifier.PUBLIC))
                 .map(c -> c.getName()).toList();
         assertThat(publicos).as("tipos públicos de catalogo fuera de api").isEmpty();
