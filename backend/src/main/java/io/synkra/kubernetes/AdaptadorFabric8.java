@@ -8,10 +8,12 @@ import io.synkra.kubernetes.api.AplicacionFallidaException;
 import io.synkra.kubernetes.api.ClienteNoDisponibleException;
 import io.synkra.kubernetes.api.ContextoFalloK8s;
 import io.synkra.kubernetes.api.EstadoPais;
+import io.synkra.kubernetes.api.LecturaPais;
 import io.synkra.kubernetes.api.ObjetosPais;
 import io.synkra.kubernetes.api.PlanPais;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /** Implementación sobre Fabric8; {@code cliente} es nulo si el pod no tiene cuenta de servicio. */
 class AdaptadorFabric8 implements AdaptadorKubernetes {
@@ -73,6 +75,12 @@ class AdaptadorFabric8 implements AdaptadorKubernetes {
     public ContextoFalloK8s contextoFallo(String namespace) {
         String ns = GuardiaNamespace.exigir(namespace);
         return lector().contexto(ns);
+    }
+
+    @Override
+    public Optional<LecturaPais> leerPais(String pais) {
+        String ns = namespaceDe(pais);
+        return lector().leerPais(pais, ns);
     }
 
     private LectorPais lector() {

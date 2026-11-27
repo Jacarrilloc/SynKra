@@ -9,11 +9,10 @@ metadata:
     app.kubernetes.io/managed-by: synkra
 data:
   plugins-activos.yaml: |
-    plugins:
-      - nombre: facturacion
-        version: 1.2.0
-      - nombre: impuestos
-        version: 2.0.1
+    - nombre: "facturacion"
+      version: "1.2.0"
+    - nombre: "impuestos"
+      version: "2.0.1"
   artefactos.txt: |
     1111111111111111111111111111111111111111111111111111111111111111 facturacion-1.2.0.jar
     2222222222222222222222222222222222222222222222222222222222222222 impuestos-2.0.1.jar

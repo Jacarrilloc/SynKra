@@ -94,7 +94,7 @@ class ConstruirObjetosPaisTest {
         var objetos = adaptador.construir(new PlanPais("co", IMAGEN, List.of()));
         assertThat(objetos.configMap().getMetadata().getNamespace()).isEqualTo("synkra-co");
         assertThat(objetos.configMap().getData()).containsEntry("artefactos.txt", "")
-                .containsEntry("plugins-activos.yaml", "plugins: []\n");
+                .containsEntry("plugins-activos.yaml", "[]\n");
     }
 
     @Test

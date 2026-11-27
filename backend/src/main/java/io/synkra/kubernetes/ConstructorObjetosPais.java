@@ -59,8 +59,25 @@ final class ConstructorObjetosPais {
     static final int PUERTO = 8080;
     static final String RUTA_READINESS = "/actuator/health/readiness";
 
+    /**
+     * Clave del ConfigMap con los plugins activos. Formato canónico (el que lee el core, U02-T04; C-81): una
+     * <b>lista YAML en la raíz</b> de mapas con exactamente dos claves de texto, {@code nombre} y {@code version}
+     * (entre comillas, para que {@code 1.0} no se lea como número), o {@code []} sin plugins. No hay mapa
+     * envolvente {@code plugins:}.
+     */
     static final String CLAVE_PLUGINS = "plugins-activos.yaml";
     static final String CLAVE_ARTEFACTOS = "artefactos.txt";
+    /** Claves de cada entrada de {@link #CLAVE_PLUGINS}. */
+    static final String CLAVE_NOMBRE = "nombre";
+    static final String CLAVE_VERSION = "version";
+    static final String SUFIJO_JAR = ".jar";
+    /** Separador entre el sha256 y el nombre del jar en cada línea de {@link #CLAVE_ARTEFACTOS}. */
+    static final String SEPARADOR_ARTEFACTO = " ";
+
+    /** Nombre del jar de un plugin: la clave que une una entrada de {@link #CLAVE_PLUGINS} con su línea de {@link #CLAVE_ARTEFACTOS}. */
+    static String nombreJar(String nombre, String version) {
+        return nombre + "-" + version + SUFIJO_JAR;
+    }
 
     private static final ResourceRequirements RECURSOS_CORE = recursos("256Mi", "512Mi", "250m", "500m");
     private static final ResourceRequirements RECURSOS_INIT = recursos("32Mi", "64Mi", "50m", "100m");
@@ -100,12 +117,12 @@ final class ConstructorObjetosPais {
 
     private static ConfigMap configMap(List<PluginPlan> plugins, String namespace) {
         String activos = plugins.isEmpty()
-                ? "plugins: []\n"
-                : "plugins:\n" + plugins.stream()
-                        .map(p -> "  - nombre: " + p.nombre() + "\n    version: " + p.version() + "\n")
+                ? "[]\n"
+                : plugins.stream()
+                        .map(p -> "- " + CLAVE_NOMBRE + ": \"" + p.nombre() + "\"\n  " + CLAVE_VERSION + ": \"" + p.version() + "\"\n")
                         .collect(Collectors.joining());
         String artefactos = plugins.stream()
-                .map(p -> p.sha256() + " " + p.nombre() + "-" + p.version() + ".jar\n")
+                .map(p -> p.sha256() + SEPARADOR_ARTEFACTO + nombreJar(p.nombre(), p.version()) + "\n")
                 .collect(Collectors.joining());
         return new ConfigMapBuilder()
                 .withNewMetadata().withName(NOMBRE_CONFIG).withNamespace(namespace).withLabels(etiquetaGestor()).endMetadata()
