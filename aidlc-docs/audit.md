@@ -722,3 +722,11 @@
 **Context**: CONSTRUCTION, U04.
 
 ---
+
+## U04-T07 cerrada por el loop
+**Timestamp**: 2026-11-27T17:00:00Z
+**User Input**: (sin mensaje nuevo; se aplica la regla de fusión que David dio a las 2026-11-27T16:14:07Z)
+**AI Response**: U04-T07 salió VERDE en la ronda 2 (ronda 1 NO-VERDE: dos ROJO en el tope de C-38 por la ruta cruda y por chunked). Se abren dos PRs, el de `m6r/U04-T07` y el de esta rama con las candidatas C-55 a C-60. Como son varios, el orquestador los fusiona en ese orden con la autorización de David.
+**Context**: Loop del módulo 6, ola 20, fuera de las etapas de AI-DLC.
+
+---
