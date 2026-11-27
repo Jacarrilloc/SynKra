@@ -18,6 +18,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.HexFormat;
 import java.util.List;
 import java.util.function.Supplier;
@@ -117,6 +118,11 @@ class RecepcionArtefacto {
             var enFlujo = leerEnFlujo(jar);
             if (!enFlujo.equals(leerIndiceJdk(jar))) {
                 throw noCoinciden();
+            }
+            // C-44: con dos entradas del mismo nombre, ZipFile.getEntry y el lector en flujo pueden leer otra.
+            if (new HashSet<>(enFlujo).size() != enFlujo.size()) {
+                throw error(HttpStatus.UNPROCESSABLE_ENTITY, CodigosCatalogo.RUTA_NO_PERMITIDA,
+                        CodigosError.MSG_ENTIDAD_NO_PROCESABLE, List.of(detalle(MotivosCatalogo.ENTRADAS_DUPLICADAS)));
             }
             var culpables = new ArrayList<DetalleError>();
             // Sin los extras Unicode: el nombre es el crudo, el mismo que decodifican los lectores de la JDK.
