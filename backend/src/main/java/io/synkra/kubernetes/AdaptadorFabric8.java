@@ -32,7 +32,7 @@ class AdaptadorFabric8 implements AdaptadorKubernetes, AutoCloseable {
         this.imagenInit = ConstructorObjetosPais.exigirImagenInit(imagenInit);
     }
 
-    /** El cliente (nulo sin cuenta de servicio); solo lo ve este paquete. */
+    /** Costura de prueba: el cliente (nulo sin cuenta de servicio); el código de producción no debe usarla. */
     KubernetesClient cliente() {
         return cliente;
     }

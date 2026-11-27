@@ -1,6 +1,7 @@
 package io.synkra.kubernetes;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.server.mock.KubernetesMockServer;
@@ -122,6 +123,19 @@ class ClienteKubernetesTest {
             assertThat(peticion.getPath()).isEqualTo("/version");
             assertThat(peticion.getHeader("Authorization")).isEqualTo("Bearer token-del-pod-123");
         });
+    }
+
+    /** F-02: el cierre del contexto cierra el cliente (el tipo del bean es la interfaz; Spring deduce close()). */
+    @Test
+    void alCerrarElContextoElClienteQuedaCerrado() throws Exception {
+        escribeCuenta("t");
+        var cliente = new java.util.concurrent.atomic.AtomicReference<KubernetesClient>();
+        conCuenta().run(ctx -> {
+            cliente.set(cliente(ctx.getBean(AdaptadorKubernetes.class)));
+            assertThat(cliente.get().getKubernetesVersion()).isNotNull(); // abierto: responde
+        }); // run cierra el contexto al terminar
+        assertThatThrownBy(() -> cliente.get().getKubernetesVersion()).isNotNull(); // cerrado: ya no, aunque el servidor sigue arriba
+        assertThat(servidor.getRequestCount()).as("sin peticiones tras cerrar").isEqualTo(1);
     }
 
     @Test

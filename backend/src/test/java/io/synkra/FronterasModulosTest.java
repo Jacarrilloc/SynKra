@@ -110,10 +110,12 @@ class FronterasModulosTest {
                     return;
                 }
                 List<String> m = new ArrayList<>();
-                revisa(m, cls.getName() + " (superclase)", cls.getRawSuperclass().stream()
-                        .flatMap(t -> t.getAllInvolvedRawTypes().stream()).toList());
-                revisa(m, cls.getName() + " (interfaces)", cls.getRawInterfaces().stream()
-                        .flatMap(t -> t.getAllInvolvedRawTypes().stream()).toList());
+                // getAllInvolvedRawTypes incluye los argumentos de tipo (Algo<ConfigMap>) y los límites de comodines.
+                cls.getSuperclass().ifPresent(t -> revisa(m, cls.getName() + " (superclase)", t.getAllInvolvedRawTypes()));
+                cls.getInterfaces().forEach(t -> revisa(m, cls.getName() + " (interfaz)", t.getAllInvolvedRawTypes()));
+                cls.getTypeParameters().forEach(v -> v.getUpperBounds()
+                        .forEach(b -> revisa(m, cls.getName() + " (límite de tipo)", b.getAllInvolvedRawTypes())));
+                cls.getAnnotations().forEach(a -> revisa(m, cls.getName() + " (anotación)", List.of(a.getRawType())));
                 for (JavaCodeUnit u : cls.getCodeUnits()) {
                     if (!u.getModifiers().contains(JavaModifier.PUBLIC) && !u.getModifiers().contains(JavaModifier.PROTECTED)) {
                         continue;
@@ -122,10 +124,15 @@ class FronterasModulosTest {
                     for (var p : u.getParameterTypes()) {
                         revisa(m, u.getFullName(), p.getAllInvolvedRawTypes());
                     }
+                    u.getThrowsClause().getTypes().forEach(t -> revisa(m, u.getFullName() + " (throws)", t.getAllInvolvedRawTypes()));
+                    u.getTypeParameters().forEach(v -> v.getUpperBounds()
+                            .forEach(b -> revisa(m, u.getFullName() + " (límite de tipo)", b.getAllInvolvedRawTypes())));
+                    u.getAnnotations().forEach(a -> revisa(m, u.getFullName() + " (anotación)", List.of(a.getRawType())));
                 }
                 for (JavaField f : cls.getFields()) {
                     if (f.getModifiers().contains(JavaModifier.PUBLIC) || f.getModifiers().contains(JavaModifier.PROTECTED)) {
                         revisa(m, f.getFullName(), f.getType().getAllInvolvedRawTypes());
+                        f.getAnnotations().forEach(a -> revisa(m, f.getFullName() + " (anotación)", List.of(a.getRawType())));
                     }
                 }
                 m.forEach(texto -> eventos.add(SimpleConditionEvent.violated(cls, texto)));
@@ -158,6 +165,12 @@ class FronterasModulosTest {
                 .isInstanceOf(AssertionError.class)
                 .hasMessageContaining("ApiFiltraFabric8.directo")
                 .hasMessageContaining("ApiFiltraFabric8.genericoEnParametro")
+                .hasMessageContaining("ApiSuperGenerica (superclase)")
+                .hasMessageContaining("ApiInterfazGenerica (interfaz)")
+                .hasMessageContaining("ApiThrows.lanza")
+                .hasMessageContaining("(throws)")
+                .hasMessageContaining("ApiLimite (límite de tipo)")
+                .hasMessageContaining("ApiAnotada (anotación)")
                 .hasMessageNotContaining("ApiLimpia");
     }
 }
