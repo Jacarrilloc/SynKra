@@ -1,0 +1,4 @@
+F-01: Corregido en el commit de la ronda 2: tope `ListadoPlugins.MAX_PAREJAS = 50`, 422 con campo `filtro` y motivo `FILTRO_LARGO`; prueba `masParejasQueElTopeDan422ConMotivoYElTopeSiPasa` (50 pasa, 51 y 1100 dan 422).
+F-02: Corregido en el commit de la ronda 2: `SubidaPlugin.acotar` se reutiliza en `ListadoPlugins`, `RutasPlugins.listar` y la tercera copia (valores largos); pruebas con más de 50 en `ListarPluginsTest` y `RutasPluginsTest` (último detalle "Se omitieron 11 motivos más").
+F-03: Corregido en el commit de la ronda 2: `listar` llama `obtenerCore` primero; prueba `elCoreInexistenteGanaSiempreAlOtros422` (repetida, clave inválida y exceso de parejas dan 404).
+F-04: Corregido en el commit de la ronda 2: el filtro sale de `getQueryString()`, no del cuerpo; la clave vacía (`?=pe`) da 422 y una codificación rota da 422; prueba `elFiltroSaleSoloDeLaConsultaYUnaClaveVaciaEsUn422`.

@@ -48,6 +48,11 @@ final class MotivosCatalogo {
             + " caracteres";
     static final String ARCHIVO_OBLIGATORIO = "Falta la parte 'archivo' con el JAR del plugin";
     static final String ETIQUETAS_NO_ES_OBJETO = "La parte 'etiquetas' debe ser un objeto JSON de texto a texto";
+    /** Se completa con la clave recortada; la clave aparece más de una vez en la consulta del listado. */
+    static final String ETIQUETA_REPETIDA = "La clave '%s' aparece más de una vez en el filtro";
+    /** Se completa con el tope de parejas ({@code ListadoPlugins.MAX_PAREJAS}). */
+    static final String FILTRO_LARGO = "El filtro tiene más de %d parejas clave=valor";
+    static final String CONSULTA_INVALIDA = "La consulta tiene una codificación de porcentaje no válida";
     static final String ETIQUETA_SIN_VALOR = "La etiqueta '%s' no tiene valor";
     /** Último detalle cuando hay más de {@code SubidaPlugin.MAX_DETALLES} (C-19); se completa con los omitidos. */
     static final String MOTIVOS_OMITIDOS = "Se omitieron %d motivos más";

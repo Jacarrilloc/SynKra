@@ -46,13 +46,6 @@ class RutasCores {
         return dto(api.obtenerCore(nombre));
     }
 
-    /** Hasta U04-T07 y U04-T08 no hay plugins: vacía, pero 404 si el core no existe. */
-    @GetMapping("/{nombre}/plugins")
-    List<Object> plugins(@PathVariable String nombre) {
-        api.obtenerCore(nombre);
-        return List.of();
-    }
-
     private static CoreDto dto(CoreRegistrado c) {
         return new CoreDto(c.nombre(), c.versiones().stream()
                 .map(v -> new VersionDto(v.toString(), c.imagenes().get(v))).toList());

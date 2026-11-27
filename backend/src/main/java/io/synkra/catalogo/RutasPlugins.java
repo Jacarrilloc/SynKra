@@ -15,6 +15,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Part;
 import java.io.IOException;
 import java.net.URI;
+import java.io.ByteArrayOutputStream;
+import java.nio.ByteBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.CodingErrorAction;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +78,83 @@ class RutasPlugins {
         return ResponseEntity.created(ubicacion).body(dto(p));
     }
 
+    /**
+     * H-05, H-06: cada parámetro de la consulta (solo la consulta, no un cuerpo) es una pareja del filtro. El core
+     * inexistente (404) gana a cualquier 422; una clave repetida es un 422 con su campo.
+     */
+    @GetMapping
+    List<PluginDto> listar(@PathVariable String nombre, HttpServletRequest peticion) {
+        api.obtenerCore(nombre);
+        var filtro = new TreeMap<String, String>();
+        var repetidas = new ArrayList<DetalleError>();
+        var consulta = peticion.getQueryString();
+        if (consulta != null && !consulta.isEmpty()) {
+            for (var trozo : consulta.split("&", -1)) {
+                if (trozo.isEmpty()) {
+                    continue;
+                }
+                var igual = trozo.indexOf('=');
+                String clave;
+                String valor;
+                try {
+                    clave = decodificar(igual < 0 ? trozo : trozo.substring(0, igual));
+                    valor = igual < 0 ? "" : decodificar(trozo.substring(igual + 1));
+                } catch (IllegalArgumentException e) {
+                    throw invalido(ListadoPlugins.CAMPO_FILTRO, MotivosCatalogo.CONSULTA_INVALIDA);
+                }
+                if (filtro.containsKey(clave)) {
+                    var corta = RecepcionArtefacto.recortar(clave);
+                    if (repetidas.stream().noneMatch(d -> d.campo().equals(corta))) {
+                        repetidas.add(new DetalleError(corta, MotivosCatalogo.ETIQUETA_REPETIDA.formatted(corta)));
+                    }
+                } else {
+                    filtro.put(clave, valor);
+                }
+            }
+        }
+        if (!repetidas.isEmpty()) {
+            throw new ExcepcionApi(HttpStatus.UNPROCESSABLE_ENTITY, new ErrorApi(CodigosError.ENTIDAD_NO_PROCESABLE,
+                    CodigosError.MSG_ENTIDAD_NO_PROCESABLE, SubidaPlugin.acotar(repetidas, ListadoPlugins.CAMPO_FILTRO)));
+        }
+        return api.listarPlugins(nombre, filtro).stream().map(RutasPlugins::dto).toList();
+    }
+
+    /**
+     * Decodifica como {@code application/x-www-form-urlencoded}: {@code +} es un espacio, {@code %XX} un byte y el
+     * resultado debe ser UTF-8 bien formado. {@link IllegalArgumentException} si el {@code %} está roto o el UTF-8 no vale.
+     */
+    static String decodificar(String crudo) {
+        var bytes = new ByteArrayOutputStream();
+        for (int i = 0; i < crudo.length(); i++) {
+            int c = crudo.charAt(i);
+            if (c == '%') {
+                if (i + 3 > crudo.length()) {
+                    throw new IllegalArgumentException("%");
+                }
+                int alto = Character.digit(crudo.charAt(i + 1), 16);
+                int bajo = Character.digit(crudo.charAt(i + 2), 16);
+                if (alto < 0 || bajo < 0) {
+                    throw new IllegalArgumentException("%");
+                }
+                bytes.write(alto * 16 + bajo);
+                i += 2;
+            } else if (c == '+') {
+                bytes.write(' ');
+            } else {
+                var punto = crudo.codePointAt(i);
+                bytes.writeBytes(new String(Character.toChars(punto)).getBytes(StandardCharsets.UTF_8));
+                i += Character.charCount(punto) - 1;
+            }
+        }
+        try {
+            return StandardCharsets.UTF_8.newDecoder().onMalformedInput(CodingErrorAction.REPORT)
+                    .onUnmappableCharacter(CodingErrorAction.REPORT).decode(ByteBuffer.wrap(bytes.toByteArray()))
+                    .toString();
+        } catch (CharacterCodingException e) {
+            throw new IllegalArgumentException("UTF-8", e);
+        }
+    }
+
     @GetMapping("/{plugin}/{version}")
     PluginDto obtener(@PathVariable String nombre, @PathVariable String plugin, @PathVariable String version) {
         return dto(api.obtenerPlugin(nombre, plugin, version));
@@ -113,8 +195,7 @@ class RutasPlugins {
         });
         if (!largos.isEmpty()) {
             throw new ExcepcionApi(HttpStatus.UNPROCESSABLE_ENTITY, new ErrorApi(CodigosError.ENTIDAD_NO_PROCESABLE,
-                    CodigosError.MSG_ENTIDAD_NO_PROCESABLE, largos.size() > SubidaPlugin.MAX_DETALLES
-                            ? largos.subList(0, SubidaPlugin.MAX_DETALLES) : largos));
+                    CodigosError.MSG_ENTIDAD_NO_PROCESABLE, SubidaPlugin.acotar(largos, PARTE_ETIQUETAS)));
         }
         return mapa;
     }

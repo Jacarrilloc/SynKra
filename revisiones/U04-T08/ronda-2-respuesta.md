@@ -1,0 +1,4 @@
+F-01: Corregido en el commit de la ronda 3: `RutasPlugins.decodificar` decodifica como form-urlencoded (`+` a espacio, `%2B` a `+`, UTF-8) y un `%` roto da 422; prueba `laConsultaSeDecodificaComoFormularioYUnaCodificacionRotaDa422` con `banco+x`, `banco%20x`, `a%2Bb` y `per%C3%BA`.
+F-02: Corregido en el commit de la ronda 3: constante `ListadoPlugins.CAMPO_FILTRO` en los cuatro puntos y en las pruebas (ya no queda el literal "filtro" fuera de la constante).
+F-03: Corregido en el commit de la ronda 3: prueba renombrada (`lasClavesMalasAlTopeDanUnDetalleCadaUnaYLasRepetidasMasDe50LlevanElAvisoDeOmitidos`) y comentario en `MAX_PAREJAS` que deja escrito el acoplamiento con `MAX_DETALLES`.
+F-04: Corregido en el commit de la ronda 3: el mismo decodificador usa un decodificador UTF-8 estricto; `per%FA` y `%C3` dan 422, igual que `%zz` y `%` (probado en la misma prueba).

@@ -43,9 +43,11 @@ class CatalogoServicio implements CatalogoApi {
     private final CoreRepositorio cores;
     private final VersionCoreRepositorio versiones;
     private final SubidaPlugin subida;
+    private final ListadoPlugins listado;
 
     CatalogoServicio(JdbcAggregateTemplate plantilla, CoreRepositorio cores, VersionCoreRepositorio versiones,
-            SubidaPlugin subida) {
+            SubidaPlugin subida, ListadoPlugins listado) {
+        this.listado = listado;
         this.plantilla = plantilla;
         this.cores = cores;
         this.versiones = versiones;
@@ -110,6 +112,13 @@ class CatalogoServicio implements CatalogoApi {
     @Override
     public PluginSubido obtenerPlugin(String core, String nombre, String version) {
         return subida.obtener(core, nombre, version);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PluginSubido> listarPlugins(String core, Map<String, String> filtro) {
+        obtenerCore(core);
+        return listado.listar(core, filtro);
     }
 
     private CoreRegistrado leer(String nombre) {
