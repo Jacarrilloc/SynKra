@@ -25,6 +25,8 @@ dependencies {
     implementation("org.xerial:sqlite-jdbc")
     implementation("org.flywaydb:flyway-core")
     implementation("org.apache.commons:commons-compress:1.27.1")
+    // U05-T01: última 7.x (Jackson 2, igual que Spring Boot 3.5); la 8.x migra a Jackson 3.
+    implementation("io.fabric8:kubernetes-client:7.9.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation(testFixtures(project(":verificador")))
@@ -33,5 +35,6 @@ dependencies {
     testImplementation("org.springframework.modulith:spring-modulith-starter-test")
     // PBT-03 (U04-T05): la misma versión que verificador.
     testImplementation("net.jqwik:jqwik:1.10.2")
+    testImplementation("io.fabric8:kubernetes-server-mock:7.9.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
