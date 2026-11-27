@@ -55,7 +55,7 @@ Para que eso no vuelva a pasar:
 | Tarea | Rama | Ronda | Estado |
 |---|---|---|---|
 | U05-T04 `aplicar` | `m6r/U05-T04` | 2 | Ronda 1 NO-VERDE (informe en `revisiones/U05-T04/ronda-1.md`, commit `e085e5f`): F-01 a F-03 NARANJA, F-04 y F-05 AMARILLO; todo se arregla. Ronda 2 del codificador hecha (`cd2ec6f`, respuesta en `ronda-1-respuesta.md`). **Revisor de la ronda 2 despachado**; si la sesión se corta, repetirlo |
-| U02-T04 `ArranquePlugins` | `m6r/U02-T04` | 2 | Ronda 1 NO-VERDE (informe en `revisiones/U02-T04/ronda-1.md`, commit `6917a8c`): F-01 y F-02 NARANJA; F-03 es de la especificación; F-04 fuera de alcance (C-78); F-05 y F-06 se arreglan. F-02 se arregla dentro de `core/` igualando las salvaguardas de `LectorDescriptor` (profundidad 32, etiquetas explícitas) y con una sola fuente para nombre y límites; la extracción a `verificador/` es C-77. **Codificador de la ronda 2 despachado.** Falta: su respuesta, revisor ronda 2 |
+| U02-T04 `ArranquePlugins` | `m6r/U02-T04` | 2 | Ronda 1 NO-VERDE (informe en `revisiones/U02-T04/ronda-1.md`, commit `6917a8c`): F-01 y F-02 NARANJA; F-03 es de la especificación; F-04 fuera de alcance (C-78); F-05 y F-06 se arreglan. F-02 se arregla dentro de `core/` igualando las salvaguardas de `LectorDescriptor` (profundidad 32, etiquetas explícitas) y con una sola fuente para nombre y límites; la extracción a `verificador/` es C-77. Ronda 2 del codificador hecha (`e726d03`, código en `7172570`). **Revisor de la ronda 2 despachado**; si la sesión se corta, repetirlo |
 
 Orden de fusión cuando las dos estén en VERDE: #77, luego U05-T04, luego U02-T04.
 
