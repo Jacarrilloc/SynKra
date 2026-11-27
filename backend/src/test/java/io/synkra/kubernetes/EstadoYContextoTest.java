@@ -453,4 +453,14 @@ class EstadoYContextoTest {
         assertThat(lineas.get(2)).contains("tercero");
         assertThat(lineas.get(3)).contains("sin marca");
     }
+
+    @Test
+    void unaExcepcionQueNoEsDeLaApiNoSeEnvuelveEnLecturaFallida() throws Exception {
+        var roto = org.mockito.Mockito.mock(KubernetesClient.class);
+        org.mockito.Mockito.when(roto.apps()).thenThrow(new IllegalStateException("bug propio"));
+        org.mockito.Mockito.when(roto.pods()).thenThrow(new IllegalStateException("bug propio"));
+        var a = new AdaptadorFabric8(roto);
+        assertThatThrownBy(() -> a.estado(NS)).isExactlyInstanceOf(IllegalStateException.class);
+        assertThatThrownBy(() -> a.contextoFallo(NS)).isExactlyInstanceOf(IllegalStateException.class);
+    }
 }
