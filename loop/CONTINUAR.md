@@ -2,7 +2,7 @@
 
 > Pega este archivo completo al abrir una sesión nueva. Responde en español.
 > Lo mantiene al día el orquestador después de cada hito (ver «Puntos de continuidad»).
-> Última actualización: 2026-11-27 21:40 UTC (16:40 en Bogotá), sesión de Julian, que retomó la de David.
+> Última actualización: 2026-11-27 21:50 UTC (16:50 en Bogotá), sesión de David, que retomó la de Julian.
 
 ---
 
@@ -69,8 +69,8 @@ Al fusionar la base de un PR apilado, GitHub cambia su base a `main`. El #6 es a
 
 | Tarea | Worktree / rama | Desde | Estado | Siguiente paso |
 |---|---|---|---|---|
-| U02-T07 endpoints del core (ola 33) | `../wt-m6r-U02-T07`, `m6r/U02-T07` | `cb2096a` | Ronda 1 NO-VERDE (`ronda-1.md`, `3514245`): F-01 NARANJA (clave duplicada o basura al final dan 200), F-02 NARANJA (plugin que devuelve `null` da 200 vacío), F-03 a F-06 AMARILLO; el orquestador manda arreglar todo y rechazar también propiedades desconocidas. C-91 y C-92 registradas. **En vuelo: codificador de la ronda 2** | Si se corta: mirar commits del codificador después de `3514245` y redespacharlo o pasar al revisor de la ronda 2. Si VERDE: PR a `m6r/U02-T06` |
-| U05-T07 script de descarga (ola 33) | `../wt-m6r-U05-T07`, `m6r/U05-T07` | `5e7a45e` | Codificador ronda 1 hecho, `dd8a95f` (16 casos en `init-descarga/test.sh`; 5 mutantes; rojo 15/16). `shellcheck` no está instalado y el modo automático no dejó ejecutar un binario descargado: esa parte de CA-1 queda sin correr y se le dice al revisor. **En vuelo: revisor de la ronda 1** | Si se corta, repetir el revisor de la ronda 1 con base `5e7a45e` y HEAD `dd8a95f`. Decisión del codificador a revisar: líneas vacías de `artefactos.txt` se saltan, el resto fuera de formato da código 3. Si VERDE: PR a `m6r/U05-T06` |
+| U02-T07 endpoints del core (ola 33) | `../wt-m6r-U02-T07`, `m6r/U02-T07` | `cb2096a` | Ronda 1 NO-VERDE (`3514245`). Codificador de la ronda 2 hecho, `e69ef05` (respuesta en `revisiones/U02-T07/ronda-2-respuesta.md`). **En vuelo: revisor de la ronda 2** (sesión de David, 21:50 UTC) | Si se corta: repetir el revisor de la ronda 2 con base `cb2096a` y HEAD `e69ef05`. Si VERDE: PR a `m6r/U02-T06` |
+| U05-T07 script de descarga (ola 33) | `../wt-m6r-U05-T07`, `m6r/U05-T07` | `5e7a45e` | Codificador ronda 1 hecho, `dd8a95f` (16 casos en `init-descarga/test.sh`; 5 mutantes; rojo 15/16). `shellcheck` no está instalado y el modo automático no dejó ejecutar un binario descargado: esa parte de CA-1 queda sin correr y se le dice al revisor. **En vuelo: revisor de la ronda 1, relanzado por la sesión de David a las 21:50 UTC** (el de Julian se perdió con el corte) | Si se corta, repetir el revisor de la ronda 1 con base `5e7a45e` y HEAD `dd8a95f`. Decisión del codificador a revisar: líneas vacías de `artefactos.txt` se saltan, el resto fuera de formato da código 3. Si VERDE: PR a `m6r/U05-T06` |
 
 Historia corta de lo terminado hoy (detalle en `revisiones/<tarea>/` de cada rama):
 - U05-T04 y U02-T04: NO-VERDE en ronda 1, VERDE en ronda 2.
