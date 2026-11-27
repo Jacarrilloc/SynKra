@@ -67,7 +67,7 @@ Orden de fusión: #77, luego #78 (U05-T04), luego #79 (U02-T04), luego #80 (U02-
 
 **U02-T06 despachada** (ola 32): worktree `../wt-m6r-U02-T06`, rama `m6r/U02-T06` desde `15ca50f`; ronda 1 NO-VERDE (`ronda-1.md`, `742c7c3`): F-01 ROJO (CA-2 falla por excepción, no por aserción), F-02 NARANJA (orden inverso y `detener` que lanza sin prueba), F-03 a F-05 AMARILLO. En F-03 el orquestador precisó la decisión 2: se prefiere un `HealthIndicator` en el grupo readiness. Ronda 2 NO-VERDE (`ronda-2.md`, `c42f25f`): F-06 y F-07 NARANJA (falta el caso «a, b falla, c»; readiness da `DOWN` y no `OUT_OF_SERVICE`). **VERDE en la ronda 3** (`cb2096a`). **PR #82** abierto contra `m6r/U02-T05` (apilado), sin fusionar.
 
-**U02-T07 despachada** (ola 33): worktree `../wt-m6r-U02-T07`, rama `m6r/U02-T07` desde `cb2096a`; codificador de la ronda 1 corriendo. Si la sesión se corta, mirar sus commits y redespacharlo.
+**U02-T07 despachada** (ola 33): worktree `../wt-m6r-U02-T07`, rama `m6r/U02-T07` desde `cb2096a`; ronda 1 del codificador hecha (`95719db`; 4 de 4 criterios, candidatas: límite de cuerpo y C-86). **Revisor de la ronda 1 despachado**; si la sesión se corta, repetirlo.
 
 ### Ola 31 (U05-T05 ∥ U02-T05), escrita, sin despachar
 
