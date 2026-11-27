@@ -1,12 +1,18 @@
- bitacoras/U02-T09-evidencia/ca1.txt                | 13 ++++
- bitacoras/U02-T09-evidencia/ca2.txt                |  4 ++
+sha (tras el último commit de código r2, más este archivo): d72da9a
+HEAD al medir: 9216337
+ bitacoras/U02-T09-evidencia/ca1.txt                | 10 +++
+ bitacoras/U02-T09-evidencia/ca2.txt                |  4 +
  bitacoras/U02-T09-evidencia/ca3.txt                |  1 +
- bitacoras/U02-T09-evidencia/rojo.txt               | 30 +++++++++
- bitacoras/U02-T09.md                               | 35 ++++++++++
- plugins/kyc-co/build.gradle.kts                    | 41 ++++++++++++
- .../src/main/java/io/synkra/kycco/PluginKycCo.java | 47 +++++++++++++
+ bitacoras/U02-T09-evidencia/ca4.txt                | 12 +++
+ bitacoras/U02-T09-evidencia/rojo-r2.txt            | 16 ++++
+ bitacoras/U02-T09-evidencia/rojo.txt               | 30 +++++++
+ bitacoras/U02-T09.md                               | 35 ++++++++
+ plugins/kyc-co/build.gradle.kts                    | 41 +++++++++
+ .../src/main/java/io/synkra/kycco/PluginKycCo.java | 54 ++++++++++++
  .../services/io.synkra.plugin.api.SynkraPlugin     |  1 +
  .../kyc-co/src/main/resources/synkra-plugin.yaml   |  7 ++
- .../src/test/java/io/synkra/kycco/KycCoTest.java   | 78 ++++++++++++++++++++++
+ .../src/test/java/io/synkra/kycco/KycCoTest.java   | 98 ++++++++++++++++++++++
+ revisiones/U02-T09/ronda-1-respuesta.md            |  6 ++
+ revisiones/U02-T09/ronda-1.md                      | 56 +++++++++++++
  settings.gradle.kts                                |  1 +
- 11 files changed, 258 insertions(+)
+ 15 files changed, 372 insertions(+)
