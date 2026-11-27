@@ -88,7 +88,7 @@ Orden de fusión: #77, luego #78 (U05-T04), luego #79 (U02-T04), luego #80 (U02-
 
 ### Olas 35 y 36, escritas en parte
 
-- `tareas/U02-T09-plugin-kyc-co.md` y `tareas/U02-T10-plugin-kyc-pe.md` escritas. Faltan U05-T09 (fronteras) y U05-T10 (resumen).
+- `tareas/U02-T09-plugin-kyc-co.md`, `tareas/U02-T10-plugin-kyc-pe.md`, `tareas/U05-T09-fronteras-kubernetes.md` y `tareas/U05-T10-resumen-unidad.md` escritas.
 
 ## Lo que sigue
 
