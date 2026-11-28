@@ -1,5 +1,5 @@
-fecha: 2026-11-28T05:11:10Z
-sha: 85d4923
+fecha: 2026-11-28T05:12:33Z
+sha: 8ee75bf
 comando: bash bitacoras/U08-A-evidencia/ca9.sh
 ---
 sintaxis=0
@@ -13,7 +13,7 @@ error: docker network connect red-que-no-existe kind-registry falló con código
 limpieza: se borra kind-registry, que creó esta corrida
 salida=1
 quedo=1
-contexto permitido: kind-synkra (https://127.0.0.1:46859)
+contexto permitido: kind-synkra (https://127.0.0.1:35427)
 scripts/registro-local.sh
 registro listo en 127.0.0.1:5001
 restaurado=0

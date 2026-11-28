@@ -1,5 +1,5 @@
-fecha: 2026-11-28T04:51:52Z
-sha: 464ecfc
+fecha: 2026-11-28T05:12:31Z
+sha: 8ee75bf
 comando: bash bitacoras/U08-A-evidencia/ca5.sh
 ---
 3

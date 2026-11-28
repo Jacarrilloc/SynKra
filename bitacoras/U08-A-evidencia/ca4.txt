@@ -1,5 +1,5 @@
-fecha: 2026-11-28T05:10:24Z
-sha: 290430c
+fecha: 2026-11-28T05:12:30Z
+sha: 8ee75bf
 comando: bash bitacoras/U08-A-evidencia/ca4.sh
 ---
 install otro salida=2
@@ -22,6 +22,6 @@ falta salida=2
 1
 falso-intacto
 nada-aplicado
-contexto permitido: kind-synkra (https://127.0.0.1:46859)
+contexto permitido: kind-synkra (https://127.0.0.1:35427)
 real salida=0
 --- salida final=0

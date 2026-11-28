@@ -1,13 +1,13 @@
-fecha: 2026-11-28T05:10:16Z
-sha: 290430c
-comando: make registro >/dev/null 2>&1; bash bitacoras/U08-A-evidencia/ca3.sh
+fecha: 2026-11-28T05:12:28Z
+sha: 8ee75bf
+comando: bash bitacoras/U08-A-evidencia/ca3.sh
 ---
 The push refers to repository [localhost:5001/synkra-prueba-registro]
-11a64b0fc2c8: Pushed
 14a4754c352f: Pushed
-07b7518a8a2c: Pushed
 bfa447a3f347: Pushed
+07b7518a8a2c: Pushed
 c9820381a213: Pushed
+11a64b0fc2c8: Pushed
 1: digest: sha256:bc68ba48dae0e0423bb885c8d07d20c3210febbe996d38d54d32c574fda690ae size: 1918
 
  Info -> Not all multiplatform-content is present and only the available single-platform image was pushed
