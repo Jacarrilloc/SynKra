@@ -1066,3 +1066,9 @@ Se despacha el codificador de la ronda 2.
 **Input del usuario (05:21:55Z):** "La sesion si esta detenida, aunque es probable que el continue no este del todo actualizado con el progreso que llevaba"
 
 **Acción del orquestador:** `git fetch`; las ramas `m6r/U08-A`, `m6r/U08-B`, `m6r/U09-A` y `orq/U05-U02-tareas` coinciden con `loop/CONTINUAR.md` de Julian (`8709ceb`). Se repiten los tres revisores en vuelo y la redacción de U08-C y U08-D. Se pide permiso a David para descargar las imágenes fijadas por digest.
+
+**Input del usuario (05:23:09Z):** "Listo tiene smi presmiso" (permiso para descargar `kindest/node@sha256:3489c76…`, `eclipse-temurin:21-jre-alpine@sha256:5d7689f…`, `alpine:3.20@sha256:d9e853e…`, `mcr.microsoft.com/dotnet/sdk:10.0.404` y, en U08-C, el Ingress NGINX).
+
+**Input del usuario (05:24:55Z):** salida de `sudo sysctl fs.inotify.max_user_instances=512 fs.inotify.max_user_watches=524288`.
+
+**Acción del orquestador:** imágenes descargadas; revisores de U09-A (ronda 3) y U08-A (ronda 1) despachados.
