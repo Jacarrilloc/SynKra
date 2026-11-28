@@ -56,7 +56,7 @@ Contratos que fijaron U06-A y U07-A (los asumen las tareas siguientes; están en
 | U06-A registro base | `m6r/U06-A` | `97f9f80` | **VERDE ronda 2**, fusionado (#97) | — |
 | U07-A planes y país | `m6r/U07-A` | `97f9f80` | **VERDE ronda 1**, fusionado (#96) | — |
 | U07-B crear plan | `../wt-m6r-U07-B`, `m6r/U07-B` | `8182b9d` | Ronda 1 NO-VERDE (F-01 NARANJA). Codificador ronda 2 terminó (`9d80cba`). **Revisor ronda 2 despachado** | Repetir el revisor ronda 2 (base `8182b9d`) si no hay `revisiones/U07-B/ronda-2.md` |
-| U06-B historial y reinicio | `../wt-m6r-U06-B`, `m6r/U06-B` | `66c7e5a` | **Codificador ronda 1 despachado** (tarea con hash `c729f5f`) | Mirar `origin/m6r/U06-B`: sin commits, redespachar; con bitácora completa, revisor ronda 1 (base `66c7e5a`) |
+| U06-B historial y reinicio | `../wt-m6r-U06-B`, `m6r/U06-B` | `66c7e5a` | Codificador ronda 1 terminó (`af22e4e`; desviaciones: `.run(...)` en vez de `.properties(...)` en la decisión 7, y mutación `id asc` en vez de quitar `, id DESC`, equivalente). **Revisor ronda 1 despachado** | Repetir el revisor ronda 1 (base `66c7e5a`) si no hay `revisiones/U06-B/ronda-1.md` |
 | U06-C y U07-C | (sin rama) | — | **Escritas** (hashes `004d66e` y `7dbe5d3`). U07-C crea el bean `Clock` en `plataforma/Reloj.java` (U06-C no puede crear otro); U06-C usa `@MockitoBean AdaptadorKubernetes`; confirmar da 501 hasta U07-D | Despachar U06-C cuando U06-B salga VERDE y U07-C cuando U07-B salga VERDE |
 
 En la máquina de Julian, las sesiones de Julian siguen trabajando mientras no se diga lo contrario: **antes de despachar, David revisa `git fetch` y la fecha del último commit de cada rama** (punto 4 de abajo) para no pisar a nadie.
