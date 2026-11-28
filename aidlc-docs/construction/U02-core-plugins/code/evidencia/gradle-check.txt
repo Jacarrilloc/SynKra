@@ -1,0 +1,61 @@
+# fecha: 2026-11-28T00:20:39Z
+# sha: 63d99fa (rama m6r/U02-T13)
+# cwd: raiz del worktree
+$ ./gradlew :core:test --rerun :core:check :plugins:kyc-co:test --rerun :plugins:kyc-co:check :plugins:kyc-pe:test --rerun :plugins:kyc-pe:check; echo "salida=$?"
+> Task :plugin-api:compileJava
+> Task :verificador:compileJava
+> Task :core:compileJava
+> Task :core:processResources
+> Task :core:classes
+> Task :verificador:compileTestFixturesJava
+> Task :core:compileTestJava
+> Task :core:processTestResources NO-SOURCE
+> Task :core:testClasses
+> Task :plugin-api:processResources NO-SOURCE
+> Task :plugin-api:classes
+> Task :plugin-api:jar
+> Task :verificador:processResources NO-SOURCE
+> Task :verificador:classes
+> Task :verificador:jar
+> Task :verificador:processTestFixturesResources NO-SOURCE
+> Task :verificador:testFixturesClasses
+> Task :verificador:testFixturesJar
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+2026-11-27T19:20:49.403-05:00  INFO 210423 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-27T19:20:49.404-05:00  INFO 210423 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+> Task :core:test
+> Task :core:check
+> Task :plugins:kyc-co:compileJava
+> Task :plugins:kyc-co:processResources
+> Task :plugins:kyc-co:classes
+> Task :plugins:kyc-co:jar
+> Task :plugins:kyc-co:compileTestJava
+> Task :plugins:kyc-co:processTestResources NO-SOURCE
+> Task :plugins:kyc-co:testClasses
+> Task :plugins:kyc-co:test
+> Task :plugins:kyc-co:check
+> Task :plugins:kyc-pe:compileJava
+> Task :plugins:kyc-pe:processResources
+> Task :plugins:kyc-pe:classes
+> Task :plugins:kyc-pe:descriptor130
+> Task :plugins:kyc-pe:jar130
+> Task :plugins:kyc-pe:descriptor200
+> Task :plugins:kyc-pe:jar200
+> Task :plugins:kyc-pe:compileTestJava
+> Task :plugins:kyc-pe:processTestResources NO-SOURCE
+> Task :plugins:kyc-pe:testClasses
+> Task :plugins:kyc-pe:test
+> Task :plugins:kyc-pe:check
+
+[Incubating] Problems report is available at: file:///home/julian/Escritorio/Proyectos/wt-m6r-U02-T13/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 11s
+23 actionable tasks: 23 executed
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
+salida=0

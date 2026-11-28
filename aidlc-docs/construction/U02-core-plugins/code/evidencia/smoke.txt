@@ -1,0 +1,7 @@
+# fecha: 2026-11-28T00:21:02Z
+# sha: 63d99fa (rama m6r/U02-T13)
+# cwd: raiz del worktree
+$ core/smoke.sh; echo "salida=$?"
+ok caso1-kyc-pe-1.3.0
+ok caso2-kyc-pe-2.0.0
+salida=0
