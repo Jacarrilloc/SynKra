@@ -149,10 +149,20 @@ class RegistroServicio implements RegistroApi {
         return List.copyOf(salida);
     }
 
+    /** R-R6: el último {@code listo} por el orden de R-R5 (el desempate por id también vale aquí). */
     @Override
     @Transactional(readOnly = true)
     public Optional<DespliegueRegistrado> ultimoListo(String pais) {
-        throw new UnsupportedOperationException("pendiente");
+        if (pais == null || !PAIS.matcher(pais).matches()) {
+            throw new IllegalArgumentException("pais: dos letras minúsculas");
+        }
+        var filas = jdbc.query("select " + COLUMNAS + " from reg_despliegue where pais = ? and estado = 'listo' "
+                + "order by confirmado_en desc, id desc limit 1", RegistroServicio::fila, pais);
+        if (filas.isEmpty()) {
+            return Optional.empty();
+        }
+        var base = filas.get(0);
+        return Optional.of(con(base, pluginsDe(List.of(base.id())).getOrDefault(base.id(), List.of()), null));
     }
 
     private static DespliegueRegistrado con(DespliegueRegistrado f, List<PluginDesplegado> plugins,
