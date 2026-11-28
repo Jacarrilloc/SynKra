@@ -37,6 +37,16 @@ if [ ! -e "$RUTA" ]; then
   fallar "falta el kubeconfig $RUTA: corre make cluster"
 fi
 
+# 2b. Tras `kind delete cluster` el archivo queda sin ningun contexto: equivale a no tener kubeconfig.
+if [ "$ANTES" -eq 1 ]; then
+  rc=0
+  CTXS=$(capturar kubectl --kubeconfig "$RUTA" config get-contexts -o name) || rc=$?
+  if [ "$rc" -eq 0 ] && [ -z "$CTXS" ]; then
+    echo "kubeconfig sin contextos todavía: lo rellena make cluster"
+    exit 0
+  fi
+fi
+
 # 3. El contexto actual debe ser kind-synkra.
 rc=0
 CTX=$(capturar kubectl --kubeconfig "$RUTA" config current-context) || rc=$?
