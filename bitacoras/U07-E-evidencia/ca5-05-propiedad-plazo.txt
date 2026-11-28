@@ -1,0 +1,28 @@
+fecha: 2026-11-28T03:19:01Z  sha: 03ffd16  mutación: 05-propiedad-plazo
+$ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"; (cd "$D" && git init -q)
+$ sed -i -e s/this.plazo\ =\ plazo\;/this.plazo\ =\ Duration.ofMinutes\(3\)\;/ "$D/backend/src/main/java/io/synkra/despliegue/VigilanciaDespliegues.java"
+--- diff de la mutación (copia vs HEAD)
+51c51
+<         this.plazo = plazo;
+---
+>         this.plazo = Duration.ofMinutes(3);
+$ (cd "$D" && ./gradlew :backend:test --tests '*VigilanciaTest' --tests '*RetomarVigilanciaTest' --tests '*AplicandoTest' --tests '*ReintentosClienteTest' --tests '*EstadoRolloutTest' --tests '*ContextoEventosTest' --tests '*VigilanciaCoincideTest' --tests '*VigilanciaDobleTest')
+30 tests completed, 12 failed
+BUILD FAILED in 29s
+$ grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaCoincideTest.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaDobleTest.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaTest.xml
+--- pruebas que cayeron (clase.método)
+VigilanciaCoincideTest.soloElShaDeUnPluginDifiereNoEsListo
+VigilanciaCoincideTest.soloLosPluginsDifierenNoEsListo
+VigilanciaCoincideTest.soloLaImagenDifiereNoEsListo
+VigilanciaDobleTest.alVencerElPlazoElContextoDelClusterEntraEnElRegistro
+VigilanciaDobleTest.unFallidoConContextoIlegibleSeCierraPorPlazoComoSinLectura
+VigilanciaDobleTest.unaFilaQueOtraPasadaYaCerroSeSaltaSinCortarLaPasada
+VigilanciaTest.pyUnAplicandoSinNadaEnElClusterSeCierraPorPlazo
+VigilanciaTest.coVenceElPlazoExactoConPropiedadDeDosMinutos
+VigilanciaTest.clCrashLoopBackOffCierraEnLaMismaPasadaConElContextoDeVerdad
+VigilanciaTest.ecSinLecturaNoCierraNadaHastaElPlazo
+VigilanciaTest.boLoQueCorreNoEsLoConfirmadoNuncaEsListo
+VigilanciaTest.peListoCuandoLoQueCorreEsLoConfirmado

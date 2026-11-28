@@ -1,0 +1,15 @@
+fecha: 2026-11-28T03:16:43Z  sha: 03ffd16  mutación: 22-B-fallido-contexto-ilegible
+$ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"; (cd "$D" && git init -q)
+$ sed -i -e s/situacion\ =\ Situacion.SIN_LECTURA\;/return\ false\;/ "$D/backend/src/main/java/io/synkra/despliegue/VigilanciaDespliegues.java"
+--- diff de la mutación (copia vs HEAD)
+90c90
+<             situacion = Situacion.SIN_LECTURA;
+---
+>             return false;
+$ (cd "$D" && ./gradlew :backend:test --tests '*VigilanciaTest' --tests '*RetomarVigilanciaTest' --tests '*AplicandoTest' --tests '*ReintentosClienteTest' --tests '*EstadoRolloutTest' --tests '*ContextoEventosTest' --tests '*VigilanciaCoincideTest' --tests '*VigilanciaDobleTest')
+30 tests completed, 1 failed
+BUILD FAILED in 37s
+$ grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaDobleTest.xml
+--- pruebas que cayeron (clase.método)
+VigilanciaDobleTest.unFallidoConContextoIlegibleSeCierraPorPlazoComoSinLectura

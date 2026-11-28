@@ -1,0 +1,85 @@
+fecha: 2026-11-28T03:24:37Z  árbol limpio; punta VERDE de U07-D = 39a242c; último commit de código 03ffd16 (ronda 2)
+$ git rev-parse --short HEAD; git diff --stat 39a242c...HEAD
+53e42e3
+ .../io/synkra/despliegue/MotivosDespliegue.java    |   5 +
+ .../io/synkra/despliegue/TareasProgramadas.java    |  37 +++
+ .../synkra/despliegue/VigilanciaDespliegues.java   | 158 ++++++++++++
+ .../synkra/kubernetes/ConfiguracionKubernetes.java |   1 +
+ .../main/java/io/synkra/kubernetes/LectorPais.java |  42 ++-
+ .../java/io/synkra/registro/RegistroServicio.java  |  16 ++
+ .../java/io/synkra/registro/api/RegistroApi.java   |   6 +
+ backend/src/main/resources/application.properties  |  12 +
+ .../synkra/despliegue/RetomarVigilanciaTest.java   | 145 +++++++++++
+ .../synkra/despliegue/VigilanciaCoincideTest.java  | 133 ++++++++++
+ .../io/synkra/despliegue/VigilanciaDobleTest.java  | 192 ++++++++++++++
+ .../java/io/synkra/despliegue/VigilanciaTest.java  | 285 +++++++++++++++++++++
+ .../io/synkra/kubernetes/ContextoEventosTest.java  |  64 +++++
+ .../io/synkra/kubernetes/EstadoRolloutTest.java    |  81 ++++++
+ .../io/synkra/kubernetes/LecturasDePrueba.java     | 121 +++++++++
+ .../synkra/kubernetes/ReintentosClienteTest.java   | 122 +++++++++
+ .../io/synkra/kubernetes/SimuladorKubernetes.java  | 159 ++++++++++++
+ .../java/io/synkra/registro/AplicandoTest.java     |  82 ++++++
+ .../test/resources/config/application.properties   |   1 +
+ bitacoras/U07-E-evidencia/ca1.txt                  |  52 ++++
+ bitacoras/U07-E-evidencia/ca2.txt                  |  12 +
+ bitacoras/U07-E-evidencia/ca3.txt                  |  17 ++
+ bitacoras/U07-E-evidencia/ca4.txt                  |  47 ++++
+ bitacoras/U07-E-evidencia/ca5-01-listo.txt         |  21 ++
+ bitacoras/U07-E-evidencia/ca5-02-coincide.txt      |  19 ++
+ .../U07-E-evidencia/ca5-03-fallo-inmediato.txt     |  22 ++
+ .../U07-E-evidencia/ca5-04-frontera-plazo.txt      |  30 +++
+ .../U07-E-evidencia/ca5-05-propiedad-plazo.txt     |  28 ++
+ bitacoras/U07-E-evidencia/ca5-06-contexto.txt      |  17 ++
+ bitacoras/U07-E-evidencia/ca5-07-sin-lectura.txt   |  15 ++
+ .../U07-E-evidencia/ca5-08-cero-escrituras.txt     |  30 +++
+ .../ca5-09-rd12-enable-scheduling.txt              |  13 +
+ bitacoras/U07-E-evidencia/ca5-10-c109-vencer.txt   |  15 ++
+ .../U07-E-evidencia/ca5-11-c116-sin-estado.txt     |  19 ++
+ bitacoras/U07-E-evidencia/ca5-12-c116-orden.txt    |  15 ++
+ .../U07-E-evidencia/ca5-13-c76-reintentos.txt      |  15 ++
+ .../U07-E-evidencia/ca5-14-c82-listas-bastan.txt   |  29 +++
+ bitacoras/U07-E-evidencia/ca5-15-c83-eventos.txt   |  17 ++
+ .../U07-E-evidencia/ca5-16-c82-razon-gana.txt      |  22 ++
+ bitacoras/U07-E-evidencia/ca5-17-c82-replicas.txt  |  16 ++
+ .../U07-E-evidencia/ca5-18-c82-actualizadas.txt    |  15 ++
+ .../U07-E-evidencia/ca5-19-c82-generacion.txt      |  15 ++
+ .../U07-E-evidencia/ca5-20-plazo-positivo.txt      |  15 ++
+ .../U07-E-evidencia/ca5-21-A-aislamiento-fila.txt  |  19 ++
+ .../ca5-22-B-fallido-contexto-ilegible.txt         |  15 ++
+ .../ca5-23-C-transicion-no-permitida.txt           |  13 +
+ bitacoras/U07-E-evidencia/ca5-24-F-solo-imagen.txt |  15 ++
+ .../U07-E-evidencia/ca5-25-G-solo-plugins.txt      |  16 ++
+ .../U07-E-evidencia/ca5-26-I-eventos-al-plazo.txt  |  15 ++
+ .../U07-E-evidencia/ca5-27-J-logs-al-plazo.txt     |  15 ++
+ bitacoras/U07-E-evidencia/ca6.txt                  |  88 +++++++
+ bitacoras/U07-E-evidencia/ca7.txt                  |  71 +++++
+ bitacoras/U07-E-evidencia/rojo-AplicandoTest.xml   |  62 +++++
+ .../U07-E-evidencia/rojo-ContextoEventosTest.xml   |  73 ++++++
+ .../U07-E-evidencia/rojo-EstadoRolloutTest.xml     |  95 +++++++
+ .../U07-E-evidencia/rojo-ReintentosClienteTest.xml |  76 ++++++
+ .../U07-E-evidencia/rojo-RetomarVigilanciaTest.xml | 156 +++++++++++
+ bitacoras/U07-E-evidencia/rojo-VigilanciaTest.xml  | 177 +++++++++++++
+ bitacoras/U07-E-evidencia/rojo.txt                 | 122 +++++++++
+ bitacoras/U07-E.md                                 | 110 ++++++++
+ revisiones/U07-E/ronda-1-respuesta.md              |   5 +
+ revisiones/U07-E/ronda-1.md                        |  87 +++++++
+ 62 files changed, 3403 insertions(+), 5 deletions(-)
+$ git diff --name-status 39a242c...HEAD -- backend/src/test backend/src/main/resources backend/src/main/java/io/synkra/registro backend/src/main/java/io/synkra/kubernetes backend/src/main/java/io/synkra/plataforma backend/src/main/java/io/synkra/catalogo
+M	backend/src/main/java/io/synkra/kubernetes/ConfiguracionKubernetes.java
+M	backend/src/main/java/io/synkra/kubernetes/LectorPais.java
+M	backend/src/main/java/io/synkra/registro/RegistroServicio.java
+M	backend/src/main/java/io/synkra/registro/api/RegistroApi.java
+M	backend/src/main/resources/application.properties
+A	backend/src/test/java/io/synkra/despliegue/RetomarVigilanciaTest.java
+A	backend/src/test/java/io/synkra/despliegue/VigilanciaCoincideTest.java
+A	backend/src/test/java/io/synkra/despliegue/VigilanciaDobleTest.java
+A	backend/src/test/java/io/synkra/despliegue/VigilanciaTest.java
+A	backend/src/test/java/io/synkra/kubernetes/ContextoEventosTest.java
+A	backend/src/test/java/io/synkra/kubernetes/EstadoRolloutTest.java
+A	backend/src/test/java/io/synkra/kubernetes/LecturasDePrueba.java
+A	backend/src/test/java/io/synkra/kubernetes/ReintentosClienteTest.java
+M	backend/src/test/java/io/synkra/kubernetes/SimuladorKubernetes.java
+A	backend/src/test/java/io/synkra/registro/AplicandoTest.java
+A	backend/src/test/resources/config/application.properties
+$ git diff 39a242c...HEAD -- backend/src/test/java/io/synkra/kubernetes/SimuladorKubernetes.java backend/src/main/resources/application.properties backend/src/main/java/io/synkra/registro/api/RegistroApi.java | grep -c '^-[^-]'
+0

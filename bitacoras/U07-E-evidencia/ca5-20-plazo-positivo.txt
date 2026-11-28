@@ -1,0 +1,15 @@
+fecha: 2026-11-28T03:21:38Z  sha: 03ffd16  mutación: 20-plazo-positivo
+$ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"; (cd "$D" && git init -q)
+$ sed -i -e s/if\ \(plazo.isZero\(\)\ \|\|\ plazo.isNegative\(\)\)\ \{/if\ \(false\)\ \{/ "$D/backend/src/main/java/io/synkra/despliegue/VigilanciaDespliegues.java"
+--- diff de la mutación (copia vs HEAD)
+45c45
+<         if (plazo.isZero() || plazo.isNegative()) {
+---
+>         if (false) {
+$ (cd "$D" && ./gradlew :backend:test --tests '*VigilanciaTest' --tests '*RetomarVigilanciaTest' --tests '*AplicandoTest' --tests '*ReintentosClienteTest' --tests '*EstadoRolloutTest' --tests '*ContextoEventosTest' --tests '*VigilanciaCoincideTest' --tests '*VigilanciaDobleTest')
+30 tests completed, 1 failed
+BUILD FAILED in 43s
+$ grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.RetomarVigilanciaTest.xml
+--- pruebas que cayeron (clase.método)
+RetomarVigilanciaTest.unPlazoNoPositivoNoArranca

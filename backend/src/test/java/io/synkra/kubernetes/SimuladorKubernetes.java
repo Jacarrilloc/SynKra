@@ -8,6 +8,8 @@ import io.fabric8.kubernetes.client.server.mock.KubernetesMockServer;
 import io.fabric8.mockwebserver.Context;
 import io.fabric8.mockwebserver.MockWebServer;
 import io.fabric8.mockwebserver.ServerRequest;
+import io.fabric8.mockwebserver.dsl.HttpMethod;
+import io.fabric8.mockwebserver.internal.SimpleRequest;
 import io.fabric8.mockwebserver.ServerResponse;
 import io.fabric8.mockwebserver.http.Headers;
 import io.fabric8.mockwebserver.http.RecordedRequest;
@@ -17,6 +19,11 @@ import io.fabric8.mockwebserver.utils.ResponseProviders;
 import io.fabric8.kubernetes.client.utils.Serialization;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
+import io.fabric8.kubernetes.api.model.ContainerStateBuilder;
+import io.fabric8.kubernetes.api.model.ContainerStatusBuilder;
+import io.fabric8.kubernetes.api.model.EventBuilder;
+import io.fabric8.kubernetes.api.model.PodBuilder;
+import io.fabric8.kubernetes.api.model.PodStatusBuilder;
 import io.synkra.kubernetes.api.AdaptadorKubernetes;
 import io.synkra.kubernetes.api.PlanPais;
 import java.nio.file.Files;
@@ -42,6 +49,7 @@ public final class SimuladorKubernetes implements AutoCloseable {
     private final String propiedadCasa;
     private final String propiedadKubeconfig;
     private int leidas;
+    private final Map<ServerRequest, Queue<ServerResponse>> respuestas;
 
     public SimuladorKubernetes() {
         try {
@@ -54,6 +62,7 @@ public final class SimuladorKubernetes implements AutoCloseable {
         System.setProperty("user.home", casa.toString());
         System.setProperty("kubeconfig", casa.resolve("kubeconfig-falso").toString());
         var respuestas = new HashMap<ServerRequest, Queue<ServerResponse>>();
+        this.respuestas = respuestas;
         servidor = new KubernetesMockServer(new Context(), new MockWebServer(), respuestas,
                 new KubernetesMixedDispatcher(respuestas), false);
         servidor.init();
@@ -87,6 +96,9 @@ public final class SimuladorKubernetes implements AutoCloseable {
 
     /** El {@code GET} del Deployment de ese país responde 500. */
     public void fallaLecturas(String pais) {
+        // Una expectativa registrada antes (aceptaAplicar) se queda con el turno: se quita la de ese GET para que esta mande.
+        respuestas.remove(new SimpleRequest(HttpMethod.GET,
+                "/apis/apps/v1/namespaces/synkra-" + pais + "/deployments/" + ConstructorObjetosPais.NOMBRE_CORE));
         servidor.expect().get()
                 .withPath("/apis/apps/v1/namespaces/synkra-" + pais + "/deployments/" + ConstructorObjetosPais.NOMBRE_CORE)
                 .andReturn(500, "{\"kind\":\"Status\",\"code\":500}").always();
@@ -113,6 +125,153 @@ public final class SimuladorKubernetes implements AutoCloseable {
         aceptaAplicarEn(rutas.get(1));
         servidor.expect().patch().withPath(rutas.get(2) + CONSULTA_APLICAR)
                 .andReturn(500, "{\"kind\":\"Status\",\"code\":500}").always();
+    }
+
+
+    /** U07-E: lo que sirven los logs y el evento de {@link #marcaFallo(String, String)}. */
+    public static final String LOG_CORE = "core: no arranca\n";
+    public static final String LOG_INIT = "descarga: plugins listos\n";
+    public static final String EVENTO = "Warning BackOff: Back-off restarting failed container";
+
+    /**
+     * El rollout terminó: {@code replicas}, {@code readyReplicas} y {@code updatedReplicas} del Deployment iguales a
+     * {@code spec.replicas} (o 1), {@code observedGeneration} igual a {@code metadata.generation}; los pods del país
+     * se reemplazan por uno corriendo y listo. Si el país se aplicó con {@link #aceptaAplicar(String)} el estado se
+     * pone en lo aplicado (es lo que sirve el {@code GET}); si no, en el Deployment sembrado. En modo CRUD el
+     * {@code status} puede sobrevivir a un {@code PATCH} posterior: no se afirma {@code EN_CURSO} después de esto.
+     */
+    public void marcaListo(String pais) {
+        borraPods(pais);
+        ponEstadoDeployment(pais, null, null, null);
+        siembraPodListo(pais, "synkra-core-listo");
+        drena();
+    }
+
+    /** Pod {@code synkra-core-fallo} con 3 reinicios, su evento y sus logs; {@code razon}: {@code CrashLoopBackOff} o {@code Init:Error}. */
+    public void marcaFallo(String pais, String razon) {
+        siembraPodFallo(pais, "synkra-core-fallo", razon);
+        drena();
+    }
+
+    /** Rollout con un pod viejo listo y uno nuevo en {@code CrashLoopBackOff}: 1 deseada, 2 réplicas, 1 lista, 1 actualizada. */
+    public void marcaRolloutConFallo(String pais) {
+        borraPods(pais);
+        ponEstadoDeployment(pais, 2, 1, 1);
+        siembraPodListo(pais, "synkra-core-viejo");
+        siembraPodFallo(pais, "synkra-core-nuevo", "CrashLoopBackOff");
+        drena();
+    }
+
+    private void borraPods(String pais) {
+        var ns = "synkra-" + pais;
+        for (var p : cliente.pods().inNamespace(ns).list().getItems()) {
+            cliente.pods().inNamespace(ns).withName(p.getMetadata().getName()).delete();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void ponEstadoDeployment(String pais, Integer replicas, Integer listas, Integer actualizadas) {
+        var ns = "synkra-" + pais;
+        var ruta = rutasDeAplicar(pais).get(2);
+        if (aplicados.containsKey(ruta)) {
+            var d = (Map<String, Object>) Serialization.unmarshal(aplicados.get(ruta), Map.class);
+            var spec = (Map<String, Object>) d.getOrDefault("spec", Map.of());
+            var meta = (Map<String, Object>) d.getOrDefault("metadata", Map.of());
+            int deseadas = spec.get("replicas") instanceof Number n ? n.intValue() : 1;
+            var status = new HashMap<String, Object>();
+            status.put("replicas", replicas != null ? replicas : deseadas);
+            status.put("readyReplicas", listas != null ? listas : deseadas);
+            status.put("updatedReplicas", actualizadas != null ? actualizadas : deseadas);
+            if (meta.get("generation") != null) {
+                status.put("observedGeneration", meta.get("generation"));
+            }
+            d.put("status", status);
+            aplicados.put(ruta, Serialization.asJson(d));
+            return;
+        }
+        var d = cliente.apps().deployments().inNamespace(ns).withName(ConstructorObjetosPais.NOMBRE_CORE).get();
+        if (d == null) {
+            throw new IllegalStateException("No hay Deployment sembrado ni aplicado en " + ns);
+        }
+        int deseadas = d.getSpec() != null && d.getSpec().getReplicas() != null ? d.getSpec().getReplicas() : 1;
+        var generacion = d.getMetadata().getGeneration();
+        var status = new io.fabric8.kubernetes.api.model.apps.DeploymentStatusBuilder()
+                .withReplicas(replicas != null ? replicas : deseadas)
+                .withReadyReplicas(listas != null ? listas : deseadas)
+                .withUpdatedReplicas(actualizadas != null ? actualizadas : deseadas);
+        if (generacion != null) {
+            status.withObservedGeneration(generacion);
+        }
+        d.setStatus(status.build());
+        d.getMetadata().setResourceVersion(null);
+        cliente.apps().deployments().inNamespace(ns).resource(d).update();
+    }
+
+    private void siembraPodListo(String pais, String nombre) {
+        var estado = new PodStatusBuilder().withPhase("Running")
+                .withInitContainerStatuses(new ContainerStatusBuilder().withName(ConstructorObjetosPais.CONTENEDOR_INIT)
+                        .withReady(true).withRestartCount(0).withState(new ContainerStateBuilder().withNewTerminated()
+                                .withExitCode(0).endTerminated().build()).build())
+                .withContainerStatuses(new ContainerStatusBuilder().withName(ConstructorObjetosPais.CONTENEDOR_CORE)
+                        .withReady(true).withRestartCount(0)
+                        .withState(new ContainerStateBuilder().withNewRunning().endRunning().build()).build()).build();
+        crea(pais, nombre, estado);
+        sinLogs(pais, nombre);
+    }
+
+    /** Un pod listo no tiene nada que contar: la API responde 400 a sus logs (el simulado, sin esto, contesta otra cosa). */
+    private void sinLogs(String pais, String nombre) {
+        var ruta = "/api/v1/namespaces/synkra-" + pais + "/pods/" + nombre + "/log?pretty=false&container=";
+        for (var contenedor : List.of(ConstructorObjetosPais.CONTENEDOR_INIT,
+                ConstructorObjetosPais.CONTENEDOR_CORE + "&tailLines=200",
+                ConstructorObjetosPais.CONTENEDOR_CORE + "&previous=true&tailLines=200")) {
+            servidor.expect().get().withPath(ruta + contenedor).andReturn(400, "sin log").always();
+        }
+    }
+
+    private void siembraPodFallo(String pais, String nombre, String razon) {
+        var ns = "synkra-" + pais;
+        boolean init = razon.equals("Init:Error");
+        if (!init && !razon.equals("CrashLoopBackOff")) {
+            throw new IllegalArgumentException("razón no soportada: " + razon);
+        }
+        var estado = new PodStatusBuilder().withPhase("Running");
+        if (init) {
+            estado.withInitContainerStatuses(new ContainerStatusBuilder().withName(ConstructorObjetosPais.CONTENEDOR_INIT)
+                    .withReady(false).withRestartCount(3).withState(new ContainerStateBuilder().withNewTerminated()
+                            .withExitCode(1).withReason("Error").endTerminated().build()).build());
+        } else {
+            estado.withContainerStatuses(new ContainerStatusBuilder().withName(ConstructorObjetosPais.CONTENEDOR_CORE)
+                    .withReady(false).withRestartCount(3).withState(new ContainerStateBuilder().withNewWaiting()
+                            .withReason("CrashLoopBackOff").endWaiting().build()).build());
+        }
+        crea(pais, nombre, estado.build());
+        var e = new EventBuilder()
+                .withNewMetadata().withName("ev-" + nombre).withNamespace(ns).endMetadata()
+                .withNewInvolvedObject().withKind("Pod").withName(nombre).withNamespace(ns).endInvolvedObject()
+                .withType("Warning").withReason("BackOff").withMessage("Back-off restarting failed container")
+                .withLastTimestamp("2026-01-01T00:00:02Z").build();
+        cliente.v1().events().inNamespace(ns).resource(e).create();
+        var ruta = "/api/v1/namespaces/" + ns + "/pods/" + nombre + "/log?pretty=false&container=";
+        servidor.expect().get().withPath(ruta + ConstructorObjetosPais.CONTENEDOR_INIT).andReturn(200, LOG_INIT).always();
+        if (!init) {
+            servidor.expect().get().withPath(ruta + ConstructorObjetosPais.CONTENEDOR_CORE + "&tailLines=200")
+                    .andReturn(200, LOG_CORE).always();
+        } else {
+            // El core nunca arrancó: su log (y el del intento anterior) no existen.
+            servidor.expect().get().withPath(ruta + ConstructorObjetosPais.CONTENEDOR_CORE + "&tailLines=200")
+                    .andReturn(400, "container is waiting to start").always();
+            servidor.expect().get().withPath(ruta + ConstructorObjetosPais.CONTENEDOR_CORE + "&previous=true&tailLines=200")
+                    .andReturn(400, "previous terminated container not found").always();
+        }
+    }
+
+    private void crea(String pais, String nombre, io.fabric8.kubernetes.api.model.PodStatus estado) {
+        var ns = "synkra-" + pais;
+        var p = new PodBuilder().withNewMetadata().withName(nombre).withNamespace(ns)
+                .addToLabels(ConstructorObjetosPais.ETIQUETA_NOMBRE, ConstructorObjetosPais.NOMBRE_CORE).endMetadata()
+                .withStatus(estado).build();
+        cliente.pods().inNamespace(ns).resource(p).create();
     }
 
     private static final String CONSULTA_APLICAR = "?fieldManager=" + ConstructorObjetosPais.GESTOR + "&force=true";

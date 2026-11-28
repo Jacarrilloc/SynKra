@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.synkra.despliegue.RetomarVigilanciaTest" tests="2" skipped="0" failures="2" errors="0" timestamp="2026-11-28T02:48:39.368Z" hostname="casdav-Legion-Pro-5-16ADR10" time="24.789">
+  <properties/>
+  <testcase name="unPlazoNoPositivoNoArranca()" classname="io.synkra.despliegue.RetomarVigilanciaTest" time="2.368">
+    <failure message="java.lang.AssertionError: &#10;Expecting code to raise a throwable." type="java.lang.AssertionError">java.lang.AssertionError: 
+Expecting code to raise a throwable.
+	at io.synkra.despliegue.RetomarVigilanciaTest.unPlazoNoPositivoNoArranca(RetomarVigilanciaTest.java:140)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="trasUnReinicioSeRetomaLaVigilanciaSinReaplicarYLosPlanesVencenSolos()" classname="io.synkra.despliegue.RetomarVigilanciaTest" time="21.729">
+    <failure message="org.awaitility.core.ConditionTimeoutException: Condition with Lambda expression in io.synkra.despliegue.RetomarVigilanciaTest was not fulfilled within 20 seconds." type="org.awaitility.core.ConditionTimeoutException">org.awaitility.core.ConditionTimeoutException: Condition with Lambda expression in io.synkra.despliegue.RetomarVigilanciaTest was not fulfilled within 20 seconds.
+	at org.awaitility.core.ConditionAwaiter.await(ConditionAwaiter.java:167)
+	at org.awaitility.core.CallableCondition.await(CallableCondition.java:78)
+	at org.awaitility.core.CallableCondition.await(CallableCondition.java:26)
+	at org.awaitility.core.ConditionFactory.until(ConditionFactory.java:1006)
+	at org.awaitility.core.ConditionFactory.until(ConditionFactory.java:975)
+	at io.synkra.despliegue.RetomarVigilanciaTest.trasUnReinicioSeRetomaLaVigilanciaSinReaplicarYLosPlanesVencenSolos(RetomarVigilanciaTest.java:119)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <system-out><![CDATA[
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-11-27T21:48:40.373-05:00  INFO 619646 --- [    Test worker] w.o.g.p.i.worker.GradleWorkerMain        : Starting GradleWorkerMain using Java 21.0.13.1 with PID 619646 (started by casdav in /home/casdav/Projects/Master/wt-m6r-U07-E/backend)
+2026-11-27T21:48:40.374-05:00  INFO 619646 --- [    Test worker] w.o.g.p.i.worker.GradleWorkerMain        : No active profile set, falling back to 1 default profile: "default"
+2026-11-27T21:48:40.939-05:00  INFO 619646 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2026-11-27T21:48:40.984-05:00  INFO 619646 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 40 ms. Found 8 JDBC repository interfaces.
+2026-11-27T21:48:41.308-05:00  INFO 619646 --- [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 0 (http)
+2026-11-27T21:48:41.318-05:00  INFO 619646 --- [    Test worker] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-11-27T21:48:41.319-05:00  INFO 619646 --- [    Test worker] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-11-27T21:48:41.356-05:00  INFO 619646 --- [    Test worker] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-11-27T21:48:41.356-05:00  INFO 619646 --- [    Test worker] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 961 ms
+2026-11-27T21:48:41.631-05:00  INFO 619646 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Starting...
+2026-11-27T21:48:41.711-05:00  INFO 619646 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : synkra-sqlite - Added connection org.sqlite.jdbc4.JDBC4Connection@4faaff61
+2026-11-27T21:48:41.713-05:00  INFO 619646 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Start completed.
+2026-11-27T21:48:41.785-05:00  INFO 619646 --- [    Test worker] org.flywaydb.core.FlywayExecutor         : Database: jdbc:sqlite:/tmp/retomar-plazo17869214798471172929/synkra.db (SQLite 3.49)
+2026-11-27T21:48:41.804-05:00  INFO 619646 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "main"."flyway_schema_history" does not exist yet
+2026-11-27T21:48:41.805-05:00  INFO 619646 --- [    Test worker] o.f.core.internal.command.DbValidate     : Successfully validated 4 migrations (execution time 00:00.008s)
+2026-11-27T21:48:41.807-05:00  INFO 619646 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "main"."flyway_schema_history" ...
+2026-11-27T21:48:41.823-05:00  INFO 619646 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Current version of schema "main": << Empty Schema >>
+2026-11-27T21:48:41.826-05:00  INFO 619646 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "main" to version "1 - base"
+2026-11-27T21:48:41.834-05:00  INFO 619646 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "main" to version "2 - catalogo"
+2026-11-27T21:48:41.839-05:00  INFO 619646 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "main" to version "3 - registro"
+2026-11-27T21:48:41.842-05:00  INFO 619646 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "main" to version "4 - despliegue"
+2026-11-27T21:48:41.847-05:00  INFO 619646 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Successfully applied 4 migrations to schema "main", now at version v4 (execution time 00:00.001s)
+2026-11-27T21:48:42.295-05:00  INFO 619646 --- [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-11-27T21:48:42.339-05:00  INFO 619646 --- [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 35415 (http) with context path '/'
+2026-11-27T21:48:42.348-05:00  INFO 619646 --- [    Test worker] w.o.g.p.i.worker.GradleWorkerMain        : Started GradleWorkerMain in 2.221 seconds (process running for 4.014)
+2026-11-27T21:48:42.402-05:00  INFO 619646 --- [    Test worker] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-27T21:48:42.405-05:00  INFO 619646 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-27T21:48:42.408-05:00  INFO 619646 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-27T21:48:42.409-05:00  INFO 619646 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-11-27T21:48:42.445-05:00  INFO 619646 --- [    Test worker] w.o.g.p.i.worker.GradleWorkerMain        : Starting GradleWorkerMain using Java 21.0.13.1 with PID 619646 (started by casdav in /home/casdav/Projects/Master/wt-m6r-U07-E/backend)
+2026-11-27T21:48:42.445-05:00  INFO 619646 --- [    Test worker] w.o.g.p.i.worker.GradleWorkerMain        : No active profile set, falling back to 1 default profile: "default"
+2026-11-27T21:48:42.603-05:00  INFO 619646 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2026-11-27T21:48:42.618-05:00  INFO 619646 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 13 ms. Found 8 JDBC repository interfaces.
+2026-11-27T21:48:42.659-05:00  INFO 619646 --- [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 0 (http)
+2026-11-27T21:48:42.660-05:00  INFO 619646 --- [    Test worker] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-11-27T21:48:42.660-05:00  INFO 619646 --- [    Test worker] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-11-27T21:48:42.674-05:00  INFO 619646 --- [    Test worker] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-11-27T21:48:42.674-05:00  INFO 619646 --- [    Test worker] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 228 ms
+2026-11-27T21:48:42.730-05:00  INFO 619646 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Starting...
+2026-11-27T21:48:42.748-05:00  INFO 619646 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : synkra-sqlite - Added connection org.sqlite.jdbc4.JDBC4Connection@a712344
+2026-11-27T21:48:42.748-05:00  INFO 619646 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Start completed.
+2026-11-27T21:48:42.758-05:00  INFO 619646 --- [    Test worker] org.flywaydb.core.FlywayExecutor         : Database: jdbc:sqlite:/home/casdav/Projects/Master/wt-m6r-U07-E/backend/build/sqlite-pruebas/RetomarVigilanciaTest/synkra.db (SQLite 3.49)
+2026-11-27T21:48:42.760-05:00  INFO 619646 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "main"."flyway_schema_history" does not exist yet
+2026-11-27T21:48:42.761-05:00  INFO 619646 --- [    Test worker] o.f.core.internal.command.DbValidate     : Successfully validated 4 migrations (execution time 00:00.001s)
+2026-11-27T21:48:42.761-05:00  INFO 619646 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "main"."flyway_schema_history" ...
+2026-11-27T21:48:42.765-05:00  INFO 619646 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Current version of schema "main": << Empty Schema >>
+2026-11-27T21:48:42.766-05:00  INFO 619646 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "main" to version "1 - base"
+2026-11-27T21:48:42.770-05:00  INFO 619646 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "main" to version "2 - catalogo"
+2026-11-27T21:48:42.773-05:00  INFO 619646 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "main" to version "3 - registro"
+2026-11-27T21:48:42.777-05:00  INFO 619646 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "main" to version "4 - despliegue"
+2026-11-27T21:48:42.779-05:00  INFO 619646 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Successfully applied 4 migrations to schema "main", now at version v4 (execution time 00:00.000s)
+2026-11-27T21:48:42.859-05:00  INFO 619646 --- [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-11-27T21:48:42.867-05:00  INFO 619646 --- [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 33229 (http) with context path '/'
+2026-11-27T21:48:42.871-05:00  INFO 619646 --- [    Test worker] w.o.g.p.i.worker.GradleWorkerMain        : Started GradleWorkerMain in 0.44 seconds (process running for 4.537)
+2026-11-27T21:48:43.162-05:00  INFO 619646 --- [o-auto-2-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-11-27T21:48:43.162-05:00  INFO 619646 --- [o-auto-2-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-11-27T21:48:43.163-05:00  INFO 619646 --- [o-auto-2-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-11-27T21:48:43.320-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[39785] received request: GET /apis/apps/v1/namespaces/synkra-pe/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T21:48:43.343-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[39785] received request: GET /api/v1/namespaces/synkra-pe/configmaps/synkra-core-config HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T21:48:43.410-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[39785] received request: GET /apis/apps/v1/namespaces/synkra-co/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T21:48:43.413-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[39785] received request: GET /api/v1/namespaces/synkra-co/configmaps/synkra-core-config HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T21:48:43.511-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[39785] received request: PATCH /api/v1/namespaces/synkra-pe/configmaps/synkra-core-config?fieldManager=synkra&force=true HTTP/1.1 and responded: HTTP/1.1 200 OK
+2026-11-27T21:48:43.526-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[39785] received request: PATCH /api/v1/namespaces/synkra-pe/services/synkra-core?fieldManager=synkra&force=true HTTP/1.1 and responded: HTTP/1.1 200 OK
+2026-11-27T21:48:43.598-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[39785] received request: PATCH /apis/apps/v1/namespaces/synkra-pe/deployments/synkra-core?fieldManager=synkra&force=true HTTP/1.1 and responded: HTTP/1.1 200 OK
+2026-11-27T21:48:43.697-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[39785] received request: PATCH /api/v1/namespaces/synkra-co/configmaps/synkra-core-config?fieldManager=synkra&force=true HTTP/1.1 and responded: HTTP/1.1 200 OK
+2026-11-27T21:48:43.700-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[39785] received request: PATCH /api/v1/namespaces/synkra-co/services/synkra-core?fieldManager=synkra&force=true HTTP/1.1 and responded: HTTP/1.1 200 OK
+2026-11-27T21:48:43.703-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[39785] received request: PATCH /apis/apps/v1/namespaces/synkra-co/deployments/synkra-core?fieldManager=synkra&force=true HTTP/1.1 and responded: HTTP/1.1 200 OK
+2026-11-27T21:48:43.721-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[39785] received request: GET /apis/apps/v1/namespaces/synkra-pe/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 200 OK
+2026-11-27T21:48:43.723-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[39785] received request: GET /api/v1/namespaces/synkra-pe/configmaps/synkra-core-config HTTP/1.1 and responded: HTTP/1.1 200 OK
+2026-11-27T21:48:43.738-05:00  INFO 619646 --- [    Test worker] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-27T21:48:43.739-05:00  INFO 619646 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-27T21:48:43.742-05:00  INFO 619646 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-27T21:48:43.744-05:00  INFO 619646 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-11-27T21:48:43.816-05:00  INFO 619646 --- [    Test worker] w.o.g.p.i.worker.GradleWorkerMain        : Starting GradleWorkerMain using Java 21.0.13.1 with PID 619646 (started by casdav in /home/casdav/Projects/Master/wt-m6r-U07-E/backend)
+2026-11-27T21:48:43.816-05:00  INFO 619646 --- [    Test worker] w.o.g.p.i.worker.GradleWorkerMain        : No active profile set, falling back to 1 default profile: "default"
+2026-11-27T21:48:43.953-05:00  INFO 619646 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2026-11-27T21:48:43.964-05:00  INFO 619646 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 10 ms. Found 8 JDBC repository interfaces.
+2026-11-27T21:48:43.988-05:00  INFO 619646 --- [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 0 (http)
+2026-11-27T21:48:43.988-05:00  INFO 619646 --- [    Test worker] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-11-27T21:48:43.989-05:00  INFO 619646 --- [    Test worker] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-11-27T21:48:44.004-05:00  INFO 619646 --- [    Test worker] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-11-27T21:48:44.005-05:00  INFO 619646 --- [    Test worker] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 188 ms
+2026-11-27T21:48:44.043-05:00  INFO 619646 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Starting...
+2026-11-27T21:48:44.044-05:00  INFO 619646 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : synkra-sqlite - Added connection org.sqlite.jdbc4.JDBC4Connection@60b90fd3
+2026-11-27T21:48:44.044-05:00  INFO 619646 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Start completed.
+2026-11-27T21:48:44.050-05:00  INFO 619646 --- [    Test worker] org.flywaydb.core.FlywayExecutor         : Database: jdbc:sqlite:/home/casdav/Projects/Master/wt-m6r-U07-E/backend/build/sqlite-pruebas/RetomarVigilanciaTest/synkra.db (SQLite 3.49)
+2026-11-27T21:48:44.053-05:00  INFO 619646 --- [    Test worker] o.f.core.internal.command.DbValidate     : Successfully validated 4 migrations (execution time 00:00.002s)
+2026-11-27T21:48:44.054-05:00  INFO 619646 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Current version of schema "main": 4
+2026-11-27T21:48:44.054-05:00  INFO 619646 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Schema "main" is up to date. No migration necessary.
+2026-11-27T21:48:44.119-05:00  INFO 619646 --- [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-11-27T21:48:44.127-05:00  INFO 619646 --- [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 46665 (http) with context path '/'
+2026-11-27T21:48:44.138-05:00  INFO 619646 --- [    Test worker] w.o.g.p.i.worker.GradleWorkerMain        : Started GradleWorkerMain in 0.335 seconds (process running for 5.804)
+2026-11-27T21:49:04.152-05:00  INFO 619646 --- [    Test worker] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-27T21:49:04.153-05:00  INFO 619646 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-27T21:49:04.155-05:00  INFO 619646 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-27T21:49:04.155-05:00  INFO 619646 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+]]></system-out>
+  <system-err><![CDATA[Nov 27, 2026 9:48:39 PM io.fabric8.mockwebserver.MockWebServer info
+INFO: MockWebServer[39785] starting to accept connections on localhost
+]]></system-err>
+</testsuite>

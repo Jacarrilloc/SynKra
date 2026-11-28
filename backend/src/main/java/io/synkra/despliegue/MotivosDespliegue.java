@@ -30,6 +30,11 @@ final class MotivosDespliegue {
     static final String USUARIO_MENSAJE = "El usuario no es válido";
     static final String USUARIO_FORMA = "El usuario debe tener de 1 a 64 caracteres: minúsculas, dígitos, punto, guion o guion bajo";
 
+    /** R-D10 (U07-E): partes del texto de eventos de un despliegue que se cierra por plazo. */
+    static final String VIGILANCIA_PLAZO = "Venció el plazo de vigilancia sin que el despliegue quedara listo";
+    static final String VIGILANCIA_NO_APLICADO = "Lo que corre en el clúster no es lo que se confirmó";
+    static final String VIGILANCIA_SIN_LECTURA = "No se pudo leer el estado del despliegue en el clúster";
+
     private MotivosDespliegue() {
     }
 }

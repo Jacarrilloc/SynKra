@@ -1,0 +1,122 @@
+2026-11-28T02:48:37Z
+a4a7d40
+$ ./gradlew :backend:test --rerun --tests *VigilanciaTest --tests *RetomarVigilanciaTest --tests *AplicandoTest --tests *ReintentosClienteTest --tests *EstadoRolloutTest --tests *ContextoEventosTest
+> Task :verificador:compileJava UP-TO-DATE
+> Task :backend:compileJava UP-TO-DATE
+> Task :backend:processResources UP-TO-DATE
+> Task :backend:classes UP-TO-DATE
+> Task :verificador:compileTestFixturesJava UP-TO-DATE
+> Task :backend:compileTestJava UP-TO-DATE
+> Task :backend:processTestResources
+> Task :backend:testClasses
+> Task :verificador:processResources NO-SOURCE
+> Task :verificador:classes UP-TO-DATE
+> Task :verificador:jar
+> Task :verificador:processTestFixturesResources NO-SOURCE
+> Task :verificador:testFixturesClasses UP-TO-DATE
+> Task :verificador:testFixturesJar
+
+> Task :backend:test
+
+RetomarVigilanciaTest > unPlazoNoPositivoNoArranca() FAILED
+    java.lang.AssertionError at RetomarVigilanciaTest.java:140
+
+RetomarVigilanciaTest > trasUnReinicioSeRetomaLaVigilanciaSinReaplicarYLosPlanesVencenSolos() FAILED
+    org.awaitility.core.ConditionTimeoutException at RetomarVigilanciaTest.java:119
+
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+
+> Task :backend:test
+
+VigilanciaTest > pyUnAplicandoSinNadaEnElClusterSeCierraPorPlazo() FAILED
+    java.lang.UnsupportedOperationException at VigilanciaTest.java:123
+
+VigilanciaTest > coVenceElPlazoExactoConPropiedadDeDosMinutos() FAILED
+    java.lang.UnsupportedOperationException at VigilanciaTest.java:123
+
+VigilanciaTest > clCrashLoopBackOffCierraEnLaMismaPasadaConElContextoDeVerdad() FAILED
+    java.lang.UnsupportedOperationException at VigilanciaTest.java:123
+
+VigilanciaTest > arInitErrorCierraConElLogDelInit() FAILED
+    java.lang.UnsupportedOperationException at VigilanciaTest.java:123
+
+VigilanciaTest > ecSinLecturaNoCierraNadaHastaElPlazo() FAILED
+    java.lang.UnsupportedOperationException at VigilanciaTest.java:123
+
+VigilanciaTest > uyUnPodViejoListoNoTapaAlNuevoQueFalla() FAILED
+    java.lang.UnsupportedOperationException at VigilanciaTest.java:123
+
+VigilanciaTest > boLoQueCorreNoEsLoConfirmadoNuncaEsListo() FAILED
+    java.lang.UnsupportedOperationException at VigilanciaTest.java:123
+
+VigilanciaTest > peListoCuandoLoQueCorreEsLoConfirmado() FAILED
+    java.lang.UnsupportedOperationException at VigilanciaTest.java:123
+
+ContextoEventosTest > losEventosDeObjetosAjenosNoAparecen() FAILED
+    org.opentest4j.AssertionFailedError at ContextoEventosTest.java:49
+
+ContextoEventosTest > sinPodsLlegaElFailedCreateDelReplicaSetYElEventoDelDeployment() FAILED
+    org.opentest4j.AssertionFailedError at ContextoEventosTest.java:36
+
+ContextoEventosTest > conUnPodSusEventosYLosDelReplicaSetSalenMezcladosPorHora() FAILED
+    org.opentest4j.AssertionFailedError at ContextoEventosTest.java:60
+
+EstadoRolloutTest > unPodNuevoPendienteConElViejoListoEsEnCurso() FAILED
+    org.opentest4j.AssertionFailedError at EstadoRolloutTest.java:47
+
+EstadoRolloutTest > unPodViejoListoNoTapaAlNuevoQueFalla() FAILED
+    org.opentest4j.AssertionFailedError at EstadoRolloutTest.java:36
+
+EstadoRolloutTest > conPodsViejosSobrandoEsEnCurso() FAILED
+    org.opentest4j.AssertionFailedError at EstadoRolloutTest.java:55
+
+EstadoRolloutTest > sinTodasLasReplicasActualizadasEsEnCurso() FAILED
+    org.opentest4j.AssertionFailedError at EstadoRolloutTest.java:62
+
+EstadoRolloutTest > unaGeneracionSinObservarEsEnCurso() FAILED
+    org.opentest4j.AssertionFailedError at EstadoRolloutTest.java:69
+
+ReintentosClienteTest > unPatchQueDa500EsUnaSolaPeticion() FAILED
+    org.opentest4j.AssertionFailedError at ReintentosClienteTest.java:118
+
+ReintentosClienteTest > unGetQueDa500EsUnaSolaPeticion() FAILED
+    org.opentest4j.AssertionFailedError at ReintentosClienteTest.java:107
+
+ReintentosClienteTest > elClienteNoTieneReintentosImplicitos() FAILED
+    org.opentest4j.AssertionFailedError at ReintentosClienteTest.java:100
+
+AplicandoTest > soloLosAplicandoDeTodosLosPaisesElMasAntiguoPrimero() FAILED
+    java.lang.UnsupportedOperationException at AplicandoTest.java:67
+
+2026-11-27T21:49:45.910-05:00  INFO 619646 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-27T21:49:45.911-05:00  INFO 619646 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-27T21:49:45.913-05:00  INFO 619646 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-27T21:49:45.915-05:00  INFO 619646 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-27T21:49:45.917-05:00  INFO 619646 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-27T21:49:45.918-05:00  INFO 619646 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-27T21:49:45.919-05:00  INFO 619646 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-27T21:49:45.921-05:00  INFO 619646 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+
+> Task :backend:test FAILED
+
+23 tests completed, 22 failed
+
+[Incubating] Problems report is available at: file:///home/casdav/Projects/Master/wt-m6r-U07-E/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':backend:test'.
+> There were failing tests. See the report at: file:///home/casdav/Projects/Master/wt-m6r-U07-E/backend/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 1m 8s
+9 actionable tasks: 4 executed, 5 up-to-date

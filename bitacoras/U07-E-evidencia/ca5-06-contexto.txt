@@ -1,0 +1,17 @@
+fecha: 2026-11-28T03:19:01Z  sha: 03ffd16  mutación: 06-contexto
+$ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"; (cd "$D" && git init -q)
+$ sed -i -e s/new\ ContextoFallo\(k.logCore\(\)\,\ k.logInit\(\)\,\ k.eventos\(\)\)/new\ ContextoFallo\(\"\"\,\ \"\"\,\ \"\"\)/ "$D/backend/src/main/java/io/synkra/despliegue/VigilanciaDespliegues.java"
+--- diff de la mutación (copia vs HEAD)
+86c86
+<                         new ContextoFallo(k.logCore(), k.logInit(), k.eventos()));
+---
+>                         new ContextoFallo("", "", ""));
+$ (cd "$D" && ./gradlew :backend:test --tests '*VigilanciaTest' --tests '*RetomarVigilanciaTest' --tests '*AplicandoTest' --tests '*ReintentosClienteTest' --tests '*EstadoRolloutTest' --tests '*ContextoEventosTest' --tests '*VigilanciaCoincideTest' --tests '*VigilanciaDobleTest')
+30 tests completed, 3 failed
+BUILD FAILED in 35s
+$ grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaTest.xml
+--- pruebas que cayeron (clase.método)
+VigilanciaTest.clCrashLoopBackOffCierraEnLaMismaPasadaConElContextoDeVerdad
+VigilanciaTest.arInitErrorCierraConElLogDelInit
+VigilanciaTest.uyUnPodViejoListoNoTapaAlNuevoQueFalla
