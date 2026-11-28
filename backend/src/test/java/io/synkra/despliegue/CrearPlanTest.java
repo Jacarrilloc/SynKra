@@ -194,10 +194,17 @@ class CrearPlanTest {
         SIM.siembra(new PlanPais("co", IMAGEN_A, List.of(new PluginPlan("kyc-co", "1.0.0", sha("kyc-co", "1.0.0")),
                 new PluginPlan("kyc-viejo", "0.9.0", SHA_VIEJO))));
 
-        var r = post(cuerpo("co", "2.1.0", "kyc-co:1.0.0", "kyc-pe:1.3.0"));
+        var r = post(cuerpo("co", "2.1.0", "kyc-pe:1.3.0", "kyc-co:1.0.0"));
 
         assertThat(r.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         soloGet(SIM.nuevasPeticiones());
+        // F-01: se pidieron al revés (kyc-pe antes que kyc-co); resumen y columna van ordenados por nombre.
+        @SuppressWarnings("unchecked")
+        var resumenPlugins = (List<Map<String, String>>) ((Map<String, Object>) r.getBody().get("resumen")).get("plugins");
+        assertThat(resumenPlugins.stream().map(p -> p.get("nombre")).toList()).containsExactly("kyc-co", "kyc-pe");
+        assertThat(fila("co", "resumen").get("plugins")).isEqualTo(JSON.valueToTree(resumenPlugins));
+        assertThat(fila("co", "plugins")).isEqualTo(JSON.readTree(
+                "[{\"nombre\":\"kyc-co\",\"version\":\"1.0.0\"},{\"nombre\":\"kyc-pe\",\"version\":\"1.3.0\"}]"));
         var cambios = fila("co", "cambios");
         assertThat(cambios.get("anadidos")).isEqualTo(JSON.readTree(
                 "[{\"nombre\":\"kyc-pe\",\"version\":\"1.3.0\",\"sha256\":\"" + sha("kyc-pe", "1.3.0") + "\"}]"));

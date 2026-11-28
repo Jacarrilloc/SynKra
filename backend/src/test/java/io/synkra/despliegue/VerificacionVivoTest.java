@@ -108,7 +108,11 @@ class VerificacionVivoTest {
     private org.springframework.http.ResponseEntity<Map> post(String json) {
         var h = new HttpHeaders();
         h.setContentType(MediaType.APPLICATION_JSON);
-        return http.exchange("/api/verificaciones", HttpMethod.POST, new HttpEntity<>(json, h), Map.class);
+        var r = http.exchange("/api/verificaciones", HttpMethod.POST, new HttpEntity<>(json, h), Map.class);
+        // F-04: ninguna llamada de ninguna prueba toca a Kubernetes ni crea filas.
+        verifyNoInteractions(adaptador);
+        assertThat(jdbc.queryForObject("select count(*) from dep_plan", Long.class)).isZero();
+        return r;
     }
 
     private static String cuerpo(io.synkra.verificador.Seleccion s) {
