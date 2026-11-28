@@ -382,7 +382,8 @@ class ReversionTest {
     void mxUnPaisQueYaNoEstaPermitidoNoSeRevierte() throws Exception {
         cargar();
         var base = T3.plus(Duration.ofHours(4)).plusSeconds(30);
-        origen(974, "mx", base, CatalogoDePrueba.IMAGEN_A, "kyc-pe", "1.3.0", sha("kyc-pe", "1.3.0"), true);
+        // La combinación de 974 tampoco es compatible: R-D1 va antes que R-D3, y el país gana (el orden es contrato).
+        origen(974, "mx", base, CatalogoDePrueba.IMAGEN_A, "kyc-pe", "2.0.0", sha("kyc-pe", "2.0.0"), true);
         RELOJ.fija(base.plusSeconds(10));
         SIM.nuevasPeticiones();
 
