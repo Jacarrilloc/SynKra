@@ -47,7 +47,7 @@ Contratos que fijaron U06-A y U07-A (los asumen las tareas siguientes; están en
 
 ### PRs
 
-#95 a #103 **fusionados** por autorización de David (la última tanda, #100 U07-C y #101 U06-C, a las 02:02 UTC). `main` en `bd0826f`. **U06 TERMINADA** (#97, #99, #101, #103). El #6 es antiguo y no se toca.
+#95 a #104 **fusionados** por autorización de David (la última tanda, #100 U07-C y #101 U06-C, a las 02:02 UTC). `main` en `39a242c` (852 pruebas en verde). **U06 TERMINADA** (#97, #99, #101, #103). El #6 es antiguo y no se toca.
 
 ### En vuelo (sesión de David, 2026-11-28 00:55 UTC; si la sesión se cortó, se perdieron)
 
@@ -55,8 +55,8 @@ Contratos que fijaron U06-A y U07-A (los asumen las tareas siguientes; están en
 |---|---|---|---|---|
 | U06-A registro base | `m6r/U06-A` | `97f9f80` | **VERDE ronda 2**, fusionado (#97) | — |
 | U07-A planes y país | `m6r/U07-A` | `97f9f80` | **VERDE ronda 1**, fusionado (#96) | — |
-| U07-D confirmar | `../wt-m6r-U07-D`, `m6r/U07-D` | `ade68f6` | Ronda 1 NO-VERDE. Codificador ronda 2 terminó (`11372b8`, código en `45b4248`). **Revisor ronda 2 despachado** | Repetir el revisor ronda 2 (base `ade68f6`) si no hay `revisiones/U07-D/ronda-2.md` |
-| U07-E y U07-F | (sin rama) | — | **Escritas** (hashes `4252363` y `2f97d8d`, tras corregir los greps de C-122). U07-E: `TareasProgramadas` con `synkra.programacion.activa`, apagada en pruebas; toca `kubernetes` por C-76, C-82 y C-83. U07-F: 422 `ORIGEN_NO_LISTO` y `ORIGEN_DESACTUALIZADO` | En cadena tras U07-D |
+| U07-E vigilancia y reinicio | `../wt-m6r-U07-E`, `m6r/U07-E` | `39a242c` | **Codificador ronda 1 despachado** (tarea con hash `4252363`) | Sin commits, redespachar; con bitácora completa, revisor ronda 1 (base `39a242c`) |
+| U07-F (y U07-G por escribir) | (sin rama) | — | **Escritas** (hashes `4252363` y `2f97d8d`, tras corregir los greps de C-122). U07-E: `TareasProgramadas` con `synkra.programacion.activa`, apagada en pruebas; toca `kubernetes` por C-76, C-82 y C-83. U07-F: 422 `ORIGEN_NO_LISTO` y `ORIGEN_DESACTUALIZADO` | En cadena tras U07-D |
 | U06-C y U07-C | (sin rama) | — | **Escritas** (hashes `004d66e` y `7dbe5d3`). U07-C crea el bean `Clock` en `plataforma/Reloj.java` (U06-C no puede crear otro); U06-C usa `@MockitoBean AdaptadorKubernetes`; confirmar da 501 hasta U07-D | Despachar U06-C cuando U06-B salga VERDE y U07-C cuando U07-B salga VERDE |
 
 En la máquina de Julian, las sesiones de Julian siguen trabajando mientras no se diga lo contrario: **antes de despachar, David revisa `git fetch` y la fecha del último commit de cada rama** (punto 4 de abajo) para no pisar a nadie.

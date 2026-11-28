@@ -1006,3 +1006,7 @@ Se despacha el codificador de la ronda 2.
 **Input del usuario (02:15:48Z):** "Por si acaso revisa si hay cosas pendinetes y/o sin terminar"
 
 **Acción del orquestador:** el plan de U03 tenía U03-T01 a T07 sin marcar aunque están fusionadas (la última en el PR #26); se marcan. U03-T08 (OpenAPI, Should) queda sin marcar con la nota de que no se hizo, como dice su resumen.
+
+## 2026-11-28T02:43Z: fusión de #104 (U07-D)
+
+**Acción del orquestador:** bajo la autorización de David de las 01:25:21Z, fusión de #104 (U07-D, confirmar) en `39a242c`, `MERGEABLE`/`CLEAN`. Con `main` en `39a242c`, `./gradlew test --rerun check` pasó (`salida=0`; 852 pruebas, 0 saltos, 0 fallos, 0 errores).
