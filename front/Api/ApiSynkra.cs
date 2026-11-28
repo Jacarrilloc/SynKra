@@ -36,12 +36,11 @@ public class ApiSynkra
         using var peticion = new HttpRequestMessage(HttpMethod.Get, ruta);
         peticion.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-        HttpResponseMessage respuesta;
-        string cuerpo;
         try
         {
-            respuesta = await _http.SendAsync(peticion, ct);
-            cuerpo = await respuesta.Content.ReadAsStringAsync(ct);
+            using var respuesta = await _http.SendAsync(peticion, ct);
+            var cuerpo = await respuesta.Content.ReadAsStringAsync(ct);
+            return Interpretar<T>((int)respuesta.StatusCode, respuesta.IsSuccessStatusCode, cuerpo);
         }
         catch (HttpRequestException e)
         {
@@ -51,47 +50,46 @@ public class ApiSynkra
         {
             throw NoDisponible(e);
         }
+    }
 
-        using (respuesta)
+    private static T Interpretar<T>(int estado, bool exito, string cuerpo)
+    {
+        if (exito)
         {
-            var estado = (int)respuesta.StatusCode;
-            if (respuesta.IsSuccessStatusCode)
-            {
-                try
-                {
-                    var valor = JsonSerializer.Deserialize<T>(cuerpo, Opciones);
-                    if (valor is null)
-                    {
-                        throw new JsonException("cuerpo nulo");
-                    }
-
-                    return valor;
-                }
-                catch (JsonException e)
-                {
-                    throw new ErrorApiSynkraException(estado, CodigosFront.RespuestaInvalida,
-                        "La respuesta de la API no tiene la forma esperada", [], e);
-                }
-            }
-
-            ErrorApi? error = null;
             try
             {
-                error = JsonSerializer.Deserialize<ErrorApi>(cuerpo, Opciones);
-            }
-            catch (JsonException)
-            {
-                // el cuerpo no es un error de la API: se informa abajo
-            }
+                var valor = JsonSerializer.Deserialize<T>(cuerpo, Opciones);
+                if (valor is null)
+                {
+                    throw new JsonException("cuerpo nulo");
+                }
 
-            if (error is null)
+                return valor;
+            }
+            catch (JsonException e)
             {
                 throw new ErrorApiSynkraException(estado, CodigosFront.RespuestaInvalida,
-                    $"La API respondió {estado} sin un cuerpo de error válido", []);
+                    "La respuesta de la API no tiene la forma esperada", [], e);
             }
-
-            throw new ErrorApiSynkraException(estado, error.Codigo, error.Mensaje, error.Detalles);
         }
+
+        ErrorApi? error = null;
+        try
+        {
+            error = JsonSerializer.Deserialize<ErrorApi>(cuerpo, Opciones);
+        }
+        catch (JsonException)
+        {
+            // el cuerpo no es un error de la API: se informa abajo
+        }
+
+        if (error is null)
+        {
+            throw new ErrorApiSynkraException(estado, CodigosFront.RespuestaInvalida,
+                $"La API respondió {estado} sin un cuerpo de error válido", []);
+        }
+
+        throw new ErrorApiSynkraException(estado, error.Codigo, error.Mensaje, error.Detalles);
     }
 
     private static ErrorApiSynkraException NoDisponible(Exception causa)

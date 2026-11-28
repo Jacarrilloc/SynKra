@@ -9,4 +9,5 @@ grep -o '"[a-zA-Z0-9]*":' front.Tests/Fixtures/paises-dos.json front.Tests/Fixtu
 grep -nE 'UnmappedMemberHandling\.Disallow|RespectNullableAnnotations = true|RespectRequiredConstructorParameters = true|SnakeCaseLower' front/Api/ApiSynkra.cs
 grep -rn 'JsonPropertyName' front/; echo "renombres=$?"
 grep -rnE 'Http(Method\.)?(Post|Put|Delete|Patch)|PostAsync|PutAsync|DeleteAsync|PatchAsync|X-Synkra-Usuario' front/ --include='*.cs' --include='*.razor'; echo "escrituras=$?"
-grep -n 'Synkra:ApiUrl\|ApiUrl' front/appsettings.json front/Program.cs front/Api/ConfiguracionApi.cs
+grep -n 'Synkra:ApiUrl\|ApiUrl' front/appsettings.json front/Api/ConfiguracionApi.cs
+grep -n 'ConfiguracionApi.UrlBase\|AddHttpClient' front/Program.cs

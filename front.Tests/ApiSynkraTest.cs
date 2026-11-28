@@ -223,6 +223,29 @@ public class ApiSynkraTest
         Assert.Equal([(HttpMethod.Get, "/x/api/paises")], m.Peticiones);
     }
 
+    [Fact]
+    public async Task CancelacionPedidaSePropagaSinEnvolver()
+    {
+        var m = new ManejadorHttpSimulado().Responde(HttpMethod.Get, "/api/paises", HttpStatusCode.OK, "[]");
+        using var cts = new CancellationTokenSource();
+        await cts.CancelAsync();
+
+        var e = await Record.ExceptionAsync(() => Cliente(m).VistaGeneralAsync(cts.Token));
+
+        Assert.IsNotType<ErrorApiSynkraException>(e);
+        Assert.IsAssignableFrom<OperationCanceledException>(e);
+    }
+
+    [Fact]
+    public async Task PideConAcceptJson()
+    {
+        var m = new ManejadorHttpSimulado().Responde(HttpMethod.Get, "/api/paises", HttpStatusCode.OK, "[]");
+
+        await Cliente(m).VistaGeneralAsync();
+
+        Assert.Equal(["application/json"], m.Accept);
+    }
+
     private static IConfiguration Config(params (string, string?)[] valores)
         => new ConfigurationBuilder()
             .AddInMemoryCollection(valores.Select(v => new KeyValuePair<string, string?>(v.Item1, v.Item2)))
@@ -239,7 +262,15 @@ public class ApiSynkraTest
     [Fact]
     public void ConfiguracionConUrlRelativaNoArranca()
     {
-        var e = Assert.Throws<InvalidOperationException>(() => ConfiguracionApi.UrlBase(Config(("Synkra:ApiUrl", "/api"))));
+        var e = Assert.Throws<InvalidOperationException>(() => ConfiguracionApi.UrlBase(Config(("Synkra:ApiUrl", "api/x"))));
+
+        Assert.Equal("Synkra:ApiUrl falta o no es una URL absoluta http o https", e.Message);
+    }
+
+    [Fact]
+    public void ConfiguracionConEsquemaAjenoNoArranca()
+    {
+        var e = Assert.Throws<InvalidOperationException>(() => ConfiguracionApi.UrlBase(Config(("Synkra:ApiUrl", "ftp://h/"))));
 
         Assert.Equal("Synkra:ApiUrl falta o no es una URL absoluta http o https", e.Message);
     }

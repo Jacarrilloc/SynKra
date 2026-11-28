@@ -119,4 +119,43 @@ public class VistaGeneralTest : BunitContext
         cut.WaitForAssertion(() => cut.Find("table#vista-general"));
         Assert.Equal([(HttpMethod.Get, "/api/paises")], _m.Peticiones);
     }
+
+    [Fact]
+    public void PaisQueNoConcuerdaMuestraNo()
+    {
+        Paises(ManejadorHttpSimulado.Fixture("paises-no-concuerda.json"));
+
+        var cut = Pinta();
+
+        cut.WaitForAssertion(() => cut.Find("tr[data-pais='cl']"));
+        Assert.Equal("No", Celda(cut, "cl", "concuerda"));
+        Assert.Equal("Leído", Celda(cut, "cl", "lectura"));
+    }
+
+    [Fact]
+    public void PaisInconsistenteMuestraInconsistente()
+    {
+        Paises(ManejadorHttpSimulado.Fixture("paises-no-concuerda.json"));
+
+        var cut = Pinta();
+
+        cut.WaitForAssertion(() => cut.Find("tr[data-pais='uy']"));
+        Assert.Equal("Inconsistente", Celda(cut, "uy", "lectura"));
+        Assert.Equal("—", Celda(cut, "uy", "imagen"));
+        Assert.Equal("—", Celda(cut, "uy", "plugins"));
+    }
+
+    [Fact]
+    public void ErrorConDetallesMuestraCampoYMotivo()
+    {
+        _m.Responde(HttpMethod.Get, "/api/paises", HttpStatusCode.UnprocessableEntity, ManejadorHttpSimulado.Fixture("error-422-pais.json"));
+
+        var cut = Pinta();
+
+        cut.WaitForAssertion(() => cut.Find("div[data-estado='error']"));
+        Assert.Equal("PAIS_INVALIDO: El país no es válido", cut.Find("p[data-campo='error']").TextContent.Trim());
+        var items = cut.FindAll("div[data-estado='error'] li").Select(l => l.TextContent.Trim()).ToArray();
+        Assert.Equal(["pais: El país debe ser un código de dos letras en minúscula (S4)"], items);
+        Assert.Empty(cut.FindAll("table"));
+    }
 }

@@ -11,7 +11,12 @@ public sealed class ManejadorHttpSimulado : HttpMessageHandler
     private readonly Dictionary<(HttpMethod, string), Func<HttpResponseMessage>> _respuestas = new();
     private readonly List<(HttpMethod Metodo, string Ruta)> _peticiones = new();
 
+    private readonly List<string> _accept = new();
+
     public IReadOnlyList<(HttpMethod Metodo, string Ruta)> Peticiones => _peticiones;
+
+    /// <summary>La cabecera Accept de cada petición recibida, en orden.</summary>
+    public IReadOnlyList<string> Accept => _accept;
 
     public static string Fixture(string nombre)
         => File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "Fixtures", nombre));
@@ -30,8 +35,14 @@ public sealed class ManejadorHttpSimulado : HttpMessageHandler
 
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return Task.FromCanceled<HttpResponseMessage>(cancellationToken);
+        }
+
         var ruta = request.RequestUri!.PathAndQuery;
         _peticiones.Add((request.Method, ruta));
+        _accept.Add(request.Headers.Accept.ToString());
         try
         {
             var respuesta = _respuestas.TryGetValue((request.Method, ruta), out var f)

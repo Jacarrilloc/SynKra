@@ -28,3 +28,11 @@ mutar escape front/Api/ApiSynkra.cs 's|Uri.EscapeDataString(pais)|pais|' "Histor
 mutar config front/Api/ConfiguracionApi.cs 's|UriKind.Absolute|UriKind.RelativeOrAbsolute|' "ConfiguracionConUrlRelativaNoArranca"
 mutar concuerda front/Components/Pages/VistaGeneral.razor 's|null => "No se sabe"|null => "No"|' "PaisSinLecturaMuestraNoDisponibleYNoSeSabe"
 mutar otra-llamada front/Components/Pages/VistaGeneral.razor 's|_paises = await Api.VistaGeneralAsync();|_paises = await Api.VistaGeneralAsync(); await Api.HistorialAsync("co");|' "SoloLlamaAGetApiPaises"
+
+# Ronda 2 (F-01 y F-02): las cinco mutaciones del revisor y la del esquema
+mutar concuerda-false front/Components/Pages/VistaGeneral.razor 's|false => "No",|false => "Sí",|' "PaisQueNoConcuerdaMuestraNo"
+mutar inconsistente front/Components/Pages/VistaGeneral.razor 's|LecturaCluster.Inconsistente => "Inconsistente"|LecturaCluster.Inconsistente => "Leído"|' "PaisInconsistenteMuestraInconsistente"
+mutar detalles front/Components/Pages/VistaGeneral.razor 's|<li>@d.Campo: @d.Motivo</li>|<li>x</li>|' "ErrorConDetallesMuestraCampoYMotivo"
+mutar cancelacion front/Api/ApiSynkra.cs 's| when (!ct.IsCancellationRequested)||' "CancelacionPedidaSePropagaSinEnvolver"
+mutar accept front/Api/ApiSynkra.cs '/Headers.Accept.Add/d' "PideConAcceptJson"
+mutar esquema front/Api/ConfiguracionApi.cs '/url.Scheme != Uri.UriSchemeHttp/c\            )' "ConfiguracionConEsquemaAjenoNoArranca"

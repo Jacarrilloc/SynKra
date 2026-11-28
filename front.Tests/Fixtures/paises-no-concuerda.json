@@ -1,0 +1,24 @@
+[
+  {
+    "pais": "cl",
+    "lectura": "leido",
+    "imagen": "localhost:5001/synkra-core@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "plugins": [
+      { "nombre": "kyc-cl", "version": "1.0.0", "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" }
+    ],
+    "concuerda": false,
+    "ultimoDespliegueId": 4,
+    "core": "synkra-core",
+    "versionCore": "2.0.0"
+  },
+  {
+    "pais": "uy",
+    "lectura": "inconsistente",
+    "imagen": null,
+    "plugins": [],
+    "concuerda": true,
+    "ultimoDespliegueId": 6,
+    "core": "synkra-core",
+    "versionCore": "2.1.0"
+  }
+]
