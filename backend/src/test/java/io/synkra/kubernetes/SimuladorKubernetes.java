@@ -9,6 +9,14 @@ import io.fabric8.mockwebserver.Context;
 import io.fabric8.mockwebserver.MockWebServer;
 import io.fabric8.mockwebserver.ServerRequest;
 import io.fabric8.mockwebserver.ServerResponse;
+import io.fabric8.mockwebserver.http.Headers;
+import io.fabric8.mockwebserver.http.RecordedRequest;
+import io.fabric8.mockwebserver.utils.BodyProvider;
+import io.fabric8.mockwebserver.utils.ResponseProvider;
+import io.fabric8.mockwebserver.utils.ResponseProviders;
+import io.fabric8.kubernetes.client.utils.Serialization;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
 import io.synkra.kubernetes.api.AdaptadorKubernetes;
 import io.synkra.kubernetes.api.PlanPais;
 import java.nio.file.Files;
@@ -84,12 +92,73 @@ public final class SimuladorKubernetes implements AutoCloseable {
                 .andReturn(500, "{\"kind\":\"Status\",\"code\":500}").always();
     }
 
-    /** El {@code PATCH} del Deployment {@code synkra-core} de ese país (el de aplicar) responde 500 siempre. */
+    /**
+     * El modo CRUD del simulado no entiende el server-side apply (responde 404 o 415 al {@code PATCH}). Esto registra
+     * para el país los tres {@code PATCH} de {@code aplicar}: responden 200 y guardan lo aplicado, y el {@code GET} de
+     * cada objeto lo devuelve (404 mientras no se haya aplicado), así que {@code leerPais} lee lo que se aplicó.
+     */
+    public void aceptaAplicar(String pais) {
+        for (var ruta : rutasDeAplicar(pais)) {
+            aceptaAplicarEn(ruta);
+        }
+    }
+
+    /**
+     * El {@code PATCH} del Deployment {@code synkra-core} de ese país (el de aplicar) responde 500 siempre. Los de
+     * ConfigMap y Service se aceptan como en {@link #aceptaAplicar(String)}: así falla el último de los tres.
+     */
     public void fallaAplicar(String pais) {
-        servidor.expect().patch()
-                .withPath("/apis/apps/v1/namespaces/synkra-" + pais + "/deployments/" + ConstructorObjetosPais.NOMBRE_CORE
-                        + "?fieldManager=" + ConstructorObjetosPais.GESTOR + "&force=true")
+        var rutas = rutasDeAplicar(pais);
+        aceptaAplicarEn(rutas.get(0));
+        aceptaAplicarEn(rutas.get(1));
+        servidor.expect().patch().withPath(rutas.get(2) + CONSULTA_APLICAR)
                 .andReturn(500, "{\"kind\":\"Status\",\"code\":500}").always();
+    }
+
+    private static final String CONSULTA_APLICAR = "?fieldManager=" + ConstructorObjetosPais.GESTOR + "&force=true";
+    private final Map<String, String> aplicados = new ConcurrentHashMap<>();
+
+    /** ConfigMap, Service y Deployment del país, en el orden en que {@code aplicar} los envía. */
+    private static List<String> rutasDeAplicar(String pais) {
+        var ns = "/namespaces/synkra-" + pais;
+        return List.of("/api/v1" + ns + "/configmaps/" + ConstructorObjetosPais.NOMBRE_CONFIG,
+                "/api/v1" + ns + "/services/" + ConstructorObjetosPais.NOMBRE_CORE,
+                "/apis/apps/v1" + ns + "/deployments/" + ConstructorObjetosPais.NOMBRE_CORE);
+    }
+
+    private void aceptaAplicarEn(String ruta) {
+        servidor.expect().patch().withPath(ruta + CONSULTA_APLICAR).andReply(respuesta(200, peticion -> {
+            var json = Serialization.asJson(Serialization.unmarshal(peticion.getUtf8Body(), Map.class));
+            aplicados.put(ruta, json);
+            return json;
+        })).always();
+        servidor.expect().get().withPath(ruta).andReply(new ResponseProvider<Object>() {
+            private Headers cabeceras = new Headers.Builder().build();
+
+            @Override
+            public int getStatusCode(RecordedRequest peticion) {
+                return aplicados.containsKey(ruta) ? 200 : 404;
+            }
+
+            @Override
+            public Object getBody(RecordedRequest peticion) {
+                return aplicados.getOrDefault(ruta, "{\"kind\":\"Status\",\"code\":404}");
+            }
+
+            @Override
+            public Headers getHeaders() {
+                return cabeceras;
+            }
+
+            @Override
+            public void setHeaders(Headers nuevas) {
+                cabeceras = nuevas;
+            }
+        }).always();
+    }
+
+    private static ResponseProvider<Object> respuesta(int estado, BodyProvider<Object> cuerpo) {
+        return ResponseProviders.of(estado, cuerpo);
     }
 
     /** {@code "MÉTODO ruta"} de lo recibido desde la llamada anterior (la siembra no cuenta). */

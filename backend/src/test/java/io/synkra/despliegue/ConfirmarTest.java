@@ -101,6 +101,9 @@ class ConfirmarTest {
             return;
         }
         CatalogoDePrueba.cargar(catalogo);
+        for (var pais : List.of("pe", "co", "cl", "ec")) {
+            SIM.aceptaAplicar(pais);
+        }
         for (var nombre : List.of("kyc-zz", "kyc-yy")) {
             catalogo.subirPlugin("synkra-core", new ByteArrayInputStream(jar(nombre)), Map.of());
         }

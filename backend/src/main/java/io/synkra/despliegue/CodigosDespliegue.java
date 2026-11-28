@@ -11,7 +11,10 @@ final class CodigosDespliegue {
     static final String PAIS_INCONSISTENTE = "PAIS_INCONSISTENTE";
     static final String PLAN_VENCIDO = "PLAN_VENCIDO";
     static final String PLAN_NO_PENDIENTE = "PLAN_NO_PENDIENTE";
-    static final String CONFIRMACION_NO_DISPONIBLE = "CONFIRMACION_NO_DISPONIBLE";
+    static final String DESPLIEGUE_EN_CURSO = "DESPLIEGUE_EN_CURSO";
+    static final String PLAN_DESACTUALIZADO = "PLAN_DESACTUALIZADO";
+    static final String APLICACION_FALLIDA = "APLICACION_FALLIDA";
+    static final String USUARIO_INVALIDO = "USUARIO_INVALIDO";
 
     private CodigosDespliegue() {
     }
