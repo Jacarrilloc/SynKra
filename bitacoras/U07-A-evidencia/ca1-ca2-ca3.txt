@@ -1,0 +1,32 @@
+2026-11-27T19:30:50-05:00
+6fde709
+$ ./gradlew :backend:test --rerun --tests "*PlanRepositorioTest"
+BUILD SUCCESSFUL in 3s
+$ grep -ho tests=... TEST-*PlanRepositorioTest.xml
+tests="12" skipped="0" failures="0" errors="0"
+$ python3 -I (consulta CA-1 parte 1)
+[('aa', 'despliegue', None, 'pendiente', 'integer', 1800000, 3), ('ab', 'reversion', 41, 'pendiente', 'integer', 1800000, 3), ('ad', 'despliegue', None, 'pendiente', 'integer', 1800000, 3), ('ae', 'despliegue', None, 'confirmado', 'integer', 1800000, 3), ('af', 'despliegue', None, 'vencido', 'integer', 1800000, 3)]
+(0,)
+[('dep_plan',)]
+$ ./gradlew :backend:bootJar
+BUILD SUCCESSFUL in 601ms
+$ java -jar backend/build/libs/backend-*.jar --server.port=18087 (SYNKRA_DATA=mktemp -d)
+health=0
+['dep_plan']
+[('1',), ('2',), ('4',)]
+(0,)
+[('dep_plan_pais_estado',)]
+
+=== CA-2
+$ ./gradlew :backend:test --rerun --tests "*PaisPermitidoTest"
+BUILD SUCCESSFUL in 3s
+tests="6" skipped="0" failures="0" errors="0"
+$ grep -rn "io.synkra.kubernetes\|io.synkra.registro\|io.synkra.catalogo" backend/src/main/java/io/synkra/despliegue; echo ajenos=$?
+ajenos=1
+
+=== CA-3
+$ SYNKRA_DATA=$(mktemp -d) SYNKRA_PAISES='co,PE' timeout 60 java -jar ... --server.port=18088
+salida=1
+$ grep -c SYNKRA_PAISES log
+1
+Caused by: java.lang.IllegalStateException: synkra.paises (SYNKRA_PAISES) debe ser una lista, separada por comas, de códigos de dos letras en minúscula, sin vacíos ni repetidos, por ejemplo co,pe
