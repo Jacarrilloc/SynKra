@@ -1,0 +1,14 @@
+bb8b641
+ bitacoras/U02-T10-evidencia/ca1.txt                |  25 +++++
+ bitacoras/U02-T10-evidencia/ca2.txt                |  29 ++++++
+ bitacoras/U02-T10-evidencia/ca3.txt                |   4 +
+ bitacoras/U02-T10-evidencia/mutacion.txt           |   5 +
+ bitacoras/U02-T10-evidencia/rojo.txt               |  15 +++
+ bitacoras/U02-T10.md                               |  22 +++++
+ plugins/kyc-pe/build.gradle.kts                    |  55 +++++++++++
+ .../kyc-pe/src/main/descriptor/synkra-plugin.yaml  |   7 ++
+ .../src/main/java/io/synkra/kycpe/PluginKycPe.java |  52 ++++++++++
+ .../services/io.synkra.plugin.api.SynkraPlugin     |   1 +
+ .../src/test/java/io/synkra/kycpe/KycPeTest.java   | 105 +++++++++++++++++++++
+ settings.gradle.kts                                |   1 +
+ 12 files changed, 321 insertions(+)
