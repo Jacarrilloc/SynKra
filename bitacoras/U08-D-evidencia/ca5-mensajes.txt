@@ -1,3 +1,9 @@
+fecha: 2026-11-28T02:51:54-05:00
+sha: 7289d41 (arbol: 4 cambios sin confirmar)
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U08-D-evidencia/ca5-mensajes.sh
 gradle=1
 dosPlanesQueSoloDifierenEnUnPluginDanAnotacionesDistintas() | java.lang.AssertionError:  Expecting actual not to be null
 elMismoPlanConLosPluginsEnOtroOrdenDaLaMismaAnotacion() | java.lang.AssertionError:  Expecting actual not to be null
