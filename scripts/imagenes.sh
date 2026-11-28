@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Construye las tres imagenes de SynKra en el Docker local; con --subir, ademas las verifica y las sube al registro.
+# Construye las cuatro imagenes de SynKra en el Docker local; con --subir, ademas las verifica y las sube al registro.
 # Uso: JAVA_HOME=<java 21> bash scripts/imagenes.sh [--subir]
-# Versiones: salen de build.gradle.kts (backend, core) y de IMAGEN_INIT_POR_DEFECTO; scripts/verificar-imagenes.sh lee las mismas.
+# Versiones: salen de build.gradle.kts (backend, core), de IMAGEN_INIT_POR_DEFECTO y de <Version> en front/Synkra.Front.csproj; scripts/verificar-imagenes.sh lee las mismas.
 # Prefijo: SYNKRA_REGISTRO_IMAGENES (por defecto localhost:5001).
 set -euo pipefail
 
@@ -32,8 +32,9 @@ fi
 version_gradle() { grep -E '^version *= *"' "$1/build.gradle.kts" | head -1 | sed -E 's/.*"([^"]+)".*/\1/'; }
 VB="$(version_gradle backend)"; VC="$(version_gradle core)"
 VI="$(grep -E 'IMAGEN_INIT_POR_DEFECTO *= *"' "$JAVA_FUENTE" | head -1 | sed -E 's/.*:([^:"]+)".*/\1/')"
-for v in "$VB" "$VC" "$VI"; do
-  [ -n "$v" ] || { echo "FALLA versiones: no se pudo leer una version de build.gradle.kts o de IMAGEN_INIT_POR_DEFECTO" >&2; exit 1; }
+VF="$(grep -oE '<Version>[^<]+</Version>' front/Synkra.Front.csproj | head -1 | sed -E 's/<[^>]+>//g' || true)"
+for v in "$VB" "$VC" "$VI" "$VF"; do
+  [ -n "$v" ] || { echo "FALLA versiones: no se pudo leer una version de build.gradle.kts, de IMAGEN_INIT_POR_DEFECTO o del .csproj del front" >&2; exit 1; }
 done
 
 # Las versiones de las etiquetas deben coincidir con las del overlay (newTag y SYNKRA_KUBERNETES_IMAGEN_INIT); si no, FALLA versiones.
@@ -56,6 +57,7 @@ construir() { # imagen directorio
 construir "$REG/synkra-backend:$VB" backend
 construir "$REG/synkra-core-ejemplo:$VC" core
 construir "$REG/synkra-init-descarga:$VI" init-descarga
+construir "$REG/synkra-front:$VF" front
 echo "OK imagenes construidas con prefijo $REG"
 
 [ "$SUBIR" -eq 1 ] || exit 0

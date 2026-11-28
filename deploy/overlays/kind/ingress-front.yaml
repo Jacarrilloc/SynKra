@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: synkra-front
+  namespace: synkra
+  labels:
+    app.kubernetes.io/name: synkra-front
+    app.kubernetes.io/part-of: synkra
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts: [synkra.local]
+      secretName: synkra-local-tls
+  rules:
+    - host: synkra.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: synkra-front
+                port:
+                  name: http

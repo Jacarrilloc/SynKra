@@ -3,9 +3,14 @@ kind: Kustomization
 resources:
   - ../../base
   - ingress.yaml
+  - ingress-front.yaml
 patches:
   - path: backend-kind.yaml
+  - path: front-kind.yaml
 images:
   - name: synkra-backend
     newName: localhost:5001/synkra-backend
+    newTag: 0.1.0
+  - name: synkra-front
+    newName: localhost:5001/synkra-front
     newTag: 0.1.0

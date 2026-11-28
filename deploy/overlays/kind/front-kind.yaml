@@ -1,0 +1,11 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: synkra-front
+  namespace: synkra
+spec:
+  template:
+    spec:
+      containers:
+        - name: synkra-front
+          imagePullPolicy: Always # la misma etiqueta puede volver a subirse con otro contenido (scripts/desplegar.sh lo comprueba)
