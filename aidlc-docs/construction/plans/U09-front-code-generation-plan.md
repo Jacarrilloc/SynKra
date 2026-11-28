@@ -15,33 +15,33 @@ Raíz del proyecto. Crea `front/` (Blazor Server, .NET 8) y `front.Tests/`, y a�
 
 ## Tareas
 
-- [ ] **U09-T01 · Proyecto Blazor Server y cliente de la API**
+- [x] **U09-T01 · Proyecto Blazor Server y cliente de la API**
   `ApiSynkra` tipado sobre `HttpClient` con la URL del backend por configuración; los errores de la API se muestran con su `codigo` y `mensaje`.
   **Criterio:** `dotnet test front.Tests --filter ApiSynkraTest` pasa contra un servidor HTTP simulado. · H-25
 
-- [ ] **U09-T02 · Pantalla "Vista general"**
+- [x] **U09-T02 · Pantalla "Vista general"**
   Un renglón por país con core, versión, plugins activos y estado del último despliegue.
   **Criterio:** `dotnet test front.Tests --filter VistaGeneralTest` pasa (bUnit) con dos países simulados. · H-25
 
-- [ ] **U09-T03 · Pantalla "Catálogo"**
+- [x] **U09-T03 · Pantalla "Catálogo"**
   Cores, versiones y plugins por core con sus etiquetas; subida de JAR que muestra el motivo de rechazo que devuelve la API.
   **Criterio:** `dotnet test front.Tests --filter CatalogoTest` pasa, incluido el caso de descriptor inválido con el motivo visible. · H-25
 
-- [ ] **U09-T04 · Pantalla "Desplegar" con verificación en vivo**
+- [x] **U09-T04 · Pantalla "Desplegar" con verificación en vivo**
   Elegir país, core y plugins; cada cambio llama al endpoint de verificación y muestra el veredicto y los motivos; el botón Confirmar solo se habilita con un plan válido.
   **Criterio:** `dotnet test front.Tests --filter DesplegarTest` pasa: con veredicto incompatible el botón está deshabilitado. · H-25
 
-- [ ] **U09-T05 · Pantalla "Detalle"**
+- [x] **U09-T05 · Pantalla "Detalle"**
   Historial del país, contexto del fallo (eventos y estado de los pods que da la API) y "Volver al anterior" con confirmación.
   **Criterio:** `dotnet test front.Tests --filter DetalleTest` pasa y la reversión llama a la API solo después de confirmar. · H-25
 
-- [ ] **U09-T06 · Sin reglas de versión en el front**
+- [x] **U09-T06 · Sin reglas de versión en el front**
   **Criterio:** `grep -rniE "semver|compatib" front/ --include='*.cs' --include='*.razor'` solo encuentra llamadas a `ApiSynkra`. · H-25
 
-- [ ] **U09-T07 · Imagen multi-stage sin root**
+- [x] **U09-T07 · Imagen multi-stage sin root**
   **Criterio:** `docker build -t localhost:5001/synkra-front front/ && docker inspect -f '{{.Config.User}}' localhost:5001/synkra-front` no es vacío, `root` ni `0`. · H-28
 
-- [ ] **U09-T08 · Manifiesto del front**
+- [x] **U09-T08 · Manifiesto del front**
   `deploy/base/front/`: Deployment, Service `synkra-front:8080` y la entrada en el `kustomization.yaml`.
   **Criterio:** `kubectl kustomize deploy/overlays/kind | kubeconform -strict -summary` sin errores y `make install` deja `synkra-front` `Running`. · H-26
 
