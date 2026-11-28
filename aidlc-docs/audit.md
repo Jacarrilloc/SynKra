@@ -1146,3 +1146,7 @@ Se despacha el codificador de la ronda 2.
 ## 2026-11-28T10:01Z: fusión de #117 y cierre de U08
 
 **Acción del orquestador:** U08-E salió VERDE en la ronda 1. Fusión de #117 en `ecd4c45` (solo documentación). U08 queda terminada: se marcan U08-T01 a T12 en el plan y se actualiza la línea de Code Generation Parte 2 en `aidlc-state.md`. La guía de uso está en `GUIA.md`. El clúster `kind-synkra` pasa a U09-D para su criterio en el clúster.
+
+## 2026-11-28T10:53Z: fusión de #119 (U09-D)
+
+**Acción del orquestador:** U09-D salió VERDE en la ronda 2. Fusión de #119 en `70b7af1`, `MERGEABLE`/`CLEAN`. Toca `front/Dockerfile`, `deploy/` y `scripts/` (sin Java): no se repite `./gradlew check`; el revisor corrió `make install` en un `kind` recién creado, el front quedó servido y los criterios de U08-C siguen en verde. Siguiente: U09-E, cuya fase del navegador necesita a David.
