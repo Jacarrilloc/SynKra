@@ -1030,3 +1030,9 @@ Se despacha el codificador de la ronda 2.
 ## 2026-11-28T04:23Z: fusión de #108 y cierre de U07
 
 **Acción del orquestador:** bajo la autorización de David de las 01:25:21Z, fusión de #108 (U07-G, fronteras y resumen) en `8306ee7`, `MERGEABLE`/`CLEAN`. Con `main` en `8306ee7`, `./gradlew test --rerun check` pasó (`salida=0`; 894 pruebas, 0 saltos, 0 fallos, 0 errores). U07 queda terminada: se marcan U07-T01 a T13 en el plan y se actualiza la línea de Code Generation Parte 2 en `aidlc-state.md`. Siguiente: U08 en `kind-synkra`, según lo aprobado por David a las 01:29:47Z.
+
+## 2026-11-28T04:31:59Z: David pausa el loop para que Julian continúe
+
+**Input del usuario:** "Pausemos, y dejemoes que mi compañero continue"
+
+**Acción del orquestador:** se detuvo el redactor de U08-A y U08-B (no dejó archivos). No hay agentes corriendo ni clúster creado. `loop/CONTINUAR.md` queda al día con el punto de retomar (U08 por escribir) en `orq/U05-U02-tareas`.
