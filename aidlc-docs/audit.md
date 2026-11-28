@@ -1080,3 +1080,7 @@ Se despacha el codificador de la ronda 2.
 **Input del usuario:** "No solo va correr en mi maquina así que simplifiquemos is en mi maquina corre y deberia de funcionar sin probelmas entonces mejor que mejor"
 
 **Acción del orquestador:** el CA-1 espera ahora `amd64` (máquina de David) y deja de comprobar «sin SDK local»; que `scripts/dotnet-docker.sh --version` dé `10.0.404` (y no el 10.0.115 del sistema) muestra que se usó el contenedor. Nuevo hash de la tarea: `0d01d83a7c08a791f308010c8fb6c4cd692e418e`. Ronda 4 del revisor limitada al CA-1, por decisión de David.
+
+## 2026-11-28T05:34Z: fusión de #110 (U09-A)
+
+**Acción del orquestador:** U09-A salió VERDE en la ronda 4 corta (solo el CA-1 enmendado). Bajo la autorización de David de las 01:25:21Z (y el pedido de Julian de fusionar U09-A si salía VERDE), fusión de #110 en `0910a09`, `MERGEABLE`/`CLEAN`. El diff solo toca `front/`, `front.Tests/`, `scripts/dotnet-docker.sh`, bitácoras y revisiones: el backend no cambia, así que no se repite `./gradlew check`; el revisor corrió las 29 pruebas del front en la ronda 3 y el CA-1 en la 4.
