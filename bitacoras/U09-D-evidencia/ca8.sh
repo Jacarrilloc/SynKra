@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# CA-8: el diff queda acotado. Base: origin/main (este worktree no tiene rama main local). Con el arbol limpio.
+# CA-8: el diff queda acotado. Base: origin/main (igual a main). Con el arbol limpio.
 B=$(git merge-base HEAD origin/main)
 git rev-parse --short HEAD; git status --porcelain | wc -l
 git diff --stat "$B"...HEAD

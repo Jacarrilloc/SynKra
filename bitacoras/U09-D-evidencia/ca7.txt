@@ -1,12 +1,12 @@
-fecha: 2026-11-28T05:09:36-05:00
-sha: 1bc94ae 0 cambios de codigo sin confirmar
+fecha: 2026-11-28T05:30:37-05:00
+sha: ec6108e 0 cambios de codigo sin confirmar
 uname -m: x86_64
 docker arch: amd64
 JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
 $ bash bitacoras/U09-D-evidencia/ca7.sh
 kind delete cluster --name synkra --kubeconfig "/home/casdav/Projects/Master/wt-m6r-U09-D/.kube/kind-synkra.yaml"
 Deleting cluster "synkra" ...
-Deleted nodes: ["synkra-control-plane" "synkra-worker"]
+Deleted nodes: ["synkra-worker" "synkra-control-plane"]
 kind-registry
 borrar=0
 kubeconfig sin contextos todavía: lo rellena make cluster
@@ -30,27 +30,27 @@ Creating cluster "synkra" ...
  ✓ Joining worker nodes 🚜
  • Waiting ≤ 3m0s for control-plane = Ready ⏳  ...
  ✓ Waiting ≤ 3m0s for control-plane = Ready ⏳
- • Ready after 7s 💚
+ • Ready after 11s 💚
 Set kubectl context to "kind-synkra"
 You can now use your cluster with:
 
 kubectl cluster-info --context kind-synkra --kubeconfig /home/casdav/Projects/Master/wt-m6r-U09-D/.kube/kind-synkra.yaml
 
-Not sure what to do next? 😅  Check out https://kind.sigs.k8s.io/docs/user/quick-start/
-contexto permitido: kind-synkra (https://127.0.0.1:44861)
+Have a question, bug, or feature request? Let us know! https://kind.sigs.k8s.io/#community 🙂
+contexto permitido: kind-synkra (https://127.0.0.1:42049)
 kubectl --kubeconfig "/home/casdav/Projects/Master/wt-m6r-U09-D/.kube/kind-synkra.yaml" wait --for=condition=Ready nodes --all --timeout=180s
 node/synkra-control-plane condition met
 node/synkra-worker condition met
 make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U09-D'
 make registro
 make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U09-D'
-contexto permitido: kind-synkra (https://127.0.0.1:44861)
+contexto permitido: kind-synkra (https://127.0.0.1:42049)
 scripts/registro-local.sh
 registro listo en 127.0.0.1:5001
 make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U09-D'
 make aplicar-base
 make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U09-D'
-contexto permitido: kind-synkra (https://127.0.0.1:44861)
+contexto permitido: kind-synkra (https://127.0.0.1:42049)
 kubectl --kubeconfig "/home/casdav/Projects/Master/wt-m6r-U09-D/.kube/kind-synkra.yaml" apply -f deploy/base/namespaces.yaml -f deploy/base/rbac.yaml
 namespace/synkra created
 namespace/synkra-co created
@@ -63,7 +63,7 @@ rolebinding.rbac.authorization.k8s.io/synkra-deployer created
 make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U09-D'
 make ingress
 make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U09-D'
-contexto permitido: kind-synkra (https://127.0.0.1:44861)
+contexto permitido: kind-synkra (https://127.0.0.1:42049)
 kubectl --kubeconfig "/home/casdav/Projects/Master/wt-m6r-U09-D/.kube/kind-synkra.yaml" apply -k deploy/ingress-nginx
 namespace/ingress-nginx created
 serviceaccount/ingress-nginx created
@@ -90,7 +90,7 @@ deployment "ingress-nginx-controller" successfully rolled out
 make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U09-D'
 make tls
 make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U09-D'
-contexto permitido: kind-synkra (https://127.0.0.1:44861)
+contexto permitido: kind-synkra (https://127.0.0.1:42049)
 scripts/secreto-tls.sh
 tls: se reutiliza .tls/tls.crt
 secret/synkra-local-tls created
@@ -128,7 +128,7 @@ You can use '--warning-mode all' to show the individual deprecation warnings and
 
 For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD SUCCESSFUL in 786ms
+BUILD SUCCESSFUL in 794ms
 12 actionable tasks: 12 up-to-date
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
 + docker build --provenance=false --sbom=false -t localhost:5001/synkra-backend:0.1.0 backend
@@ -150,25 +150,25 @@ Consider enabling configuration cache to speed up this build: https://docs.gradl
 #4 DONE 0.0s
 
 #5 [internal] load build context
-#5 transferring context: 68.07MB 0.1s done
+#5 transferring context: 68.07MB 0.2s done
 #5 DONE 0.2s
 
-#6 [capas 2/4] WORKDIR /app
+#6 [capas 3/4] COPY build/libs/backend-*.jar /jars/
 #6 CACHED
 
-#7 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
+#7 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un backend-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/backend-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
 #7 CACHED
 
-#8 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
+#8 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
 #8 CACHED
 
-#9 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
+#9 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
 #9 CACHED
 
-#10 [capas 3/4] COPY build/libs/backend-*.jar /jars/
+#10 [capas 2/4] WORKDIR /app
 #10 CACHED
 
-#11 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un backend-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/backend-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
+#11 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
 #11 CACHED
 
 #12 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
@@ -206,22 +206,22 @@ Consider enabling configuration cache to speed up this build: https://docs.gradl
 #5 transferring context: 24.15MB 0.1s done
 #5 DONE 0.2s
 
-#6 [capas 3/4] COPY build/libs/core-*.jar /jars/
+#6 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
 #6 CACHED
 
-#7 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
+#7 [capas 3/4] COPY build/libs/core-*.jar /jars/
 #7 CACHED
 
-#8 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
+#8 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un core-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/core-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
 #8 CACHED
 
-#9 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un core-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/core-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
+#9 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
 #9 CACHED
 
 #10 [capas 2/4] WORKDIR /app
 #10 CACHED
 
-#11 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
+#11 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
 #11 CACHED
 
 #12 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
@@ -259,16 +259,16 @@ Consider enabling configuration cache to speed up this build: https://docs.gradl
 #5 transferring context: 4.30kB done
 #5 DONE 0.0s
 
-#6 [revision 2/4] RUN apk add --no-cache shellcheck
+#6 [stage-1 2/3] RUN apk add --no-cache curl  && addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins && chmod 0755 /config  && apk del --no-cache apk-tools
 #6 CACHED
 
-#7 [revision 4/4] RUN shellcheck -s sh /descargar.sh
+#7 [revision 2/4] RUN apk add --no-cache shellcheck
 #7 CACHED
 
 #8 [revision 3/4] COPY descargar.sh /descargar.sh
 #8 CACHED
 
-#9 [stage-1 2/3] RUN apk add --no-cache curl  && addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins && chmod 0755 /config  && apk del --no-cache apk-tools
+#9 [revision 4/4] RUN shellcheck -s sh /descargar.sh
 #9 CACHED
 
 #10 [stage-1 3/3] COPY --from=revision --chmod=0555 /descargar.sh /usr/local/bin/descargar.sh
@@ -310,19 +310,19 @@ Consider enabling configuration cache to speed up this build: https://docs.gradl
 #7 transferring context: 60.18kB done
 #7 DONE 0.0s
 
-#8 [build 3/5] COPY . .
+#8 [build 4/5] RUN dotnet restore
 #8 CACHED
 
-#9 [build 5/5] RUN dotnet publish -c Release -o /app --no-restore
+#9 [build 3/5] COPY . .
 #9 CACHED
 
-#10 [build 4/5] RUN dotnet restore
+#10 [stage-1 2/3] WORKDIR /app
 #10 CACHED
 
 #11 [build 2/5] WORKDIR /src
 #11 CACHED
 
-#12 [stage-1 2/3] WORKDIR /app
+#12 [build 5/5] RUN dotnet publish -c Release -o /app --no-restore
 #12 CACHED
 
 #13 [stage-1 3/3] COPY --from=build /app .
@@ -371,31 +371,31 @@ ok localhost:5001/synkra-front:0.1.0 sin-sdk
 OK imagenes
 + docker push localhost:5001/synkra-backend:0.1.0
 The push refers to repository [localhost:5001/synkra-backend]
-4f4fb700ef54: Pushed
-eaeb7fc83754: Pushed
-cb99678e5a4c: Pushed
-881fc932939e: Pushed
-95d78c2a8ddf: Pushed
-2db787ed6893: Pushed
-dd1ebef4bc6a: Pushed
-d1540b868518: Pushed
 7c3a5aabfc1c: Pushed
-f8e7364513c9: Pushed
+881fc932939e: Pushed
+cb99678e5a4c: Pushed
+2db787ed6893: Pushed
+4f4fb700ef54: Pushed
+95d78c2a8ddf: Pushed
+dd1ebef4bc6a: Pushed
 89406ef15e50: Pushed
+f8e7364513c9: Pushed
+eaeb7fc83754: Pushed
+d1540b868518: Pushed
 0.1.0: digest: sha256:48b554d0a4fa144ecf93cb5403209c06cacd26985f629824920b0facbc5e1baa size: 2381
 + docker push localhost:5001/synkra-core-ejemplo:2.1.0
 The push refers to repository [localhost:5001/synkra-core-ejemplo]
+a450f847083e: Pushed
+3a719728310e: Pushed
+cb99678e5a4c: Mounted from synkra-backend
+89406ef15e50: Mounted from synkra-backend
 881fc932939e: Mounted from synkra-backend
+4f4fb700ef54: Mounted from synkra-backend
+ff0cb9c7af64: Pushed
 7c3a5aabfc1c: Mounted from synkra-backend
 2db787ed6893: Mounted from synkra-backend
 95d78c2a8ddf: Mounted from synkra-backend
-a450f847083e: Pushed
-ff0cb9c7af64: Pushed
-cb99678e5a4c: Mounted from synkra-backend
-89406ef15e50: Mounted from synkra-backend
 df17b0c6b739: Pushed
-4f4fb700ef54: Mounted from synkra-backend
-3a719728310e: Pushed
 2.1.0: digest: sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76 size: 2380
 + docker push localhost:5001/synkra-init-descarga:1.0.0
 The push refers to repository [localhost:5001/synkra-init-descarga]
@@ -410,9 +410,9 @@ bbb89ae32e02: Pushed
 272c58efda97: Pushed
 8a289e1ea591: Pushed
 0e59dac7f525: Pushed
+245c91b0e5fd: Pushed
 8a1660ec1854: Pushed
 590be7a8d3a7: Pushed
-245c91b0e5fd: Pushed
 0.1.0: digest: sha256:d1d80b7a3418e937e9974d80402c1870e5d7185ae9295cc2952c69423e4e1313 size: 1816
 subida localhost:5001/synkra-backend:0.1.0 sha256:48b554d0a4fa144ecf93cb5403209c06cacd26985f629824920b0facbc5e1baa
 subida localhost:5001/synkra-core-ejemplo:2.1.0 sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76
@@ -422,7 +422,7 @@ OK imagenes subidas
 make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U09-D'
 make desplegar
 make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U09-D'
-contexto permitido: kind-synkra (https://127.0.0.1:44861)
+contexto permitido: kind-synkra (https://127.0.0.1:42049)
 scripts/desplegar.sh
 namespace/synkra unchanged (server dry run)
 namespace/synkra-co unchanged (server dry run)
@@ -462,7 +462,7 @@ OK desplegar: localhost:5001/synkra-front:0.1.0 sha256:d1d80b7a3418e937e9974d804
 make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U09-D'
 make verificar-limite
 make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U09-D'
-contexto permitido: kind-synkra (https://127.0.0.1:44861)
+contexto permitido: kind-synkra (https://127.0.0.1:42049)
 scripts/verificar-limite.sh
 ok create deployments.apps -n synkra-co: yes
 ok create deployments.apps -n synkra-pe: yes
@@ -473,21 +473,21 @@ ok create namespaces: no
 OK limite: 6 respuestas esperadas
 make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U09-D'
 
-real	1m32,250s
-user	0m8,881s
-sys	0m5,409s
+real	1m28,560s
+user	0m9,372s
+sys	0m6,059s
 install=0
 NAME                             READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS       IMAGES                                SELECTOR
-deployment.apps/synkra-backend   1/1     1            1           26s   synkra-backend   localhost:5001/synkra-backend:0.1.0   app.kubernetes.io/name=synkra-backend
-deployment.apps/synkra-front     1/1     1            1           26s   synkra-front     localhost:5001/synkra-front:0.1.0     app.kubernetes.io/name=synkra-front
+deployment.apps/synkra-backend   1/1     1            1           25s   synkra-backend   localhost:5001/synkra-backend:0.1.0   app.kubernetes.io/name=synkra-backend
+deployment.apps/synkra-front     1/1     1            1           25s   synkra-front     localhost:5001/synkra-front:0.1.0     app.kubernetes.io/name=synkra-front
 
 NAME                     TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE   SELECTOR
-service/synkra-backend   ClusterIP   10.96.102.218   <none>        8080/TCP   26s   app.kubernetes.io/name=synkra-backend
-service/synkra-front     ClusterIP   10.96.156.165   <none>        8080/TCP   26s   app.kubernetes.io/name=synkra-front
+service/synkra-backend   ClusterIP   10.96.108.138   <none>        8080/TCP   25s   app.kubernetes.io/name=synkra-backend
+service/synkra-front     ClusterIP   10.96.67.79     <none>        8080/TCP   25s   app.kubernetes.io/name=synkra-front
 
 NAME                                       CLASS   HOSTS          ADDRESS   PORTS     AGE
-ingress.networking.k8s.io/synkra-backend   nginx   synkra.local             80, 443   26s
-ingress.networking.k8s.io/synkra-front     nginx   synkra.local             80, 443   26s
+ingress.networking.k8s.io/synkra-backend   nginx   synkra.local             80, 443   25s
+ingress.networking.k8s.io/synkra-front     nginx   synkra.local             80, 443   25s
 Running true localhost:5001/synkra-front:0.1.0 Always false localhost:5001/synkra-front@sha256:d1d80b7a3418e937e9974d80402c1870e5d7185ae9295cc2952c69423e4e1313
 10001
 {"name":"synkra-front","tags":["0.1.0"]}

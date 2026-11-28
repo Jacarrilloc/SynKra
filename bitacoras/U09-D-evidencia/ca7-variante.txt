@@ -1,12 +1,12 @@
-fecha: 2026-11-28T05:11:19-05:00
-sha: 1bc94ae 0 cambios de codigo sin confirmar
+fecha: 2026-11-28T05:34:20-05:00
+sha: ec6108e 0 cambios de codigo sin confirmar
 uname -m: x86_64
 docker arch: amd64
 JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
 $ bash bitacoras/U09-D-evidencia/ca7-variante.sh
 variante=0
 registro-cambio
-contexto permitido: kind-synkra (https://127.0.0.1:44861)
+contexto permitido: kind-synkra (https://127.0.0.1:42049)
 scripts/desplegar.sh
 namespace/synkra unchanged (server dry run)
 namespace/synkra-co unchanged (server dry run)
@@ -41,12 +41,12 @@ ingress.networking.k8s.io/synkra-front unchanged
 deployment "synkra-backend" successfully rolled out
 OK desplegar: localhost:5001/synkra-backend:0.1.0 sha256:48b554d0a4fa144ecf93cb5403209c06cacd26985f629824920b0facbc5e1baa
 deployment "synkra-front" successfully rolled out
-desplegar: synkra-front corre sha256:d1d80b7a3418e937e9974d80402c1870e5d7185ae9295cc2952c69423e4e1313 y el registro tiene sha256:8cef467d917a239d6e8bc43db39cdc065c82b19e4f239e0dc51123edc9f3bd4a; rollout restart
+desplegar: synkra-front corre sha256:d1d80b7a3418e937e9974d80402c1870e5d7185ae9295cc2952c69423e4e1313 y el registro tiene sha256:67d24c5c5003421303fddbcfa06ff6af8beaa8328dbfac36227403ca77b7e26f; rollout restart
 deployment.apps/synkra-front restarted
 Waiting for deployment "synkra-front" rollout to finish: 1 old replicas are pending termination...
 Waiting for deployment "synkra-front" rollout to finish: 1 old replicas are pending termination...
 deployment "synkra-front" successfully rolled out
-OK desplegar: localhost:5001/synkra-front:0.1.0 sha256:8cef467d917a239d6e8bc43db39cdc065c82b19e4f239e0dc51123edc9f3bd4a
+OK desplegar: localhost:5001/synkra-front:0.1.0 sha256:67d24c5c5003421303fddbcfa06ff6af8beaa8328dbfac36227403ca77b7e26f
 desplegar=0
 corre-la-variante
 #0 building with "default" instance using docker driver
@@ -70,25 +70,25 @@ corre-la-variante
 #5 transferring context: 107B done
 #5 DONE 0.0s
 
-#6 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
+#6 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
 #6 CACHED
 
-#7 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
+#7 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un backend-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/backend-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
 #7 CACHED
 
-#8 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
+#8 [capas 3/4] COPY build/libs/backend-*.jar /jars/
 #8 CACHED
 
-#9 [capas 2/4] WORKDIR /app
+#9 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
 #9 CACHED
 
-#10 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
+#10 [capas 2/4] WORKDIR /app
 #10 CACHED
 
-#11 [capas 3/4] COPY build/libs/backend-*.jar /jars/
+#11 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
 #11 CACHED
 
-#12 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un backend-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/backend-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
+#12 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
 #12 CACHED
 
 #13 [stage-1 7/7] RUN addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H synkra  && mkdir /data && chown 10001:10001 /data
@@ -122,25 +122,25 @@ corre-la-variante
 #5 transferring context: 104B done
 #5 DONE 0.0s
 
-#6 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
+#6 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
 #6 CACHED
 
-#7 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
+#7 [capas 2/4] WORKDIR /app
 #7 CACHED
 
-#8 [capas 2/4] WORKDIR /app
+#8 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
 #8 CACHED
 
-#9 [capas 3/4] COPY build/libs/core-*.jar /jars/
+#9 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
 #9 CACHED
 
 #10 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un core-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/core-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
 #10 CACHED
 
-#11 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
+#11 [capas 3/4] COPY build/libs/core-*.jar /jars/
 #11 CACHED
 
-#12 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
+#12 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
 #12 CACHED
 
 #13 [stage-1 7/7] RUN addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins /config
@@ -174,13 +174,13 @@ corre-la-variante
 #5 transferring context: 34B done
 #5 DONE 0.0s
 
-#6 [stage-1 2/3] RUN apk add --no-cache curl  && addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins && chmod 0755 /config  && apk del --no-cache apk-tools
+#6 [revision 2/4] RUN apk add --no-cache shellcheck
 #6 CACHED
 
 #7 [revision 3/4] COPY descargar.sh /descargar.sh
 #7 CACHED
 
-#8 [revision 2/4] RUN apk add --no-cache shellcheck
+#8 [stage-1 2/3] RUN apk add --no-cache curl  && addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins && chmod 0755 /config  && apk del --no-cache apk-tools
 #8 CACHED
 
 #9 [revision 4/4] RUN shellcheck -s sh /descargar.sh
@@ -212,22 +212,22 @@ corre-la-variante
 #4 transferring context: 66B done
 #4 DONE 0.0s
 
-#5 [stage-1 1/3] FROM mcr.microsoft.com/dotnet/aspnet:10.0.15@sha256:aac50ceef10391e78a899e3d2ccd00bbafa2dcb56ccf4586cbccf00edb84fc21
-#5 resolve mcr.microsoft.com/dotnet/aspnet:10.0.15@sha256:aac50ceef10391e78a899e3d2ccd00bbafa2dcb56ccf4586cbccf00edb84fc21 0.0s done
+#5 [build 1/5] FROM mcr.microsoft.com/dotnet/sdk:10.0.404@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
+#5 resolve mcr.microsoft.com/dotnet/sdk:10.0.404@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d 0.0s done
 #5 DONE 0.0s
 
-#6 [build 1/5] FROM mcr.microsoft.com/dotnet/sdk:10.0.404@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
-#6 resolve mcr.microsoft.com/dotnet/sdk:10.0.404@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d 0.0s done
+#6 [stage-1 1/3] FROM mcr.microsoft.com/dotnet/aspnet:10.0.15@sha256:aac50ceef10391e78a899e3d2ccd00bbafa2dcb56ccf4586cbccf00edb84fc21
+#6 resolve mcr.microsoft.com/dotnet/aspnet:10.0.15@sha256:aac50ceef10391e78a899e3d2ccd00bbafa2dcb56ccf4586cbccf00edb84fc21 0.0s done
 #6 DONE 0.0s
 
 #7 [internal] load build context
 #7 transferring context: 1.31kB done
 #7 DONE 0.0s
 
-#8 [build 5/5] RUN dotnet publish -c Release -o /app --no-restore
+#8 [build 4/5] RUN dotnet restore
 #8 CACHED
 
-#9 [build 4/5] RUN dotnet restore
+#9 [build 3/5] COPY . .
 #9 CACHED
 
 #10 [stage-1 2/3] WORKDIR /app
@@ -236,7 +236,7 @@ corre-la-variante
 #11 [build 2/5] WORKDIR /src
 #11 CACHED
 
-#12 [build 3/5] COPY . .
+#12 [build 5/5] RUN dotnet publish -c Release -o /app --no-restore
 #12 CACHED
 
 #13 [stage-1 3/3] COPY --from=build /app .
@@ -250,3 +250,4 @@ corre-la-variante
 #14 unpacking to localhost:5001/synkra-front:0.1.0 done
 #14 DONE 0.0s
 restaurado=0
+corre-lo-subido

@@ -6,7 +6,7 @@ m0=$(stat -c '%Y %s' "$HOME/.kube/config" 2>/dev/null || echo ausente)
 make cluster-delete; echo "borrar=$?"
 time make install; echo "install=$?"
 kubectl --kubeconfig "$KC" -n synkra get deploy,svc,ingress -o wide
-P=$(kubectl --kubeconfig "$KC" -n synkra get pods -l app.kubernetes.io/name=synkra-front -o jsonpath='{.items[0].metadata.name}')
+P=$(kubectl --kubeconfig "$KC" -n synkra get pods -l app.kubernetes.io/name=synkra-front -o json | python3 -I -c "import sys,json; print([p['metadata']['name'] for p in json.load(sys.stdin)['items'] if not p['metadata'].get('deletionTimestamp') and p['status'].get('phase')=='Running'][0])")
 kubectl --kubeconfig "$KC" -n synkra get pod "$P" -o jsonpath='{.status.phase} {.status.containerStatuses[0].ready} {.spec.containers[0].image} {.spec.containers[0].imagePullPolicy} {.spec.automountServiceAccountToken} {.status.containerStatuses[0].imageID}'; echo
 kubectl --kubeconfig "$KC" -n synkra exec "$P" -- id -u
 curl -sf "http://$R/v2/synkra-front/tags/list"; echo
