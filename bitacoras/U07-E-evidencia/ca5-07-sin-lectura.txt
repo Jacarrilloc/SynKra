@@ -1,0 +1,15 @@
+fecha: 2026-11-28T02:56:33Z  sha: 4869522  mutación: 07-sin-lectura
+$ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"; (cd "$D" && git init -q)
+$ sed -i -e /LecturaFallidaException\ \|\ LecturaPaisInconsistenteException\ e/\{n\;s/SIN_LECTURA/FALLIDO/\} "$D/backend/src/main/java/io/synkra/despliegue/VigilanciaDespliegues.java"
+--- diff de la mutación (copia vs HEAD)
+129c129
+<             return Situacion.SIN_LECTURA;
+---
+>             return Situacion.FALLIDO;
+$ (cd "$D" && ./gradlew :backend:test --tests '*VigilanciaTest' --tests '*RetomarVigilanciaTest' --tests '*AplicandoTest' --tests '*ReintentosClienteTest' --tests '*EstadoRolloutTest' --tests '*ContextoEventosTest')
+23 tests completed, 1 failed
+BUILD FAILED in 21s
+$ grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaTest.xml
+--- pruebas que cayeron (clase.método)
+VigilanciaTest.ecSinLecturaNoCierraNadaHastaElPlazo

@@ -1,0 +1,12 @@
+fecha: 2026-11-28T02:54:07Z  sha: 4869522
+./gradlew :backend:test --rerun --tests '*RetomarVigilanciaTest' 2>&1 | grep "BUILD\|FAILED"
+grep -ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-*RetomarVigilanciaTest.xml
+python3 -I -c "import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); print(c.execute('select id, pais, estado from dep_plan order by id').fetchall()); print(c.execute('select id, pais, estado, creado_por, confirmado_por from reg_despliegue order by id').fetchall()); print(c.execute('select despliegue_id, log_core, log_init, eventos from reg_contexto').fetchall())" backend/build/sqlite-pruebas/RetomarVigilanciaTest/synkra.db
+grep -rn "Thread\.sleep" backend/src/test/java/io/synkra/despliegue/VigilanciaTest.java backend/src/test/java/io/synkra/despliegue/RetomarVigilanciaTest.java; echo "sleep=$?"
+--- salida
+BUILD SUCCESSFUL in 7s
+tests="2" skipped="0" failures="0" errors="0"
+[(1, 'pe', 'confirmado'), (2, 'co', 'confirmado'), (3, 'pe', 'vencido')]
+[(1, 'pe', 'listo', 'ana', 'luis'), (2, 'co', 'fallido', 'ana', 'luis')]
+[(2, '', '', 'Venció el plazo de vigilancia sin que el despliegue quedara listo')]
+sleep=1

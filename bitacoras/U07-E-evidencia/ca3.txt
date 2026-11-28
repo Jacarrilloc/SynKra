@@ -1,0 +1,17 @@
+fecha: 2026-11-28T02:54:19Z  sha: 4869522
+./gradlew :backend:test --rerun --tests '*ReintentosClienteTest' --tests '*EstadoRolloutTest' --tests '*ContextoEventosTest' --tests '*AplicandoTest' --tests '*EstadoYContextoTest' --tests '*ClienteKubernetesTest' --tests '*AplicarTest' --tests '*HistorialTest' 2>&1 | grep "BUILD\|FAILED"
+for c in ReintentosClienteTest EstadoRolloutTest ContextoEventosTest AplicandoTest EstadoYContextoTest ClienteKubernetesTest AplicarTest HistorialTest; do grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-*.$c.xml; done
+grep -n "withRequestRetryBackoffLimit" backend/src/main/java/io/synkra/kubernetes/ConfiguracionKubernetes.java
+python3 -I -c "import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); print(c.execute('select id, pais, estado from reg_despliegue order by id').fetchall())" backend/build/sqlite-pruebas/AplicandoTest/synkra.db
+--- salida
+BUILD SUCCESSFUL in 12s
+backend/build/test-results/test/TEST-io.synkra.kubernetes.ReintentosClienteTest.xml:tests="3" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.EstadoRolloutTest.xml:tests="6" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.ContextoEventosTest.xml:tests="3" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.registro.AplicandoTest.xml:tests="1" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.EstadoYContextoTest.xml:tests="20" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.ClienteKubernetesTest.xml:tests="10" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.AplicarTest.xml:tests="10" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.registro.HistorialTest.xml:tests="8" skipped="0" failures="0" errors="0"
+40:                .withRequestRetryBackoffLimit(0)
+[(41, 'pe', 'aplicando'), (42, 'co', 'aplicando'), (43, 'pe', 'listo'), (44, 'co', 'fallido'), (45, 'cl', 'aplicando')]

@@ -1,0 +1,22 @@
+fecha: 2026-11-28T02:56:33Z  sha: 4869522  mutación: 08-cero-escrituras
+$ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"; (cd "$D" && git init -q)
+$ sed -i -e /\^\ \ \ \ \ \ \ \ if\ \(\!vencido\)\ \{\$/i\\\ \ \ \ \ \ \ \ kubernetes.aplicar\(kubernetes.construir\(new\ io.synkra.kubernetes.api.PlanPais\(d.pais\(\)\,\ d.imagen\(\)\,\ java.util.List.of\(\)\)\)\)\; "$D/backend/src/main/java/io/synkra/despliegue/VigilanciaDespliegues.java"
+--- diff de la mutación (copia vs HEAD)
+91a92
+>         kubernetes.aplicar(kubernetes.construir(new io.synkra.kubernetes.api.PlanPais(d.pais(), d.imagen(), java.util.List.of())));
+$ (cd "$D" && ./gradlew :backend:test --tests '*VigilanciaTest' --tests '*RetomarVigilanciaTest' --tests '*AplicandoTest' --tests '*ReintentosClienteTest' --tests '*EstadoRolloutTest' --tests '*ContextoEventosTest')
+23 tests completed, 9 failed
+BUILD FAILED in 21s
+$ grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.RetomarVigilanciaTest.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaTest.xml
+--- pruebas que cayeron (clase.método)
+RetomarVigilanciaTest.trasUnReinicioSeRetomaLaVigilanciaSinReaplicarYLosPlanesVencenSolos
+VigilanciaTest.pyUnAplicandoSinNadaEnElClusterSeCierraPorPlazo
+VigilanciaTest.coVenceElPlazoExactoConPropiedadDeDosMinutos
+VigilanciaTest.clCrashLoopBackOffCierraEnLaMismaPasadaConElContextoDeVerdad
+VigilanciaTest.arInitErrorCierraConElLogDelInit
+VigilanciaTest.ecSinLecturaNoCierraNadaHastaElPlazo
+VigilanciaTest.uyUnPodViejoListoNoTapaAlNuevoQueFalla
+VigilanciaTest.boLoQueCorreNoEsLoConfirmadoNuncaEsListo
+VigilanciaTest.peListoCuandoLoQueCorreEsLoConfirmado

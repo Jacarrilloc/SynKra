@@ -1,0 +1,15 @@
+fecha: 2026-11-28T02:58:46Z  sha: 4869522  mutación: 18-c82-actualizadas
+$ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"; (cd "$D" && git init -q)
+$ sed -i -e s/boolean\ actualizadas\ =\ status.getUpdatedReplicas\(\)\ ==\ null\ \|\|\ status.getUpdatedReplicas\(\)\ ==\ deseadas\;/boolean\ actualizadas\ =\ true\;/ "$D/backend/src/main/java/io/synkra/kubernetes/LectorPais.java"
+--- diff de la mutación (copia vs HEAD)
+83c83
+<         boolean actualizadas = status.getUpdatedReplicas() == null || status.getUpdatedReplicas() == deseadas;
+---
+>         boolean actualizadas = true;
+$ (cd "$D" && ./gradlew :backend:test --tests '*VigilanciaTest' --tests '*RetomarVigilanciaTest' --tests '*AplicandoTest' --tests '*ReintentosClienteTest' --tests '*EstadoRolloutTest' --tests '*ContextoEventosTest')
+23 tests completed, 1 failed
+BUILD FAILED in 30s
+$ grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.kubernetes.EstadoRolloutTest.xml
+--- pruebas que cayeron (clase.método)
+EstadoRolloutTest.sinTodasLasReplicasActualizadasEsEnCurso

@@ -1,0 +1,15 @@
+fecha: 2026-11-28T02:55:37Z  sha: 4869522  mutación: 02-coincide
+$ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"; (cd "$D" && git init -q)
+$ sed -i -e s/if\ \(lectura.isEmpty\(\)\ \|\|\ \!coincide\(d\,\ lectura.get\(\)\)\)\ \{/if\ \(lectura.isEmpty\(\)\)\ \{/ "$D/backend/src/main/java/io/synkra/despliegue/VigilanciaDespliegues.java"
+--- diff de la mutación (copia vs HEAD)
+118c118
+<             if (lectura.isEmpty() || !coincide(d, lectura.get())) {
+---
+>             if (lectura.isEmpty()) {
+$ (cd "$D" && ./gradlew :backend:test --tests '*VigilanciaTest' --tests '*RetomarVigilanciaTest' --tests '*AplicandoTest' --tests '*ReintentosClienteTest' --tests '*EstadoRolloutTest' --tests '*ContextoEventosTest')
+23 tests completed, 1 failed
+BUILD FAILED in 33s
+$ grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaTest.xml
+--- pruebas que cayeron (clase.método)
+VigilanciaTest.boLoQueCorreNoEsLoConfirmadoNuncaEsListo

@@ -1,0 +1,15 @@
+fecha: 2026-11-28T02:57:05Z  sha: 4869522  mutación: 10-c109-vencer
+$ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"; (cd "$D" && git init -q)
+$ sed -i -e s/vencimiento\\.vencerPendientes\(\)\;/\;/ "$D/backend/src/main/java/io/synkra/despliegue/TareasProgramadas.java"
+--- diff de la mutación (copia vs HEAD)
+35c35
+<         vencimiento.vencerPendientes();
+---
+>         ;
+$ (cd "$D" && ./gradlew :backend:test --tests '*VigilanciaTest' --tests '*RetomarVigilanciaTest' --tests '*AplicandoTest' --tests '*ReintentosClienteTest' --tests '*EstadoRolloutTest' --tests '*ContextoEventosTest')
+23 tests completed, 1 failed
+BUILD FAILED in 41s
+$ grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.RetomarVigilanciaTest.xml
+--- pruebas que cayeron (clase.método)
+RetomarVigilanciaTest.trasUnReinicioSeRetomaLaVigilanciaSinReaplicarYLosPlanesVencenSolos
