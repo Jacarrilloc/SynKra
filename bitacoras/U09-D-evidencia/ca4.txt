@@ -1,10 +1,10 @@
-fecha: 2026-11-28T05:04:29-05:00
-sha: 66cb961 0 cambios de codigo sin confirmar
+fecha: 2026-11-28T05:09:01-05:00
+sha: 1bc94ae 0 cambios de codigo sin confirmar
 uname -m: x86_64
 docker arch: amd64
 JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
 $ bash bitacoras/U09-D-evidencia/ca4.sh
-5005cf7d8bd36509f0e14ba6282473e85a4a974820b0b8ffb9f7f2d40122fdb3
+c23666dd8042521a5e9e56494b99710dc7c9b4987596109da332e2da5b6d9d6f
 espera=0
 200
 blazor.web.js 200
