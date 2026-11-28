@@ -1,5 +1,5 @@
-fecha: 2026-11-28T00:54:41-05:00
-sha: b7d41a5 (arbol: 1 cambios sin confirmar)
+fecha: 2026-11-28T00:59:35-05:00
+sha: a4924e6 (arbol: 2 cambios sin confirmar)
 uname -m: x86_64
 docker arch: amd64
 JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
@@ -21,6 +21,9 @@ archivos-de-9272914-identicos-en-05a709e (40 archivos)
 archivos-de-d6ca8b9-identicos-en-05a709e (52 archivos)
 # la rama m6r/U08-C sale de 05a709e y no tiene merges propios:
 0
+* a4924e6 U08-C: devuelve el modo 0644 a certificado-tls.sh y verificar-imagenes.sh (U08-B), que un chmod masivo habia cambiado
+* 7b551a2 U08-C: bitacora, corrige el conteo de clusteres
+* fc0579f U08-C: bitacora y evidencia fresca de la ronda 1 (ca1 a ca9)
 * b7d41a5 U08-C: imagenes sin atestaciones (el digest del indice no cambia con el mismo contenido), ca1, ca9, ca10, ca8 corregido
 * 486bcb1 U08-C: guiones ca4, ca5, ca8 y evidencia de apoyo
 * a00fe29 U08-C: Ingress NGINX fijado, base con backend, make install/imagenes/desplegar/tls/verificar-limite
@@ -58,6 +61,3 @@ archivos-de-d6ca8b9-identicos-en-05a709e (52 archivos)
 * 7c01549 U09-A: informe del revisor, ronda 1 (NO-VERDE)
 * 4429f9f U09-A: CA-7, diff acotado (ca7.sh, ca7.txt y línea de la bitácora)
 * 0ff8944 U09-A: evidencia de CA-1 a CA-6 regenerada con el sha final del código
-* 0fd4b82 U09-A: Program.cs nombra la clave Synkra:ApiUrl
-* 56e3814 U09-A: bitácora y evidencia de CA-1 a CA-6
-* 9281e0c U09-A: HistorialEscapaElPais también prueba / y ? (la mutación de escape sobrevivía con «p e»)

@@ -1,5 +1,5 @@
-fecha: 2026-11-28T00:57:45-05:00
-sha: b7d41a5 (arbol: 10 cambios sin confirmar)
+fecha: 2026-11-28T01:02:28-05:00
+sha: a4924e6 (arbol: 11 cambios sin confirmar)
 uname -m: x86_64
 docker arch: amd64
 JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
@@ -96,7 +96,7 @@ $ sed -i 's|elif \[ "\$respuesta" = "\$esperado" \]; then|elif true; then|' scri
 >   elif true; then
 clusterrolebinding.rbac.authorization.k8s.io/synkra-prueba-limite created
 edit synkra/deployer
-contexto permitido: kind-synkra (https://127.0.0.1:33577)
+contexto permitido: kind-synkra (https://127.0.0.1:41787)
 scripts/verificar-limite.sh
 ok create deployments.apps -n synkra-co: yes
 ok create deployments.apps -n synkra-pe: yes
@@ -110,7 +110,7 @@ clusterrolebinding.rbac.authorization.k8s.io "synkra-prueba-limite" deleted
 Error from server (NotFound): clusterrolebindings.rbac.authorization.k8s.io "synkra-prueba-limite" not found
 crb-borrado=1
 rolebinding.rbac.authorization.k8s.io/synkra-prueba-limite created
-contexto permitido: kind-synkra (https://127.0.0.1:33577)
+contexto permitido: kind-synkra (https://127.0.0.1:41787)
 scripts/verificar-limite.sh
 ok create deployments.apps -n synkra-co: yes
 ok create deployments.apps -n synkra-pe: yes
@@ -123,7 +123,7 @@ con-rb=0
 rolebinding.rbac.authorization.k8s.io "synkra-prueba-limite" deleted from synkra namespace
 Error from server (NotFound): rolebindings.rbac.authorization.k8s.io "synkra-prueba-limite" not found
 rb-borrado=1
-contexto permitido: kind-synkra (https://127.0.0.1:33577)
+contexto permitido: kind-synkra (https://127.0.0.1:41787)
 scripts/verificar-limite.sh
 ok create deployments.apps -n synkra-co: yes
 ok create deployments.apps -n synkra-pe: yes
@@ -146,7 +146,7 @@ $ sed -i 's#^if \[ "\$EN_REGISTRO" != "\$EN_POD" \]; then#if false; then#; s#^\[
 > [ -n "$EN_REGISTRO" ] || { echo "FALLA desplegar: corre ${EN_POD:-nada} y el registro tiene ${EN_REGISTRO:-nada}" >&2; exit 1; }
 variante=0
 registro-cambio
-OK desplegar: localhost:5001/synkra-backend:0.1.0 sha256:ac33f7275f378f42c9998c4a4fde217a7e895e95c543c9bebdd03b71c5604d48
+OK desplegar: localhost:5001/synkra-backend:0.1.0 sha256:6576bd9ab79dca65b94d24f94296986765ac5ba6dd0577be8c651cb7e58eeb29
 desplegar=0
 restaurado=0
 corre-lo-subido

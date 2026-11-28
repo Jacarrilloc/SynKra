@@ -1,10 +1,10 @@
-fecha: 2026-11-28T00:57:22-05:00
-sha: b7d41a5 (arbol: 7 cambios sin confirmar)
+fecha: 2026-11-28T01:02:14-05:00
+sha: a4924e6 (arbol: 8 cambios sin confirmar)
 uname -m: x86_64
 docker arch: amd64
 JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
 $ bash bitacoras/U08-C-evidencia/ca6.sh
-contexto permitido: kind-synkra (https://127.0.0.1:33577)
+contexto permitido: kind-synkra (https://127.0.0.1:41787)
 scripts/verificar-limite.sh
 ok create deployments.apps -n synkra-co: yes
 ok create deployments.apps -n synkra-pe: yes

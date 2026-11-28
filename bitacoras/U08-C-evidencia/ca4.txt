@@ -1,12 +1,12 @@
-fecha: 2026-11-28T00:54:42-05:00
-sha: b7d41a5 (arbol: 3 cambios sin confirmar)
+fecha: 2026-11-28T00:59:35-05:00
+sha: a4924e6 (arbol: 4 cambios sin confirmar)
 uname -m: x86_64
 docker arch: amd64
 JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
 $ bash bitacoras/U08-C-evidencia/ca4.sh
 kind delete cluster --name synkra --kubeconfig "/home/casdav/Projects/Master/wt-m6r-U08-C/.kube/kind-synkra.yaml"
 Deleting cluster "synkra" ...
-Deleted nodes: ["synkra-worker" "synkra-control-plane"]
+Deleted nodes: ["synkra-control-plane" "synkra-worker"]
 kind-registry
 borrar=0
 # C-130 y puertos antes de crear el cluster (decision 5)
@@ -33,27 +33,27 @@ Creating cluster "synkra" ...
  ✓ Joining worker nodes 🚜
  • Waiting ≤ 3m0s for control-plane = Ready ⏳  ...
  ✓ Waiting ≤ 3m0s for control-plane = Ready ⏳
- • Ready after 11s 💚
+ • Ready after 10s 💚
 Set kubectl context to "kind-synkra"
 You can now use your cluster with:
 
 kubectl cluster-info --context kind-synkra --kubeconfig /home/casdav/Projects/Master/wt-m6r-U08-C/.kube/kind-synkra.yaml
 
-Thanks for using kind! 😊
-contexto permitido: kind-synkra (https://127.0.0.1:33577)
+Not sure what to do next? 😅  Check out https://kind.sigs.k8s.io/docs/user/quick-start/
+contexto permitido: kind-synkra (https://127.0.0.1:41787)
 kubectl --kubeconfig "/home/casdav/Projects/Master/wt-m6r-U08-C/.kube/kind-synkra.yaml" wait --for=condition=Ready nodes --all --timeout=180s
 node/synkra-control-plane condition met
 node/synkra-worker condition met
 make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U08-C'
 make registro
 make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U08-C'
-contexto permitido: kind-synkra (https://127.0.0.1:33577)
+contexto permitido: kind-synkra (https://127.0.0.1:41787)
 scripts/registro-local.sh
 registro listo en 127.0.0.1:5001
 make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U08-C'
 make aplicar-base
 make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U08-C'
-contexto permitido: kind-synkra (https://127.0.0.1:33577)
+contexto permitido: kind-synkra (https://127.0.0.1:41787)
 kubectl --kubeconfig "/home/casdav/Projects/Master/wt-m6r-U08-C/.kube/kind-synkra.yaml" apply -f deploy/base/namespaces.yaml -f deploy/base/rbac.yaml
 namespace/synkra created
 namespace/synkra-co created
@@ -66,7 +66,7 @@ rolebinding.rbac.authorization.k8s.io/synkra-deployer created
 make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U08-C'
 make ingress
 make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U08-C'
-contexto permitido: kind-synkra (https://127.0.0.1:33577)
+contexto permitido: kind-synkra (https://127.0.0.1:41787)
 kubectl --kubeconfig "/home/casdav/Projects/Master/wt-m6r-U08-C/.kube/kind-synkra.yaml" apply -k deploy/ingress-nginx
 namespace/ingress-nginx created
 serviceaccount/ingress-nginx created
@@ -93,7 +93,7 @@ deployment "ingress-nginx-controller" successfully rolled out
 make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U08-C'
 make tls
 make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U08-C'
-contexto permitido: kind-synkra (https://127.0.0.1:33577)
+contexto permitido: kind-synkra (https://127.0.0.1:41787)
 scripts/secreto-tls.sh
 tls: se reutiliza .tls/tls.crt
 secret/synkra-local-tls created
@@ -131,7 +131,7 @@ You can use '--warning-mode all' to show the individual deprecation warnings and
 
 For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD SUCCESSFUL in 848ms
+BUILD SUCCESSFUL in 856ms
 12 actionable tasks: 12 up-to-date
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
 + docker build --provenance=false --sbom=false -t localhost:5001/synkra-backend:0.1.0 backend
@@ -156,25 +156,25 @@ Consider enabling configuration cache to speed up this build: https://docs.gradl
 #5 transferring context: 107B done
 #5 DONE 0.0s
 
-#6 [capas 2/4] WORKDIR /app
+#6 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
 #6 CACHED
 
-#7 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
+#7 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un backend-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/backend-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
 #7 CACHED
 
-#8 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
+#8 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
 #8 CACHED
 
-#9 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
+#9 [capas 2/4] WORKDIR /app
 #9 CACHED
 
 #10 [capas 3/4] COPY build/libs/backend-*.jar /jars/
 #10 CACHED
 
-#11 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un backend-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/backend-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
+#11 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
 #11 CACHED
 
-#12 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
+#12 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
 #12 CACHED
 
 #13 [stage-1 7/7] RUN addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H synkra  && mkdir /data && chown 10001:10001 /data
@@ -209,25 +209,25 @@ Consider enabling configuration cache to speed up this build: https://docs.gradl
 #5 transferring context: 104B done
 #5 DONE 0.0s
 
-#6 [capas 3/4] COPY build/libs/core-*.jar /jars/
+#6 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
 #6 CACHED
 
-#7 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
+#7 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
 #7 CACHED
 
-#8 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
+#8 [capas 2/4] WORKDIR /app
 #8 CACHED
 
-#9 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
+#9 [capas 3/4] COPY build/libs/core-*.jar /jars/
 #9 CACHED
 
-#10 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
+#10 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un core-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/core-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
 #10 CACHED
 
-#11 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un core-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/core-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
+#11 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
 #11 CACHED
 
-#12 [capas 2/4] WORKDIR /app
+#12 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
 #12 CACHED
 
 #13 [stage-1 7/7] RUN addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins /config
@@ -265,13 +265,13 @@ Consider enabling configuration cache to speed up this build: https://docs.gradl
 #6 [stage-1 2/3] RUN apk add --no-cache curl  && addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins && chmod 0755 /config  && apk del --no-cache apk-tools
 #6 CACHED
 
-#7 [revision 3/4] COPY descargar.sh /descargar.sh
+#7 [revision 4/4] RUN shellcheck -s sh /descargar.sh
 #7 CACHED
 
-#8 [revision 4/4] RUN shellcheck -s sh /descargar.sh
+#8 [revision 2/4] RUN apk add --no-cache shellcheck
 #8 CACHED
 
-#9 [revision 2/4] RUN apk add --no-cache shellcheck
+#9 [revision 3/4] COPY descargar.sh /descargar.sh
 #9 CACHED
 
 #10 [stage-1 3/3] COPY --from=revision --chmod=0555 /descargar.sh /usr/local/bin/descargar.sh
@@ -310,39 +310,37 @@ ok localhost:5001/synkra-init-descarga:1.0.0 sin-apk
 OK imagenes
 + docker push localhost:5001/synkra-backend:0.1.0
 The push refers to repository [localhost:5001/synkra-backend]
-c2eb0b480d0e: Waiting
-292d7b184a69: Waiting
-7c3a5aabfc1c: Pushed
+dd1ebef4bc6a: Pushed
+4f4fb700ef54: Pushed
 881fc932939e: Pushed
 2db787ed6893: Pushed
-4f4fb700ef54: Pushed
-95d78c2a8ddf: Pushed
-dd1ebef4bc6a: Pushed
-89406ef15e50: Pushed
-f8e7364513c9: Pushed
+7c3a5aabfc1c: Pushed
 cb99678e5a4c: Pushed
+95d78c2a8ddf: Pushed
 c2eb0b480d0e: Pushed
 292d7b184a69: Pushed
+89406ef15e50: Pushed
+f8e7364513c9: Pushed
 0.1.0: digest: sha256:38d18ff75383d719a077c95a97f3a3d9e67b5074fdce0a0ec5d223075857b549 size: 2381
 + docker push localhost:5001/synkra-core-ejemplo:2.1.0
 The push refers to repository [localhost:5001/synkra-core-ejemplo]
+89406ef15e50: Mounted from synkra-backend
+2db787ed6893: Mounted from synkra-backend
 a450f847083e: Pushed
 4f4fb700ef54: Mounted from synkra-backend
-881fc932939e: Mounted from synkra-backend
-cb99678e5a4c: Mounted from synkra-backend
-2db787ed6893: Mounted from synkra-backend
-95d78c2a8ddf: Mounted from synkra-backend
 3a719728310e: Pushed
 ff0cb9c7af64: Pushed
 7c3a5aabfc1c: Mounted from synkra-backend
-89406ef15e50: Mounted from synkra-backend
+cb99678e5a4c: Mounted from synkra-backend
+95d78c2a8ddf: Mounted from synkra-backend
 df17b0c6b739: Pushed
+881fc932939e: Mounted from synkra-backend
 2.1.0: digest: sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76 size: 2380
 + docker push localhost:5001/synkra-init-descarga:1.0.0
 The push refers to repository [localhost:5001/synkra-init-descarga]
-da0a2cb9f313: Pushed
 586e1e534fba: Pushed
 25f1d6b1951a: Pushed
+da0a2cb9f313: Pushed
 1.0.0: digest: sha256:d3019aacdfb153d8db5c2ffe3bdab553601f2aa7dfda8ffbcf2ed298e6f12d75 size: 862
 subida localhost:5001/synkra-backend:0.1.0 sha256:38d18ff75383d719a077c95a97f3a3d9e67b5074fdce0a0ec5d223075857b549
 subida localhost:5001/synkra-core-ejemplo:2.1.0 sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76
@@ -351,7 +349,7 @@ OK imagenes subidas
 make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U08-C'
 make desplegar
 make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U08-C'
-contexto permitido: kind-synkra (https://127.0.0.1:33577)
+contexto permitido: kind-synkra (https://127.0.0.1:41787)
 scripts/desplegar.sh
 namespace/synkra unchanged (server dry run)
 namespace/synkra-co unchanged (server dry run)
@@ -383,7 +381,7 @@ OK desplegar: localhost:5001/synkra-backend:0.1.0 sha256:38d18ff75383d719a077c95
 make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U08-C'
 make verificar-limite
 make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U08-C'
-contexto permitido: kind-synkra (https://127.0.0.1:33577)
+contexto permitido: kind-synkra (https://127.0.0.1:41787)
 scripts/verificar-limite.sh
 ok create deployments.apps -n synkra-co: yes
 ok create deployments.apps -n synkra-pe: yes
@@ -394,9 +392,9 @@ ok create namespaces: no
 OK limite: 6 respuestas esperadas
 make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U08-C'
 
-real	1m22,277s
-user	0m9,149s
-sys	0m5,925s
+real	1m28,297s
+user	0m9,196s
+sys	0m5,880s
 install=0
 synkra-control-plane Ready
 synkra-worker Ready
@@ -412,14 +410,14 @@ secreto-es-el-certificado
 600 .tls/tls.key
 .gitignore:11:/.tls/	.tls/tls.key
 NAME                              READY   STATUS    RESTARTS   AGE   IP           NODE            NOMINATED NODE   READINESS GATES
-synkra-backend-5b58475c6d-s9t4t   1/1     Running   0          26s   10.244.1.5   synkra-worker   <none>           <none>
+synkra-backend-5b58475c6d-nqsmp   1/1     Running   0          26s   10.244.1.5   synkra-worker   <none>           <none>
 Bound standard 1Gi
 deployer localhost:5001/synkra-backend:0.1.0 Always localhost:5001/synkra-backend@sha256:38d18ff75383d719a077c95a97f3a3d9e67b5074fdce0a0ec5d223075857b549
 10001
 total 196
--rw-r--r-- 1 10001 10001   4096 Nov 28 05:55 synkra.db
--rw-r--r-- 1 10001 10001  32768 Nov 28 05:55 synkra.db-shm
--rw-r--r-- 1 10001 10001 160712 Nov 28 05:55 synkra.db-wal
+-rw-r--r-- 1 10001 10001   4096 Nov 28 06:00 synkra.db
+-rw-r--r-- 1 10001 10001  32768 Nov 28 06:00 synkra.db-shm
+-rw-r--r-- 1 10001 10001 160712 Nov 28 06:00 synkra.db-wal
 {"name":"synkra-backend","tags":["0.1.0"]}
 
 {"name":"synkra-core-ejemplo","tags":["2.1.0"]}
