@@ -1,0 +1,8 @@
+sha=19b9683
+ bitacoras/U02-T12-evidencia/ca1.txt  | 38 +++++++++++++++
+ bitacoras/U02-T12-evidencia/ca2.txt  | 10 ++++
+ bitacoras/U02-T12-evidencia/rojo.txt |  3 ++
+ bitacoras/U02-T12.md                 | 19 ++++++++
+ core/smoke.sh                        | 95 ++++++++++++++++++++++++++++++++++++
+ 5 files changed, 165 insertions(+)
+100755 c9a2cccc9228ab8dea3df01bc5e915881f99fe67 0	core/smoke.sh
