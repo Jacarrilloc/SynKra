@@ -1,0 +1,68 @@
+ok aidlc-docs/construction/U08-instalacion-limite/code/evidencia/install.txt: salida=0
+ok aidlc-docs/construction/U08-instalacion-limite/code/evidencia/install.txt: segundos=84
+ok aidlc-docs/construction/U08-instalacion-limite/code/evidencia/install.txt: OK limite: 6 respuestas esperadas
+ok aidlc-docs/construction/U08-instalacion-limite/code/evidencia/limite.txt: OK limite: 6 respuestas esperadas
+ok aidlc-docs/construction/U08-instalacion-limite/code/evidencia/limite.txt: ok create deployments.apps -n synkra-co: yes
+ok aidlc-docs/construction/U08-instalacion-limite/code/evidencia/limite.txt: ok create namespaces: no
+ok aidlc-docs/construction/U08-instalacion-limite/code/evidencia/e2e.txt: OK e2e: CU1 a CU5, 10 respuestas 4xx con codigo, mensaje y detalles
+ok aidlc-docs/construction/U08-instalacion-limite/code/evidencia/e2e.txt: segundos=229
+ok aidlc-docs/construction/U08-instalacion-limite/code/evidencia/e2e.txt: tiempo CU5 188s
+ok aidlc-docs/construction/U08-instalacion-limite/code/evidencia/e2e.txt: D4 tardó 185s en fallar
+ok aidlc-docs/construction/U08-instalacion-limite/code/evidencia/e2e.txt: 4xx 404 NO_ENCONTRADO POST /api/despliegues/0/reversion
+ok bitacoras/U08-A.md: criterios de aceptación: 10 (CA-1 a CA-10)
+ok bitacoras/U08-B.md: criterios de aceptación: 9 (CA-1 a CA-9)
+ok bitacoras/U08-C.md: criterios de aceptación: 10 (CA-1 a CA-10)
+ok bitacoras/U08-D.md: criterios de aceptación: 8 (CA-1 a CA-8)
+ok revisiones/U08-A/ronda-2.md: VEREDICTO: VERDE
+ok revisiones/U08-B/ronda-3.md: VEREDICTO: VERDE
+ok revisiones/U08-C/ronda-3.md: VEREDICTO: VERDE
+ok revisiones/U08-D/ronda-2.md: VEREDICTO: VERDE
+ok bitacoras/U08-D.md: laPlantillaDelPodLlevaElSha256DeLaConfiguracionDelConfigMap
+ok orq:CANDIDATAS.md: | C-130
+ok orq:CANDIDATAS.md: | C-144
+ok orq:tareas/U08-E-resumen-guia.md: # U08-E: resumen de U08 y guía para instalar y usar SynKra
+filas de la tabla: 23
+ok aidlc-docs/construction/plans/U08-instalacion-limite-code-generation-plan.md: yq 'select(.kind=="Deployment" and .metadata.name=="synkra-backend") | .spec.strategy.type'
+ok bitacoras/U08-B.md: sustituye a `kubeconform -strict`, que no está
+ok bitacoras/U08-B.md: Con el comando literal de la tarea el backend no arranca
+ok revisiones/U08-B/ronda-1.md: CA-6, `tmpfs` con `exec`: aceptada.
+ok bitacoras/U08-A.md: el RBAC añade `get` sobre `namespaces` con `resourceNames` por `existeNamespace`
+ok bitacoras/U08-C.md: pasa a `apply -f namespaces.yaml -f rbac.yaml` (decisión 7)
+ok bitacoras/U08-C.md: `imagePullPolicy: Always` solo en el overlay de `kind`
+ok bitacoras/U08-C.md: `docker build --provenance=false --sbom=false`
+ok revisiones/U08-C/ronda-1.md: aceptada. `rojo-digest.txt` muestra que el mismo contenido daba dos digests distintos
+ok bitacoras/U08-C.md: `make verificar-limite` sale con 2, no con 1, cuando el script sale con 1
+ok revisiones/U08-C/ronda-1.md: GNU make devuelve 2 siempre que falla una receta
+ok bitacoras/U08-C.md: es la última versión del proyecto `kubernetes/ingress-nginx`, retirado después: no habrá parches nue
+ok revisiones/U08-C/ronda-1.md: Ingress NGINX `controller-v1.15.1` está retirado y no tendrá parches: plan de cambio de controlador.
+ok bitacoras/U08-D.md: Arreglada aquí (`c202f7c`).
+ok revisiones/U08-D/ronda-1.md: El arreglo de C-138 es correcto y está probado.
+ok bitacoras/U08-D.md: es `configmap/kube-root-ca.crt`, que Kubernetes crea en **todo** namespace
+ok revisiones/U08-D/ronda-1.md: La acepto. Lo único que hay es `configmap/kube-root-ca.crt`
+ok bitacoras/U08-D.md: `kubectl get deploy -n synkra-co -o jsonpath='{..image}'` **no tiene orden estable**
+ok bitacoras/U08-B.md: sin líneas muertas (C-103)
+ok bitacoras/U08-B.md: Alpine solo guarda la última versión de cada rama
+ok orq:CANDIDATAS.md: `kind create cluster` necesita `fs.inotify.max_user_instances` ≥ 512
+ok orq:CANDIDATAS.md: `core/Dockerfile:2` cita C-98 para el digest de la base
+ok orq:CANDIDATAS.md: Ninguna tarea debe comparar `Id` entre corridas
+ok orq:CANDIDATAS.md: Cada `kubectl` de las recetas del `Makefile` escribe la caché de descubrimiento
+ok orq:CANDIDATAS.md: `bitacoras/U08-B-evidencia/ronda3-verde.txt` se cita como prueba de `FALLA versiones`
+ok orq:CANDIDATAS.md: Especificación de U08-C: CA-7 y H-27 piden que `make verificar-limite` salga con 1
+ok orq:CANDIDATAS.md: Pulido de scripts de U08-C
+ok orq:CANDIDATAS.md: un core en CrashLoopBackOff se cierra en `fallido` solo al vencer el plazo
+ok orq:CANDIDATAS.md: Pulido de U08-D
+ok revisiones/U08-A/ronda-1.md: VEREDICTO: NO-VERDE
+ok revisiones/U08-A/ronda-2.md: VEREDICTO: VERDE
+ok revisiones/U08-B/ronda-1.md: VEREDICTO: NO-VERDE
+ok revisiones/U08-B/ronda-2.md: VEREDICTO: NO-VERDE
+ok revisiones/U08-B/ronda-3.md: VEREDICTO: VERDE
+ok revisiones/U08-C/ronda-1.md: VEREDICTO: NO-VERDE
+ok revisiones/U08-C/ronda-2.md: VEREDICTO: NO-VERDE
+ok revisiones/U08-C/ronda-3.md: VEREDICTO: VERDE
+ok revisiones/U08-D/ronda-1.md: VEREDICTO: NO-VERDE
+ok revisiones/U08-D/ronda-2.md: VEREDICTO: VERDE
+ok orq:tareas/U08-E-resumen-guia.md: U08-A a U08-D (fusionadas en `main`: #111, #112, #113, #116)
+ok revisiones/U08-B/ronda-2.md: lo provocó el arreglo de F-03
+citas: 41
+lineas de fragmentos de la guia comprobadas: 203
+ok=267 falta=0
