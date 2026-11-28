@@ -1,0 +1,53 @@
+2026-11-27T21:19:29-05:00
+f03069a
+--- script (ca7.sh):
+git status --short | wc -l   # árbol limpio
+git rev-parse --short HEAD; git diff --stat ade68f6...HEAD
+git diff --name-status ade68f6...HEAD -- backend/src/test backend/src/main/resources backend/src/main/java/io/synkra/registro backend/src/main/java/io/synkra/plataforma backend/src/main/java/io/synkra/kubernetes backend/src/main/java/io/synkra/catalogo
+git diff ade68f6...HEAD -- backend/src/test/java/io/synkra/kubernetes/SimuladorKubernetes.java | grep -c '^-[^-]'
+--- salida:
+2
+f03069a
+ .../io/synkra/despliegue/CodigosDespliegue.java    |   5 +-
+ .../io/synkra/despliegue/ConfirmacionServicio.java | 110 ++++++
+ .../io/synkra/despliegue/MotivosDespliegue.java    |   7 +-
+ .../src/main/java/io/synkra/despliegue/Plan.java   |   2 +-
+ .../java/io/synkra/despliegue/PlanServicio.java    |  31 +-
+ .../io/synkra/despliegue/ReservaConfirmacion.java  |  80 +++++
+ .../java/io/synkra/despliegue/ResumenCatalogo.java |  35 ++
+ .../io/synkra/despliegue/RutasConfirmacion.java    |  33 +-
+ .../java/io/synkra/despliegue/RutasPlanes.java     |  10 +-
+ .../main/java/io/synkra/despliegue/Usuario.java    |  35 ++
+ .../despliegue/CarpetaEquivocadaPlanTest.java      | 145 ++++++++
+ .../synkra/despliegue/ConfirmarSinClusterTest.java |  73 ++++
+ .../java/io/synkra/despliegue/ConfirmarTest.java   | 396 +++++++++++++++++++++
+ .../test/java/io/synkra/despliegue/HttpPlanes.java | 101 ++++++
+ .../io/synkra/despliegue/PlanPendienteTest.java    |  11 +-
+ .../io/synkra/kubernetes/SimuladorKubernetes.java  |  77 ++++
+ bitacoras/U07-D-evidencia/ca0.txt                  |  90 +++++
+ bitacoras/U07-D-evidencia/ca1.sh                   |  16 +
+ bitacoras/U07-D-evidencia/ca1.txt                  |  28 ++
+ bitacoras/U07-D-evidencia/ca2.sh                   |   3 +
+ bitacoras/U07-D-evidencia/ca2.txt                  |  11 +
+ bitacoras/U07-D-evidencia/ca3.sh                   |  41 +++
+ bitacoras/U07-D-evidencia/ca3.txt                  |  62 ++++
+ bitacoras/U07-D-evidencia/ca4.sh                   |   5 +
+ bitacoras/U07-D-evidencia/ca4.txt                  |  25 ++
+ bitacoras/U07-D-evidencia/ca5.sh                   |  35 ++
+ bitacoras/U07-D-evidencia/ca5.txt                  | 225 ++++++++++++
+ bitacoras/U07-D-evidencia/ca6.sh                   |  12 +
+ bitacoras/U07-D-evidencia/ca6.txt                  |  78 ++++
+ bitacoras/U07-D-evidencia/correr.sh                |   2 +
+ .../rojo-CarpetaEquivocadaPlanTest.xml             |  67 ++++
+ .../rojo-ConfirmarSinClusterTest.xml               |  57 +++
+ bitacoras/U07-D-evidencia/rojo-ConfirmarTest.xml   | 171 +++++++++
+ bitacoras/U07-D-evidencia/rojo.txt                 |  28 ++
+ bitacoras/U07-D.md                                 |  76 ++++
+ 35 files changed, 2138 insertions(+), 45 deletions(-)
+A	backend/src/test/java/io/synkra/despliegue/CarpetaEquivocadaPlanTest.java
+A	backend/src/test/java/io/synkra/despliegue/ConfirmarSinClusterTest.java
+A	backend/src/test/java/io/synkra/despliegue/ConfirmarTest.java
+A	backend/src/test/java/io/synkra/despliegue/HttpPlanes.java
+M	backend/src/test/java/io/synkra/despliegue/PlanPendienteTest.java
+M	backend/src/test/java/io/synkra/kubernetes/SimuladorKubernetes.java
+0
