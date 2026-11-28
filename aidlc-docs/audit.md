@@ -1048,3 +1048,9 @@ Se despacha el codificador de la ronda 2.
 **Input del usuario:** "cuando el u8 este completo, fusionalo al main y dame las instrucciones para correrlo, y de paso genera una postman collection para probar todo el backend"
 
 **Acción del orquestador:** cuando cada PR de U08 salga VERDE, el orquestador lo fusiona en `main` (merge commit, en orden). La colección de Postman se genera desde las rutas reales del backend en `main` y va en su propia rama y PR.
+
+## 2026-11-28T05:09:09Z: Julian sube el límite de inotify
+
+**Input del usuario:** "ya ejecute el comando y salio esto ... fs.inotify.max_user_instances = 512 fs.inotify.max_user_watches = 524288"
+
+**Acción del orquestador:** se redespacha al codificador de U08-A para crear `kind-synkra` y correr los criterios que necesitan clúster.
