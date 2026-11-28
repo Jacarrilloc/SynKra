@@ -27,8 +27,9 @@ class RegistroReinicioTest {
     static final Path DATOS = Path.of("build/sqlite-pruebas/RegistroReinicioTest");
 
     private static ConfigurableApplicationContext arrancar() {
+        // Argumentos de línea de comandos: .properties(...) son valores por defecto y application.properties los pisa.
         return new SpringApplicationBuilder(SynkraApp.class)
-                .properties("synkra.data=" + DATOS.toAbsolutePath(), "server.port=0").run();
+                .run("--synkra.data=" + DATOS.toAbsolutePath(), "--server.port=0");
     }
 
     private static NuevoDespliegue nuevo(long id, Instant en) {
