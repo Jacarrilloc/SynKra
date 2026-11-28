@@ -992,3 +992,7 @@ Se despacha el codificador de la ronda 2.
 ## 2026-11-28T02:02Z: tanda de fusión #100 y #101
 
 **Acción del orquestador:** bajo la autorización de David de las 01:25:21Z ("lo que sea más practico"), fusión con merge commit y en orden: #100 U07-C (`208d5f9`) y #101 U06-C (`ade68f6`). Los dos estaban `MERGEABLE`/`CLEAN`. Con `main` en `ade68f6`, `./gradlew test --rerun check` pasó (`salida=0`; 837 pruebas, 0 saltos, 0 fallos, 0 errores). `ade68f6` es la unión de U07-C y U06-C que pide U07-D.
+
+## 2026-11-28T02:06Z: fusión de #102 (rama del orquestador)
+
+**Acción del orquestador:** bajo la autorización de David de las 01:25:21Z, fusión de #102 (`orq/U05-U02-tareas` → `main`, solo tareas, candidatas, auditoría y CONTINUAR) en `eb33d68`. No toca código: el diff contra `ade68f6` fuera de `tareas/`, `loop/`, `CANDIDATAS.md` y `audit.md` está vacío, así que no se repite `./gradlew check`. U06-D sale de `eb33d68` para que `CANDIDATAS.md` esté en su árbol.
