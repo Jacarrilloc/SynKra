@@ -1,0 +1,63 @@
+# fecha: 2026-11-28T04:57:42Z  sha: 0ae9306  script: ca4-shellcheck.sh
+$ docker build --no-cache --progress=plain -t verde.local:1/init-descarga:1.0.0 init-descarga
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.13kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 57B done
+#3 DONE 0.0s
+
+#4 [revision 1/4] FROM docker.io/library/alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc
+#4 resolve docker.io/library/alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc done
+#4 CACHED
+
+#5 [internal] load build context
+#5 transferring context: 34B done
+#5 DONE 0.0s
+
+#6 [revision 2/4] RUN apk add --no-cache shellcheck
+#6 2.767 Executing busybox-1.36.1-r31.trigger
+#6 2.774 OK: 29 MiB in 17 packages
+#6 DONE 2.9s
+
+#7 [stage-1 2/3] RUN apk add --no-cache curl  && addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins && chmod 0755 /config  && apk del --no-cache apk-tools
+#7 2.427 Executing busybox-1.36.1-r31.trigger
+#7 2.433 Executing ca-certificates-20261020-r0.trigger
+#7 2.453 OK: 15 MiB in 24 packages
+#7 ...
+
+#8 [revision 3/4] COPY descargar.sh /descargar.sh
+#8 DONE 0.0s
+
+#7 [stage-1 2/3] RUN apk add --no-cache curl  && addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins && chmod 0755 /config  && apk del --no-cache apk-tools
+#7 3.067 (1/2) Purging apk-tools (2.14.4-r1)
+#7 3.067 (2/2) Purging ca-certificates-bundle (20260413-r0)
+#7 3.068 Executing busybox-1.36.1-r31.trigger
+#7 3.072 Executing ca-certificates-20261020-r0.trigger
+#7 3.092 OK: 14 MiB in 22 packages
+#7 DONE 3.2s
+
+#9 [revision 4/4] RUN shellcheck -s sh /descargar.sh
+#9 DONE 0.2s
+
+#10 [stage-1 3/3] COPY --from=revision --chmod=0555 /descargar.sh /usr/local/bin/descargar.sh
+#10 DONE 0.0s
+
+#11 exporting to image
+#11 exporting layers
+#11 exporting layers 0.2s done
+#11 exporting manifest sha256:f03a294aa41de6e82acb051ceff4f0b76eb1aa7e6365ec7d5f749feed26283d1 done
+#11 exporting config sha256:4bf0703cb916f6aa0c2d1f705d4fa419b85c9c78336bfd1bfbf484c50b66ab02 done
+#11 exporting attestation manifest sha256:24f9dafd5cefe5ca768891f3e4b8dc9a8199066a279f74ee1b052fb816b7f303 done
+#11 exporting manifest list sha256:3ee1d7f6c9258db83b091d434c06a7e4ed7c67e5d98776479e3571e59f499547 done
+#11 naming to verde.local:1/init-descarga:1.0.0 done
+#11 unpacking to verde.local:1/init-descarga:1.0.0 0.1s done
+#11 DONE 0.3s
+build=0
+1
