@@ -56,7 +56,7 @@ Contratos que fijaron U06-A y U07-A (los asumen las tareas siguientes; están en
 | U06-A registro base | `m6r/U06-A` | `97f9f80` | **VERDE ronda 2**, fusionado (#97) | — |
 | U07-A planes y país | `m6r/U07-A` | `97f9f80` | **VERDE ronda 1**, fusionado (#96) | — |
 | U07-D confirmar | (sin rama) | unión de U07-C y U06-C | **Escrita** (hash `2d710b0`). Registra `aplicando` antes de aplicar (desviación de R-D9 por el pool de una conexión); usuario por `X-Synkra-Usuario` | Despachar cuando U07-C y U06-C salgan VERDES |
-| U07-C plan vence | `../wt-m6r-U07-C`, `m6r/U07-C` | `285ef22` | Ronda 1 NO-VERDE. Codificador ronda 2 terminó (`24651bf`, código en `7246352`). **Revisor ronda 2 despachado** | Repetir el revisor ronda 2 (base `285ef22`) si no hay `revisiones/U07-C/ronda-2.md` |
+| U07-C plan vence | `m6r/U07-C` | `285ef22` | **VERDE ronda 2** (informe en `f9d38c9`). PR a `main` abierto | U07-D sale de la unión de `f9d38c9` y la punta VERDE de U06-C |
 | U06-C vista general | `../wt-m6r-U06-C`, `m6r/U06-C` | `e0f5c62` | Codificador ronda 1 terminó (`23abbd7`, código en `f73b9f0`). **Revisor ronda 1 despachado** | Repetir el revisor ronda 1 (base `e0f5c62`) si no hay `revisiones/U06-C/ronda-1.md` |
 | U06-C y U07-C | (sin rama) | — | **Escritas** (hashes `004d66e` y `7dbe5d3`). U07-C crea el bean `Clock` en `plataforma/Reloj.java` (U06-C no puede crear otro); U06-C usa `@MockitoBean AdaptadorKubernetes`; confirmar da 501 hasta U07-D | Despachar U06-C cuando U06-B salga VERDE y U07-C cuando U07-B salga VERDE |
 
