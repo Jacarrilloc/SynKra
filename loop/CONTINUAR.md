@@ -60,7 +60,7 @@ El #6 es antiguo y no se toca.
 |---|---|---|---|---|
 | U06-A registro base | `../wt-m6r-U06-A`, `m6r/U06-A` | `97f9f80` | Revisor ronda 1: **NO-VERDE** (F-01 ROJO: id9/id10 solo afirman `RuntimeException`; F-02 a F-05 AMARILLO), informe en `cb20742`. **Codificador ronda 2 despachado** | Mirar `origin/m6r/U06-A`: sin `revisiones/U06-A/ronda-1-respuesta.md`, redespachar el codificador ronda 2; con ella, despachar el revisor ronda 2 (base `97f9f80`) |
 | U07-A planes y país | `m6r/U07-A` | `97f9f80` | **VERDE ronda 1** (`8182b9d`). PR #96 abierto | Lo fusiona un humano |
-| U07-B crear plan | `../wt-m6r-U07-B`, `m6r/U07-B` | `8182b9d` | **Codificador ronda 1 despachado** (tarea con hash `b4a557b`) | Mirar `origin/m6r/U07-B`: sin commits, redespachar; con bitácora completa, despachar el revisor ronda 1 (base `8182b9d`) |
+| U07-B crear plan | `../wt-m6r-U07-B`, `m6r/U07-B` | `8182b9d` | Codificador ronda 1 terminó (`9bc67ae`, código en `09439f4`). **Revisor ronda 1 despachado** | Repetir el revisor ronda 1 (base `8182b9d`) si no hay `revisiones/U07-B/ronda-1.md` |
 | U06-B historial y reinicio | (sin rama) | punta VERDE de U06-A | Escrita (hash `c729f5f`), espera a U06-A | Despachar cuando U06-A salga VERDE |
 
 En la máquina de Julian, las sesiones de Julian siguen trabajando mientras no se diga lo contrario: **antes de despachar, David revisa `git fetch` y la fecha del último commit de cada rama** (punto 4 de abajo) para no pisar a nadie.
