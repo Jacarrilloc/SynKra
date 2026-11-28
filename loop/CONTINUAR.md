@@ -55,7 +55,7 @@ Contratos que fijaron U06-A y U07-A (los asumen las tareas siguientes; están en
 |---|---|---|---|---|
 | U06-A registro base | `m6r/U06-A` | `97f9f80` | **VERDE ronda 2**, fusionado (#97) | — |
 | U07-A planes y país | `m6r/U07-A` | `97f9f80` | **VERDE ronda 1**, fusionado (#96) | — |
-| U07-G fronteras y resumen | `../wt-m6r-U07-G`, `m6r/U07-G` | `2f47340` | Ronda 1 **NO-VERDE** (fronteras bien; F-01 a F-03 NARANJA en el resumen: filtro `*despliegue*`, citas no literales, «Decisión» de candidatas). **Codificador ronda 2 despachado** (mismo agente) | Sin `revisiones/U07-G/ronda-1-respuesta.md`, redespachar; con ella, revisor ronda 2 |
+| U07-G fronteras y resumen | `../wt-m6r-U07-G`, `m6r/U07-G` | `2f47340` | Ronda 1 NO-VERDE. Codificador ronda 2 terminó (`446ee3a`; código sin cambios desde `ba0b1fd`). **Revisor ronda 2 despachado** | Repetir el revisor ronda 2 si no hay `revisiones/U07-G/ronda-2.md` |
 | (fila anterior de U07-E y U07-F) | (sin rama) | — | **Escritas** (hashes `4252363` y `2f97d8d`, tras corregir los greps de C-122). U07-E: `TareasProgramadas` con `synkra.programacion.activa`, apagada en pruebas; toca `kubernetes` por C-76, C-82 y C-83. U07-F: 422 `ORIGEN_NO_LISTO` y `ORIGEN_DESACTUALIZADO` | En cadena tras U07-D |
 | U06-C y U07-C | (sin rama) | — | **Escritas** (hashes `004d66e` y `7dbe5d3`). U07-C crea el bean `Clock` en `plataforma/Reloj.java` (U06-C no puede crear otro); U06-C usa `@MockitoBean AdaptadorKubernetes`; confirmar da 501 hasta U07-D | Despachar U06-C cuando U06-B salga VERDE y U07-C cuando U07-B salga VERDE |
 
