@@ -980,3 +980,11 @@ Se despacha el codificador de la ronda 2.
 **Input del usuario:** "¿Fusiono #98 y #99 en orden, como los anteriores? Si o si puedes esperar  mas prrs tambein, lo que sea más practico y potenciaamete pueda ahorrar mas de tu consumo"
 
 **Acción del orquestador (01:26Z):** fusión con merge commit, en orden: #98 U07-B (`0c83a20`), #99 U06-B (`4bd2ad4`). Con `main` en `4bd2ad4`, `./gradlew test --rerun check` pasó (`salida=0`; 805 pruebas, 0 saltos, 0 fallos, 0 errores). Las siguientes fusiones se hacen por tandas de PRs VERDES bajo esta misma autorización.
+
+## 2026-11-28T01:30:28Z: David aprueba la desviación de R-D9 en U07-D
+
+**Pregunta del orquestador:** "el despliegue se registra como aplicando justo antes de aplicarlo en el clúster, no después como dice R-D9. [...] Si prefieres el orden original, dímelo antes de que arranque"
+
+**Input del usuario:** "Sigamos tu recoemndación"
+
+**Input del usuario (01:29:47Z), sobre U08:** "Si cuando termines vamos con eso directamente mientras sigas en los lineameientos del poryecto  y del alcance"
