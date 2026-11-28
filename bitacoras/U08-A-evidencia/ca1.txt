@@ -1,5 +1,5 @@
-fecha: 2026-11-28T04:51:10Z
-sha: 464ecfc
+fecha: 2026-11-28T05:09:28Z
+sha: c3fcff0
 comando: bash bitacoras/U08-A-evidencia/ca1.sh
 ---
 sin kubeconfig todavía: lo crea make cluster
@@ -7,47 +7,46 @@ Creating cluster "synkra" ...
  • Ensuring node image (kindest/node) 🖼️  ...
  ✓ Ensuring node image (kindest/node) 🖼️
  • Preparing nodes 📦 📦   ...
- ✗ Preparing nodes 📦 📦 
-Deleted nodes: ["synkra-control-plane" "synkra-worker"]
-ERROR: failed to create cluster: could not find a log line that matches "Reached target .*Multi-User System.*|detected cgroup v1"
-make: *** [Makefile:25: cluster] Error 1
-salida=2
-error: current-context is not set
-stat: cannot statx '/home/julian/Escritorio/Proyectos/wt-m6r-U08-A/.kube/kind-synkra.yaml': No such file or directory
+ ✓ Preparing nodes 📦 📦 
+ • Writing configuration 📜  ...
+ ✓ Writing configuration 📜
+ • Starting control-plane 🕹️  ...
+ ✓ Starting control-plane 🕹️
+ • Installing CNI 🔌  ...
+ ✓ Installing CNI 🔌
+ • Installing StorageClass 💾  ...
+ ✓ Installing StorageClass 💾
+ • Joining worker nodes 🚜  ...
+ ✓ Joining worker nodes 🚜
+ • Waiting ≤ 3m0s for control-plane = Ready ⏳  ...
+ ✓ Waiting ≤ 3m0s for control-plane = Ready ⏳
+ • Ready after 6s 💚
+Set kubectl context to "kind-synkra"
+You can now use your cluster with:
+
+kubectl cluster-info --context kind-synkra --kubeconfig /home/julian/Escritorio/Proyectos/wt-m6r-U08-A/.kube/kind-synkra.yaml
+
+Not sure what to do next? 😅  Check out https://kind.sigs.k8s.io/docs/user/quick-start/
+contexto permitido: kind-synkra (https://127.0.0.1:46859)
+kubectl --kubeconfig "/home/julian/Escritorio/Proyectos/wt-m6r-U08-A/.kube/kind-synkra.yaml" wait --for=condition=Ready nodes --all --timeout=180s
+node/synkra-control-plane condition met
+node/synkra-worker condition met
+salida=0
+kind-synkra
+600
 775
 .gitignore:10:/.kube/	/home/julian/Escritorio/Proyectos/wt-m6r-U08-A/.kube/kind-synkra.yaml
-error: stat /home/julian/Escritorio/Proyectos/wt-m6r-U08-A/.kube/kind-synkra.yaml: no such file or directory
-Traceback (most recent call last):
-  File "<string>", line 1, in <module>
-    import json,sys; d=json.load(sys.stdin); print(sorted((n['metadata']['name'], [c['status'] for c in n['status']['conditions'] if c['type']=='Ready'][0], n['metadata']['labels'].get('ingress-ready','-'), n['status']['nodeInfo']['architecture']) for n in d['items']))
-                       ~~~~~~~~~^^^^^^^^^^^
-  File "/usr/lib/python3.14/json/__init__.py", line 298, in load
-    return loads(fp.read(),
-        cls=cls, object_hook=object_hook,
-        parse_float=parse_float, parse_int=parse_int,
-        parse_constant=parse_constant, object_pairs_hook=object_pairs_hook, **kw)
-  File "/usr/lib/python3.14/json/__init__.py", line 352, in loads
-    return _default_decoder.decode(s)
-           ~~~~~~~~~~~~~~~~~~~~~~~^^^
-  File "/usr/lib/python3.14/json/decoder.py", line 345, in decode
-    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
-               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3.14/json/decoder.py", line 363, in raw_decode
-    raise JSONDecodeError("Expecting value", s, err.value) from None
-json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
-Error response from daemon: No such container: synkra-control-plane
-error: no such object: synkra-control-plane
-sin kubeconfig todavía: lo crea make cluster
-Creating cluster "synkra" ...
- • Ensuring node image (kindest/node) 🖼️  ...
- ✓ Ensuring node image (kindest/node) 🖼️
- • Preparing nodes 📦 📦   ...
- ✗ Preparing nodes 📦 📦 
-Deleted nodes: ["synkra-worker" "synkra-control-plane"]
-ERROR: failed to create cluster: could not find a log line that matches "Reached target .*Multi-User System.*|detected cgroup v1"
-make: *** [Makefile:25: cluster] Error 1
-salida=2
-error: no such object: synkra-control-plane
+[('synkra-control-plane', 'True', 'true', 'arm64'), ('synkra-worker', 'True', '-', 'arm64')]
+80/tcp -> 127.0.0.1:80
+443/tcp -> 127.0.0.1:443
+6443/tcp -> 127.0.0.1:46859
+contexto permitido: kind-synkra (https://127.0.0.1:46859)
+Set kubectl context to "kind-synkra"
+contexto permitido: kind-synkra (https://127.0.0.1:46859)
+kubectl --kubeconfig "/home/julian/Escritorio/Proyectos/wt-m6r-U08-A/.kube/kind-synkra.yaml" wait --for=condition=Ready nodes --all --timeout=180s
+node/synkra-control-plane condition met
+node/synkra-worker condition met
+salida=0
 no-recreado
 0
 variable=1

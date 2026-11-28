@@ -21,7 +21,7 @@ guardia: ## Comprueba que el kubeconfig es el de kind-synkra
 
 cluster: ## Crea (o reexporta) el clúster kind-synkra
 	@scripts/guardia-contexto.sh --antes-de-crear
-	@mkdir -p -m 0700 "$(dir $(KUBECONFIG_SYNKRA))"
+	@mkdir -p -m 0700 "$(dir $(KUBECONFIG_SYNKRA))" && chmod 0700 "$(dir $(KUBECONFIG_SYNKRA))"
 	@if kind get kubeconfig --name synkra >/dev/null 2>&1; then \
 	  kind export kubeconfig --name synkra --kubeconfig "$(KUBECONFIG_SYNKRA)"; \
 	else \
