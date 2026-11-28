@@ -1,0 +1,38 @@
+fecha: 2026-11-28T02:12:45-05:00
+sha: 3c399f2 (arbol: 0 cambios sin confirmar)
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U08-D-evidencia/ca8.sh
+3c399f2
+0
+ .../synkra/kubernetes/ConstructorObjetosPais.java  |  26 +-
+ .../kubernetes/ConstruirObjetosPaisTest.java       |  41 ++
+ .../resources/kubernetes/pais-pe-esperado.yaml     |   2 +
+ bitacoras/U08-D-evidencia/ca1.sh                   |  16 +
+ bitacoras/U08-D-evidencia/ca1.txt                  | 177 ++++++
+ bitacoras/U08-D-evidencia/ca2.sh                   |  49 ++
+ bitacoras/U08-D-evidencia/ca2.txt                  |  38 ++
+ bitacoras/U08-D-evidencia/ca3-pe.sh                |   5 +
+ bitacoras/U08-D-evidencia/ca3-pe.txt               |   8 +
+ bitacoras/U08-D-evidencia/ca3.sh                   |  15 +
+ bitacoras/U08-D-evidencia/ca3.txt                  | 541 ++++++++++++++++++
+ bitacoras/U08-D-evidencia/ca4.sh                   |   3 +
+ bitacoras/U08-D-evidencia/ca4.txt                  |  99 ++++
+ bitacoras/U08-D-evidencia/ca5-estado.sh            |   8 +
+ bitacoras/U08-D-evidencia/ca5-estado.txt           |  15 +
+ bitacoras/U08-D-evidencia/ca5-mensajes.txt         |   4 +
+ bitacoras/U08-D-evidencia/ca5.sh                   |   6 +
+ bitacoras/U08-D-evidencia/ca5.txt                  | 110 ++++
+ bitacoras/U08-D-evidencia/ca6.sh                   |  22 +
+ bitacoras/U08-D-evidencia/ca6.txt                  |  77 +++
+ bitacoras/U08-D-evidencia/ca7.sh                   |  17 +
+ bitacoras/U08-D-evidencia/ca7.txt                  |  17 +
+ bitacoras/U08-D-evidencia/ca8.sh                   |   8 +
+ bitacoras/U08-D-evidencia/corre.sh                 |  15 +
+ bitacoras/U08-D.md                                 |  66 +++
+ scripts/e2e-api.sh                                 | 608 +++++++++++++++++++++
+ 26 files changed, 1991 insertions(+), 2 deletions(-)
+fuera=1
+0
+0
