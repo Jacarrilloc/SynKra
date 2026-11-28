@@ -1,0 +1,38 @@
+fecha: 2026-11-28T02:52:10-05:00
+sha: c436428 (arbol: 1 cambios sin confirmar)
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U08-D-evidencia/ca2.sh
+sintaxis=0
+7:set -euo pipefail
+1
+1
+prohibidos=1
+sin-kubeconfig=1
+arquitectura=1
+138:  jq -e 'has("codigo") and has("mensaje") and has("detalles") and (.codigo|type)=="string" and (.mensaje|type)=="string" and (.detalles|type)=="array"' \
+32:# El trap se instala antes de crear nada; las senales terminan el script (y disparan EXIT).
+33:trap limpiar EXIT
+34:trap 'exit 130' INT
+== la regla sin-kubeconfig por orden (sin_kc de U08-C ca9.sh, con el archivo de esta tarea)
+sin-kubeconfig-orden=1
+== envoltorio
+< kc() { kubectl --kubeconfig "$KC" --request-timeout=60s "$@"; }
+> kc() { kubectl --request-timeout=60s "$@"; }
+scripts/e2e-api.sh:39: kc() { kubectl --request-timeout=60s "$@"; }
+sin-kubeconfig-mutado-envoltorio=0
+== suelto
+< NS=synkra-co
+> NS=synkra-co; kubectl get ns >/dev/null
+scripts/e2e-api.sh:12: NS=synkra-co; kubectl get ns >/dev/null
+sin-kubeconfig-mutado-suelto=0
+== mensaje
+<   command -v "$h" >/dev/null 2>&1 || falla preparacion "falta $h"
+>   command -v "$h" >/dev/null 2>&1 || falla preparacion "falta --kubeconfig $h"; kubectl get ns
+scripts/e2e-api.sh:51: command -v "$h" >/dev/null 2>&1 || falla preparacion "falta --kubeconfig $h"; kubectl get ns
+sin-kubeconfig-mutado-mensaje=0
+== k
+<   ESTADO="$(curl -sS --max-time 60 --resolve synkra.local:443:127.0.0.1 --cacert "$RAIZ/.tls/tls.crt" \
+>   ESTADO="$(curl -k -sS --max-time 60 --resolve synkra.local:443:127.0.0.1 --cacert "$RAIZ/.tls/tls.crt" \
+prohibidos-mutado-k=0
