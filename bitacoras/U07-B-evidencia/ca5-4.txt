@@ -1,0 +1,30 @@
+=== M4 R-D1 primero (PaisPermitido despues de verificar)
+2026-11-27T20:01:12-05:00
+sha 09439f4
+$ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"
+$ sed -i 's/var namespace = paises.namespace(pais);//' 's/rechazaSiNoCompatible(verificado.veredicto());/rechazaSiNoCompatible(verificado.veredicto()); var namespace = paises.namespace(pais);/'  "$D/backend/src/main/java/io/synkra/despliegue/PlanServicio.java"
+$ diff -u (original, mutado)
+@@ -52,10 +52,10 @@
+     }
+ 
+     PlanPreparado prepararPlan(String pais, String core, String versionCore, List<PluginPedido> plugins) {
+-        var namespace = paises.namespace(pais);
++        
+ 
+         var verificado = verificacion.verificar(core, versionCore, plugins);
+-        rechazaSiNoCompatible(verificado.veredicto());
++        rechazaSiNoCompatible(verificado.veredicto()); var namespace = paises.namespace(pais);
+ 
+         var registrado = catalogo.obtenerCore(core);
+         var imagen = registrado.imagenes().get(verificado.seleccion().versionCore());
+$ (cd "$D" && ./gradlew :backend:test --tests '*VerificacionVivoTest' --tests '*CrearPlanTest' --tests '*CambiosPropiedades')
+CrearPlanTest > unPaisNoPermitidoDa422AunqueLaSeleccionTambienSeaInvalidaSinPeticiones() FAILED
+> Task :backend:test FAILED
+28 tests completed, 1 failed
+BUILD FAILED in 10s
+$ grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.CrearPlanTest.xml
+pruebas caídas en la clase dueña (CrearPlanTest):
+   unPaisNoPermitidoDa422AunqueLaSeleccionTambienSeaInvalidaSinPeticiones()
+$ rm -rf "$D"
+archivos rastreados modificados en el worktree: 4

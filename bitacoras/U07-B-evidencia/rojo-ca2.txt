@@ -1,0 +1,76 @@
+2026-11-27T19:53:24-05:00
+a71818b
+$ ./gradlew :backend:test --rerun --tests '*CrearPlanTest'
+> Task :verificador:compileJava UP-TO-DATE
+> Task :backend:compileJava UP-TO-DATE
+> Task :backend:processResources UP-TO-DATE
+> Task :backend:classes UP-TO-DATE
+> Task :verificador:compileTestFixturesJava UP-TO-DATE
+> Task :backend:compileTestJava
+> Task :backend:processTestResources UP-TO-DATE
+> Task :backend:testClasses
+> Task :verificador:processResources NO-SOURCE
+> Task :verificador:classes UP-TO-DATE
+> Task :verificador:jar UP-TO-DATE
+> Task :verificador:processTestFixturesResources NO-SOURCE
+> Task :verificador:testFixturesClasses UP-TO-DATE
+> Task :verificador:testFixturesJar UP-TO-DATE
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+
+> Task :backend:test
+
+CrearPlanTest > unPlanIdenticoALoQueCorreSeCreaIgualConSinCambios() FAILED
+    org.opentest4j.AssertionFailedError at CrearPlanTest.java:220
+
+CrearPlanTest > unaCombinacionRechazadaDa422SinFilaNiPeticionesAKubernetes() FAILED
+    org.opentest4j.AssertionFailedError at CrearPlanTest.java:241
+
+CrearPlanTest > paisVacioCreaUnPlanPendienteConTodoAnadido() FAILED
+    org.opentest4j.AssertionFailedError at CrearPlanTest.java:162
+
+CrearPlanTest > unaSeleccionMalFormadaDa422SinFilaNiPeticiones() FAILED
+    org.opentest4j.AssertionFailedError at CrearPlanTest.java:315
+
+CrearPlanTest > cambiaUnPluginYSeQuedaOtroDistingueAnadidosQuitadosEIguales() FAILED
+    org.opentest4j.AssertionFailedError at CrearPlanTest.java:199
+
+CrearPlanTest > unaLecturaQueFallaDa503SinFila() FAILED
+    org.opentest4j.AssertionFailedError at CrearPlanTest.java:279
+
+CrearPlanTest > unCoreNoRegistradoDa422SinFilaNiPeticiones() FAILED
+    org.opentest4j.AssertionFailedError at CrearPlanTest.java:332
+
+CrearPlanTest > unPaisNoPermitidoDa422AunqueLaSeleccionTambienSeaInvalidaSinPeticiones() FAILED
+    org.opentest4j.AssertionFailedError at CrearPlanTest.java:298
+
+CrearPlanTest > unPaisConSoloElDeploymentDa409SinFila() FAILED
+    org.opentest4j.AssertionFailedError at CrearPlanTest.java:261
+
+2026-11-27T19:53:33.449-05:00  INFO 36674 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-27T19:53:33.451-05:00  INFO 36674 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-27T19:53:33.455-05:00  INFO 36674 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-27T19:53:33.573-05:00  INFO 36674 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+
+> Task :backend:test FAILED
+
+9 tests completed, 9 failed
+
+[Incubating] Problems report is available at: file:///home/casdav/Projects/Master/wt-m6r-U07-B/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':backend:test'.
+> There were failing tests. See the report at: file:///home/casdav/Projects/Master/wt-m6r-U07-B/backend/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 8s
+9 actionable tasks: 2 executed, 7 up-to-date

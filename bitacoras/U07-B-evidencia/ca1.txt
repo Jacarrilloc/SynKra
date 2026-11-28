@@ -1,0 +1,7 @@
+2026-11-27T20:01:44-05:00
+sha 09439f4
+$ ./gradlew :backend:test --rerun --tests '*VerificacionVivoTest'
+BUILD SUCCESSFUL in 7s
+tests="15" skipped="0" failures="0" errors="0"
+(0,)
+(4,) (3,)

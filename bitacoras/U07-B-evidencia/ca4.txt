@@ -1,0 +1,14 @@
+2026-11-27T20:02:01-05:00
+sha 09439f4
+ocupantes del puerto 18090: 0
+$ ./gradlew :backend:bootJar
+BUILD SUCCESSFUL in 1s
+201
+201
+201
+201
+200 RECHAZADA [{'tipo': 'PLUGIN', 'nombre': 'kyc-pe', 'version': '1.3.0'}, {'tipo': 'CORE', 'nombre': 'synkra-core', 'version': '3.0.0'}]
+422 COMBINACION_RECHAZADA
+422 PAIS_NO_PERMITIDO
+503 KUBERNETES_NO_DISPONIBLE
+(0,)

@@ -1,0 +1,34 @@
+=== M5 cluster despues
+2026-11-27T20:13:24-05:00
+sha c9d0814
+$ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"
+$ sed -i -e 's/var verificado = verificacion.verificar(core, versionCore, plugins);/kubernetes.leerPais(pais); var verificado = verificacion.verificar(core, versionCore, plugins);/'  "$D/backend/src/main/java/io/synkra/despliegue/PlanServicio.java"
+$ diff -u (original, mutado)
+@@ -54,7 +54,7 @@
+     PlanPreparado prepararPlan(String pais, String core, String versionCore, List<PluginPedido> plugins) {
+         var namespace = paises.namespace(pais);
+ 
+-        var verificado = verificacion.verificar(core, versionCore, plugins);
++        kubernetes.leerPais(pais); var verificado = verificacion.verificar(core, versionCore, plugins);
+         rechazaSiNoCompatible(verificado.veredicto());
+ 
+         var registrado = catalogo.obtenerCore(core);
+$ (cd "$D" && ./gradlew :backend:test --tests '*VerificacionVivoTest' --tests '*CrearPlanTest' --tests '*CambiosPropiedades')
+CrearPlanTest > unaCombinacionRechazadaDa422SinFilaNiPeticionesAKubernetes() FAILED
+CrearPlanTest > unaSeleccionMalFormadaDa422SinFilaNiPeticiones() FAILED
+CrearPlanTest > unaLecturaQueFallaDa503SinFila() FAILED
+CrearPlanTest > unCoreNoRegistradoDa422SinFilaNiPeticiones() FAILED
+CrearPlanTest > unPaisConSoloElDeploymentDa409SinFila() FAILED
+> Task :backend:test FAILED
+28 tests completed, 5 failed
+BUILD FAILED in 13s
+$ grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.CrearPlanTest.xml
+pruebas caídas en la clase dueña (CrearPlanTest):
+   unaCombinacionRechazadaDa422SinFilaNiPeticionesAKubernetes()
+   unaSeleccionMalFormadaDa422SinFilaNiPeticiones()
+   unaLecturaQueFallaDa503SinFila()
+   unCoreNoRegistradoDa422SinFilaNiPeticiones()
+   unPaisConSoloElDeploymentDa409SinFila()
+$ rm -rf "$D"
+archivos rastreados modificados en el worktree: 0

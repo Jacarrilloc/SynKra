@@ -1,0 +1,7 @@
+# U07-B, respuesta a la ronda 1
+
+- F-01: Corregido en c9d0814: el caso `co` ahora pide `kyc-pe` antes que `kyc-co` y afirma que `resumen.plugins` de la respuesta, `resumen.plugins` de `dep_plan` y la columna `dep_plan.plugins` salen ordenados por nombre (`kyc-co`, `kyc-pe`); lectura de vuelta con python3 -I en `bitacoras/U07-B-evidencia/ronda2/ca2.txt`. La mutación M8 del revisor (quitar el `.sorted(...)`) ahora cae: `ca5-8.txt`, `BUILD FAILED`, cae `cambiaUnPluginYSeQuedaOtroDistingueAnadidosQuitadosEIguales`. Las cifras de CA-2 no cambian (co sigue en 1,1,1,0,1).
+- F-02: Aceptado como candidata C-108: `PlanDto` se queda con `Plan.PENDIENTE` en esta tarea y el grep de CA-6 no se toca.
+- F-03: Corregido en c9d0814 (evidencia en `ronda2/`): M4 y M6 se rehicieron con el `sed` real con `-e` por expresión; el comando literal que corrió queda impreso en `ronda2/ca5-4.txt` y `ronda2/ca5-6.txt` (el script ahora imprime los `-e`). Resultado igual: M4 cae `unPaisNoPermitidoDa422...`, M6 cae 3 propiedades de `CambiosPropiedades`. Se rehicieron también M1, M2, M3 y M5 con el sha de esta ronda.
+- F-04: Corregido en c9d0814: el ayudante `post` de `VerificacionVivoTest` hace `verifyNoInteractions(adaptador)` y comprueba `dep_plan` vacía después de cada llamada, así que lo cubre en todas las pruebas y no solo en tres llamadas de una; `nadaTocaDepPlanNiKubernetes` se conserva.
+- F-05: Fuera de alcance: convención del orquestador (la plantilla de CA-7 debe incluir `bitacoras/U07-B-evidencia/`); no hay cambio de código; se anota la ruta en la bitácora.
