@@ -16,14 +16,17 @@ cabecera() { # cabecera <archivo> <comando>
     echo "comando: $2"
     echo "docker-servidor-arquitectura: $(docker info --format '{{.Architecture}}')"
     echo "JAVA_HOME: ${JAVA_HOME:-sin definir}"
+    echo "nota: la ruta personal de la maquina aparece como \$HOME"
     echo "---"
-  } >"$1"
+  } | sed "s|$HOME|\$HOME|g" >"$1"
 }
 paso() { # paso <archivo> <comando...>: la salida completa y, al final, salida=N y segundos=N
   local f="$1" t0=$SECONDS rc=0
   shift
   cabecera "$f" "$*"
-  "$@" >>"$f" 2>&1 || rc=$?
+  # La salida se guarda con la ruta personal sustituida por la cadena $HOME (decision 5 de la tarea); nada mas se toca.
+  "$@" 2>&1 | sed "s|$HOME|\$HOME|g" >>"$f"
+  rc="${PIPESTATUS[0]}"
   { echo "salida=$rc"; echo "segundos=$((SECONDS - t0))"; } >>"$f"
   return "$rc"
 }
