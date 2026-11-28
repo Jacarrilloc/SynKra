@@ -45,22 +45,16 @@ Contratos que fijaron U06-A y U07-A (los asumen las tareas siguientes; están en
 
 ## Estado al corte (2026-11-28 00:40 UTC)
 
-### PRs abiertos
+### PRs
 
-| PR | Rama → base | Contenido |
-|---|---|---|
-| #95 | `orq/U05-U02-tareas` → `main` | Cierre de U05 y U02, candidatas, auditoría, tareas U06-A y U07-A. Lo fusiona un humano |
-| #96 | `m6r/U07-A` → `main` | U07-A planes y país permitido, VERDE ronda 1 |
-| #97 | `m6r/U06-A` → `main` | U06-A base del registro, VERDE ronda 2 |
-
-El #6 es antiguo y no se toca.
+#95, #96 (U07-A) y #97 (U06-A) **fusionados** por pedido de David (01:13 UTC). `main` en `f466591`, 768 pruebas en verde. El #6 es antiguo y no se toca. La rama `orq/U05-U02-tareas` ya incluye `main` y sigue como rama del orquestador (su próximo PR a `main` lleva lo nuevo).
 
 ### En vuelo (sesión de David, 2026-11-28 00:55 UTC; si la sesión se cortó, se perdieron)
 
 | Tarea | Worktree / rama | Desde | Estado | Qué hacer al retomar |
 |---|---|---|---|---|
-| U06-A registro base | `m6r/U06-A` | `97f9f80` | **VERDE en la ronda 2** (informe en `66c7e5a`). **PR #97** a `main`, abierto | Lo fusiona un humano; U06-B sale de `66c7e5a` |
-| U07-A planes y país | `m6r/U07-A` | `97f9f80` | **VERDE ronda 1** (`8182b9d`). PR #96 abierto | Lo fusiona un humano |
+| U06-A registro base | `m6r/U06-A` | `97f9f80` | **VERDE ronda 2**, fusionado (#97) | — |
+| U07-A planes y país | `m6r/U07-A` | `97f9f80` | **VERDE ronda 1**, fusionado (#96) | — |
 | U07-B crear plan | `../wt-m6r-U07-B`, `m6r/U07-B` | `8182b9d` | Revisor ronda 1: **NO-VERDE** (F-01 NARANJA: orden de `resumen.plugins` sin prueba; F-02 a F-05 AMARILLO; F-02 va a C-108). **Codificador ronda 2 despachado** (mismo agente) | Sin `revisiones/U07-B/ronda-1-respuesta.md`, redespachar el codificador ronda 2; con ella, revisor ronda 2 (base `8182b9d`) |
 | U06-B historial y reinicio | `../wt-m6r-U06-B`, `m6r/U06-B` | `66c7e5a` | **Codificador ronda 1 despachado** (tarea con hash `c729f5f`) | Mirar `origin/m6r/U06-B`: sin commits, redespachar; con bitácora completa, revisor ronda 1 (base `66c7e5a`) |
 | U06-C y U07-C | (sin rama) | — | Un ayudante las redacta en `tareas/` | Si no están commiteadas, escribirlas desde el plan y la tabla de arriba |

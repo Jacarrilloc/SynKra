@@ -952,3 +952,23 @@ Se despacha el codificador de la ronda 2.
 ## 2026-11-28T00:45Z: cierre de U05 y U02
 
 **Acción del orquestador:** con `main` en `97f9f80`, `./gradlew test --rerun check` pasó (`salida=0`; 710 pruebas, 0 saltos, 0 fallos, 0 errores). Se marcan los planes de U05 (T01 a T10) y U02 (T01 a T13) y se actualiza la línea de Code Generation Parte 2 en `aidlc-state.md`. U10 y U11 quedan cortadas por R9, según el plan aprobado por Julian a las 00:19:53Z.
+
+## 2026-11-28T00:44:27Z: David retoma el loop
+
+**Input del usuario:** "El punto de retomar para David es el commit 0a78506 en la rama orq/U05-U02-tareas, ya subido a GitHub."
+
+**Input del usuario (00:46:56Z):** "Confirmo que ya esta detenida, tengo entendido que hay un archivo de continuar los loops, entonces puedes revisarlo tambein donde quedo"
+
+**Acción del orquestador:** retoma desde `b3a0b8e` (un commit después de `0a78506`, con las tareas U06-B y U07-B). Revisor U06-A ronda 1 (NO-VERDE, F-01 ROJO), ronda 2 (VERDE, PR #97). U07-B ronda 1 (NO-VERDE, F-01 NARANJA). Candidatas C-107 y C-108.
+
+**Input del usuario (01:06:42Z):** "La maquin en la que estoy tiene Kind, podemo hacerlo"
+
+**Input del usuario (01:09:58Z):** "docker stop gitops2-control-plane gitops2-gitea gitops2-registry m08-gitops1-control-plane gitops1-gitea gitops1-registry [...] Ya bajé esos clsuteres, tenemos la totalidad de la maquina para ejecutar"
+
+## 2026-11-28T01:11:40Z: David pide fusionar #95, #96 y #97
+
+**Pregunta del orquestador:** "Ya hay tres PRs esperando fusión (#95, #96 y #97). Dime si los fusiono en orden según tu regla de varios PRs"
+
+**Input del usuario:** "FUsinalos en orden"
+
+**Acción del orquestador (01:13Z):** fusión con merge commit, en orden: #95 (`b0f9d48`), #96 (`1d69064`), #97 (`f466591`). Los tres estaban `MERGEABLE`/`CLEAN` y sus diffs de código no se tocan. Con `main` en `f466591`, `./gradlew test --rerun check` pasó (`salida=0`; 768 pruebas, 0 saltos, 0 fallos, 0 errores).
