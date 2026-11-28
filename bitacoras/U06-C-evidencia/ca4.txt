@@ -21,10 +21,14 @@ $ grep -rn @Bean backend/src/main/java/io/synkra/registro
 $ echo beans=1
 beans=1
 
-# El grep literal de la tarea no imprime nada porque los nombres traen paréntesis (name="x()"). Variante corregida, mismo XML:
-$ grep -o 'testcase name="[A-Za-z]*()"' backend/build/test-results/test/TEST-*FronterasModulosTest.xml
+# El grep literal de la tarea no imprime nada: los nombres traen paréntesis (name="x()") y algunos un dígito (Fabric8). Variante corregida, mismo XML:
+$ grep -o 'testcase name="[A-Za-z0-9]*()"' backend/build/test-results/test/TEST-*FronterasModulosTest.xml
+testcase name="laReglaDeApiMuerdeConUnaFirmaPublicaConFabric8()"
+testcase name="soloElModuloKubernetesImportaFabric8()"
+testcase name="laReglaDeFabric8FueraDeKubernetesMuerdeConUnaClaseDeJuguete()"
 testcase name="generaLaDocumentacionDeModulos()"
 testcase name="elBackendRealRespetaSusFronteras()"
+testcase name="laApiPublicaDeKubernetesNoMencionaFabric8()"
 testcase name="laDocumentacionGeneradaNoSeVersiona()"
 testcase name="laApiDeRegistroSoloMencionaTiposPropios()"
 testcase name="verifyFallaCuandoUnModuloImportaUnPaqueteInternoDeOtro()"
