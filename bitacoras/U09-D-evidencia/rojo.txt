@@ -1,0 +1,46 @@
+fecha: 2026-11-28T01:55:02-05:00
+sha: c533215 (primer commit de la rama, solo verificadores y guiones)
+uname -m: x86_64
+docker arch: amd64
+commit c533215e1264001ed076dfcfc0e3048d2b20005d
+Author: David Castillo <davale.cast@gmail.com>
+Date:   Sat Nov 28 01:54:52 2026 -0500
+
+    U09-D: rojo primero, verificadores del front y guiones de CA-3 a CA-5 (sin Dockerfile ni manifiestos)
+
+ bitacoras/U09-D-evidencia/ca3.sh |   9 +++
+ bitacoras/U09-D-evidencia/ca4.sh |  14 ++++
+ bitacoras/U09-D-evidencia/ca5.sh |  11 +++
+ scripts/verificar-backend.py     |  30 +++++---
+ scripts/verificar-base.py        |   5 +-
+ scripts/verificar-front.py       | 161 +++++++++++++++++++++++++++++++++++++++
+ scripts/verificar-imagenes.sh    |  25 +++++-
+ 7 files changed, 238 insertions(+), 17 deletions(-)
+
+$ (copia de c533215) bash bitacoras/U09-D-evidencia/ca5.sh
+FALLA objetos: falta ('Deployment', 'synkra', 'synkra-front')
+FALLA objetos: falta ('Service', 'synkra', 'synkra-front')
+base=1
+FALLA entrada: no se pudo leer <Version>([^<]+)</Version> en front/Synkra.Front.csproj
+backend=1
+FALLA entrada: no se pudo leer <Version>([^<]+)</Version> en front/Synkra.Front.csproj
+versiones=1
+FALLA entrada: front/Synkra.Front.csproj no tiene <Version>
+front=1
+error: must build at directory: not a valid directory: evalsymlink failure on 'deploy/base/front' : lstat /tmp/tmp.loLISmvihy/deploy/base/front: no such file or directory
+FALLA entrada: no hay manifiestos en la entrada estandar
+front-base=1
+FALLA entrada: no se pudo leer <Version>([^<]+)</Version> en front/Synkra.Front.csproj
+solo-backend=1
+[('Deployment', 'synkra', 'synkra-backend'), ('Ingress', 'synkra', 'synkra-backend'), ('Namespace', '-', 'synkra'), ('Namespace', '-', 'synkra-co'), ('Namespace', '-', 'synkra-pe'), ('PersistentVolumeClaim', 'synkra', 'synkra-datos'), ('Role', 'synkra-co', 'synkra-deployer'), ('Role', 'synkra-pe', 'synkra-deployer'), ('RoleBinding', 'synkra-co', 'synkra-deployer'), ('RoleBinding', 'synkra-pe', 'synkra-deployer'), ('Service', 'synkra', 'synkra-backend'), ('ServiceAccount', 'synkra', 'deployer')]
+[('synkra.local', '/actuator/health', 'synkra-backend'), ('synkra.local', '/api', 'synkra-backend')]
+literales=1
+
+$ (copia de c533215) bash scripts/verificar-imagenes.sh
+FALLA entrada: no se pudo leer <Version>([^<]+)</Version> en front/Synkra.Front.csproj
+FALLA versiones: el overlay de kind no coincide con el origen de las versiones
+FALLA front/Synkra.Front.csproj Version: esperado <Version>x.y.z</Version> / visto ausente
+FALLA front/Dockerfile existe: esperado Dockerfile / visto no existe
+FALLA localhost:5001/synkra-front:sin-version existe: esperado imagen construida / visto no existe
+FALLAN 4 comprobaciones
+salida=

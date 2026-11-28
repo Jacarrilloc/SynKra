@@ -7,6 +7,7 @@ docker run --pull=never -d --name "$N" --user 10001:10001 --read-only --tmpfs /t
 P=$(docker port "$N" 8080/tcp | head -1 | cut -d: -f2)
 timeout 60 bash -c "until curl -sf 127.0.0.1:$P/app.css >/dev/null; do sleep 1; done"; echo "espera=$?"
 curl -s -o /dev/null -w '%{http_code}\n' 127.0.0.1:$P/app.css
+curl -s -o /dev/null -w 'blazor.web.js %{http_code}\n' 127.0.0.1:$P/_framework/blazor.web.js
 curl -s 127.0.0.1:$P/ | grep -o -e '<h1>Vista general</h1>' -e 'API_NO_DISPONIBLE: No se pudo conectar con la API de SynKra' | sort -u
 docker exec "$N" id -u
 docker logs "$N" 2>&1 | grep -ciE 'read-only file system|permission denied|unhandled exception'

@@ -1,0 +1,6 @@
+fecha: 2026-11-28T01:57:44-05:00
+sha: 7230042 (Dockerfile con COPY del .csproj solo y restore antes de COPY . .)
+$ bash bitacoras/U09-D-evidencia/blazor.sh
+<script src="_framework/blazor.web.js">
+blazor.web.js 404
+['Synkra.Front/0.1.0']
