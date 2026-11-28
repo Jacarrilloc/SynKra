@@ -1,0 +1,30 @@
+$ F-01: SYNKRA_REGISTRO_IMAGENES=rojo-revisor.local:1 bash scripts/verificar-imagenes.sh   (sin esa imagen en local)
+ok rojo-revisor.local:1/synkra-init-descarga:1.0.0 etiqueta
+FALLA rojo-revisor.local:1/synkra-backend:0.1.0 existe: esperado imagen construida / visto no existe
+FALLA rojo-revisor.local:1/synkra-core-ejemplo:2.1.0 existe: esperado imagen construida / visto no existe
+FALLA rojo-revisor.local:1/synkra-init-descarga:1.0.0 existe: esperado imagen construida / visto no existe
+FALLA rojo-revisor.local:1/synkra-backend:0.1.0 ExposedPorts: esperado 8080/tcp / visto 
+FALLA rojo-revisor.local:1/synkra-core-ejemplo:2.1.0 ExposedPorts: esperado 8080/tcp / visto 
+FALLA rojo-revisor.local:1/synkra-core-ejemplo:2.1.0 Volumes: esperado /config /plugins / visto 
+FALLA rojo-revisor.local:1/synkra-init-descarga:1.0.0 Entrypoint: esperado ["/usr/local/bin/descargar.sh"] / visto 
+FALLA rojo-revisor.local:1/synkra-init-descarga:1.0.0 sin-apk: esperado  / visto Unable to find image 'rojo-revisor.local:1/synkra-init-descarga:1.0.0' locally
+docker: Error response from daemon: failed to resolve reference "rojo-revisor.local:1/synkra-init-descarga:1.0.0": failed to do request: Head "https://rojo-revisor.local:1/v2/synkra-init-descarga/manifests/1.0.0": dial tcp: lookup rojo-revisor.local: no such host
+salida=1
+
+$ F-02: copia de HEAD con `from alpine:3.20 AS revision` (minusculas, sin digest) en init-descarga/Dockerfile; verificar-imagenes.sh contra las imagenes buenas
+6:from alpine:3.20 AS revision
+11:FROM alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc
+ok backend/Dockerfile FROM
+ok backend/Dockerfile FROM
+ok core/Dockerfile FROM
+ok core/Dockerfile FROM
+ok init-descarga/Dockerfile FROM
+OK imagenes
+salida=0
+
+$ F-04: openssl falso que escribe un diagnostico y sale con 7
+FALLA certificado: openssl req -x509 salió con 7
+salida=1
+$ F-04: mv falso que falla en el segundo mv (tls.crt) -> queda tls.key sin tls.crt?
+salida=1
+tls.key

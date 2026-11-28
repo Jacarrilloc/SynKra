@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Construye las tres imagenes de SynKra en el Docker local (no sube nada; subir es de U08-C).
 # Uso: JAVA_HOME=<java 21> bash scripts/imagenes.sh
+# Versiones: salen de build.gradle.kts (backend, core) y de IMAGEN_INIT_POR_DEFECTO; scripts/verificar-imagenes.sh lee las mismas.
 # Prefijo: SYNKRA_REGISTRO_IMAGENES (por defecto localhost:5001).
 set -euo pipefail
 
@@ -17,9 +18,9 @@ fi
 version_gradle() { grep -E '^version *= *"' "$1/build.gradle.kts" | head -1 | sed -E 's/.*"([^"]+)".*/\1/'; }
 VB="$(version_gradle backend)"; VC="$(version_gradle core)"
 VI="$(grep -E 'IMAGEN_INIT_POR_DEFECTO *= *"' "$JAVA_FUENTE" | head -1 | sed -E 's/.*:([^:"]+)".*/\1/')"
-[ "$VB" = "0.1.0" ] || { echo "FALLA versiones: backend/build.gradle.kts dice $VB, la etiqueta es 0.1.0" >&2; exit 1; }
-[ "$VC" = "2.1.0" ] || { echo "FALLA versiones: core/build.gradle.kts dice $VC, la etiqueta es 2.1.0" >&2; exit 1; }
-[ "$VI" = "1.0.0" ] || { echo "FALLA versiones: IMAGEN_INIT_POR_DEFECTO dice $VI, la etiqueta es 1.0.0" >&2; exit 1; }
+for v in "$VB" "$VC" "$VI"; do
+  [ -n "$v" ] || { echo "FALLA versiones: no se pudo leer una version de build.gradle.kts o de IMAGEN_INIT_POR_DEFECTO" >&2; exit 1; }
+done
 
 echo "+ ./gradlew :backend:bootJar :core:bootJar"
 ./gradlew :backend:bootJar :core:bootJar || { echo "FALLA gradle: ./gradlew :backend:bootJar :core:bootJar salió con $?" >&2; exit 1; }

@@ -11,15 +11,18 @@ if [ -e "$DIR/tls.crt" ] || [ -e "$DIR/tls.key" ]; then
 fi
 
 TMP_CRT="$DIR/.tls.crt.$$"; TMP_KEY="$DIR/.tls.key.$$"
-trap 'rm -f "$TMP_CRT" "$TMP_KEY"' EXIT
+LISTO=0
+limpiar() { rm -f "$TMP_CRT" "$TMP_KEY"; [ "$LISTO" -eq 1 ] || rm -f "$DIR/tls.key" "$DIR/tls.crt"; }
+trap limpiar EXIT
 umask 077
 
 rc=0
 openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes -days 365 \
   -subj "/CN=synkra.local" -addext "subjectAltName=DNS:synkra.local" \
-  -keyout "$TMP_KEY" -out "$TMP_CRT" 2>/dev/null || rc=$?
+  -keyout "$TMP_KEY" -out "$TMP_CRT" || rc=$?
 [ "$rc" -eq 0 ] || { echo "FALLA certificado: openssl req -x509 salió con $rc" >&2; exit 1; }
 
 chmod 0600 "$TMP_KEY"; chmod 0644 "$TMP_CRT"
-mv "$TMP_KEY" "$DIR/tls.key"; mv "$TMP_CRT" "$DIR/tls.crt"
+mv "$TMP_KEY" "$DIR/tls.key" && mv "$TMP_CRT" "$DIR/tls.crt" || { echo "FALLA certificado: no se pudieron mover los archivos a $DIR" >&2; exit 1; }
+LISTO=1
 echo "OK certificado: $DIR/tls.crt y $DIR/tls.key"
