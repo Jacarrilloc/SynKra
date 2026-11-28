@@ -8,6 +8,7 @@ spec:
     spec:
       containers:
         - name: synkra-backend
+          imagePullPolicy: Always # la misma etiqueta puede volver a subirse con otro contenido (scripts/desplegar.sh lo comprueba)
           env:
             - name: SYNKRA_REGISTRO_PERMITIDO # R-C3, H-31: el unico registro permitido es el local
               value: localhost:5001

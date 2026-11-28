@@ -1,0 +1,9 @@
+f379e71 U08-C: rojo, verificadores con las listas de la union y guiones ca2, ca3, ca6, ca7
+
+ bitacoras/U08-C-evidencia/ca2.sh | 12 ++++++++++++
+ bitacoras/U08-C-evidencia/ca3.sh | 13 +++++++++++++
+ bitacoras/U08-C-evidencia/ca6.sh | 12 ++++++++++++
+ bitacoras/U08-C-evidencia/ca7.sh | 15 +++++++++++++++
+ scripts/verificar-backend.py     | 29 ++++++++++++++++++++++-------
+ scripts/verificar-base.py        |  6 +++++-
+ 6 files changed, 79 insertions(+), 8 deletions(-)

@@ -17,6 +17,7 @@ PAISES = ("co", "pe")
 VERBOS_ESCRITURA = ["get", "list", "watch", "create", "update", "patch"]
 VERBOS_LECTURA = ["get", "list", "watch"]
 PARTE = {"app.kubernetes.io/part-of": "synkra"}
+BACKEND = (("PersistentVolumeClaim", "synkra-datos"), ("Deployment", "synkra-backend"), ("Service", "synkra-backend"))
 
 
 def reglas(pais):
@@ -34,6 +35,9 @@ def esperados():
         ("Namespace", "-", "synkra"): PARTE,
         ("ServiceAccount", "synkra", "deployer"): PARTE,
     }
+    # El backend (U08-B): aqui solo kind, namespace y nombre; sus campos los mira verificar-backend.py.
+    for k, n in BACKEND:
+        e[(k, "synkra", n)] = None
     for p in PAISES:
         e[("Namespace", "-", "synkra-" + p)] = dict(PARTE, **{"synkra.io/pais": p})
         e[("Role", "synkra-" + p, "synkra-deployer")] = PARTE
@@ -70,7 +74,7 @@ def main():
     for c in sorted(set(objs) - set(esp), key=str):
         fallas.append("FALLA objetos: sobra %s" % (c,))
     for c, d in objs.items():
-        if c not in esp:
+        if c not in esp or esp[c] is None:
             continue
         et = d["metadata"].get("labels") or {}
         if et != esp[c]:

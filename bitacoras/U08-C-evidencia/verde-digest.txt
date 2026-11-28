@@ -1,0 +1,21 @@
+fecha: 2026-11-28T01:02:18-05:00
+sha: a4924e6 (arbol: 10 cambios sin confirmar)
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U08-C-evidencia/rojo-digest.sh
+# reconstruir y subir la misma imagen dos veces (mismo contenido)
+imagenes-1=0
+imagenes-2=0
+registro tras la 1a subida: sha256:38d18ff75383d719a077c95a97f3a3d9e67b5074fdce0a0ec5d223075857b549
+registro tras la 2a subida: sha256:38d18ff75383d719a077c95a97f3a3d9e67b5074fdce0a0ec5d223075857b549
+mismo-digest
+# make desplegar
+deployment.apps/synkra-backend unchanged
+ingress.networking.k8s.io/synkra-backend unchanged
+deployment "synkra-backend" successfully rolled out
+OK desplegar: localhost:5001/synkra-backend:0.1.0 sha256:38d18ff75383d719a077c95a97f3a3d9e67b5074fdce0a0ec5d223075857b549
+desplegar=0
+# lo que ve el pod y lo que tiene el nodo (solo lectura)
+localhost:5001/synkra-backend@sha256:38d18ff75383d719a077c95a97f3a3d9e67b5074fdce0a0ec5d223075857b549
+{"id":"sha256:02559b94e69330441e01badfd9549ea1e710f2b77d6b088fce0ae9d6ab7a3ca9","repoDigests":["localhost:5001/synkra-backend@sha256:38d18ff75383d719a077c95a97f3a3d9e67b5074fdce0a0ec5d223075857b549"]}

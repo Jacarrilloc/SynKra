@@ -2,7 +2,7 @@
 """Verifica los manifiestos del backend (U08-B).
 
 Uso:
-  kubectl kustomize deploy/overlays/kind | python3 -I scripts/verificar-backend.py
+  kubectl kustomize deploy/overlays/kind | python3 -I scripts/verificar-backend.py   (cuatro del backend + los ocho de la base)
   kubectl kustomize deploy/base/backend  | python3 -I scripts/verificar-backend.py --base
   kubectl kustomize deploy/overlays/kind | python3 -I scripts/verificar-backend.py --versiones   (solo versiones)
 Imprime `OK backend: N objetos` y sale con 0, o una linea `FALLA <regla>: <detalle>` por fallo y sale con 1.
@@ -49,6 +49,12 @@ ENV_OVERLAY = {
     "SYNKRA_REGISTRO_PERMITIDO": "localhost:5001",
     "SYNKRA_KUBERNETES_IMAGEN_INIT": IMAGEN_INIT,
 }
+BASE8 = sorted([
+    ("Namespace", None, "synkra"), ("Namespace", None, "synkra-co"), ("Namespace", None, "synkra-pe"),
+    ("ServiceAccount", NS, "deployer"),
+    ("Role", "synkra-co", "synkra-deployer"), ("Role", "synkra-pe", "synkra-deployer"),
+    ("RoleBinding", "synkra-co", "synkra-deployer"), ("RoleBinding", "synkra-pe", "synkra-deployer"),
+], key=str)
 fallos = []
 
 
@@ -105,18 +111,27 @@ def main():
     if "--versiones" in sys.argv[1:]:
         return solo_versiones(objs)
 
-    claves = sorted((o["kind"], (o.get("metadata") or {}).get("namespace"), (o.get("metadata") or {}).get("name")) for o in objs)
+    clave = lambda o: (o["kind"], (o.get("metadata") or {}).get("namespace"), (o.get("metadata") or {}).get("name"))
     esperados = [("Deployment", NS, "synkra-backend"), ("PersistentVolumeClaim", NS, "synkra-datos"), ("Service", NS, "synkra-backend")]
     if not base:
         esperados.append(("Ingress", NS, "synkra-backend"))
     esperados.sort()
-    igual("objetos", claves, esperados)
-    por = {o["kind"]: o for o in objs}
+    # En el overlay completo el resto tiene que ser exactamente los ocho de la base (U08-A).
+    if base:
+        propios, resto = objs, []
+    else:
+        propios = [o for o in objs if clave(o) in esperados]
+        resto = [o for o in objs if clave(o) not in esperados]
+    igual("objetos", sorted(clave(o) for o in propios), esperados)
+    if not base:
+        igual("base", sorted((clave(o) for o in resto), key=str), BASE8)
+    por = {o["kind"]: o for o in propios}
 
     for o in objs:
-        m = o.get("metadata") or {}
         if o["kind"].startswith("Cluster"):
             falla("sin-cluster", o["kind"])
+    for o in propios:
+        m = o.get("metadata") or {}
         if m.get("namespace") != NS:
             falla("namespace", "%s/%s en %r" % (o["kind"], m.get("name"), m.get("namespace")))
         et = m.get("labels") or {}
@@ -164,7 +179,7 @@ def main():
         if len(cs) == 1:
             c = cs[0]
             igual("imagen", c.get("image"), "synkra-backend" if base else "localhost:5001/synkra-backend:" + VERSION_BACKEND)
-            igual("pull", c.get("imagePullPolicy"), "IfNotPresent")
+            igual("pull", c.get("imagePullPolicy"), "IfNotPresent" if base else "Always")
             igual("puerto", c.get("ports"), [{"name": "http", "containerPort": 8080, "protocol": "TCP"}])
             env = {e["name"]: e.get("value") for e in c.get("env") or []}
             esp = dict(ENV_BASE)
@@ -195,7 +210,7 @@ def main():
     if fallos:
         print("\n".join(fallos))
         return 1
-    print("OK backend: %d objetos" % len(objs))
+    print("OK backend: %d objetos" % len(propios) + ("" if base else " (más %d de la base)" % len(resto)))
     return 0
 
 

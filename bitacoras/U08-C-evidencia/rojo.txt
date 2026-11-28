@@ -1,0 +1,30 @@
+# rojo: copia de f379e71, el commit de los verificadores y guiones
+$ bash bitacoras/U08-C-evidencia/ca2.sh
+FALLA objetos: falta ('Deployment', 'synkra', 'synkra-backend')
+FALLA objetos: falta ('PersistentVolumeClaim', 'synkra', 'synkra-datos')
+FALLA objetos: falta ('Service', 'synkra', 'synkra-backend')
+base=1
+FALLA base: esperado [('Namespace', None, 'synkra'), ('Namespace', None, 'synkra-co'), ('Namespace', None, 'synkra-pe'), ('Role', 'synkra-co', 'synkra-deployer'), ('Role', 'synkra-pe', 'synkra-deployer'), ('RoleBinding', 'synkra-co', 'synkra-deployer'), ('RoleBinding', 'synkra-pe', 'synkra-deployer'), ('ServiceAccount', 'synkra', 'deployer')] / visto []
+FALLA pull: esperado 'Always' / visto 'IfNotPresent'
+overlay=1
+OK backend: 3 objetos
+solo-backend=0
+[('Deployment', 'synkra', 'synkra-backend'), ('Ingress', 'synkra', 'synkra-backend'), ('PersistentVolumeClaim', 'synkra', 'synkra-datos'), ('Service', 'synkra', 'synkra-backend')]
+sha256sum: deploy/ingress-nginx/deploy.yaml: No such file or directory
+error: must build at directory: not a valid directory: evalsymlink failure on 'deploy/ingress-nginx' : lstat /tmp/tmp.avvuZVlX9y/deploy/ingress-nginx: no such file or directory
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import sys,yaml; os_=[o for o in yaml.safe_load_all(sys.stdin) if o]; d=[o for o in os_ if o['kind']=='Deployment'][0]; print(d['metadata']['namespace'], d['metadata']['name'], sorted(d['spec']['template']['spec']['nodeSelector'].items())); imgs=sorted({c['image'] for o in os_ if o['kind'] in ('Deployment','Job') for c in o['spec']['template']['spec']['containers']}); print(len(imgs), all('@sha256:' in i for i in imgs))
+                                                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+grep: scripts/desplegar.sh: No such file or directory
+grep: scripts/secreto-tls.sh: No such file or directory
+grep: scripts/verificar-limite.sh: No such file or directory
+literales=2
+grep: deploy/ingress-nginx/kustomization.yaml: No such file or directory
+grep: deploy/ingress-nginx/controlador-kind.yaml: No such file or directory
+arquitectura=1
+$ make verificar-limite
+make: *** No rule to make target 'verificar-limite'.  Stop.
+make=2

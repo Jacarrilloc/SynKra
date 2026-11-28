@@ -1,0 +1,47 @@
+fecha: 2026-11-28T01:02:15-05:00
+sha: a4924e6 (arbol: 9 cambios sin confirmar)
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U08-C-evidencia/ca7.sh
+clusterrolebinding.rbac.authorization.k8s.io/synkra-prueba-limite created
+edit synkra/deployer
+contexto permitido: kind-synkra (https://127.0.0.1:41787)
+scripts/verificar-limite.sh
+ok create deployments.apps -n synkra-co: yes
+ok create deployments.apps -n synkra-pe: yes
+FALLA create deployments.apps -n default: yes (esperado no)
+FALLA create deployments.apps -n kube-system: yes (esperado no)
+FALLA create deployments.apps -n synkra: yes (esperado no)
+ok create namespaces: no
+FALLA limite: 3 respuestas no esperadas
+make: *** [Makefile:53: verificar-limite] Error 1
+con-crb=2
+clusterrolebinding.rbac.authorization.k8s.io "synkra-prueba-limite" deleted
+Error from server (NotFound): clusterrolebindings.rbac.authorization.k8s.io "synkra-prueba-limite" not found
+crb-borrado=1
+rolebinding.rbac.authorization.k8s.io/synkra-prueba-limite created
+contexto permitido: kind-synkra (https://127.0.0.1:41787)
+scripts/verificar-limite.sh
+ok create deployments.apps -n synkra-co: yes
+ok create deployments.apps -n synkra-pe: yes
+ok create deployments.apps -n default: no
+ok create deployments.apps -n kube-system: no
+FALLA create deployments.apps -n synkra: yes (esperado no)
+ok create namespaces: no
+FALLA limite: 1 respuestas no esperadas
+make: *** [Makefile:53: verificar-limite] Error 1
+con-rb=2
+rolebinding.rbac.authorization.k8s.io "synkra-prueba-limite" deleted from synkra namespace
+Error from server (NotFound): rolebindings.rbac.authorization.k8s.io "synkra-prueba-limite" not found
+rb-borrado=1
+contexto permitido: kind-synkra (https://127.0.0.1:41787)
+scripts/verificar-limite.sh
+ok create deployments.apps -n synkra-co: yes
+ok create deployments.apps -n synkra-pe: yes
+ok create deployments.apps -n default: no
+ok create deployments.apps -n kube-system: no
+ok create deployments.apps -n synkra: no
+ok create namespaces: no
+OK limite: 6 respuestas esperadas
+limpio=0

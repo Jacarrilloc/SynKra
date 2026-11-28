@@ -1,0 +1,12 @@
+# Fija el controlador al nodo con la etiqueta ingress-ready (el control plane de kind-synkra, cuyo 80/443 publica deploy/kind/cluster.yaml).
+# Sin esto el hostPort 80/443 puede quedar en synkra-worker, que no esta publicado en el host.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingress-nginx-controller
+  namespace: ingress-nginx
+spec:
+  template:
+    spec:
+      nodeSelector:
+        ingress-ready: "true"
