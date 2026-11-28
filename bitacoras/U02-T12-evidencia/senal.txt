@@ -1,0 +1,4 @@
+$ core/smoke.sh & sleep 2; kill -TERM <pid>; wait; docker ps -a | grep -c smoke ; ls /tmp/tmp.* 
+salida=143
+0
+sin temporales nuevos

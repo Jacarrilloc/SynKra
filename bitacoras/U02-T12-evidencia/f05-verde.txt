@@ -1,0 +1,11 @@
+$ docker run -d --name smoke-ocupa-t12 -p 127.0.0.1:18089:8080 synkra-core:2.1.0
+rc=0
+$ SMOKE_RAIZ=$PWD $D/mut.sh; echo "salida=$?"   (misma mutacion, DESPUES del arreglo)
+docker: Error response from daemon: failed to set up container networking: driver failed programming external connectivity on endpoint smoke-c1-192453-1795824795 (e463e2ae24b071771130d1e45c5596b13e97b180f4e599c9f37572c9516ef428): Bind for 127.0.0.1:18089 failed: port is already allocated
+
+Run 'docker run --help' for more information
+FALLA caso1-kyc-pe-1.3.0: docker run fallo
+ok caso2-kyc-pe-2.0.0
+salida=1
+$ docker ps -a --format '{{.Names}}' | grep smoke | grep -vc ocupa
+0
