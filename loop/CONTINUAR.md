@@ -58,7 +58,7 @@ El #6 es antiguo y no se toca.
 
 | Tarea | Worktree / rama | Desde | Estado | Qué hacer al retomar |
 |---|---|---|---|---|
-| U06-A registro base | `../wt-m6r-U06-A`, `m6r/U06-A` | `97f9f80` | Revisor ronda 1: **NO-VERDE** (F-01 ROJO: id9/id10 solo afirman `RuntimeException`; F-02 a F-05 AMARILLO), informe en `cb20742`. **Codificador ronda 2 despachado** | Mirar `origin/m6r/U06-A`: sin `revisiones/U06-A/ronda-1-respuesta.md`, redespachar el codificador ronda 2; con ella, despachar el revisor ronda 2 (base `97f9f80`) |
+| U06-A registro base | `../wt-m6r-U06-A`, `m6r/U06-A` | `97f9f80` | Revisor ronda 1: **NO-VERDE** (F-01 ROJO: id9/id10 solo afirman `RuntimeException`; F-02 a F-05 AMARILLO), informe en `cb20742`. Codificador ronda 2 terminó (`c132c58`, código en `220229a`). **Revisor ronda 2 despachado** | Repetir el revisor ronda 2 (base `97f9f80`) si no hay `revisiones/U06-A/ronda-2.md` |
 | U07-A planes y país | `m6r/U07-A` | `97f9f80` | **VERDE ronda 1** (`8182b9d`). PR #96 abierto | Lo fusiona un humano |
 | U07-B crear plan | `../wt-m6r-U07-B`, `m6r/U07-B` | `8182b9d` | Codificador ronda 1 terminó (`9bc67ae`, código en `09439f4`). **Revisor ronda 1 despachado** | Repetir el revisor ronda 1 (base `8182b9d`) si no hay `revisiones/U07-B/ronda-1.md` |
 | U06-B historial y reinicio | (sin rama) | punta VERDE de U06-A | Escrita (hash `c729f5f`), espera a U06-A | Despachar cuando U06-A salga VERDE |
