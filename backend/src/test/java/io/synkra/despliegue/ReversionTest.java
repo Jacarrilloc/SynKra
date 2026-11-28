@@ -314,7 +314,8 @@ class ReversionTest {
         cargar();
         var base = T3.plus(Duration.ofHours(2));
         var imagen = CatalogoDePrueba.IMAGEN_A;
-        origen(970, "co", base, imagen, "kyc-pe", "1.3.0", sha("kyc-pe", "1.3.0"), false);
+        // 970 lleva una combinación incompatible: ORIGEN_NO_LISTO va antes que R-D1 y R-D3 (el orden es contrato).
+        origen(970, "co", base, imagen, "kyc-pe", "2.0.0", sha("kyc-pe", "2.0.0"), false);
         registro.actualizarResultado(970, EstadoDespliegue.FALLIDO, new ContextoFallo("", "", "falló en la prueba"));
         origen(971, "co", base.plusSeconds(1), imagen, "kyc-pe", "1.3.0", sha("kyc-pe", "1.3.0"), false);
         assertThat(estado(970)).isEqualTo(EstadoDespliegue.FALLIDO);
@@ -351,14 +352,14 @@ class ReversionTest {
         SIM.nuevasPeticiones();
         sinFilasNiPeticiones("cl", 0);
 
-        var q = revertir(977, "marta");
-        assertThat(q.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
-        assertThat(q.getBody()).containsEntry("codigo", "COMBINACION_RECHAZADA")
-                .containsEntry("mensaje", "La combinación no es compatible");
+        var vq = http().verificar("synkra-core", "2.1.0", "kyc-qq:1.0.0");
         @SuppressWarnings("unchecked")
-        var detalles = (List<Map<String, String>>) q.getBody().get("detalles");
-        assertThat(detalles).hasSize(1);
-        assertThat(detalles.get(0)).containsEntry("campo", "plugins.kyc-qq");
+        var motivosQq = (List<Map<String, Object>>) ((Map<String, Object>) ((List<?>) vq.getBody().get("plugins")).get(0))
+                .get("motivos");
+        assertThat(motivosQq).hasSize(1);
+        esperaError(revertir(977, "marta"), HttpStatus.UNPROCESSABLE_ENTITY, "COMBINACION_RECHAZADA",
+                "La combinación no es compatible", detalle("plugins.kyc-qq", (String) motivosQq.get(0).get("mensaje")));
+        SIM.nuevasPeticiones();
         sinFilasNiPeticiones("cl", 0);
     }
 
@@ -443,9 +444,8 @@ class ReversionTest {
         for (var id : List.of("999", "0", "-1")) {
             esperaError(revertir(id, "marta", null), HttpStatus.NOT_FOUND, "NO_ENCONTRADO", "Recurso no encontrado");
         }
-        var r = revertir("abc", "marta", null);
-        assertThat(r.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(r.getBody()).containsEntry("codigo", "SOLICITUD_INVALIDA");
+        esperaError(revertir("abc", "marta", null), HttpStatus.BAD_REQUEST, "SOLICITUD_INVALIDA",
+                "La solicitud es inválida o su cuerpo no se puede leer");
         assertThat(SIM.nuevasPeticiones()).isEmpty();
         assertThat(jdbc.queryForObject("select count(*) from dep_plan where tipo = 'reversion' and pais in"
                 + " ('co', 'cl', 'ar', 'mx', 'bo')", Long.class)).isZero();
