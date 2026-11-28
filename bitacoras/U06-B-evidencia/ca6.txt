@@ -1,0 +1,23 @@
+# fecha: 2026-11-28T01:16:21Z  tomada justo antes de su propio commit (el commit de bitacora y esta evidencia no esta incluido)
+$ git rev-parse --short HEAD
+871c459
+$ git diff --stat 66c7e5a...HEAD
+ .../java/io/synkra/registro/CodigosRegistro.java   |  10 ++
+ .../java/io/synkra/registro/MotivosRegistro.java   |  12 ++
+ .../java/io/synkra/registro/RegistroServicio.java  |  95 ++++++++++
+ .../java/io/synkra/registro/RutasRegistro.java     |  84 +++++++++
+ .../synkra/registro/api/DespliegueRegistrado.java  |  26 +++
+ .../java/io/synkra/registro/api/RegistroApi.java   |  13 ++
+ .../java/io/synkra/registro/HistorialTest.java     | 197 +++++++++++++++++++++
+ .../io/synkra/registro/RegistroReinicioTest.java   |  89 ++++++++++
+ bitacoras/U06-B-evidencia/ca1.txt                  |   9 +
+ bitacoras/U06-B-evidencia/ca2.txt                  |   9 +
+ bitacoras/U06-B-evidencia/ca3.sh                   |  32 ++++
+ bitacoras/U06-B-evidencia/ca3.txt                  |  16 ++
+ bitacoras/U06-B-evidencia/ca4.sh                   |  25 +++
+ bitacoras/U06-B-evidencia/ca4.txt                  |  48 +++++
+ bitacoras/U06-B-evidencia/ca4b.sh                  |  29 +++
+ bitacoras/U06-B-evidencia/ca4b.txt                 |  15 ++
+ bitacoras/U06-B-evidencia/rojo.txt                 |  42 +++++
+ bitacoras/U06-B.md                                 |   9 +
+ 18 files changed, 760 insertions(+)
