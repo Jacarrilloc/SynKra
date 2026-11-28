@@ -5,7 +5,7 @@ m=$1; c=${2:-HEAD}
 export JAVA_HOME=$HOME/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
 D=$(mktemp -d); git archive "$c" | tar -x -C "$D"; (cd "$D" && git init -q)
 J=$D/backend/src/main/java/io/synkra
-campo() { sed -i "0,/^    private final /s//    private $2 mutacion;\n    private final /" "$1"; }
+campo() { sed -i "0,/^\(public \|final \)*class .*{\$/s//&\n    private $2 mutacion;/" "$1"; grep -q mutacion "$1" || echo "MUTACION NO APLICADA en $1"; }
 case $m in
   registro)   sed -i 's/^final class MotivosRegistro/public final class MotivosRegistro/' $J/registro/MotivosRegistro.java
               campo $J/despliegue/ConfirmacionServicio.java io.synkra.registro.MotivosRegistro ;;

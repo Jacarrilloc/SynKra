@@ -1,0 +1,61 @@
+fecha: 2026-11-27T22:55:30-05:00
+sha: ba0b1fd (commit con package-info; copia con git archive)
+JAVA_HOME=/home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+comando: bitacoras/U07-G-evidencia/ca2.sh <mutacion> ba0b1fd
+
+##### registro
+== mutacion=registro commit=ba0b1fd
+FronterasModulosTest > elBackendRealRespetaSusFronteras() FAILED
+FronterasModulosTest > despliegueSoloUsaLasApisDeOtrosModulos() FAILED
+BUILD FAILED in 8s
+salida-gradle-ver-xml:
+testcase name="elBackendRealRespetaSusFronteras()"
+testcase name="despliegueSoloUsaLasApisDeOtrosModulos()"
+##### kubernetes
+== mutacion=kubernetes commit=ba0b1fd
+FronterasModulosTest > elBackendRealRespetaSusFronteras() FAILED
+FronterasModulosTest > despliegueSoloUsaLasApisDeOtrosModulos() FAILED
+BUILD FAILED in 8s
+salida-gradle-ver-xml:
+testcase name="elBackendRealRespetaSusFronteras()"
+testcase name="despliegueSoloUsaLasApisDeOtrosModulos()"
+##### catalogo
+== mutacion=catalogo commit=ba0b1fd
+FronterasModulosTest > elBackendRealRespetaSusFronteras() FAILED
+FronterasModulosTest > despliegueSoloUsaLasApisDeOtrosModulos() FAILED
+BUILD FAILED in 8s
+salida-gradle-ver-xml:
+testcase name="elBackendRealRespetaSusFronteras()"
+testcase name="despliegueSoloUsaLasApisDeOtrosModulos()"
+##### fabric8
+== mutacion=fabric8 commit=ba0b1fd
+FronterasModulosTest > soloElModuloKubernetesImportaFabric8() FAILED
+FronterasModulosTest > despliegueSoloUsaLasApisDeOtrosModulos() FAILED
+BUILD FAILED in 8s
+salida-gradle-ver-xml:
+testcase name="soloElModuloKubernetesImportaFabric8()"
+testcase name="despliegueSoloUsaLasApisDeOtrosModulos()"
+##### modulonuevo
+== mutacion=modulonuevo commit=ba0b1fd
+FronterasModulosTest > elBackendRealRespetaSusFronteras() FAILED
+FronterasModulosTest > despliegueSoloDependeDeSusModulosPermitidos() FAILED
+FronterasModulosTest > despliegueSoloUsaLasApisDeOtrosModulos() FAILED
+BUILD FAILED in 8s
+salida-gradle-ver-xml:
+testcase name="elBackendRealRespetaSusFronteras()"
+testcase name="despliegueSoloDependeDeSusModulosPermitidos()"
+testcase name="despliegueSoloUsaLasApisDeOtrosModulos()"
+##### inverso
+== mutacion=inverso commit=ba0b1fd
+FronterasModulosTest > elBackendRealRespetaSusFronteras() FAILED
+FronterasModulosTest > ningunModuloDependeDeDespliegue() FAILED
+BUILD FAILED in 8s
+salida-gradle-ver-xml:
+testcase name="elBackendRealRespetaSusFronteras()"
+testcase name="ningunModuloDependeDeDespliegue()"
+##### allowed
+== mutacion=allowed commit=ba0b1fd
+FronterasModulosTest > elBackendRealRespetaSusFronteras() FAILED
+BUILD FAILED in 8s
+salida-gradle-ver-xml:
+testcase name="elBackendRealRespetaSusFronteras()"

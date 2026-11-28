@@ -1,4 +1,4 @@
-fecha: 2026-11-27T22:52:40-05:00
+fecha: 2026-11-27T22:55:22-05:00
 sha: 6a97c2b (commit que solo trae las pruebas; copia con git archive)
 JAVA_HOME=/home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
 comando: bitacoras/U07-G-evidencia/ca2.sh registro 6a97c2b
