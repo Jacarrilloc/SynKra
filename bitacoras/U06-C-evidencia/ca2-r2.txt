@@ -1,0 +1,36 @@
+# fecha: 2026-11-28T01:51:40Z  sha: 5170285  puerto 18091 libre: 0 sockets
+$ ./gradlew :backend:test --rerun --tests '*PaisesConfiguradosTest'
+$ grep -E 'BUILD|FAILED'
+BUILD SUCCESSFUL in 1s
+$ grep -ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.registro.PaisesConfiguradosTest.xml
+tests="5" skipped="0" failures="0" errors="0"
+$ git show 8182b9d:backend/src/main/resources/application.properties
+$ diff - backend/src/main/resources/application.properties
+$ echo igual=0
+igual=0
+$ ./gradlew :backend:bootJar
+$ grep -E 'BUILD|FAILED'
+BUILD SUCCESSFUL in 1s
+$$ mktemp
+$ L=/tmp/tmp.EcfHSEIhEK
+$$ mktemp -d
+$ H=/tmp/tmp.hCdGyl0gJx
+$ HOME=/tmp/tmp.hCdGyl0gJx
+$ KUBECONFIG=/tmp/tmp.hCdGyl0gJx/kubeconfig-falso
+$$ mktemp -d
+$ SYNKRA_DATA=/tmp/tmp.Mq9rPMLksp
+$ SYNKRA_PAISES=co,PE
+$ timeout 60 /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2/bin/java -Duser.home=/tmp/tmp.hCdGyl0gJx -jar backend/build/libs/backend-0.1.0.jar --server.port=18091
+$ echo salida=1
+salida=1
+$ grep -c SYNKRA_PAISES /tmp/tmp.EcfHSEIhEK
+1
+$ grep -ci paisesConfigurados /tmp/tmp.EcfHSEIhEK
+4
+$ set +x
+--- líneas relevantes del log:
+2026-11-27T20:51:46.772-05:00  WARN 361841 --- [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'paisesConfigurados' de
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'paisesConfigurados' defined in URL [jar:nested:/home/casdav/Projects/Master/wt-m6r-U06-C/backend/build/libs/backend-0.1.0.jar/!BOOT-INF/classes/!/io/synkra/registro/PaisesConfigurados.class]: Failed to instantiat
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [io.synkra.registro.PaisesConfigurados]: Constructor threw exception
+Caused by: java.lang.IllegalStateException: synkra.paises (SYNKRA_PAISES) inválida: debe tener al menos un país de dos letras en minúscula, separados por coma, sin entradas vacías ni repetidas
+	at io.synkra.registro.PaisesConfigurados.<init>(PaisesConfigurados.java:32) ~[!/:0.1.0]
