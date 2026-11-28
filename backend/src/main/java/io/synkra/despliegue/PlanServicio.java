@@ -2,7 +2,6 @@ package io.synkra.despliegue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.synkra.catalogo.api.CatalogoApi;
 import io.synkra.kubernetes.api.AdaptadorKubernetes;
 import io.synkra.kubernetes.api.ClienteNoDisponibleException;
 import io.synkra.kubernetes.api.LecturaFallidaException;
@@ -13,7 +12,6 @@ import io.synkra.plataforma.ExcepcionApi;
 import io.synkra.verificador.Veredicto;
 import java.time.Clock;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.http.HttpStatus;
@@ -28,51 +26,45 @@ import org.springframework.transaction.support.TransactionTemplate;
 @Service
 class PlanServicio {
 
-    static final String CREADO_POR = "anonimo";
-
     private final PaisPermitido paises;
     private final VerificacionVivo verificacion;
-    private final CatalogoApi catalogo;
+    private final ResumenCatalogo resumenCatalogo;
     private final AdaptadorKubernetes kubernetes;
     private final JdbcAggregateTemplate plantilla;
     private final ObjectMapper json;
     private final TransactionTemplate transaccion;
     private final Clock reloj;
 
-    PlanServicio(PaisPermitido paises, VerificacionVivo verificacion, CatalogoApi catalogo,
+    PlanServicio(PaisPermitido paises, VerificacionVivo verificacion, ResumenCatalogo resumenCatalogo,
             AdaptadorKubernetes kubernetes, JdbcAggregateTemplate plantilla, ObjectMapper json,
             PlatformTransactionManager gestor, Clock reloj) {
         this.reloj = reloj;
         this.paises = paises;
         this.verificacion = verificacion;
-        this.catalogo = catalogo;
+        this.resumenCatalogo = resumenCatalogo;
         this.kubernetes = kubernetes;
         this.plantilla = plantilla;
         this.json = json;
         this.transaccion = new TransactionTemplate(gestor);
     }
 
-    PlanPreparado prepararPlan(String pais, String core, String versionCore, List<PluginPedido> plugins) {
-        var namespace = paises.namespace(pais);
+    PlanPreparado prepararPlan(String pais, String core, String versionCore, List<PluginPedido> plugins,
+            String creadoPor) {
+        paises.exigir(pais);
 
         var verificado = verificacion.verificar(core, versionCore, plugins);
         rechazaSiNoCompatible(verificado.veredicto());
 
-        var registrado = catalogo.obtenerCore(core);
-        var imagen = registrado.imagenes().get(verificado.seleccion().versionCore());
-        var elegidos = verificado.seleccion().plugins().stream()
-                .map(d -> new PluginResumen(d.nombre(), d.version().toString(),
-                        catalogo.obtenerPlugin(core, d.nombre(), d.version().toString()).sha256()))
-                .sorted(Comparator.comparing(PluginResumen::nombre).thenComparing(PluginResumen::version))
-                .toList();
-        var resumen = new Resumen(namespace, core, verificado.seleccion().versionCore().toString(), imagen, elegidos);
+        var resumen = resumenCatalogo.armar(pais, verificado.seleccion());
+        var imagen = resumen.imagen();
+        var elegidos = resumen.plugins();
 
         var corre = leer(pais);
         var cambios = CalculoCambios.calcular(corre, imagen, elegidos);
 
         var pedidos = elegidos.stream().map(p -> new PluginPedido(p.nombre(), p.version())).toList();
         var nuevo = Plan.nuevo(pais, Plan.DESPLIEGUE, null, core, resumen.versionCore(), texto(pedidos),
-                texto(resumen), texto(cambios), CREADO_POR, reloj.instant());
+                texto(resumen), texto(cambios), creadoPor, reloj.instant());
         var guardado = transaccion.execute(estado -> plantilla.insert(nuevo));
         return new PlanPreparado(guardado, resumen, cambios);
     }
@@ -89,7 +81,8 @@ class PlanServicio {
         }
     }
 
-    private static void rechazaSiNoCompatible(Veredicto veredicto) {
+    /** R-D3 y R-D6: 422 {@code COMBINACION_RECHAZADA} con un detalle por motivo; lo usan crear y confirmar. */
+    static void rechazaSiNoCompatible(Veredicto veredicto) {
         if (veredicto.global() == Veredicto.Global.APROBADA) {
             return;
         }

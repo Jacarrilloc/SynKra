@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.synkra.despliegue.ConfirmarTest" tests="10" skipped="0" failures="9" errors="0" timestamp="2026-11-28T02:08:13.523Z" hostname="casdav-Legion-Pro-5-16ADR10" time="1.66">
+  <properties/>
+  <testcase name="clSoloBloqueaUnAplicandoYSinCabeceraElUsuarioEsAnonimo()" classname="io.synkra.despliegue.ConfirmarTest" time="0.365">
+    <failure message="org.opentest4j.AssertionFailedError: &#10;expected: 202 ACCEPTED&#10; but was: 501 NOT_IMPLEMENTED" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+expected: 202 ACCEPTED
+ but was: 501 NOT_IMPLEMENTED
+	at io.synkra.despliegue.ConfirmarTest.clSoloBloqueaUnAplicandoYSinCabeceraElUsuarioEsAnonimo(ConfirmarTest.java:246)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="unPlanInexistenteDa404()" classname="io.synkra.despliegue.ConfirmarTest" time="0.008"/>
+  <testcase name="boSiAplicarFallaQuedaFallidoSinReintentos()" classname="io.synkra.despliegue.ConfirmarTest" time="0.033">
+    <failure message="org.opentest4j.AssertionFailedError: &#10;expected: 502 BAD_GATEWAY&#10; but was: 501 NOT_IMPLEMENTED" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+expected: 502 BAD_GATEWAY
+ but was: 501 NOT_IMPLEMENTED
+	at io.synkra.despliegue.HttpPlanes.esperaError(HttpPlanes.java:88)
+	at io.synkra.despliegue.ConfirmarTest.boSiAplicarFallaQuedaFallidoSinReintentos(ConfirmarTest.java:307)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="pyUnUsuarioInvalidoAlCrearNoDejaFilaNiPeticiones()" classname="io.synkra.despliegue.ConfirmarTest" time="0.115">
+    <failure message="org.opentest4j.AssertionFailedError: &#10;expected: 422 UNPROCESSABLE_ENTITY&#10; but was: 201 CREATED" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+expected: 422 UNPROCESSABLE_ENTITY
+ but was: 201 CREATED
+	at io.synkra.despliegue.HttpPlanes.esperaError(HttpPlanes.java:88)
+	at io.synkra.despliegue.ConfirmarTest.pyUnUsuarioInvalidoAlCrearNoDejaFilaNiPeticiones(ConfirmarTest.java:362)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="uyElResumenDesactualizadoDa422()" classname="io.synkra.despliegue.ConfirmarTest" time="0.024">
+    <failure message="org.opentest4j.AssertionFailedError: &#10;expected: 422 UNPROCESSABLE_ENTITY&#10; but was: 501 NOT_IMPLEMENTED" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+expected: 422 UNPROCESSABLE_ENTITY
+ but was: 501 NOT_IMPLEMENTED
+	at io.synkra.despliegue.HttpPlanes.esperaError(HttpPlanes.java:88)
+	at io.synkra.despliegue.ConfirmarTest.uyElResumenDesactualizadoDa422(ConfirmarTest.java:291)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="coUnSegundoPlanConUnoAplicandoDa409DespliegueEnCurso()" classname="io.synkra.despliegue.ConfirmarTest" time="0.021">
+    <failure message="org.opentest4j.AssertionFailedError: &#10;expected: 202 ACCEPTED&#10; but was: 501 NOT_IMPLEMENTED" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+expected: 202 ACCEPTED
+ but was: 501 NOT_IMPLEMENTED
+	at io.synkra.despliegue.ConfirmarTest.coUnSegundoPlanConUnoAplicandoDa409DespliegueEnCurso(ConfirmarTest.java:219)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="ecDosConfirmacionesAlaVezSoloUnaGana()" classname="io.synkra.despliegue.ConfirmarTest" time="0.136">
+    <failure message="java.lang.AssertionError: &#10;Expecting actual:&#10;  [501 NOT_IMPLEMENTED, 501 NOT_IMPLEMENTED]&#10;to contain exactly in any order:&#10;  [202 ACCEPTED, 409 CONFLICT]&#10;elements not found:&#10;  [202 ACCEPTED, 409 CONFLICT]&#10;and elements not expected:&#10;  [501 NOT_IMPLEMENTED, 501 NOT_IMPLEMENTED]&#10;" type="java.lang.AssertionError">java.lang.AssertionError: 
+Expecting actual:
+  [501 NOT_IMPLEMENTED, 501 NOT_IMPLEMENTED]
+to contain exactly in any order:
+  [202 ACCEPTED, 409 CONFLICT]
+elements not found:
+  [202 ACCEPTED, 409 CONFLICT]
+and elements not expected:
+  [501 NOT_IMPLEMENTED, 501 NOT_IMPLEMENTED]
+
+	at io.synkra.despliegue.ConfirmarTest.ecDosConfirmacionesAlaVezSoloUnaGana(ConfirmarTest.java:342)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="pyUnUsuarioInvalidoAlConfirmarDejaElPlanPendiente()" classname="io.synkra.despliegue.ConfirmarTest" time="0.193">
+    <failure message="org.opentest4j.AssertionFailedError: &#10;expected: 422 UNPROCESSABLE_ENTITY&#10; but was: 501 NOT_IMPLEMENTED" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+expected: 422 UNPROCESSABLE_ENTITY
+ but was: 501 NOT_IMPLEMENTED
+	at io.synkra.despliegue.HttpPlanes.esperaError(HttpPlanes.java:88)
+	at io.synkra.despliegue.ConfirmarTest.pyUnUsuarioInvalidoAlConfirmarDejaElPlanPendiente(ConfirmarTest.java:378)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="arElCatalogoCambioEntreMediasVuelveAVerificar()" classname="io.synkra.despliegue.ConfirmarTest" time="0.045">
+    <failure message="org.opentest4j.AssertionFailedError: &#10;expected: 422 UNPROCESSABLE_ENTITY&#10; but was: 501 NOT_IMPLEMENTED" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+expected: 422 UNPROCESSABLE_ENTITY
+ but was: 501 NOT_IMPLEMENTED
+	at io.synkra.despliegue.HttpPlanes.esperaError(HttpPlanes.java:88)
+	at io.synkra.despliegue.ConfirmarTest.arElCatalogoCambioEntreMediasVuelveAVerificar(ConfirmarTest.java:264)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="peConfirmaYSeRegistraAplicando()" classname="io.synkra.despliegue.ConfirmarTest" time="0.127">
+    <failure message="org.opentest4j.AssertionFailedError: &#10;expected: 202 ACCEPTED&#10; but was: 501 NOT_IMPLEMENTED" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+expected: 202 ACCEPTED
+ but was: 501 NOT_IMPLEMENTED
+	at io.synkra.despliegue.ConfirmarTest.peConfirmaYSeRegistraAplicando(ConfirmarTest.java:169)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <system-out><![CDATA[2026-11-27T21:08:13.526-05:00  INFO 432916 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [io.synkra.despliegue.ConfirmarTest]: ConfirmarTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-27T21:08:13.528-05:00  INFO 432916 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration io.synkra.SynkraApp for test class io.synkra.despliegue.ConfirmarTest
+2026-11-27T21:08:13.538-05:00  INFO 432916 --- [    Test worker] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40093] starting to accept connections on localhost
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-11-27T21:08:13.568-05:00  INFO 432916 --- [    Test worker] io.synkra.despliegue.ConfirmarTest       : Starting ConfirmarTest using Java 21.0.13.1 with PID 432916 (started by casdav in /home/casdav/Projects/Master/wt-m6r-U07-D/backend)
+2026-11-27T21:08:13.570-05:00  INFO 432916 --- [    Test worker] io.synkra.despliegue.ConfirmarTest       : No active profile set, falling back to 1 default profile: "default"
+2026-11-27T21:08:13.817-05:00  INFO 432916 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2026-11-27T21:08:13.830-05:00  INFO 432916 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 12 ms. Found 8 JDBC repository interfaces.
+2026-11-27T21:08:13.864-05:00  INFO 432916 --- [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 0 (http)
+2026-11-27T21:08:13.864-05:00  INFO 432916 --- [    Test worker] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-11-27T21:08:13.865-05:00  INFO 432916 --- [    Test worker] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-11-27T21:08:13.886-05:00  INFO 432916 --- [    Test worker] o.a.c.c.C.[Tomcat-2].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2026-11-27T21:08:13.887-05:00  INFO 432916 --- [    Test worker] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 315 ms
+2026-11-27T21:08:13.960-05:00  INFO 432916 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Starting...
+2026-11-27T21:08:13.969-05:00  INFO 432916 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : synkra-sqlite - Added connection org.sqlite.jdbc4.JDBC4Connection@5ca01e01
+2026-11-27T21:08:13.970-05:00  INFO 432916 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Start completed.
+2026-11-27T21:08:13.980-05:00  INFO 432916 --- [    Test worker] org.flywaydb.core.FlywayExecutor         : Database: jdbc:sqlite:/home/casdav/Projects/Master/wt-m6r-U07-D/backend/build/sqlite-pruebas/ConfirmarTest/synkra.db (SQLite 3.49)
+2026-11-27T21:08:13.983-05:00  INFO 432916 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "main"."flyway_schema_history" does not exist yet
+2026-11-27T21:08:13.983-05:00  INFO 432916 --- [    Test worker] o.f.core.internal.command.DbValidate     : Successfully validated 4 migrations (execution time 00:00.001s)
+2026-11-27T21:08:13.984-05:00  INFO 432916 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "main"."flyway_schema_history" ...
+2026-11-27T21:08:13.988-05:00  INFO 432916 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Current version of schema "main": << Empty Schema >>
+2026-11-27T21:08:13.989-05:00  INFO 432916 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "main" to version "1 - base"
+2026-11-27T21:08:13.994-05:00  INFO 432916 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "main" to version "2 - catalogo"
+2026-11-27T21:08:13.999-05:00  INFO 432916 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "main" to version "3 - registro"
+2026-11-27T21:08:14.004-05:00  INFO 432916 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "main" to version "4 - despliegue"
+2026-11-27T21:08:14.007-05:00  INFO 432916 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Successfully applied 4 migrations to schema "main", now at version v4 (execution time 00:00.000s)
+2026-11-27T21:08:14.096-05:00  INFO 432916 --- [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-11-27T21:08:14.109-05:00  INFO 432916 --- [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 41229 (http) with context path '/'
+2026-11-27T21:08:14.114-05:00  INFO 432916 --- [    Test worker] io.synkra.despliegue.ConfirmarTest       : Started ConfirmarTest in 0.566 seconds (process running for 7.034)
+2026-11-27T21:08:14.187-05:00  INFO 432916 --- [o-auto-3-exec-1] o.a.c.c.C.[Tomcat-2].[localhost].[/]     : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-11-27T21:08:14.187-05:00  INFO 432916 --- [o-auto-3-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-11-27T21:08:14.187-05:00  INFO 432916 --- [o-auto-3-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+2026-11-27T21:08:14.341-05:00  INFO 432916 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40093] received request: GET /apis/apps/v1/namespaces/synkra-cl/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T21:08:14.358-05:00  INFO 432916 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40093] received request: GET /api/v1/namespaces/synkra-cl/configmaps/synkra-core-config HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T21:08:14.506-05:00  INFO 432916 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40093] received request: GET /apis/apps/v1/namespaces/synkra-bo/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T21:08:14.508-05:00  INFO 432916 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40093] received request: GET /api/v1/namespaces/synkra-bo/configmaps/synkra-core-config HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T21:08:14.533-05:00  INFO 432916 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40093] received request: GET /apis/apps/v1/namespaces/synkra-py/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T21:08:14.535-05:00  INFO 432916 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40093] received request: GET /api/v1/namespaces/synkra-py/configmaps/synkra-core-config HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T21:08:14.649-05:00  INFO 432916 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40093] received request: GET /apis/apps/v1/namespaces/synkra-uy/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T21:08:14.650-05:00  INFO 432916 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40093] received request: GET /api/v1/namespaces/synkra-uy/configmaps/synkra-core-config HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T21:08:14.671-05:00  INFO 432916 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40093] received request: GET /apis/apps/v1/namespaces/synkra-co/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T21:08:14.673-05:00  INFO 432916 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40093] received request: GET /api/v1/namespaces/synkra-co/configmaps/synkra-core-config HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T21:08:14.693-05:00  INFO 432916 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40093] received request: GET /apis/apps/v1/namespaces/synkra-ec/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T21:08:14.695-05:00  INFO 432916 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40093] received request: GET /api/v1/namespaces/synkra-ec/configmaps/synkra-core-config HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T21:08:14.767-05:00  INFO 432916 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40093] received request: GET /apis/apps/v1/namespaces/synkra-ec/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T21:08:14.769-05:00  INFO 432916 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40093] received request: GET /api/v1/namespaces/synkra-ec/configmaps/synkra-core-config HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T21:08:14.829-05:00  INFO 432916 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40093] received request: GET /apis/apps/v1/namespaces/synkra-py/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T21:08:14.830-05:00  INFO 432916 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40093] received request: GET /api/v1/namespaces/synkra-py/configmaps/synkra-core-config HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T21:08:15.021-05:00  INFO 432916 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40093] received request: GET /apis/apps/v1/namespaces/synkra-ar/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T21:08:15.022-05:00  INFO 432916 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40093] received request: GET /api/v1/namespaces/synkra-ar/configmaps/synkra-core-config HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T21:08:15.066-05:00  INFO 432916 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40093] received request: GET /apis/apps/v1/namespaces/synkra-pe/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T21:08:15.068-05:00  INFO 432916 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40093] received request: GET /api/v1/namespaces/synkra-pe/configmaps/synkra-core-config HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T21:08:15.185-05:00  INFO 432916 --- [    Test worker] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40093] done accepting connections
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -23,7 +23,12 @@ final class MotivosDespliegue {
     static final String PAIS_INCONSISTENTE_MENSAJE = "Lo que corre en el país no es consistente";
     static final String PLAN_VENCIDO_MENSAJE = "El plan venció sin confirmarse";
     static final String PLAN_NO_PENDIENTE_MENSAJE = "El plan ya no está pendiente";
-    static final String CONFIRMACION_NO_DISPONIBLE_MENSAJE = "La confirmación todavía no está disponible";
+    static final String DESPLIEGUE_EN_CURSO_MENSAJE = "Ya hay un despliegue en curso en el país";
+    static final String PLAN_DESACTUALIZADO_MENSAJE = "El catálogo cambió desde que se creó el plan";
+    static final String APLICACION_FALLIDA_MENSAJE = "No se pudo aplicar el plan en el clúster";
+    static final String KUBERNETES_APLICAR_MENSAJE = "No hay clúster al que aplicar el plan";
+    static final String USUARIO_MENSAJE = "El usuario no es válido";
+    static final String USUARIO_FORMA = "El usuario debe tener de 1 a 64 caracteres: minúsculas, dígitos, punto, guion o guion bajo";
 
     private MotivosDespliegue() {
     }
