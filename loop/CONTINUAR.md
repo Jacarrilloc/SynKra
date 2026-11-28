@@ -17,7 +17,7 @@ U01, U02, U03, U04 y U05 están **terminadas y fusionadas en `main`** (`97f9f80`
 - **Fusión**: Julian pidió (00:25 UTC) que el orquestador fusionara. Se fusionaron en orden, con merge commit y cambiando antes la base a `main`: U05 (#85, #87, #90, #92) y U02 (#84, #86, #88, #89, #91, #93, #94). Está en `aidlc-docs/audit.md`.
 - **Comprobación**: `./gradlew test --rerun check` sobre `main` `97f9f80` → `salida=0`, 710 pruebas, 0 saltos, 0 fallos.
 - **Cierre de U05 y U02**: planes marcados, `aidlc-state.md` y auditoría, en la rama `orq/U05-U02-tareas`. Va en el **PR #95** (rama del loop → `main`), **abierto**. El control de permisos de la sesión de Julian bloqueó la fusión porque no era uno de los PRs que él nombró: lo fusiona un humano.
-- `CANDIDATAS.md` llega hasta **C-108**. La siguiente libre es **C-109**.
+- `CANDIDATAS.md` llega hasta **C-110**. La siguiente libre es **C-111**.
 
 ## Plan para acelerar (aprobado por Julian el 2026-11-28 a las 00:19 UTC)
 
@@ -57,7 +57,7 @@ Contratos que fijaron U06-A y U07-A (los asumen las tareas siguientes; están en
 | U07-A planes y país | `m6r/U07-A` | `97f9f80` | **VERDE ronda 1**, fusionado (#96) | — |
 | U07-B crear plan | `../wt-m6r-U07-B`, `m6r/U07-B` | `8182b9d` | Revisor ronda 1: **NO-VERDE** (F-01 NARANJA: orden de `resumen.plugins` sin prueba; F-02 a F-05 AMARILLO; F-02 va a C-108). **Codificador ronda 2 despachado** (mismo agente) | Sin `revisiones/U07-B/ronda-1-respuesta.md`, redespachar el codificador ronda 2; con ella, revisor ronda 2 (base `8182b9d`) |
 | U06-B historial y reinicio | `../wt-m6r-U06-B`, `m6r/U06-B` | `66c7e5a` | **Codificador ronda 1 despachado** (tarea con hash `c729f5f`) | Mirar `origin/m6r/U06-B`: sin commits, redespachar; con bitácora completa, revisor ronda 1 (base `66c7e5a`) |
-| U06-C y U07-C | (sin rama) | — | Un ayudante las redacta en `tareas/` | Si no están commiteadas, escribirlas desde el plan y la tabla de arriba |
+| U06-C y U07-C | (sin rama) | — | **Escritas** (hashes `004d66e` y `7dbe5d3`). U07-C crea el bean `Clock` en `plataforma/Reloj.java` (U06-C no puede crear otro); U06-C usa `@MockitoBean AdaptadorKubernetes`; confirmar da 501 hasta U07-D | Despachar U06-C cuando U06-B salga VERDE y U07-C cuando U07-B salga VERDE |
 
 En la máquina de Julian, las sesiones de Julian siguen trabajando mientras no se diga lo contrario: **antes de despachar, David revisa `git fetch` y la fecha del último commit de cada rama** (punto 4 de abajo) para no pisar a nadie.
 
