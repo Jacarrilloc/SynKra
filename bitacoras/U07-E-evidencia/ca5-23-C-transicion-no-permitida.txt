@@ -1,0 +1,13 @@
+fecha: 2026-11-28T03:17:52Z  sha: 03ffd16  mutación: 23-C-transicion-no-permitida
+$ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"; (cd "$D" && git init -q)
+$ sed -i -e s/\}\ catch\ \(TransicionNoPermitidaException\ e\)\ \{/\&\\n\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ throw\ e\;/ "$D/backend/src/main/java/io/synkra/despliegue/VigilanciaDespliegues.java"
+--- diff de la mutación (copia vs HEAD)
+62a63
+>                 throw e;
+$ (cd "$D" && ./gradlew :backend:test --tests '*VigilanciaTest' --tests '*RetomarVigilanciaTest' --tests '*AplicandoTest' --tests '*ReintentosClienteTest' --tests '*EstadoRolloutTest' --tests '*ContextoEventosTest' --tests '*VigilanciaCoincideTest' --tests '*VigilanciaDobleTest')
+30 tests completed, 1 failed
+BUILD FAILED in 13s
+$ grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaDobleTest.xml
+--- pruebas que cayeron (clase.método)
+VigilanciaDobleTest.unaFilaQueOtraPasadaYaCerroSeSaltaSinCortarLaPasada

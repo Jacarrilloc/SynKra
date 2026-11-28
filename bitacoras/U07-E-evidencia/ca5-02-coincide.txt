@@ -1,4 +1,4 @@
-fecha: 2026-11-28T02:55:37Z  sha: 4869522  mutación: 02-coincide
+fecha: 2026-11-28T03:18:06Z  sha: 03ffd16  mutación: 02-coincide
 $ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"; (cd "$D" && git init -q)
 $ sed -i -e s/if\ \(lectura.isEmpty\(\)\ \|\|\ \!coincide\(d\,\ lectura.get\(\)\)\)\ \{/if\ \(lectura.isEmpty\(\)\)\ \{/ "$D/backend/src/main/java/io/synkra/despliegue/VigilanciaDespliegues.java"
 --- diff de la mutación (copia vs HEAD)
@@ -6,10 +6,14 @@ $ sed -i -e s/if\ \(lectura.isEmpty\(\)\ \|\|\ \!coincide\(d\,\ lectura.get\(\)\
 <             if (lectura.isEmpty() || !coincide(d, lectura.get())) {
 ---
 >             if (lectura.isEmpty()) {
-$ (cd "$D" && ./gradlew :backend:test --tests '*VigilanciaTest' --tests '*RetomarVigilanciaTest' --tests '*AplicandoTest' --tests '*ReintentosClienteTest' --tests '*EstadoRolloutTest' --tests '*ContextoEventosTest')
-23 tests completed, 1 failed
-BUILD FAILED in 33s
+$ (cd "$D" && ./gradlew :backend:test --tests '*VigilanciaTest' --tests '*RetomarVigilanciaTest' --tests '*AplicandoTest' --tests '*ReintentosClienteTest' --tests '*EstadoRolloutTest' --tests '*ContextoEventosTest' --tests '*VigilanciaCoincideTest' --tests '*VigilanciaDobleTest')
+30 tests completed, 4 failed
+BUILD FAILED in 36s
 $ grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaCoincideTest.xml
 backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaTest.xml
 --- pruebas que cayeron (clase.método)
+VigilanciaCoincideTest.soloElShaDeUnPluginDifiereNoEsListo
+VigilanciaCoincideTest.soloLosPluginsDifierenNoEsListo
+VigilanciaCoincideTest.soloLaImagenDifiereNoEsListo
 VigilanciaTest.boLoQueCorreNoEsLoConfirmadoNuncaEsListo

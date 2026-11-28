@@ -1,4 +1,4 @@
-fecha: 2026-11-28T02:57:47Z  sha: 4869522  mutación: 14-c82-listas-bastan
+fecha: 2026-11-28T03:20:25Z  sha: 03ffd16  mutación: 14-c82-listas-bastan
 $ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"; (cd "$D" && git init -q)
 $ sed -i -e s/if\ \(razon\ \!=\ null\)\ \{/if\ \(false\)\ \{/ -e s/\ \\\&\\\&\ rolloutTerminado\(d\,\ deseadas\)// "$D/backend/src/main/java/io/synkra/kubernetes/LectorPais.java"
 --- diff de la mutación (copia vs HEAD)
@@ -10,9 +10,9 @@ $ sed -i -e s/if\ \(razon\ \!=\ null\)\ \{/if\ \(false\)\ \{/ -e s/\ \\\&\\\&\ r
 <         if (listas == deseadas && deseadas > 0 && rolloutTerminado(d, deseadas)) {
 ---
 >         if (listas == deseadas && deseadas > 0) {
-$ (cd "$D" && ./gradlew :backend:test --tests '*VigilanciaTest' --tests '*RetomarVigilanciaTest' --tests '*AplicandoTest' --tests '*ReintentosClienteTest' --tests '*EstadoRolloutTest' --tests '*ContextoEventosTest')
-23 tests completed, 10 failed
-BUILD FAILED in 20s
+$ (cd "$D" && ./gradlew :backend:test --tests '*VigilanciaTest' --tests '*RetomarVigilanciaTest' --tests '*AplicandoTest' --tests '*ReintentosClienteTest' --tests '*EstadoRolloutTest' --tests '*ContextoEventosTest' --tests '*VigilanciaCoincideTest' --tests '*VigilanciaDobleTest')
+30 tests completed, 10 failed
+BUILD FAILED in 24s
 $ grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml
 backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaTest.xml
 backend/build/test-results/test/TEST-io.synkra.kubernetes.EstadoRolloutTest.xml

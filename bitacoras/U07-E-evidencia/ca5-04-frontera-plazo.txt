@@ -1,4 +1,4 @@
-fecha: 2026-11-28T02:55:37Z  sha: 4869522  mutación: 04-frontera-plazo
+fecha: 2026-11-28T03:18:06Z  sha: 03ffd16  mutación: 04-frontera-plazo
 $ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"; (cd "$D" && git init -q)
 $ sed -i -e s/boolean\ vencido\ =\ \!reloj.instant\(\).isBefore\(/boolean\ vencido\ =\ reloj.instant\(\).isAfter\(/ "$D/backend/src/main/java/io/synkra/despliegue/VigilanciaDespliegues.java"
 --- diff de la mutación (copia vs HEAD)
@@ -6,14 +6,22 @@ $ sed -i -e s/boolean\ vencido\ =\ \!reloj.instant\(\).isBefore\(/boolean\ venci
 <         boolean vencido = !reloj.instant().isBefore(d.confirmadoEn().plus(plazo));
 ---
 >         boolean vencido = reloj.instant().isAfter(d.confirmadoEn().plus(plazo));
-$ (cd "$D" && ./gradlew :backend:test --tests '*VigilanciaTest' --tests '*RetomarVigilanciaTest' --tests '*AplicandoTest' --tests '*ReintentosClienteTest' --tests '*EstadoRolloutTest' --tests '*ContextoEventosTest')
-23 tests completed, 7 failed
-BUILD FAILED in 36s
+$ (cd "$D" && ./gradlew :backend:test --tests '*VigilanciaTest' --tests '*RetomarVigilanciaTest' --tests '*AplicandoTest' --tests '*ReintentosClienteTest' --tests '*EstadoRolloutTest' --tests '*ContextoEventosTest' --tests '*VigilanciaCoincideTest' --tests '*VigilanciaDobleTest')
+30 tests completed, 13 failed
+BUILD FAILED in 53s
 $ grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml
 backend/build/test-results/test/TEST-io.synkra.despliegue.RetomarVigilanciaTest.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaCoincideTest.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaDobleTest.xml
 backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaTest.xml
 --- pruebas que cayeron (clase.método)
 RetomarVigilanciaTest.trasUnReinicioSeRetomaLaVigilanciaSinReaplicarYLosPlanesVencenSolos
+VigilanciaCoincideTest.soloElShaDeUnPluginDifiereNoEsListo
+VigilanciaCoincideTest.soloLosPluginsDifierenNoEsListo
+VigilanciaCoincideTest.soloLaImagenDifiereNoEsListo
+VigilanciaDobleTest.alVencerElPlazoElContextoDelClusterEntraEnElRegistro
+VigilanciaDobleTest.unFallidoConContextoIlegibleSeCierraPorPlazoComoSinLectura
+VigilanciaDobleTest.unaFilaQueOtraPasadaYaCerroSeSaltaSinCortarLaPasada
 VigilanciaTest.pyUnAplicandoSinNadaEnElClusterSeCierraPorPlazo
 VigilanciaTest.coVenceElPlazoExactoConPropiedadDeDosMinutos
 VigilanciaTest.clCrashLoopBackOffCierraEnLaMismaPasadaConElContextoDeVerdad
