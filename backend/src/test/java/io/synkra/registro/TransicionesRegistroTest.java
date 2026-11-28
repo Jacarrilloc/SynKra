@@ -17,7 +17,9 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,6 +28,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.support.TransactionTemplate;
 
 /** R-R1 a R-R3. El archivo SQLite queda en build/sqlite-pruebas para leerlo de vuelta (ids fijos 1 a 10). */
+@TestMethodOrder(MethodOrderer.MethodName.class) // id8 usa el despliegue 1 como origen
 @SpringBootTest
 class TransicionesRegistroTest {
 

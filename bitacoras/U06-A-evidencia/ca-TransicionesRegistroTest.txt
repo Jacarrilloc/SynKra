@@ -1,0 +1,9 @@
+2026-11-27T19:35:49-05:00
+c9a734d
+$ ./gradlew :backend:test --rerun --tests '*TransicionesRegistroTest'
+TransicionesRegistroTest > id8UnaReversionGuardaSuOrigen() FAILED
+    java.lang.AssertionError at TransicionesRegistroTest.java:146
+> Task :backend:test FAILED
+BUILD FAILED in 10s
+$ grep -ho tests=...
+tests="15" skipped="0" failures="1" errors="0"
