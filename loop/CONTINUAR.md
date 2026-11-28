@@ -65,6 +65,7 @@ Para que eso no vuelva a pasar:
 | 8 | #91 | `m6r/U02-T11` → `m6r/U02-T10` | U02-T11 imagen del core, VERDE ronda 1 (apilado sobre #89) |
 | 9 | #92 | `m6r/U05-T10` → `m6r/U05-T09` | U05-T10 resumen de U05, VERDE ronda 3 (apilado sobre #90) |
 | 10 | #93 | `m6r/U02-T12` → `m6r/U02-T11` | U02-T12 humo del core, VERDE ronda 3 (apilado sobre #91) |
+| 11 | #94 | `m6r/U02-T13` → `m6r/U02-T12` | U02-T13 resumen de U02, VERDE ronda 1 (apilado sobre #93) |
 
 El #6 es antiguo y no se toca.
 
@@ -80,7 +81,7 @@ El #6 es antiguo y no se toca.
 | U02-T10 plugin `kyc-pe` (ola 36) | `../wt-m6r-U02-T10`, `m6r/U02-T10` | `288e5c0` | **VERDE en la ronda 1** (informe en `3538d67`). PR #89, apilado sobre #88. | Esperar fusión humana; U02-T11 sale de esta punta |
 | U02-T11 imagen del core (ola 37) | `../wt-m6r-U02-T11`, `m6r/U02-T11` | `3538d67` | **VERDE en la ronda 1** (informe en `28a6ac3`). PR #91, apilado sobre #89. | Esperar fusión humana; U02-T12 sale de esta punta |
 | U02-T12 humo del core (ola 38) | `../wt-m6r-U02-T12`, `m6r/U02-T12` | `28a6ac3` | **VERDE en la ronda 3** (informe en `63d99fa`). PR #93, apilado sobre #91. | Esperar fusión humana; U02-T13 sale de esta punta |
-| U02-T13 resumen de U02 (ola 39) | `../wt-m6r-U02-T13`, `m6r/U02-T13` | `63d99fa` (punta VERDE de U02-T12) | Codificador ronda 1 hecho, `00b1b77`. **En vuelo (00:30 UTC del 28-nov):** revisor ronda 1 (sonnet, por ser documentación). | Si no hay `revisiones/U02-T13/ronda-1.md`, repetir el revisor (base `63d99fa`, HEAD `00b1b77`) |
+| U02-T13 resumen de U02 (ola 39) | `../wt-m6r-U02-T13`, `m6r/U02-T13` | `63d99fa` | **VERDE en la ronda 1** (informe en `1ab000c`). PR #94, apilado sobre #93. | Cuando la pila de U02 esté fusionada: commit de cierre de U02 (plan, `aidlc-state.md`, `audit.md`) |
 
 | U02-T08 el core no conoce países (ola 34) | `../wt-m6r-U02-T08`, `m6r/U02-T08` | `9d84b4c` (punta VERDE de U02-T07, #84 sin fusionar) | **VERDE en la ronda 1** (informe en `d99cf36`). PR #86, apilado. | Esperar fusión humana; U02-T09 sale de esta punta |
 
