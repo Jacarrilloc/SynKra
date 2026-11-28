@@ -1,0 +1,39 @@
+fecha: 2026-11-28T02:00:37-05:00
+sha: 8d7a11e (ultimo commit de codigo: 8d7a11e)
+arch: x86_64
+imagen: mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
+
++ scripts/dotnet-docker.sh test front.Tests --filter CatalogoTest --logger 'trx;LogFileName=catalogo.trx' --results-directory front.Tests/TestResults
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Synkra.Front -> /src/front/bin/Debug/net10.0/Synkra.Front.dll
+  Synkra.Front.Tests -> /src/front.Tests/bin/Debug/net10.0/Synkra.Front.Tests.dll
+Test run for /src/front.Tests/bin/Debug/net10.0/Synkra.Front.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /src/front.Tests/TestResults/catalogo.trx
+
+Passed!  - Failed:     0, Passed:    18, Skipped:     0, Total:    18, Duration: 421 ms - Synkra.Front.Tests.dll (net10.0)
++ echo salida=0
+salida=0
++ python3 -I bitacoras/U09-A-evidencia/trx.py front.Tests/TestResults/catalogo.trx
+total=18 executed=18 passed=18 failed=0 notExecuted=0
+CampoDesconocidoEnPluginDaRespuestaInvalida
+CoreInexistenteDaElErrorDeLaApi
+CoresConListaVaciaDevuelveListaVacia
+CoresLeeNombreVersionesEImagen
+PluginsConEtiquetaEscapaClaveYValor
+PluginsConEtiquetaPideLaConsulta
+PluginsEscapaElCore
+PluginsLeeTodosLosCamposConEtiquetas
+CoreSinPluginsMuestraAviso
+EnlaceDeSubidaPorCore
+ErrorAlLeerCoresMuestraCodigoYMensaje
+ErrorEnLosPluginsDeUnCoreNoEscondeLosDemas
+EtiquetasSeOrdenanPorClave
+MuestraCadaCoreConSusVersionesEImagenes
+MuestraLosPluginsDeCadaCoreConSusEtiquetas
+NoFiltraNiComparaVersiones
+SinCoresMuestraAviso
+SoloLlamaALecturasDelCatalogo
++ python3 -I -c 'import json,sys; print([(p["nombre"], p["version"], p["coreCompatible"], sorted(p["etiquetas"])) for p in json.load(open(sys.argv[1]))])' front.Tests/Fixtures/catalogo-plugins-synkra-core.json
+[('kyc-co', '1.0.0', '2.x', ['cliente', 'pais']), ('kyc-pe', '1.3.0', '2.x', ['pais']), ('kyc-pe', '2.0.0', '3.x', ['pais'])]

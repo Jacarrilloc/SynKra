@@ -4,8 +4,8 @@ using System.Text.Json.Serialization;
 
 namespace Synkra.Front.Api;
 
-/// <summary>Cliente tipado de la API REST de SynKra. Solo lecturas; todo lo que devuelve sale tal cual de la API.</summary>
-public class ApiSynkra
+/// <summary>Cliente tipado de la API REST de SynKra; todo lo que devuelve sale tal cual de la API.</summary>
+public partial class ApiSynkra
 {
     private static readonly JsonSerializerOptions Opciones = new(JsonSerializerDefaults.Web)
     {
