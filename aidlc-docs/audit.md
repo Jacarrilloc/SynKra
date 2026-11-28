@@ -996,3 +996,7 @@ Se despacha el codificador de la ronda 2.
 ## 2026-11-28T02:06Z: fusión de #102 (rama del orquestador)
 
 **Acción del orquestador:** bajo la autorización de David de las 01:25:21Z, fusión de #102 (`orq/U05-U02-tareas` → `main`, solo tareas, candidatas, auditoría y CONTINUAR) en `eb33d68`. No toca código: el diff contra `ade68f6` fuera de `tareas/`, `loop/`, `CANDIDATAS.md` y `audit.md` está vacío, así que no se repite `./gradlew check`. U06-D sale de `eb33d68` para que `CANDIDATAS.md` esté en su árbol.
+
+## 2026-11-28T02:14Z: fusión de #103 y cierre de U06
+
+**Acción del orquestador:** bajo la autorización de David de las 01:25:21Z, fusión de #103 (U06-D, resumen; solo documentación) en `bd0826f`. El diff contra `eb33d68` solo toca `aidlc-docs/construction/U06-registro/code/`, `bitacoras/U06-D*` y `revisiones/U06-D/`, así que no se repite `./gradlew check` (el revisor lo corrió en la punta: 566 pruebas en verde). U06 queda terminada: se marcan U06-T01 a T08 en el plan y se actualiza la línea de Code Generation Parte 2 en `aidlc-state.md`.
