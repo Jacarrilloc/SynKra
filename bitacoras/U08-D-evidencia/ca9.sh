@@ -13,5 +13,10 @@ copia; sed -i 's/^version = "2.1.0"/version = "4.0.0"/' "$D/core/build.gradle.kt
 echo "################ jq-no-json: el cuerpo de un 200 no es JSON (en esperar_estado)"
 copia; sed -i '0,/^    jq_c .estado$/s//    echo "<html>no es json<\/html>" > "$CUERPO"\n    jq_c .estado/' "$D/scripts/e2e-api.sh"; diff <(git show HEAD:scripts/e2e-api.sh) "$D/scripts/e2e-api.sh"
 (cd "$D" && KUBECONFIG_SYNKRA="$KC" bash scripts/e2e-api.sh) 2>&1 | grep -v '^ok ' | tail -4; echo "salida=${PIPESTATUS[0]}"; rm -rf "$D"
+echo "== la mutacion dejo un despliegue confirmado: se espera a que cierre (el e2e real exige que no haya uno aplicandose)"
+for i in $(seq 1 40); do
+  n=$(curl -s --resolve synkra.local:443:127.0.0.1 --cacert .tls/tls.crt https://synkra.local/api/paises/co/despliegues | jq '[.[] | select(.estado=="aplicando")] | length')
+  [ "$n" = 0 ] && break; sleep 3
+done; echo "aplicando=$n"
 echo "################ restaurado"
 ./scripts/e2e-api.sh 2>&1 | tail -2; echo "restaurado=${PIPESTATUS[0]}"

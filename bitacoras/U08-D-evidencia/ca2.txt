@@ -1,5 +1,5 @@
-fecha: 2026-11-28T01:42:52-05:00
-sha: ec373b1 (arbol: 15 cambios sin confirmar)
+fecha: 2026-11-28T02:52:10-05:00
+sha: c436428 (arbol: 1 cambios sin confirmar)
 uname -m: x86_64
 docker arch: amd64
 JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
@@ -11,7 +11,7 @@ sintaxis=0
 prohibidos=1
 sin-kubeconfig=1
 arquitectura=1
-137:  jq -e 'has("codigo") and has("mensaje") and has("detalles") and (.codigo|type)=="string" and (.mensaje|type)=="string" and (.detalles|type)=="array"' \
+138:  jq -e 'has("codigo") and has("mensaje") and has("detalles") and (.codigo|type)=="string" and (.mensaje|type)=="string" and (.detalles|type)=="array"' \
 32:# El trap se instala antes de crear nada; las senales terminan el script (y disparan EXIT).
 33:trap limpiar EXIT
 34:trap 'exit 130' INT

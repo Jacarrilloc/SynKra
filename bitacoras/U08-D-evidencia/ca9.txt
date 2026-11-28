@@ -1,0 +1,28 @@
+fecha: 2026-11-28T03:01:22-05:00
+sha: c436428 (arbol: 5 cambios sin confirmar)
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U08-D-evidencia/ca9.sh
+################ version-core: la linea version de core/build.gradle.kts cambia (el caso del revisor)
+8c8
+< version = "2.1.0"
+---
+> versión = "2.1.0"
+FALLA preparacion: no se pudo leer la version de core/build.gradle.kts (grep, head o sed salió con 1)
+salida=1
+################ version-core-2x: la version ya no cae en 2.x
+FALLA preparacion: la versión del core en core/build.gradle.kts es '4.0.0' y no cae en 2.x
+salida=1
+################ jq-no-json: el cuerpo de un 200 no es JSON (en esperar_estado)
+211a212
+>     echo "<html>no es json</html>" > "$CUERPO"
+4xx 422 PAIS_NO_PERMITIDO POST /api/despliegues
+4xx 422 USUARIO_INVALIDO POST /api/despliegues
+4xx 409 PLAN_NO_PENDIENTE POST /api/despliegues/11/confirmacion
+FALLA CU2: jq .estado salió con 5: jq: parse error: Invalid numeric literal at line 1, column 9 
+salida=1
+################ restaurado
+4xx 422 USUARIO_INVALIDO POST /api/despliegues
+FALLA CU2: POST /api/despliegues/12/confirmacion dio 409 DESPLIEGUE_EN_CURSO (esperado 202): {"codigo":"DESPLIEGUE_EN_CURSO","mensaje":"Ya hay un despliegue en curso en el país","detalles":[]}
+restaurado=1
