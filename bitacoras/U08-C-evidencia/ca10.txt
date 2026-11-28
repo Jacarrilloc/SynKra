@@ -1,16 +1,16 @@
-fecha: 2026-11-28T01:14:10-05:00
-sha: 6ddb891 (padre del commit de este archivo)
+fecha: 2026-11-28T01:16:49-05:00
+sha: 8924d1b (padre del commit de este archivo)
 uname -m: x86_64
 docker arch: amd64
 JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
 $ bash bitacoras/U08-C-evidencia/ca10.sh
-6ddb891
+8924d1b
 0
  Makefile                                   |  29 +-
  bitacoras/U08-C-evidencia/ca1.sh           |  18 +
  bitacoras/U08-C-evidencia/ca1.txt          |  63 +++
  bitacoras/U08-C-evidencia/ca10.sh          |   9 +
- bitacoras/U08-C-evidencia/ca10.txt         |  56 +++
+ bitacoras/U08-C-evidencia/ca10.txt         |  58 +++
  bitacoras/U08-C-evidencia/ca2.sh           |  12 +
  bitacoras/U08-C-evidencia/ca2.txt          |  19 +
  bitacoras/U08-C-evidencia/ca3.sh           |  13 +
@@ -27,8 +27,8 @@ $ bash bitacoras/U08-C-evidencia/ca10.sh
  bitacoras/U08-C-evidencia/ca7.txt          |  47 ++
  bitacoras/U08-C-evidencia/ca8.sh           |  47 ++
  bitacoras/U08-C-evidencia/ca8.txt          | 160 +++++++
- bitacoras/U08-C-evidencia/ca9.sh           |  23 +
- bitacoras/U08-C-evidencia/ca9.txt          |  29 ++
+ bitacoras/U08-C-evidencia/ca9.sh           |  52 +++
+ bitacoras/U08-C-evidencia/ca9.txt          |  61 +++
  bitacoras/U08-C-evidencia/corre.sh         |  15 +
  bitacoras/U08-C-evidencia/imagetools.txt   |  30 ++
  bitacoras/U08-C-evidencia/rojo-commit.txt  |   9 +
@@ -36,7 +36,7 @@ $ bash bitacoras/U08-C-evidencia/ca10.sh
  bitacoras/U08-C-evidencia/rojo-digest.txt  |  21 +
  bitacoras/U08-C-evidencia/rojo.txt         |  30 ++
  bitacoras/U08-C-evidencia/verde-digest.txt |  21 +
- bitacoras/U08-C.md                         |  69 +++
+ bitacoras/U08-C.md                         |  76 ++++
  deploy/base/kustomization.yaml             |   1 +
  deploy/ingress-nginx/controlador-kind.yaml |  12 +
  deploy/ingress-nginx/deploy.yaml           | 679 +++++++++++++++++++++++++++++
@@ -45,13 +45,15 @@ $ bash bitacoras/U08-C-evidencia/ca10.sh
  deploy/overlays/kind/kustomization.yaml    |   2 +-
  revisiones/U08-C/ronda-1-respuesta.md      |   8 +
  revisiones/U08-C/ronda-1.md                |  71 +++
+ revisiones/U08-C/ronda-2-respuesta.md      |   5 +
+ revisiones/U08-C/ronda-2.md                |  72 +++
  scripts/desplegar.sh                       |  63 +++
  scripts/imagenes.sh                        |  52 ++-
  scripts/secreto-tls.sh                     |  45 ++
  scripts/verificar-backend.py               |  29 +-
  scripts/verificar-base.py                  |   6 +-
  scripts/verificar-limite.sh                |  40 ++
- 45 files changed, 2661 insertions(+), 17 deletions(-)
+ 47 files changed, 2808 insertions(+), 17 deletions(-)
 fuera=1
 0
 0
