@@ -1,0 +1,32 @@
+CA-5 r3 2026-11-27T22:41:25-05:00 arbol limpio, sin commits de codigo despues de 8cd0286
+$ git rev-parse --short HEAD
+a0560fb
+$ git diff --stat 1783515...HEAD
+ .../io/synkra/despliegue/CodigosDespliegue.java    |   2 +
+ .../io/synkra/despliegue/MotivosDespliegue.java    |   2 +
+ .../java/io/synkra/despliegue/PlanServicio.java    |  58 ++-
+ .../java/io/synkra/despliegue/RutasPlanes.java     |   4 +-
+ .../java/io/synkra/despliegue/RutasReversion.java  |  31 ++
+ .../java/io/synkra/despliegue/ReversionTest.java   | 451 +++++++++++++++++++++
+ bitacoras/U07-F-evidencia/ca1.txt                  |  22 +
+ bitacoras/U07-F-evidencia/ca2.txt                  |  15 +
+ bitacoras/U07-F-evidencia/ca3-rojo.txt             |  27 ++
+ bitacoras/U07-F-evidencia/ca3.txt                  | 232 +++++++++++
+ bitacoras/U07-F-evidencia/ca4.txt                  |  78 ++++
+ bitacoras/U07-F-evidencia/ca5.txt                  |  19 +
+ bitacoras/U07-F-evidencia/r2/ca1.txt               |  19 +
+ bitacoras/U07-F-evidencia/r2/ca2.txt               |  15 +
+ bitacoras/U07-F-evidencia/r2/ca3.txt               | 173 ++++++++
+ bitacoras/U07-F-evidencia/r2/ca4.txt               |  69 ++++
+ bitacoras/U07-F-evidencia/r2/ca5.txt               |  26 ++
+ bitacoras/U07-F-evidencia/r3/ca1.txt               |  18 +
+ bitacoras/U07-F-evidencia/r3/ca3.txt               | 244 +++++++++++
+ bitacoras/U07-F-evidencia/r3/ca4.txt               |  69 ++++
+ bitacoras/U07-F.md                                 |  69 ++++
+ revisiones/U07-F/ronda-1-respuesta.md              |   3 +
+ revisiones/U07-F/ronda-1.md                        |  63 +++
+ revisiones/U07-F/ronda-2-respuesta.md              |   1 +
+ revisiones/U07-F/ronda-2.md                        |  68 ++++
+ 25 files changed, 1770 insertions(+), 8 deletions(-)
+$ git diff --name-status 1783515...HEAD -- backend/src/test backend/src/main/resources backend/src/main/java/io/synkra/registro backend/src/main/java/io/synkra/plataforma backend/src/main/java/io/synkra/kubernetes backend/src/main/java/io/synkra/catalogo
+A	backend/src/test/java/io/synkra/despliegue/ReversionTest.java
