@@ -70,4 +70,7 @@ for t in tpl:
     else:
         sal.append(re.sub(r"@@TIEMPO (CU\d)@@", tiempo, t))
 open("GUIA.md", "w", encoding="utf-8").write("\n".join(sal))
+# Copia congelada de la corrida de la que salen los fragmentos de GUIA.md: guia.sh reescribe guia.txt en cada corrida
+# (ids, edades y marcas de tiempo cambian) y cifras.sh compara los fragmentos con esta copia.
+open(D + "guia-publicada.txt", "w", encoding="utf-8").write("\n".join(guia))
 print("bloques ejecutables:", n)

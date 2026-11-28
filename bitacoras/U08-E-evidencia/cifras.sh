@@ -2,7 +2,8 @@
 # U08-E, CA-4: cada cifra del resumen y cada fragmento de respuesta de la guia salen de un archivo real.
 #  1. «Cifras y su fuente» de summary.md: cada fila `| cifra | valor | `fuente` | `texto` |` se busca con grep -F en su fuente.
 #  2. Las citas «texto» (`fuente`) de «Desviaciones del diseño» y «Candidatas abiertas» se buscan con grep -F en su fuente.
-#  3. Cada linea de cada bloque ```text de GUIA.md tiene que estar, entera, en guia.txt, en la evidencia o en borrar.txt.
+#  3. Cada linea de cada bloque ```text de GUIA.md tiene que estar, entera, en guia-publicada.txt (copia congelada de la corrida
+#     de guia.sh de la que salen los fragmentos), en la evidencia de la corrida fresca o en borrar.txt.
 # Una fuente que empieza por orq: se lee del arbol del orquestador (solo lectura): tareas/ y CANDIDATAS.md de la rama orq.
 # Salida: una linea `ok` o `FALTA` por comprobacion. Sale con 1 si hay alguna FALTA.
 # Uso (desde la raiz del worktree): bash bitacoras/U08-E-evidencia/cifras.sh
@@ -80,7 +81,7 @@ for nombre in ("Desviaciones del diseño", "Candidatas abiertas", "Tareas y rond
 print("citas: %d" % citas)
 
 # 3. los fragmentos de la guia
-fuentes = [os.path.join(bit, "guia.txt"), os.path.join(bit, "borrar.txt")]
+fuentes = [os.path.join(bit, "guia-publicada.txt"), os.path.join(bit, "borrar.txt")]
 fuentes += [os.path.join(ev, f) for f in ("install.txt", "limite.txt", "e2e.txt")]
 conocidas = set()
 for f in fuentes:

@@ -6,7 +6,7 @@ Cómo leerla:
 
 - Cada paso trae el comando y, debajo, lo que debes ver. Las salidas son copias literales de una corrida real hecha en una máquina x86_64 con Linux. Los números que cambian de una corrida a otra (ids de planes, tiempos, hashes de pods) en tu pantalla serán otros.
 - Los comandos de cada sección dependen de los anteriores (usan variables de la terminal): ábrela una vez y ve en orden, sin cerrarla.
-- Todo se corre desde la raíz del repositorio.
+- Todo se corre desde la raíz del repositorio. En las salidas, la carpeta personal de la máquina de la corrida aparece escrita como `$HOME` (y el repositorio estaba en `$HOME/Projects/Master/wt-m6r-U08-E`); en tu pantalla verás tus propias rutas.
 - Lo único que se instala es un clúster `kind` local llamado `synkra`. SynKra nunca toca tu `~/.kube/config` ni otros clústeres: usa su propio kubeconfig en `.kube/kind-synkra.yaml`.
 - El front (Blazor) todavía no se despliega en `kind`: su manifiesto es la tarea U09-D, pendiente. Hoy se entra por la API REST. El script `scripts/dotnet-docker.sh` solo corre `dotnet` dentro de la imagen oficial del SDK (lo usan las pruebas del front, tarea U09-A); esta guía no documenta cómo arrancar el front porque ninguna tarea lo documenta todavía.
 
