@@ -9,6 +9,9 @@ final class CodigosDespliegue {
     static final String COMBINACION_RECHAZADA = "COMBINACION_RECHAZADA";
     static final String KUBERNETES_NO_DISPONIBLE = "KUBERNETES_NO_DISPONIBLE";
     static final String PAIS_INCONSISTENTE = "PAIS_INCONSISTENTE";
+    static final String PLAN_VENCIDO = "PLAN_VENCIDO";
+    static final String PLAN_NO_PENDIENTE = "PLAN_NO_PENDIENTE";
+    static final String CONFIRMACION_NO_DISPONIBLE = "CONFIRMACION_NO_DISPONIBLE";
 
     private CodigosDespliegue() {
     }

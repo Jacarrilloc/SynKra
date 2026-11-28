@@ -1,0 +1,50 @@
+2026-11-27T20:38:35-05:00
+sha 7246352
+$ ./gradlew :backend:test --rerun :backend:check
+BUILD SUCCESSFUL in 35s
+backend/build/test-results/test/TEST-io.synkra.catalogo.ArtefactosPorHashTest.xml:tests="10" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.CatalogoRepositoriosTest.xml:tests="19" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.CatalogoVerificadorTest.xml:tests="14" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.CoreRegistradoTest.xml:tests="4" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.InterfazCatalogoTest.xml:tests="6" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.ListarPluginsTest.xml:tests="14" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.RecepcionArtefactoTest.xml:tests="67" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.RegistrarCoreTest.xml:tests="19" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.RegistroPermitidoCaracterizacionTest.xml:tests="2" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.RegistroPermitidoTest.xml:tests="7" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.RutasCoresTest.xml:tests="15" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.RutasPluginsTest.xml:tests="28" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.RutasSegurasPropiedades.xml:tests="4" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.SubirPluginTest.xml:tests="52" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.CambiosPropiedades.xml:tests="4" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.CrearPlanTest.xml:tests="9" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.PaisPermitidoTest.xml:tests="6" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.PlanPendienteTest.xml:tests="9" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.PlanRepositorioTest.xml:tests="12" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.VencimientoPlanesTest.xml:tests="2" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.VerificacionVivoTest.xml:tests="15" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.FronterasModulosTest.xml:tests="9" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.AplicarTest.xml:tests="10" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.ClienteKubernetesTest.xml:tests="10" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.ConfiguracionKubernetesTest.xml:tests="2" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.ConstruirObjetosPaisTest.xml:tests="32" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.EstadoYContextoTest.xml:tests="20" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.GuardiaNamespaceTest.xml:tests="22" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.ImagenInitCaracterizacionTest.xml:tests="2" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.ImagenInitConfiguradaTest.xml:tests="3" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.LeerPaisTest.xml:tests="24" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.YamlObjetosPaisTest.xml:tests="2" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.plataforma.BaseDeDatosTest.xml:tests="4" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.plataforma.DialectoSqliteTest.xml:tests="6" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.plataforma.ErrorApiTest.xml:tests="13" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.plataforma.RelojTest.xml:tests="1" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.plataforma.RepositorioSqliteTest.xml:tests="4" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.plataforma.RutaDatosPorDefectoTest.xml:tests="1" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.plataforma.SaludTest.xml:tests="3" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.plataforma.ValidacionErroresTest.xml:tests="8" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.SynkraAppTest.xml:tests="3" skipped="0" failures="0" errors="0"
+registro=1
+aplica=1
+k8s=1
+requiresNew=1
+programado=1
