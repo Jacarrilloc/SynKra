@@ -17,7 +17,7 @@ U01 a U07 **terminadas y fusionadas en `main`** (`8306ee7`, 894 pruebas en verde
 - Retomó desde el punto de David (`6994ff1`/`ab090d0`). U08 corre en la **máquina de Julian**: tiene `kind` v0.33 y `kubectl` v1.37 (aarch64). Julian subió `fs.inotify.max_user_instances` a 512 y `max_user_watches` a 524288 (05:09 UTC; vuelve al valor anterior si reinicia: entonces repetir `sudo sysctl fs.inotify.max_user_instances=512 fs.inotify.max_user_watches=524288`).
 - **Colección de Postman** del backend en el **PR #109** (`m6r/postman`, abierto): colección v2.1, entorno local y de `kind`, README; 112 tests en verde contra el backend real sin clúster.
 - Tareas escritas (agrupadas, en `tareas/`): U08-A, U08-B, U09-A. En redacción: U08-C y U08-D.
-- `CANDIDATAS.md` llega hasta **C-135**. La siguiente libre es **C-136**.
+- `CANDIDATAS.md` llega hasta **C-136**. La siguiente libre es **C-137**.
 
 ## Plan para acelerar (aprobado por Julian el 2026-11-28 a las 00:19 UTC, sigue vigente)
 
