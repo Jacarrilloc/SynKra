@@ -1,3 +1,5 @@
+fecha: 2026-11-27T19:05:26-05:00  sha: 587e7a4
+$ for f in backend/build/test-results/test/TEST-*kubernetes*.xml; do echo "$(basename $f .xml | sed 's/TEST-io.synkra.//') $(grep -o -m1 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' $f)"; done
 kubernetes.AplicarTest tests="10" skipped="0" failures="0" errors="0"
 kubernetes.ClienteKubernetesTest tests="10" skipped="0" failures="0" errors="0"
 kubernetes.ConfiguracionKubernetesTest tests="2" skipped="0" failures="0" errors="0"

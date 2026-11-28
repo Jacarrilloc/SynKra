@@ -1,7 +1,7 @@
 # U05 Pod del país: resumen de la unidad
 
 Unidad: U05 (`backend/`, paquete `io.synkra.kubernetes`, y `init-descarga/`). Historia dueña: H-15; contribuye a H-12, H-13, H-14, H-16, H-19 y H-28 (plan de la unidad y `tareas/U05-T10-resumen-unidad.md`).
-Este resumen lo escribe U05-T10 sin cambiar código, pruebas, build ni scripts. Las salidas de abajo se produjeron en esta tarea, el 2026-11-27, con `--rerun`, sobre la rama `m6r/U05-T10` en el sha `03943ec` (punta de U05-T09, antes del commit de este resumen). Los archivos originales están en `evidencia/` (junto a este resumen). Nada se corrió contra un clúster: AUTONOMIA-01.
+Este resumen lo escribe U05-T10 sin cambiar código, pruebas, build ni scripts. Las salidas de abajo se produjeron en esta tarea, el 2026-11-27, con `--rerun`, sobre la rama `m6r/U05-T10`. Cada archivo de `evidencia/` (junto a este resumen) trae su fecha, el sha de la rama (`587e7a4`, la punta al momento de la corrida, sin cambios de código desde `03943ec`, la punta de U05-T09), el comando completo y la salida completa. Nada se corrió contra un clúster: AUTONOMIA-01.
 
 ## Qué expone
 
@@ -28,7 +28,7 @@ BUILD SUCCESSFUL in 15s
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
 ```
 
-(2026-11-27T19:00:49-05:00, sha `03943ec`; salida completa en `evidencia/gradle-kubernetes.txt`.)
+(Se pega la cola; la salida completa, con fecha, sha `587e7a4` y comando, está en `evidencia/gradle-kubernetes.txt`.)
 
 Conteo por clase, de los XML de `backend/build/test-results/test/` (`evidencia/conteo-por-clase.txt`):
 
@@ -82,7 +82,7 @@ todos los casos ok
 salida=0
 ```
 
-(`evidencia/init-descarga-test.txt`, con fecha y sha.)
+(`evidencia/init-descarga-test.txt`, con fecha, sha `587e7a4` y comando.)
 
 ### Imagen del init
 
@@ -92,9 +92,11 @@ $ docker inspect -f '{{.Config.User}} {{json .Config.Entrypoint}}' synkra-init-d
 10001:10001 ["/usr/local/bin/descargar.sh"]
 ```
 
-Usuario numérico no root (10001:10001) y entrypoint en la ruta que invoca el Deployment (C-72). Salida completa en `evidencia/imagen-init.txt`.
+Usuario numérico no root (10001:10001) y entrypoint en la ruta que invoca el Deployment (C-72). El `docker build` completo y el `inspect`, con fecha, sha y comandos, están en `evidencia/imagen-init.txt`.
 
 ## Trazabilidad
+
+La tabla amplía la del plan (`U05-pod-pais-code-generation-plan.md`): el plan asigna H-15 a T03, T07 y T10 y H-13 solo a T02. Aquí se añade T08 a H-15 (el script y la imagen entregan juntos el init container, historia dueña) y T09 a H-13 (la frontera del módulo impide llegar a la API de Kubernetes sin pasar por la guardia, y su tarea declara H-13). Las demás filas siguen al plan.
 
 | Historia | Tareas que la cubren |
 |---|---|
@@ -116,18 +118,18 @@ Usuario numérico no root (10001:10001) y entrypoint en la ruta que invoca el De
 | U05-T04 | `aplicar` con server-side apply | #78 | 2 |
 | U05-T05 | `estado` y `contextoFallo` | #81 | 3 |
 | U05-T06 | `leerPais` y formato de `plugins-activos.yaml` (C-81) | #83 | 3 |
-| U05-T07 | `descargar.sh` y `test.sh` | #85 (abierto, apilado) | 2 |
-| U05-T08 | Imagen del init container | #87 (abierto, apilado) | 1 |
-| U05-T09 | Fronteras del módulo; cliente deja de ser bean; `ObjetosPais` sin Fabric8 | #90 (abierto, apilado) | 2 |
+| U05-T07 | `descargar.sh` y `test.sh` | #85 (abierto, base `main`) | 2 |
+| U05-T08 | Imagen del init container | #87 (abierto, apilado sobre T07) | 1 |
+| U05-T09 | Fronteras del módulo; cliente deja de ser bean; `ObjetosPais` sin Fabric8 | #90 (abierto, apilado sobre T08) | 2 |
 | U05-T10 | Este resumen | este PR (U05-T10) | (pendiente) |
 
-Las rondas son los informes `revisiones/U05-T<NN>/ronda-N.md` (sin contar `ronda-N-respuesta.md`), contados con `ls`; todas terminaron en VERDE. Los PR salen de `gh pr list`;. Los PR #68, #73, #74 y #77 son de la rama del orquestador (`orq/U05-U02-tareas`), no de tareas.
+Las rondas son los informes `revisiones/U05-T<NN>/ronda-N.md` (sin contar `ronda-N-respuesta.md`), contados con `ls`; todas terminaron en VERDE. Los PR salen de `gh pr list`. Los PR #68, #73, #74 y #77 son de la rama del orquestador (`orq/U05-U02-tareas`), no de tareas.
 
 ## Candidatas abiertas que nombran U05, U07 o U08
 
-Tomadas de `CANDIDATAS.md` (hasta C-102). Ninguna está marcada como resuelta allí; donde T09 tocó una, se anota.
+Tomadas de `CANDIDATAS.md` (hasta C-103). C-71 solo nombra U05 en «Salió de» y se atiende en los despachos, por eso no se lista. Ninguna está marcada como resuelta allí; donde T09 tocó una, se anota.
 
-- **Para U07 (despliegue):** C-35 (longitud de `Descriptor.NOMBRE` frente a los 63 de Kubernetes), C-40 (coerción numérica de `ConfiguracionJson`), C-46, C-49, C-51 y C-52 (extracción del init container: enlaces, `a/`, autorreferencias, Unicode; el script de T07 escribe archivos regulares y rechaza nombres con `/`), C-62 (N+1 de `Catalogo`), C-76 (reintentos implícitos del cliente Fabric8 frente a los de U07), C-82 y C-83 (`estado` da `LISTO` antes de mirar los pods nuevos; `contextoFallo` toma un solo pod y pierde eventos del ReplicaSet y el Deployment), C-87 (colisión de nombres de JAR en `construir`), C-90 (`leerPais` más laxo que el core).
-- **Para U08:** C-17 (UID arbitrario y `fsGroup`), C-75 (server-side apply sin probar contra un servidor real: `kind-synkra`, nunca desde el loop), C-95 (`shellcheck` en la CI), C-97 (`emptyDir` de `/plugins` escribible para el UID 10001), C-98 y C-101 (digest y versiones fijas en las imágenes).
+- **Para U07 (despliegue):** C-30 (el plan de U07 nombra a una persona; se corrige al escribir las tareas de U07), C-35 (longitud de `Descriptor.NOMBRE` frente a los 63 de Kubernetes), C-40 (coerción numérica de `ConfiguracionJson`), C-46, C-49, C-51 y C-52 (extracción del init container: enlaces, `a/`, autorreferencias, Unicode; el script de T07 escribe archivos regulares y rechaza nombres con `/`), C-62 (N+1 de `Catalogo`), C-76 (reintentos implícitos del cliente Fabric8 frente a los de U07), C-82 y C-83 (`estado` da `LISTO` antes de mirar los pods nuevos; `contextoFallo` toma un solo pod y pierde eventos del ReplicaSet y el Deployment), C-87 (colisión de nombres de JAR en `construir`), C-90 (`leerPais` más laxo que el core).
+- **Para U08:** C-17 (UID arbitrario y `fsGroup`), C-75 (server-side apply sin probar contra un servidor real: `kind-synkra`, nunca desde el loop), C-95 (`shellcheck` en la CI), C-97 (`emptyDir` de `/plugins` escribible para el UID 10001), C-98 y C-101 (digest y versiones fijas en las imágenes), C-103 (UID/GID 10001, puerto 8080 y rutas `/plugins` y `/config` repetidos como literales en las tres imágenes, sin prueba que los ate; va con C-98 y C-101).
 - **Pulido de U05 (sin tarea asignada hoy):** C-93 (pulido de `test.sh`), C-94 (`/plugins` de solo lectura en el core), C-102 (excepción concreta en `alCerrarElContextoElClienteQuedaCerrado`) y lo que dejó abierto T09 de C-73 (la prueba del defecto de la imagen no carga `application.properties`; unificar las reglas de imagen de `RegistroPermitido` y `exigirImagenInit`). C-68, C-70 y C-79 las recogió U05-T09 según su bitácora; C-64 lo cubre el caso `hash-alterado` de T07.
 - **Compartidas con U02:** C-88 y C-77 (lector YAML seguro compartido en `verificador/`) y C-78 (versión de `snakeyaml-engine` repetida en tres `build.gradle.kts`).
