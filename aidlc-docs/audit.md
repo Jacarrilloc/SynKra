@@ -988,3 +988,7 @@ Se despacha el codificador de la ronda 2.
 **Input del usuario:** "Sigamos tu recoemndación"
 
 **Input del usuario (01:29:47Z), sobre U08:** "Si cuando termines vamos con eso directamente mientras sigas en los lineameientos del poryecto  y del alcance"
+
+## 2026-11-28T02:2xZ: tanda de fusión #100 y #101
+
+**Acción del orquestador:** bajo la autorización de David de las 01:25:21Z ("lo que sea más practico"), fusión con merge commit y en orden: #100 U07-C (`208d5f9`) y #101 U06-C (`ade68f6`). Los dos estaban `MERGEABLE`/`CLEAN`. Con `main` en `ade68f6`, `./gradlew test --rerun check` pasó (`salida=0`; 837 pruebas, 0 saltos, 0 fallos, 0 errores). `ade68f6` es la unión de U07-C y U06-C que pide U07-D.
