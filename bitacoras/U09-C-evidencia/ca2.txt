@@ -1,0 +1,20 @@
+fecha=2026-11-28T07:21:59Z
+sha-codigo=ee83866 (HEAD=ee83866)
+uname -m=x86_64
+RepoDigests=mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
+
+$ docker image inspect --format ... mcr.microsoft.com/dotnet/sdk:10.0.404
+mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
+
+$ scripts/dotnet-docker.sh build front.Tests --no-incremental
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+$ git diff --name-only $(git merge-base HEAD main) HEAD -- '*.csproj' | wc -l
+0
+
+$ grep -rlE 'Http(Method\.)?(Post|Put|Delete|Patch)|PostAsync|PutAsync|DeleteAsync|PatchAsync|X-Synkra-Usuario|MultipartFormDataContent|HttpRequestMessage|HttpClient' front/ --include='*.cs' --include='*.razor' | sort
+front/Api/ApiSynkra.cs
+front/Api/ApiSynkra.Escrituras.cs
+front/Program.cs
