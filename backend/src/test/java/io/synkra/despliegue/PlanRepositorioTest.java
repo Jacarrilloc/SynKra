@@ -94,8 +94,8 @@ class PlanRepositorioTest {
 
     @Test
     void aceptaLosEstadosConfirmadoYVencido() {
-        sql("ae", "despliegue", null, "confirmado", 1000, 2000, JSON);
-        sql("af", "despliegue", null, "vencido", 1000, 2000, JSON);
+        sql("ae", "despliegue", null, "confirmado", 1000, 1_801_000, JSON);
+        sql("af", "despliegue", null, "vencido", 1000, 1_801_000, JSON);
         assertThat(planes.findByPaisAndEstado("ae", Plan.CONFIRMADO)).hasSize(1);
         assertThat(planes.findByPaisAndEstado("af", Plan.VENCIDO)).hasSize(1);
     }
