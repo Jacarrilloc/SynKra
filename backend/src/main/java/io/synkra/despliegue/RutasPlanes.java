@@ -23,9 +23,10 @@ class RutasPlanes {
     record PlanDto(Long id, String pais, String tipo, String estado, String core, String versionCore, String creadoPor,
             Instant creadoEn, Instant venceEn, Resumen resumen, Cambios cambios) {
 
+        /** Esta tarea solo inserta planes pendientes (ningún cambio de estado): {@code estado} es {@link Plan#PENDIENTE}. */
         static PlanDto de(PlanPreparado p) {
             var plan = p.plan();
-            return new PlanDto(plan.id(), plan.pais(), plan.tipo(), plan.estado(), plan.core(), plan.versionCore(),
+            return new PlanDto(plan.id(), plan.pais(), plan.tipo(), Plan.PENDIENTE, plan.core(), plan.versionCore(),
                     plan.creadoPor(), Instant.ofEpochMilli(plan.creadoEn()), Instant.ofEpochMilli(plan.venceEn()),
                     p.resumen(), p.cambios());
         }
