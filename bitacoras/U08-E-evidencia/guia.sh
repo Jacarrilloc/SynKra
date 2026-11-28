@@ -3,7 +3,7 @@
 # (las variables pasan de un bloque al siguiente, igual que en la terminal de quien sigue la guia).
 # Escribe bitacoras/U08-E-evidencia/guia.txt. Antes de correrlo, hace falta JAVA_HOME en Java 21. El primer bloque borra
 # kind-synkra y el segundo lo instala de nuevo: la guia corre sobre una instalacion limpia.
-# Uso (desde la raiz del worktree): JAVA_HOME=<java 21> bash bitacoras/U08-E-evidencia/guia.sh
+# Uso (desde la raiz del worktree): JAVA_HOME=<java 21> bash bitacoras/U08-E-evidencia/guia.sh [guia; por defecto GUIA.md]
 set -u
 RAIZ="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$RAIZ"
@@ -12,7 +12,7 @@ OUT="$DIR/guia.txt"
 BLOQUES="$(mktemp -d)"
 trap 'rm -rf "$BLOQUES"' EXIT
 
-python3 -I - GUIA.md "$BLOQUES" <<'PY'
+python3 -I - "${1:-GUIA.md}" "$BLOQUES" <<'PY'
 import re, sys
 texto = open(sys.argv[1], encoding="utf-8").read().split("\n")
 n = 0
@@ -56,7 +56,10 @@ malos=0
     cat "$f" | sed 's/^/$ /'
     echo "--- salida"
     rc=0
-    . "$f" || rc=$?
+    . "$f" >"$BLOQUES/salida" 2>&1 || rc=$?
+    cat "$BLOQUES/salida"
+    # Si la salida no termina en salto de linea (curl sin -w), se añade uno para que la marca de fin quede en su linea.
+    [ ! -s "$BLOQUES/salida" ] || [ "$(tail -c1 "$BLOQUES/salida" | od -An -c | tr -d ' ')" = '\n' ] || echo
     echo "--- fin bloque $total salida=$rc"
     [ "$rc" -eq 0 ] || { echo "FALLA bloque $total salio con $rc"; malos=$((malos + 1)); }
   done
