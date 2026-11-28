@@ -16,7 +16,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 /** Implementación sobre Fabric8; {@code cliente} es nulo si el pod no tiene cuenta de servicio. */
-class AdaptadorFabric8 implements AdaptadorKubernetes {
+class AdaptadorFabric8 implements AdaptadorKubernetes, AutoCloseable {
 
     private final KubernetesClient cliente;
 
@@ -32,6 +32,19 @@ class AdaptadorFabric8 implements AdaptadorKubernetes {
         this.imagenInit = ConstructorObjetosPais.exigirImagenInit(imagenInit);
     }
 
+    /** Costura de prueba: el cliente (nulo sin cuenta de servicio); el código de producción no debe usarla. */
+    KubernetesClient cliente() {
+        return cliente;
+    }
+
+    /** Cierra el cliente al cerrarse el contexto: el adaptador es su único dueño. */
+    @Override
+    public void close() {
+        if (cliente != null) {
+            cliente.close();
+        }
+    }
+
     @Override
     public boolean disponible() {
         return cliente != null;
@@ -44,19 +57,20 @@ class AdaptadorFabric8 implements AdaptadorKubernetes {
     }
 
     @Override
-    public ObjetosPais construir(PlanPais plan) {
+    public ObjetosPaisFabric8 construir(PlanPais plan) {
         return ConstructorObjetosPais.construir(plan, namespaceDe(plan.pais()), imagenInit);
     }
 
     @Override
     public void aplicar(ObjetosPais objetos) {
         Objects.requireNonNull(objetos, "objetos");
-        String ns = namespaceComun(objetos);
+        ObjetosPaisFabric8 f = ObjetosPaisFabric8.de(objetos);
+        String ns = GuardiaNamespace.exigir(f.namespaceComun());
         if (cliente == null) {
             throw new IllegalStateException("No hay cliente de Kubernetes: el pod no tiene cuenta de servicio");
         }
         // ConfigMap primero, luego Service, luego Deployment; el que falla corta, los anteriores se quedan.
-        for (HasMetadata objeto : List.of(objetos.configMap(), objetos.service(), objetos.deployment())) {
+        for (HasMetadata objeto : List.of(f.configMap(), f.service(), f.deployment())) {
             try {
                 cliente.resource(objeto).inNamespace(ns).fieldManager(ConstructorObjetosPais.GESTOR).forceConflicts().serverSideApply();
             } catch (KubernetesClientException e) {
@@ -88,16 +102,6 @@ class AdaptadorFabric8 implements AdaptadorKubernetes {
             throw new ClienteNoDisponibleException();
         }
         return new LectorPais(cliente);
-    }
-
-    /** El namespace único de los tres objetos, ya pasado por la guardia; sin ninguna petición. */
-    private static String namespaceComun(ObjetosPais objetos) {
-        String ns = objetos.configMap().getMetadata().getNamespace();
-        if (!Objects.equals(ns, objetos.service().getMetadata().getNamespace())
-                || !Objects.equals(ns, objetos.deployment().getMetadata().getNamespace())) {
-            throw new IllegalArgumentException("Los tres objetos deben estar en el mismo namespace");
-        }
-        return GuardiaNamespace.exigir(ns);
     }
 
     /** Namespace del país, pasando por la guardia antes de armar nada. */
