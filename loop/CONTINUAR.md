@@ -17,7 +17,7 @@ U01, U02, U03, U04 y U05 están **terminadas y fusionadas en `main`** (`97f9f80`
 - **Fusión**: Julian pidió (00:25 UTC) que el orquestador fusionara. Se fusionaron en orden, con merge commit y cambiando antes la base a `main`: U05 (#85, #87, #90, #92) y U02 (#84, #86, #88, #89, #91, #93, #94). Está en `aidlc-docs/audit.md`.
 - **Comprobación**: `./gradlew test --rerun check` sobre `main` `97f9f80` → `salida=0`, 710 pruebas, 0 saltos, 0 fallos.
 - **Cierre de U05 y U02**: planes marcados, `aidlc-state.md` y auditoría, en la rama `orq/U05-U02-tareas`. Va en el **PR #95** (rama del loop → `main`), **abierto**. El control de permisos de la sesión de Julian bloqueó la fusión porque no era uno de los PRs que él nombró: lo fusiona un humano.
-- `CANDIDATAS.md` llega hasta **C-106**. La siguiente libre es **C-107**.
+- `CANDIDATAS.md` llega hasta **C-107**. La siguiente libre es **C-108**.
 
 ## Plan para acelerar (aprobado por Julian el 2026-11-28 a las 00:19 UTC)
 
@@ -58,7 +58,7 @@ El #6 es antiguo y no se toca.
 
 | Tarea | Worktree / rama | Desde | Estado | Qué hacer al retomar |
 |---|---|---|---|---|
-| U06-A registro base | `../wt-m6r-U06-A`, `m6r/U06-A` | `97f9f80` | Codificador ronda 1 terminó (`839e25a`, bitácora completa). **Revisor ronda 1 despachado** | Repetir el revisor ronda 1 (base `97f9f80`) si no hay `revisiones/U06-A/ronda-1.md` |
+| U06-A registro base | `../wt-m6r-U06-A`, `m6r/U06-A` | `97f9f80` | Revisor ronda 1: **NO-VERDE** (F-01 ROJO: id9/id10 solo afirman `RuntimeException`; F-02 a F-05 AMARILLO), informe en `cb20742`. **Codificador ronda 2 despachado** | Mirar `origin/m6r/U06-A`: sin `revisiones/U06-A/ronda-1-respuesta.md`, redespachar el codificador ronda 2; con ella, despachar el revisor ronda 2 (base `97f9f80`) |
 | U07-A planes y país | `m6r/U07-A` | `97f9f80` | **VERDE ronda 1** (`8182b9d`). PR #96 abierto | Lo fusiona un humano |
 | U07-B crear plan | `../wt-m6r-U07-B`, `m6r/U07-B` | `8182b9d` | **Codificador ronda 1 despachado** (tarea con hash `b4a557b`) | Mirar `origin/m6r/U07-B`: sin commits, redespachar; con bitácora completa, despachar el revisor ronda 1 (base `8182b9d`) |
 | U06-B historial y reinicio | (sin rama) | punta VERDE de U06-A | Escrita (hash `c729f5f`), espera a U06-A | Despachar cuando U06-A salga VERDE |
