@@ -349,7 +349,6 @@ class ReversionTest {
         assertThat(motivos).hasSize(1);
         esperaError(r, HttpStatus.UNPROCESSABLE_ENTITY, "COMBINACION_RECHAZADA", "La combinación no es compatible",
                 detalle("plugins.kyc-pe", (String) motivos.get(0).get("mensaje")));
-        SIM.nuevasPeticiones();
         sinFilasNiPeticiones("cl", 0);
 
         var vq = http().verificar("synkra-core", "2.1.0", "kyc-qq:1.0.0");
@@ -359,7 +358,6 @@ class ReversionTest {
         assertThat(motivosQq).hasSize(1);
         esperaError(revertir(977, "marta"), HttpStatus.UNPROCESSABLE_ENTITY, "COMBINACION_RECHAZADA",
                 "La combinación no es compatible", detalle("plugins.kyc-qq", (String) motivosQq.get(0).get("mensaje")));
-        SIM.nuevasPeticiones();
         sinFilasNiPeticiones("cl", 0);
     }
 
