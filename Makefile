@@ -5,7 +5,7 @@ export KUBECONFIG_SYNKRA
 export KUBECONFIG := $(KUBECONFIG_SYNKRA)
 COUNTRY ?= co
 
-.PHONY: help setup doctor guardia cluster registro aplicar-base install status cluster-delete
+.PHONY: help setup doctor guardia cluster registro aplicar-base ingress tls imagenes desplegar verificar-limite install status cluster-delete
 
 help: ## Lista los comandos
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN{FS=":.*## "}{printf "  %-16s %s\n", $$1, $$2}'
@@ -33,14 +33,35 @@ cluster: ## Crea (o reexporta) el clúster kind-synkra
 registro: guardia ## Levanta el registro local en 127.0.0.1:5001
 	scripts/registro-local.sh
 
-aplicar-base: guardia ## Aplica namespaces y RBAC (deploy/base)
-	kubectl --kubeconfig "$(KUBECONFIG_SYNKRA)" apply -k deploy/base
+aplicar-base: guardia ## Aplica namespaces y RBAC (deploy/base/namespaces.yaml y rbac.yaml)
+	kubectl --kubeconfig "$(KUBECONFIG_SYNKRA)" apply -f deploy/base/namespaces.yaml -f deploy/base/rbac.yaml
 
-install: ## Clúster, registro y base
+ingress: guardia ## Instala Ingress NGINX (deploy/ingress-nginx) y espera al controlador
+	kubectl --kubeconfig "$(KUBECONFIG_SYNKRA)" apply -k deploy/ingress-nginx
+	kubectl --kubeconfig "$(KUBECONFIG_SYNKRA)" rollout status deployment/ingress-nginx-controller -n ingress-nginx --timeout=300s
+
+tls: guardia ## Crea el secreto TLS synkra/synkra-local-tls desde .tls/
+	scripts/secreto-tls.sh
+
+imagenes: ## Construye, verifica y sube las imagenes a 127.0.0.1:5001
+	scripts/imagenes.sh --subir
+
+desplegar: guardia ## Despliega el backend en kind-synkra y comprueba el digest
+	scripts/desplegar.sh
+
+verificar-limite: guardia ## Pregunta que puede y que no puede la cuenta deployer
+	scripts/verificar-limite.sh
+
+install: ## Clúster, registro, base, Ingress, TLS, imágenes, backend y límite
 	@scripts/guardia-contexto.sh --antes-de-crear
 	$(MAKE) cluster
 	$(MAKE) registro
 	$(MAKE) aplicar-base
+	$(MAKE) ingress
+	$(MAKE) tls
+	$(MAKE) imagenes
+	$(MAKE) desplegar
+	$(MAKE) verificar-limite
 
 status: guardia ## Muestra nodos y pods del clúster
 	kubectl --kubeconfig "$(KUBECONFIG_SYNKRA)" get nodes -o wide
