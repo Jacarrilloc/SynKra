@@ -1,0 +1,61 @@
+fecha: 2026-11-28T01:16:48-05:00
+sha: c5779f1 (arbol: 1 cambios sin confirmar)
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U08-C-evidencia/ca9.sh
+sintaxis=0
+scripts/secreto-tls.sh:4:set -euo pipefail
+scripts/desplegar.sh:4:set -euo pipefail
+scripts/verificar-limite.sh:4:set -euo pipefail
+12:trap limpiar EXIT                  # registrado antes de crear el temporal
+13:TMP="$(mktemp -d)"
+sin-kubeconfig=1
+registro-caido=1
+1
+0
+FALLA subir: el registro 127.0.0.1:1 no responde: corre make registro
+FALLA tls: .tls tiene solo tls.crt; no se regenera ni se borra
+media-pareja=1
+tls.crt
+secreto-intacto
+== k
+< k() { kubectl --kubeconfig "$KC" "$@"; }
+> k() { kubectl "$@"; }
+scripts/desplegar.sh:10: k() { kubectl "$@"; }
+sin-kubeconfig-mutado-k=0
+== patron-revisor-echo
+< kubectl --kubeconfig "$KC" apply -f "$TMP/secreto.yaml" || rc=$?
+> kubectl apply -f "$TMP/secreto.yaml" || { echo "FALLA tls: apply"; exit 1; }
+scripts/secreto-tls.sh:32: kubectl apply -f "$TMP/secreto.yaml" || { echo "FALLA tls: apply"; exit 1; }
+sin-kubeconfig-mutado-patron-revisor-echo=0
+== v1-canI
+<   respuesta="$(kubectl --kubeconfig "$KC" auth can-i $pregunta --as=system:serviceaccount:synkra:deployer 2>/dev/null)" || rc=$?
+>   respuesta="$(kubectl auth can-i $pregunta --as=system:serviceaccount:synkra:deployer 2>/dev/null)" || rc=$?
+scripts/verificar-limite.sh:23: respuesta="$(kubectl auth can-i $pregunta --as=system:serviceaccount:synkra:deployer 2>/dev/null)" || rc=$?
+sin-kubeconfig-mutado-v1-canI=0
+== v2-tipo
+< TIPO="$(kubectl --kubeconfig "$KC" -n synkra get secret synkra-local-tls -o jsonpath='{.type}')" || rc=$?
+> TIPO="$(kubectl -n synkra get secret synkra-local-tls -o jsonpath='{.type}')" || rc=$?
+scripts/secreto-tls.sh:37: TIPO="$(kubectl -n synkra get secret synkra-local-tls -o jsonpath='{.type}')" || rc=$?
+sin-kubeconfig-mutado-v2-tipo=0
+== v3-encluster
+< EN_CLUSTER="$(kubectl --kubeconfig "$KC" -n synkra get secret synkra-local-tls -o jsonpath='{.data.tls\.crt}' | base64 -d | sha256sum | cut -d' ' -f1)" || rc=$?
+> EN_CLUSTER="$(kubectl -n synkra get secret synkra-local-tls -o jsonpath='{.data.tls\.crt}' | base64 -d | sha256sum | cut -d' ' -f1)" || rc=$?
+scripts/secreto-tls.sh:41: EN_CLUSTER="$(kubectl -n synkra get secret synkra-local-tls -o jsonpath='{.data.tls\.crt}' | base64 -d | sha256sum | cut -d' ' -f1)" || rc=$?
+sin-kubeconfig-mutado-v3-encluster=0
+== v4-jsonpath-dq
+< kubectl --kubeconfig "$KC" apply -f "$TMP/secreto.yaml" || rc=$?
+> kubectl get secret -o jsonpath="{.type}" -n synkra x || rc=$?
+scripts/secreto-tls.sh:32: kubectl get secret -o jsonpath="{.type}" -n synkra x || rc=$?
+sin-kubeconfig-mutado-v4-jsonpath-dq=0
+== v5-dos-ordenes
+< kubectl --kubeconfig "$KC" apply -f "$TMP/secreto.yaml" || rc=$?
+> kubectl --kubeconfig "$KC" get ns >/dev/null && kubectl apply -f "$TMP/secreto.yaml" || rc=$?
+scripts/secreto-tls.sh:32: kubectl --kubeconfig "$KC" get ns >/dev/null && kubectl apply -f "$TMP/secreto.yaml" || rc=$?
+sin-kubeconfig-mutado-v5-dos-ordenes=0
+== v6-kc-en-mensaje
+< kubectl --kubeconfig "$KC" apply -f "$TMP/secreto.yaml" || rc=$?
+> kubectl apply -f "$TMP/secreto.yaml" || { echo "falta --kubeconfig"; exit 1; }
+scripts/secreto-tls.sh:32: kubectl apply -f "$TMP/secreto.yaml" || { echo "falta --kubeconfig"; exit 1; }
+sin-kubeconfig-mutado-v6-kc-en-mensaje=0

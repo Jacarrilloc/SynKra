@@ -1,0 +1,21 @@
+fecha: 2026-11-28T00:53:14-05:00
+sha: 486bcb1 (arbol: 2 cambios sin confirmar)
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U08-C-evidencia/rojo-digest.sh
+# reconstruir y subir la misma imagen dos veces (mismo contenido)
+imagenes-1=0
+imagenes-2=0
+registro tras la 1a subida: sha256:3a3428844d2c4ed9a1668c80810ce24093c5b7b306a902c9b29ac0d25877dcac
+registro tras la 2a subida: sha256:aed1e388fd3c4f3d02ee5038a39e8014b6ee836e0eeb8db819bc8346480c7e54
+digest-distinto-con-el-mismo-contenido
+# make desplegar
+Waiting for deployment "synkra-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "synkra-backend" successfully rolled out
+FALLA desplegar: corre sha256:09d9ce65051d1fbd566e490ccdbca9fc988a191b1a7618e0c624d04e87a1a7eb y el registro tiene sha256:aed1e388fd3c4f3d02ee5038a39e8014b6ee836e0eeb8db819bc8346480c7e54
+make: *** [Makefile:50: desplegar] Error 1
+desplegar=2
+# lo que ve el pod y lo que tiene el nodo (solo lectura)
+localhost:5001/synkra-backend@sha256:09d9ce65051d1fbd566e490ccdbca9fc988a191b1a7618e0c624d04e87a1a7eb
+{"id":"sha256:02559b94e69330441e01badfd9549ea1e710f2b77d6b088fce0ae9d6ab7a3ca9","repoDigests":["localhost:5001/synkra-backend@sha256:09d9ce65051d1fbd566e490ccdbca9fc988a191b1a7618e0c624d04e87a1a7eb","localhost:5001/synkra-backend@sha256:68566fb4a65630cf2b9ac2d0e8a7c10b747b14a6a434112c77af1e23114971ae","localhost:5001/synkra-backend@sha256:6df0a0d8605de1e26b72d13eb3bcc31e49eb075fb6318963d44422376dec4972","localhost:5001/synkra-backend@sha256:7b9d64feeaa191550f9137f2713952bd5cecf9c39e012e96d47c50b7d571ff43","localhost:5001/synkra-backend@sha256:aed1e388fd3c4f3d02ee5038a39e8014b6ee836e0eeb8db819bc8346480c7e54"]}

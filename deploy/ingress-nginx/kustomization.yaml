@@ -1,0 +1,9 @@
+# Ingress NGINX controller-v1.15.1 (ultima version del proyecto kubernetes/ingress-nginx, retirado despues: no habra parches nuevos).
+# deploy.yaml es, byte por byte, https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.15.1/deploy/static/provider/kind/deploy.yaml
+# sha256 2a3ae008c8786431115502644e77ab398fdebfb721a5d1195ed3089cde3299df (679 lineas). Ninguna receta lo vuelve a descargar.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - deploy.yaml
+patches:
+  - path: controlador-kind.yaml
