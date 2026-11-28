@@ -1130,3 +1130,7 @@ Se despacha el codificador de la ronda 2.
 ## 2026-11-28T07:12Z: fusión de #114 (U09-B)
 
 **Acción del orquestador:** U09-B salió VERDE en la ronda 1. Fusión de #114 en `00c54ef` (autorización de David de las 01:25:21Z y 06:58:50Z), `MERGEABLE`/`CLEAN`. Solo toca `front/` y `front.Tests/`: no se repite `./gradlew check`; el revisor corrió las 64 pruebas del front.
+
+## 2026-11-28T08:01Z: fusión de #115 (U09-C)
+
+**Acción del orquestador:** U09-C salió VERDE en la ronda 2. Fusión de #115 en `5e00878`, `MERGEABLE`/`CLEAN` (solo `front/` y `front.Tests/`; el revisor corrió las 117 pruebas de la unión con U09-B). U09-D sigue con la parte que necesita la unión (CA-1 y CA-4) sin tocar el clúster.
