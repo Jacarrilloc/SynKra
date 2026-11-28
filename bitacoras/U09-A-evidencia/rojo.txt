@@ -1,0 +1,493 @@
+fecha: 2026-11-27T23:58:32-05:00
+sha del commit con stubs que compila: 7a1e065 (antes: 8402830 y 5b31de9 no compilaban, ver bitacora)
+imagen: mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d arm64
+
+$ git show --stat 8402830 (primer commit; los stubs son de este)
+8402830 U09-A: rojo primero, proyecto front, pruebas y stubs sin implementar
+
+ bitacoras/U09-A-evidencia/trx.py                   |   7 +
+ front.Tests/.gitignore                             |   3 +
+ front.Tests/ApiSynkraTest.cs                       | 248 +++++++++++++++++++++
+ front.Tests/Fixtures/despliegue-fallido.json       |  19 ++
+ front.Tests/Fixtures/despliegue-listo.json         |  19 ++
+ front.Tests/Fixtures/error-422-pais.json           |   7 +
+ front.Tests/Fixtures/error-500.json                |   1 +
+ front.Tests/Fixtures/historial-pe.json             |  36 +++
+ front.Tests/Fixtures/paises-campo-desconocido.json |  25 +++
+ front.Tests/Fixtures/paises-dos.json               |  24 ++
+ front.Tests/Fixtures/paises-sin-despliegue.json    |  12 +
+ front.Tests/ManejadorHttpSimulado.cs               |  50 +++++
+ front.Tests/Synkra.Front.Tests.csproj              |  27 +++
+ front.Tests/VistaGeneralTest.cs                    | 122 ++++++++++
+ front/.gitignore                                   |   2 +
+ front/Api/ApiSynkra.cs                             |  17 ++
+ front/Api/CodigosFront.cs                          |   8 +
+ front/Api/ConfiguracionApi.cs                      |   9 +
+ front/Api/ErrorApiSynkraException.cs               |  17 ++
+ front/Api/Modelos.cs                               |  61 +++++
+ front/Components/App.razor                         |  17 ++
+ front/Components/Layout/MainLayout.razor           |   8 +
+ front/Components/Layout/NavMenu.razor              |   4 +
+ front/Components/Pages/VistaGeneral.razor          |   3 +
+ front/Components/Routes.razor                      |  11 +
+ front/Components/_Imports.razor                    |  10 +
+ front/Program.cs                                   |  19 ++
+ front/Synkra.Front.csproj                          |  11 +
+ front/appsettings.json                             |  12 +
+ front/wwwroot/app.css                              |   9 +
+ scripts/dotnet-docker.sh                           |  11 +
+ 31 files changed, 829 insertions(+)
+
+$ scripts/dotnet-docker.sh test front.Tests --filter ApiSynkraTest --logger "trx;LogFileName=api.trx" --results-directory front.Tests/TestResults  (copia de 7a1e065)
+  Determining projects to restore...
+  Restored /src/front/Synkra.Front.csproj (in 430 ms).
+  Restored /src/front.Tests/Synkra.Front.Tests.csproj (in 439 ms).
+  Synkra.Front -> /src/front/bin/Debug/net10.0/Synkra.Front.dll
+  Synkra.Front.Tests -> /src/front.Tests/bin/Debug/net10.0/Synkra.Front.Tests.dll
+Test run for /src/front.Tests/bin/Debug/net10.0/Synkra.Front.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.12]     Synkra.Front.Tests.ApiSynkraTest.DespliegueFallidoTraeVeredictoYContexto [FAIL]
+[xUnit.net 00:00:00.12]     Synkra.Front.Tests.ApiSynkraTest.TiempoAgotadoDaApiNoDisponible [FAIL]
+[xUnit.net 00:00:00.12]     Synkra.Front.Tests.ApiSynkraTest.VistaGeneralConListaVaciaDevuelveListaVacia [FAIL]
+[xUnit.net 00:00:00.12]     Synkra.Front.Tests.ApiSynkraTest.HistorialPideLaRutaDelPaisYLeeTipoOrigenYFechas [FAIL]
+[xUnit.net 00:00:00.12]     Synkra.Front.Tests.ApiSynkraTest.ConfiguracionConUrlRelativaNoArranca [FAIL]
+[xUnit.net 00:00:00.12]     Synkra.Front.Tests.ApiSynkraTest.ConfiguracionSinUrlNoArranca [FAIL]
+[xUnit.net 00:00:00.13]     Synkra.Front.Tests.ApiSynkraTest.Error404DaCodigoYMensajeDeLaApi [FAIL]
+[xUnit.net 00:00:00.13]     Synkra.Front.Tests.ApiSynkraTest.FalloDeConexionDaApiNoDisponible [FAIL]
+[xUnit.net 00:00:00.13]     Synkra.Front.Tests.ApiSynkraTest.Error422DaLosDetallesConCampoYMotivo [FAIL]
+  Failed Synkra.Front.Tests.ApiSynkraTest.DespliegueFallidoTraeVeredictoYContexto [3 ms]
+  Error Message:
+   System.NotImplementedException : The method or operation is not implemented.
+  Stack Trace:
+     at Synkra.Front.Api.ApiSynkra.DespliegueAsync(Int64 id, CancellationToken ct) in /src/front/Api/ApiSynkra.cs:line 16
+   at Synkra.Front.Tests.ApiSynkraTest.DespliegueFallidoTraeVeredictoYContexto() in /src/front.Tests/ApiSynkraTest.cs:line 105
+--- End of stack trace from previous location ---
+  Failed Synkra.Front.Tests.ApiSynkraTest.TiempoAgotadoDaApiNoDisponible [2 ms]
+  Error Message:
+   Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(Synkra.Front.Api.ErrorApiSynkraException)
+Actual:   typeof(System.NotImplementedException)
+---- System.NotImplementedException : The method or operation is not implemented.
+  Stack Trace:
+     at Synkra.Front.Tests.ApiSynkraTest.Falla(Func`1 accion) in /src/front.Tests/ApiSynkraTest.cs:line 17
+   at Synkra.Front.Tests.ApiSynkraTest.TiempoAgotadoDaApiNoDisponible() in /src/front.Tests/ApiSynkraTest.cs:line 202
+--- End of stack trace from previous location ---
+----- Inner Stack Trace -----
+   at Synkra.Front.Api.ApiSynkra.VistaGeneralAsync(CancellationToken ct) in /src/front/Api/ApiSynkra.cs:line 10
+   at Synkra.Front.Tests.ApiSynkraTest.<>c__DisplayClass16_0.<TiempoAgotadoDaApiNoDisponible>b__0() in /src/front.Tests/ApiSynkraTest.cs:line 202
+  Failed Synkra.Front.Tests.ApiSynkraTest.VistaGeneralConListaVaciaDevuelveListaVacia [< 1 ms]
+  Error Message:
+   System.NotImplementedException : The method or operation is not implemented.
+  Stack Trace:
+     at Synkra.Front.Api.ApiSynkra.VistaGeneralAsync(CancellationToken ct) in /src/front/Api/ApiSynkra.cs:line 10
+   at Synkra.Front.Tests.ApiSynkraTest.VistaGeneralConListaVaciaDevuelveListaVacia() in /src/front.Tests/ApiSynkraTest.cs:line 56
+--- End of stack trace from previous location ---
+  Failed Synkra.Front.Tests.ApiSynkraTest.HistorialPideLaRutaDelPaisYLeeTipoOrigenYFechas [< 1 ms]
+  Error Message:
+   System.NotImplementedException : The method or operation is not implemented.
+  Stack Trace:
+     at Synkra.Front.Api.ApiSynkra.HistorialAsync(String pais, CancellationToken ct) in /src/front/Api/ApiSynkra.cs:line 13
+   at Synkra.Front.Tests.ApiSynkraTest.HistorialPideLaRutaDelPaisYLeeTipoOrigenYFechas() in /src/front.Tests/ApiSynkraTest.cs:line 66
+--- End of stack trace from previous location ---
+  Failed Synkra.Front.Tests.ApiSynkraTest.ConfiguracionConUrlRelativaNoArranca [2 ms]
+  Error Message:
+   Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(System.InvalidOperationException)
+Actual:   typeof(System.NotImplementedException)
+---- System.NotImplementedException : The method or operation is not implemented.
+  Stack Trace:
+     at Synkra.Front.Tests.ApiSynkraTest.ConfiguracionConUrlRelativaNoArranca() in /src/front.Tests/ApiSynkraTest.cs:line 236
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+----- Inner Stack Trace -----
+   at Synkra.Front.Api.ConfiguracionApi.UrlBase(IConfiguration configuracion) in /src/front/Api/ConfiguracionApi.cs:line 7
+   at Synkra.Front.Tests.ApiSynkraTest.<>c.<ConfiguracionConUrlRelativaNoArranca>b__20_0() in /src/front.Tests/ApiSynkraTest.cs:line 236
+  Failed Synkra.Front.Tests.ApiSynkraTest.ConfiguracionSinUrlNoArranca [< 1 ms]
+  Error Message:
+   Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(System.InvalidOperationException)
+Actual:   typeof(System.NotImplementedException)
+---- System.NotImplementedException : The method or operation is not implemented.
+  Stack Trace:
+     at Synkra.Front.Tests.ApiSynkraTest.ConfiguracionSinUrlNoArranca() in /src/front.Tests/ApiSynkraTest.cs:line 228
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+----- Inner Stack Trace -----
+   at Synkra.Front.Api.ConfiguracionApi.UrlBase(IConfiguration configuracion) in /src/front/Api/ConfiguracionApi.cs:line 7
+   at Synkra.Front.Tests.ApiSynkraTest.<>c.<ConfiguracionSinUrlNoArranca>b__19_0() in /src/front.Tests/ApiSynkraTest.cs:line 228
+  Failed Synkra.Front.Tests.ApiSynkraTest.Error404DaCodigoYMensajeDeLaApi [< 1 ms]
+  Error Message:
+   Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(Synkra.Front.Api.ErrorApiSynkraException)
+Actual:   typeof(System.NotImplementedException)
+---- System.NotImplementedException : The method or operation is not implemented.
+  Stack Trace:
+     at Synkra.Front.Tests.ApiSynkraTest.Falla(Func`1 accion) in /src/front.Tests/ApiSynkraTest.cs:line 17
+   at Synkra.Front.Tests.ApiSynkraTest.Error404DaCodigoYMensajeDeLaApi() in /src/front.Tests/ApiSynkraTest.cs:line 135
+--- End of stack trace from previous location ---
+----- Inner Stack Trace -----
+   at Synkra.Front.Api.ApiSynkra.DespliegueAsync(Int64 id, CancellationToken ct) in /src/front/Api/ApiSynkra.cs:line 16
+   at Synkra.Front.Tests.ApiSynkraTest.<>c__DisplayClass11_0.<Error404DaCodigoYMensajeDeLaApi>b__0() in /src/front.Tests/ApiSynkraTest.cs:line 135
+  Failed Synkra.Front.Tests.ApiSynkraTest.FalloDeConexionDaApiNoDisponible [< 1 ms]
+  Error Message:
+   Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(Synkra.Front.Api.ErrorApiSynkraException)
+Actual:   typeof(System.NotImplementedException)
+---- System.NotImplementedException : The method or operation is not implemented.
+  Stack Trace:
+     at Synkra.Front.Tests.ApiSynkraTest.Falla(Func`1 accion) in /src/front.Tests/ApiSynkraTest.cs:line 17
+   at Synkra.Front.Tests.ApiSynkraTest.FalloDeConexionDaApiNoDisponible() in /src/front.Tests/ApiSynkraTest.cs:line 189
+--- End of stack trace from previous location ---
+----- Inner Stack Trace -----
+   at Synkra.Front.Api.ApiSynkra.VistaGeneralAsync(CancellationToken ct) in /src/front/Api/ApiSynkra.cs:line 10
+   at Synkra.Front.Tests.ApiSynkraTest.<>c__DisplayClass15_0.<FalloDeConexionDaApiNoDisponible>b__0() in /src/front.Tests/ApiSynkraTest.cs:line 189
+  Failed Synkra.Front.Tests.ApiSynkraTest.Error422DaLosDetallesConCampoYMotivo [< 1 ms]
+  Error Message:
+   Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(Synkra.Front.Api.ErrorApiSynkraException)
+Actual:   typeof(System.NotImplementedException)
+---- System.NotImplementedException : The method or operation is not implemented.
+  Stack Trace:
+     at Synkra.Front.Tests.ApiSynkraTest.Falla(Func`1 accion) in /src/front.Tests/ApiSynkraTest.cs:line 17
+   at Synkra.Front.Tests.ApiSynkraTest.Error422DaLosDetallesConCampoYMotivo() in /src/front.Tests/ApiSynkraTest.cs:line 148
+--- End of stack trace from previous location ---
+----- Inner Stack Trace -----
+   at Synkra.Front.Api.ApiSynkra.HistorialAsync(String pais, CancellationToken ct) in /src/front/Api/ApiSynkra.cs:line 13
+   at Synkra.Front.Tests.ApiSynkraTest.<>c__DisplayClass12_0.<Error422DaLosDetallesConCampoYMotivo>b__0() in /src/front.Tests/ApiSynkraTest.cs:line 148
+[xUnit.net 00:00:00.14]     Synkra.Front.Tests.ApiSynkraTest.ConfiguracionConUrlValidaTerminaEnBarra [FAIL]
+[xUnit.net 00:00:00.14]     Synkra.Front.Tests.ApiSynkraTest.ErrorSinCuerpoDeLaApiDaRespuestaInvalida [FAIL]
+[xUnit.net 00:00:00.14]     Synkra.Front.Tests.ApiSynkraTest.CampoDesconocidoEnLaRespuestaDaRespuestaInvalida [FAIL]
+[xUnit.net 00:00:00.14]     Synkra.Front.Tests.ApiSynkraTest.DespliegueListoNoTraeContexto [FAIL]
+[xUnit.net 00:00:00.14]     Synkra.Front.Tests.ApiSynkraTest.VistaGeneralLeeLosDosPaisesConTodosSusCampos [FAIL]
+[xUnit.net 00:00:00.14]     Synkra.Front.Tests.ApiSynkraTest.HistorialEscapaElPais [FAIL]
+[xUnit.net 00:00:00.14]     Synkra.Front.Tests.ApiSynkraTest.LaUrlBaseConPrefijoSeRespeta [FAIL]
+  Failed Synkra.Front.Tests.ApiSynkraTest.ConfiguracionConUrlValidaTerminaEnBarra [< 1 ms]
+  Error Message:
+   System.NotImplementedException : The method or operation is not implemented.
+  Stack Trace:
+     at Synkra.Front.Api.ConfiguracionApi.UrlBase(IConfiguration configuracion) in /src/front/Api/ConfiguracionApi.cs:line 7
+   at Synkra.Front.Tests.ApiSynkraTest.ConfiguracionConUrlValidaTerminaEnBarra() in /src/front.Tests/ApiSynkraTest.cs:line 244
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Synkra.Front.Tests.ApiSynkraTest.ErrorSinCuerpoDeLaApiDaRespuestaInvalida [< 1 ms]
+  Error Message:
+   Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(Synkra.Front.Api.ErrorApiSynkraException)
+Actual:   typeof(System.NotImplementedException)
+---- System.NotImplementedException : The method or operation is not implemented.
+  Stack Trace:
+     at Synkra.Front.Tests.ApiSynkraTest.Falla(Func`1 accion) in /src/front.Tests/ApiSynkraTest.cs:line 17
+   at Synkra.Front.Tests.ApiSynkraTest.ErrorSinCuerpoDeLaApiDaRespuestaInvalida() in /src/front.Tests/ApiSynkraTest.cs:line 163
+--- End of stack trace from previous location ---
+----- Inner Stack Trace -----
+   at Synkra.Front.Api.ApiSynkra.VistaGeneralAsync(CancellationToken ct) in /src/front/Api/ApiSynkra.cs:line 10
+   at Synkra.Front.Tests.ApiSynkraTest.<>c__DisplayClass13_0.<ErrorSinCuerpoDeLaApiDaRespuestaInvalida>b__0() in /src/front.Tests/ApiSynkraTest.cs:line 163
+  Failed Synkra.Front.Tests.ApiSynkraTest.CampoDesconocidoEnLaRespuestaDaRespuestaInvalida [< 1 ms]
+  Error Message:
+   Assert.Throws() Failure: Exception type was not an exact match
+Expected: typeof(Synkra.Front.Api.ErrorApiSynkraException)
+Actual:   typeof(System.NotImplementedException)
+---- System.NotImplementedException : The method or operation is not implemented.
+  Stack Trace:
+     at Synkra.Front.Tests.ApiSynkraTest.Falla(Func`1 accion) in /src/front.Tests/ApiSynkraTest.cs:line 17
+   at Synkra.Front.Tests.ApiSynkraTest.CampoDesconocidoEnLaRespuestaDaRespuestaInvalida() in /src/front.Tests/ApiSynkraTest.cs:line 176
+--- End of stack trace from previous location ---
+----- Inner Stack Trace -----
+   at Synkra.Front.Api.ApiSynkra.VistaGeneralAsync(CancellationToken ct) in /src/front/Api/ApiSynkra.cs:line 10
+   at Synkra.Front.Tests.ApiSynkraTest.<>c__DisplayClass14_0.<CampoDesconocidoEnLaRespuestaDaRespuestaInvalida>b__0() in /src/front.Tests/ApiSynkraTest.cs:line 176
+  Failed Synkra.Front.Tests.ApiSynkraTest.DespliegueListoNoTraeContexto [< 1 ms]
+  Error Message:
+   System.NotImplementedException : The method or operation is not implemented.
+  Stack Trace:
+     at Synkra.Front.Api.ApiSynkra.DespliegueAsync(Int64 id, CancellationToken ct) in /src/front/Api/ApiSynkra.cs:line 16
+   at Synkra.Front.Tests.ApiSynkraTest.DespliegueListoNoTraeContexto() in /src/front.Tests/ApiSynkraTest.cs:line 122
+--- End of stack trace from previous location ---
+  Failed Synkra.Front.Tests.ApiSynkraTest.VistaGeneralLeeLosDosPaisesConTodosSusCampos [< 1 ms]
+  Error Message:
+   System.NotImplementedException : The method or operation is not implemented.
+  Stack Trace:
+     at Synkra.Front.Api.ApiSynkra.VistaGeneralAsync(CancellationToken ct) in /src/front/Api/ApiSynkra.cs:line 10
+   at Synkra.Front.Tests.ApiSynkraTest.VistaGeneralLeeLosDosPaisesConTodosSusCampos() in /src/front.Tests/ApiSynkraTest.cs:line 24
+--- End of stack trace from previous location ---
+  Failed Synkra.Front.Tests.ApiSynkraTest.HistorialEscapaElPais [< 1 ms]
+  Error Message:
+   System.NotImplementedException : The method or operation is not implemented.
+  Stack Trace:
+     at Synkra.Front.Api.ApiSynkra.HistorialAsync(String pais, CancellationToken ct) in /src/front/Api/ApiSynkra.cs:line 13
+   at Synkra.Front.Tests.ApiSynkraTest.HistorialEscapaElPais() in /src/front.Tests/ApiSynkraTest.cs:line 95
+--- End of stack trace from previous location ---
+  Failed Synkra.Front.Tests.ApiSynkraTest.LaUrlBaseConPrefijoSeRespeta [< 1 ms]
+  Error Message:
+   System.NotImplementedException : The method or operation is not implemented.
+  Stack Trace:
+     at Synkra.Front.Api.ApiSynkra.VistaGeneralAsync(CancellationToken ct) in /src/front/Api/ApiSynkra.cs:line 10
+   at Synkra.Front.Tests.ApiSynkraTest.LaUrlBaseConPrefijoSeRespeta() in /src/front.Tests/ApiSynkraTest.cs:line 215
+--- End of stack trace from previous location ---
+Results File: /src/front.Tests/TestResults/api.trx
+
+Failed!  - Failed:    16, Passed:     0, Skipped:     0, Total:    16, Duration: 34 ms - Synkra.Front.Tests.dll (net10.0)
+salida=1
+$ python3 -I bitacoras/U09-A-evidencia/trx.py front.Tests/TestResults/api.trx
+total=16 executed=16 passed=0 failed=16 notExecuted=0
+FALLA CampoDesconocidoEnLaRespuestaDaRespuestaInvalida
+FALLA ConfiguracionConUrlRelativaNoArranca
+FALLA ConfiguracionConUrlValidaTerminaEnBarra
+FALLA ConfiguracionSinUrlNoArranca
+FALLA DespliegueFallidoTraeVeredictoYContexto
+FALLA DespliegueListoNoTraeContexto
+FALLA Error404DaCodigoYMensajeDeLaApi
+FALLA Error422DaLosDetallesConCampoYMotivo
+FALLA ErrorSinCuerpoDeLaApiDaRespuestaInvalida
+FALLA FalloDeConexionDaApiNoDisponible
+FALLA HistorialEscapaElPais
+FALLA HistorialPideLaRutaDelPaisYLeeTipoOrigenYFechas
+FALLA LaUrlBaseConPrefijoSeRespeta
+FALLA TiempoAgotadoDaApiNoDisponible
+FALLA VistaGeneralConListaVaciaDevuelveListaVacia
+FALLA VistaGeneralLeeLosDosPaisesConTodosSusCampos
+
+$ scripts/dotnet-docker.sh test front.Tests --filter VistaGeneralTest --logger "trx;LogFileName=vista.trx" --results-directory front.Tests/TestResults  (copia de 7a1e065)
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Synkra.Front -> /src/front/bin/Debug/net10.0/Synkra.Front.dll
+  Synkra.Front.Tests -> /src/front.Tests/bin/Debug/net10.0/Synkra.Front.Tests.dll
+Test run for /src/front.Tests/bin/Debug/net10.0/Synkra.Front.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:01.32]     Synkra.Front.Tests.VistaGeneralTest.SoloLlamaAGetApiPaises [FAIL]
+  Failed Synkra.Front.Tests.VistaGeneralTest.SoloLlamaAGetApiPaises [1 s]
+  Error Message:
+   Bunit.Extensions.WaitForHelpers.WaitForFailedException : The assertion did not pass within the timeout period.
+
+If this test does not fail consistently, the reason may be that
+the wait timeout is too short, and the runtime did not have enough
+time to complete the necessary number of renders of the component under test.
+This can happen on highly utilized or slower hardware, for example.
+
+To determine if this is the cause, compare the check and render count(s) below
+and see if they match what is expected. If they do not,
+consider increasing the timeout, either at the individual
+method call level, e.g. WaitForElement("div", TimeSpan.FromSeconds(15)),
+or via the static TestContext.DefaultWaitTimeout property.
+
+Check count: 1.
+Component render count: 1.
+Total render count across all components: 0.
+---- Bunit.ElementNotFoundException : No elements were found that matches the selector 'table#vista-general'
+  Stack Trace:
+     at Bunit.RenderedComponentWaitForHelperExtensions.WaitForAssertion[TComponent](IRenderedComponent`1 renderedComponent, Action assertion, Nullable`1 timeout) in /_/src/bunit/Extensions/WaitForHelpers/RenderedComponentWaitForHelperExtensions.WaitForState.cs:line 102
+   at Synkra.Front.Tests.VistaGeneralTest.SoloLlamaAGetApiPaises() in /src/front.Tests/VistaGeneralTest.cs:line 119
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+----- Inner Stack Trace -----
+   at Bunit.RenderedComponentExtensions.Find[TComponent,TElement](IRenderedComponent`1 renderedComponent, String cssSelector) in /_/src/bunit/Extensions/RenderedComponentExtensions.cs:line 42
+   at Bunit.RenderedComponentExtensions.Find[TComponent](IRenderedComponent`1 renderedComponent, String cssSelector) in /_/src/bunit/Extensions/RenderedComponentExtensions.cs:line 21
+   at Synkra.Front.Tests.VistaGeneralTest.<>c__DisplayClass10_0.<SoloLlamaAGetApiPaises>b__0() in /src/front.Tests/VistaGeneralTest.cs:line 119
+   at Bunit.Extensions.WaitForHelpers.WaitForAssertionHelper`1.<>c__DisplayClass6_0.<.ctor>b__0() in /_/src/bunit/Extensions/WaitForHelpers/WaitForAssertionHelper.cs:line 35
+   at Bunit.Extensions.WaitForHelpers.WaitForHelper`2.<>c__DisplayClass34_0.<WrapSynchronousChecker>b__0() in /_/src/bunit/Extensions/WaitForHelpers/WaitForHelper.cs:line 324
+   at Bunit.Extensions.WaitForHelpers.WaitForHelper`2.RunCheckAsync() in /_/src/bunit/Extensions/WaitForHelpers/WaitForHelper.cs:line 253
+[xUnit.net 00:00:02.34]     Synkra.Front.Tests.VistaGeneralTest.MuestraUnRenglonPorPaisConLosDatosDeLaApi [FAIL]
+  Failed Synkra.Front.Tests.VistaGeneralTest.MuestraUnRenglonPorPaisConLosDatosDeLaApi [1 s]
+  Error Message:
+   Bunit.Extensions.WaitForHelpers.WaitForFailedException : The assertion did not pass within the timeout period.
+
+If this test does not fail consistently, the reason may be that
+the wait timeout is too short, and the runtime did not have enough
+time to complete the necessary number of renders of the component under test.
+This can happen on highly utilized or slower hardware, for example.
+
+To determine if this is the cause, compare the check and render count(s) below
+and see if they match what is expected. If they do not,
+consider increasing the timeout, either at the individual
+method call level, e.g. WaitForElement("div", TimeSpan.FromSeconds(15)),
+or via the static TestContext.DefaultWaitTimeout property.
+
+Check count: 1.
+Component render count: 1.
+Total render count across all components: 0.
+---- Assert.Equal() Failure: Collections differ
+           ↓ (pos 0)
+Expected: ["co", "pe"]
+Actual:   []
+  Stack Trace:
+     at Bunit.RenderedComponentWaitForHelperExtensions.WaitForAssertion[TComponent](IRenderedComponent`1 renderedComponent, Action assertion, Nullable`1 timeout) in /_/src/bunit/Extensions/WaitForHelpers/RenderedComponentWaitForHelperExtensions.WaitForState.cs:line 102
+   at Synkra.Front.Tests.VistaGeneralTest.MuestraUnRenglonPorPaisConLosDatosDeLaApi() in /src/front.Tests/VistaGeneralTest.cs:line 31
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+----- Inner Stack Trace -----
+   at Synkra.Front.Tests.VistaGeneralTest.<>c__DisplayClass4_0.<MuestraUnRenglonPorPaisConLosDatosDeLaApi>b__0() in /src/front.Tests/VistaGeneralTest.cs:line 34
+   at Bunit.Extensions.WaitForHelpers.WaitForAssertionHelper`1.<>c__DisplayClass6_0.<.ctor>b__0() in /_/src/bunit/Extensions/WaitForHelpers/WaitForAssertionHelper.cs:line 35
+   at Bunit.Extensions.WaitForHelpers.WaitForHelper`2.<>c__DisplayClass34_0.<WrapSynchronousChecker>b__0() in /_/src/bunit/Extensions/WaitForHelpers/WaitForHelper.cs:line 324
+   at Bunit.Extensions.WaitForHelpers.WaitForHelper`2.RunCheckAsync() in /_/src/bunit/Extensions/WaitForHelpers/WaitForHelper.cs:line 253
+[xUnit.net 00:00:03.34]     Synkra.Front.Tests.VistaGeneralTest.SinPaisesMuestraAviso [FAIL]
+[xUnit.net 00:00:04.35]     Synkra.Front.Tests.VistaGeneralTest.PaisSinLecturaMuestraNoDisponibleYNoSeSabe [FAIL]
+  Failed Synkra.Front.Tests.VistaGeneralTest.SinPaisesMuestraAviso [1 s]
+  Error Message:
+   Bunit.Extensions.WaitForHelpers.WaitForFailedException : The assertion did not pass within the timeout period.
+
+If this test does not fail consistently, the reason may be that
+the wait timeout is too short, and the runtime did not have enough
+time to complete the necessary number of renders of the component under test.
+This can happen on highly utilized or slower hardware, for example.
+
+To determine if this is the cause, compare the check and render count(s) below
+and see if they match what is expected. If they do not,
+consider increasing the timeout, either at the individual
+method call level, e.g. WaitForElement("div", TimeSpan.FromSeconds(15)),
+or via the static TestContext.DefaultWaitTimeout property.
+
+Check count: 1.
+Component render count: 1.
+Total render count across all components: 0.
+---- Bunit.ElementNotFoundException : No elements were found that matches the selector 'p[data-estado='vacio']'
+  Stack Trace:
+     at Bunit.RenderedComponentWaitForHelperExtensions.WaitForAssertion[TComponent](IRenderedComponent`1 renderedComponent, Action assertion, Nullable`1 timeout) in /_/src/bunit/Extensions/WaitForHelpers/RenderedComponentWaitForHelperExtensions.WaitForState.cs:line 102
+   at Synkra.Front.Tests.VistaGeneralTest.SinPaisesMuestraAviso() in /src/front.Tests/VistaGeneralTest.cs:line 87
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+----- Inner Stack Trace -----
+   at Bunit.RenderedComponentExtensions.Find[TComponent,TElement](IRenderedComponent`1 renderedComponent, String cssSelector) in /_/src/bunit/Extensions/RenderedComponentExtensions.cs:line 42
+   at Bunit.RenderedComponentExtensions.Find[TComponent](IRenderedComponent`1 renderedComponent, String cssSelector) in /_/src/bunit/Extensions/RenderedComponentExtensions.cs:line 21
+   at Synkra.Front.Tests.VistaGeneralTest.<>c__DisplayClass7_0.<SinPaisesMuestraAviso>b__0() in /src/front.Tests/VistaGeneralTest.cs:line 87
+   at Bunit.Extensions.WaitForHelpers.WaitForAssertionHelper`1.<>c__DisplayClass6_0.<.ctor>b__0() in /_/src/bunit/Extensions/WaitForHelpers/WaitForAssertionHelper.cs:line 35
+   at Bunit.Extensions.WaitForHelpers.WaitForHelper`2.<>c__DisplayClass34_0.<WrapSynchronousChecker>b__0() in /_/src/bunit/Extensions/WaitForHelpers/WaitForHelper.cs:line 324
+   at Bunit.Extensions.WaitForHelpers.WaitForHelper`2.RunCheckAsync() in /_/src/bunit/Extensions/WaitForHelpers/WaitForHelper.cs:line 253
+  Failed Synkra.Front.Tests.VistaGeneralTest.PaisSinLecturaMuestraNoDisponibleYNoSeSabe [1 s]
+  Error Message:
+   Bunit.Extensions.WaitForHelpers.WaitForFailedException : The assertion did not pass within the timeout period.
+
+If this test does not fail consistently, the reason may be that
+the wait timeout is too short, and the runtime did not have enough
+time to complete the necessary number of renders of the component under test.
+This can happen on highly utilized or slower hardware, for example.
+
+To determine if this is the cause, compare the check and render count(s) below
+and see if they match what is expected. If they do not,
+consider increasing the timeout, either at the individual
+method call level, e.g. WaitForElement("div", TimeSpan.FromSeconds(15)),
+or via the static TestContext.DefaultWaitTimeout property.
+
+Check count: 1.
+Component render count: 1.
+Total render count across all components: 0.
+---- Bunit.ElementNotFoundException : No elements were found that matches the selector 'tr[data-pais='pe']'
+  Stack Trace:
+     at Bunit.RenderedComponentWaitForHelperExtensions.WaitForAssertion[TComponent](IRenderedComponent`1 renderedComponent, Action assertion, Nullable`1 timeout) in /_/src/bunit/Extensions/WaitForHelpers/RenderedComponentWaitForHelperExtensions.WaitForState.cs:line 102
+   at Synkra.Front.Tests.VistaGeneralTest.PaisSinLecturaMuestraNoDisponibleYNoSeSabe() in /src/front.Tests/VistaGeneralTest.cs:line 55
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+----- Inner Stack Trace -----
+   at Bunit.RenderedComponentExtensions.Find[TComponent,TElement](IRenderedComponent`1 renderedComponent, String cssSelector) in /_/src/bunit/Extensions/RenderedComponentExtensions.cs:line 42
+   at Bunit.RenderedComponentExtensions.Find[TComponent](IRenderedComponent`1 renderedComponent, String cssSelector) in /_/src/bunit/Extensions/RenderedComponentExtensions.cs:line 21
+   at Synkra.Front.Tests.VistaGeneralTest.<>c__DisplayClass5_0.<PaisSinLecturaMuestraNoDisponibleYNoSeSabe>b__0() in /src/front.Tests/VistaGeneralTest.cs:line 55
+   at Bunit.Extensions.WaitForHelpers.WaitForAssertionHelper`1.<>c__DisplayClass6_0.<.ctor>b__0() in /_/src/bunit/Extensions/WaitForHelpers/WaitForAssertionHelper.cs:line 35
+   at Bunit.Extensions.WaitForHelpers.WaitForHelper`2.<>c__DisplayClass34_0.<WrapSynchronousChecker>b__0() in /_/src/bunit/Extensions/WaitForHelpers/WaitForHelper.cs:line 324
+   at Bunit.Extensions.WaitForHelpers.WaitForHelper`2.RunCheckAsync() in /_/src/bunit/Extensions/WaitForHelpers/WaitForHelper.cs:line 253
+[xUnit.net 00:00:05.35]     Synkra.Front.Tests.VistaGeneralTest.PaisSinDespliegueMuestraGuiones [FAIL]
+  Failed Synkra.Front.Tests.VistaGeneralTest.PaisSinDespliegueMuestraGuiones [1 s]
+  Error Message:
+   Bunit.Extensions.WaitForHelpers.WaitForFailedException : The assertion did not pass within the timeout period.
+
+If this test does not fail consistently, the reason may be that
+the wait timeout is too short, and the runtime did not have enough
+time to complete the necessary number of renders of the component under test.
+This can happen on highly utilized or slower hardware, for example.
+
+To determine if this is the cause, compare the check and render count(s) below
+and see if they match what is expected. If they do not,
+consider increasing the timeout, either at the individual
+method call level, e.g. WaitForElement("div", TimeSpan.FromSeconds(15)),
+or via the static TestContext.DefaultWaitTimeout property.
+
+Check count: 1.
+Component render count: 1.
+Total render count across all components: 0.
+---- Bunit.ElementNotFoundException : No elements were found that matches the selector 'tr[data-pais='mx']'
+  Stack Trace:
+     at Bunit.RenderedComponentWaitForHelperExtensions.WaitForAssertion[TComponent](IRenderedComponent`1 renderedComponent, Action assertion, Nullable`1 timeout) in /_/src/bunit/Extensions/WaitForHelpers/RenderedComponentWaitForHelperExtensions.WaitForState.cs:line 102
+   at Synkra.Front.Tests.VistaGeneralTest.PaisSinDespliegueMuestraGuiones() in /src/front.Tests/VistaGeneralTest.cs:line 70
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+----- Inner Stack Trace -----
+   at Bunit.RenderedComponentExtensions.Find[TComponent,TElement](IRenderedComponent`1 renderedComponent, String cssSelector) in /_/src/bunit/Extensions/RenderedComponentExtensions.cs:line 42
+   at Bunit.RenderedComponentExtensions.Find[TComponent](IRenderedComponent`1 renderedComponent, String cssSelector) in /_/src/bunit/Extensions/RenderedComponentExtensions.cs:line 21
+   at Synkra.Front.Tests.VistaGeneralTest.<>c__DisplayClass6_0.<PaisSinDespliegueMuestraGuiones>b__0() in /src/front.Tests/VistaGeneralTest.cs:line 70
+   at Bunit.Extensions.WaitForHelpers.WaitForAssertionHelper`1.<>c__DisplayClass6_0.<.ctor>b__0() in /_/src/bunit/Extensions/WaitForHelpers/WaitForAssertionHelper.cs:line 35
+   at Bunit.Extensions.WaitForHelpers.WaitForHelper`2.<>c__DisplayClass34_0.<WrapSynchronousChecker>b__0() in /_/src/bunit/Extensions/WaitForHelpers/WaitForHelper.cs:line 324
+   at Bunit.Extensions.WaitForHelpers.WaitForHelper`2.RunCheckAsync() in /_/src/bunit/Extensions/WaitForHelpers/WaitForHelper.cs:line 253
+[xUnit.net 00:00:06.35]     Synkra.Front.Tests.VistaGeneralTest.ErrorDeLaApiMuestraCodigoYMensaje [FAIL]
+[xUnit.net 00:00:07.35]     Synkra.Front.Tests.VistaGeneralTest.ApiNoDisponibleMuestraElCodigoDelFront [FAIL]
+  Failed Synkra.Front.Tests.VistaGeneralTest.ErrorDeLaApiMuestraCodigoYMensaje [1 s]
+  Error Message:
+   Bunit.Extensions.WaitForHelpers.WaitForFailedException : The assertion did not pass within the timeout period.
+
+If this test does not fail consistently, the reason may be that
+the wait timeout is too short, and the runtime did not have enough
+time to complete the necessary number of renders of the component under test.
+This can happen on highly utilized or slower hardware, for example.
+
+To determine if this is the cause, compare the check and render count(s) below
+and see if they match what is expected. If they do not,
+consider increasing the timeout, either at the individual
+method call level, e.g. WaitForElement("div", TimeSpan.FromSeconds(15)),
+or via the static TestContext.DefaultWaitTimeout property.
+
+Check count: 1.
+Component render count: 1.
+Total render count across all components: 0.
+---- Bunit.ElementNotFoundException : No elements were found that matches the selector 'div[data-estado='error'] p[data-campo='error']'
+  Stack Trace:
+     at Bunit.RenderedComponentWaitForHelperExtensions.WaitForAssertion[TComponent](IRenderedComponent`1 renderedComponent, Action assertion, Nullable`1 timeout) in /_/src/bunit/Extensions/WaitForHelpers/RenderedComponentWaitForHelperExtensions.WaitForState.cs:line 102
+   at Synkra.Front.Tests.VistaGeneralTest.ErrorDeLaApiMuestraCodigoYMensaje() in /src/front.Tests/VistaGeneralTest.cs:line 98
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+----- Inner Stack Trace -----
+   at Bunit.RenderedComponentExtensions.Find[TComponent,TElement](IRenderedComponent`1 renderedComponent, String cssSelector) in /_/src/bunit/Extensions/RenderedComponentExtensions.cs:line 42
+   at Bunit.RenderedComponentExtensions.Find[TComponent](IRenderedComponent`1 renderedComponent, String cssSelector) in /_/src/bunit/Extensions/RenderedComponentExtensions.cs:line 21
+   at Synkra.Front.Tests.VistaGeneralTest.<>c__DisplayClass8_0.<ErrorDeLaApiMuestraCodigoYMensaje>b__0() in /src/front.Tests/VistaGeneralTest.cs:line 98
+   at Bunit.Extensions.WaitForHelpers.WaitForAssertionHelper`1.<>c__DisplayClass6_0.<.ctor>b__0() in /_/src/bunit/Extensions/WaitForHelpers/WaitForAssertionHelper.cs:line 35
+   at Bunit.Extensions.WaitForHelpers.WaitForHelper`2.<>c__DisplayClass34_0.<WrapSynchronousChecker>b__0() in /_/src/bunit/Extensions/WaitForHelpers/WaitForHelper.cs:line 324
+   at Bunit.Extensions.WaitForHelpers.WaitForHelper`2.RunCheckAsync() in /_/src/bunit/Extensions/WaitForHelpers/WaitForHelper.cs:line 253
+  Failed Synkra.Front.Tests.VistaGeneralTest.ApiNoDisponibleMuestraElCodigoDelFront [1 s]
+  Error Message:
+   Bunit.Extensions.WaitForHelpers.WaitForFailedException : The assertion did not pass within the timeout period.
+
+If this test does not fail consistently, the reason may be that
+the wait timeout is too short, and the runtime did not have enough
+time to complete the necessary number of renders of the component under test.
+This can happen on highly utilized or slower hardware, for example.
+
+To determine if this is the cause, compare the check and render count(s) below
+and see if they match what is expected. If they do not,
+consider increasing the timeout, either at the individual
+method call level, e.g. WaitForElement("div", TimeSpan.FromSeconds(15)),
+or via the static TestContext.DefaultWaitTimeout property.
+
+Check count: 1.
+Component render count: 1.
+Total render count across all components: 0.
+---- Bunit.ElementNotFoundException : No elements were found that matches the selector 'p[data-campo='error']'
+  Stack Trace:
+     at Bunit.RenderedComponentWaitForHelperExtensions.WaitForAssertion[TComponent](IRenderedComponent`1 renderedComponent, Action assertion, Nullable`1 timeout) in /_/src/bunit/Extensions/WaitForHelpers/RenderedComponentWaitForHelperExtensions.WaitForState.cs:line 102
+   at Synkra.Front.Tests.VistaGeneralTest.ApiNoDisponibleMuestraElCodigoDelFront() in /src/front.Tests/VistaGeneralTest.cs:line 109
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+----- Inner Stack Trace -----
+   at Bunit.RenderedComponentExtensions.Find[TComponent,TElement](IRenderedComponent`1 renderedComponent, String cssSelector) in /_/src/bunit/Extensions/RenderedComponentExtensions.cs:line 42
+   at Bunit.RenderedComponentExtensions.Find[TComponent](IRenderedComponent`1 renderedComponent, String cssSelector) in /_/src/bunit/Extensions/RenderedComponentExtensions.cs:line 21
+   at Synkra.Front.Tests.VistaGeneralTest.<>c__DisplayClass9_0.<ApiNoDisponibleMuestraElCodigoDelFront>b__0() in /src/front.Tests/VistaGeneralTest.cs:line 109
+   at Bunit.Extensions.WaitForHelpers.WaitForAssertionHelper`1.<>c__DisplayClass6_0.<.ctor>b__0() in /_/src/bunit/Extensions/WaitForHelpers/WaitForAssertionHelper.cs:line 35
+   at Bunit.Extensions.WaitForHelpers.WaitForHelper`2.<>c__DisplayClass34_0.<WrapSynchronousChecker>b__0() in /_/src/bunit/Extensions/WaitForHelpers/WaitForHelper.cs:line 324
+   at Bunit.Extensions.WaitForHelpers.WaitForHelper`2.RunCheckAsync() in /_/src/bunit/Extensions/WaitForHelpers/WaitForHelper.cs:line 253
+Results File: /src/front.Tests/TestResults/vista.trx
+
+Failed!  - Failed:     7, Passed:     0, Skipped:     0, Total:     7, Duration: 7 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+$ python3 -I bitacoras/U09-A-evidencia/trx.py front.Tests/TestResults/vista.trx
+total=7 executed=7 passed=0 failed=7 notExecuted=0
+FALLA ApiNoDisponibleMuestraElCodigoDelFront
+FALLA ErrorDeLaApiMuestraCodigoYMensaje
+FALLA MuestraUnRenglonPorPaisConLosDatosDeLaApi
+FALLA PaisSinDespliegueMuestraGuiones
+FALLA PaisSinLecturaMuestraNoDisponibleYNoSeSabe
+FALLA SinPaisesMuestraAviso
+FALLA SoloLlamaAGetApiPaises

@@ -1,3 +1,111 @@
 @page "/"
+@inject ApiSynkra Api
+
+<PageTitle>Vista general · SynKra</PageTitle>
 
 <h1>Vista general</h1>
+
+@if (_error is not null)
+{
+    <div data-estado="error">
+        <p data-campo="error">@_error.Codigo: @_error.Message</p>
+        @if (_error.Detalles.Count > 0)
+        {
+            <ul>
+                @foreach (var d in _error.Detalles)
+                {
+                    <li>@d.Campo: @d.Motivo</li>
+                }
+            </ul>
+        }
+    </div>
+}
+else if (_paises is null)
+{
+    <p data-estado="cargando">Cargando…</p>
+}
+else if (_paises.Count == 0)
+{
+    <p data-estado="vacio">No hay países configurados en la API.</p>
+}
+else
+{
+    <table id="vista-general">
+        <thead>
+            <tr>
+                <th>País</th>
+                <th>Core</th>
+                <th>Versión</th>
+                <th>Imagen</th>
+                <th>Plugins activos</th>
+                <th>Clúster</th>
+                <th>Concuerda</th>
+                <th>Último despliegue</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in _paises)
+            {
+                <tr data-pais="@p.Pais">
+                    <td data-campo="pais">@p.Pais</td>
+                    <td data-campo="core">@(p.Core ?? Guion)</td>
+                    <td data-campo="versionCore">@(p.VersionCore ?? Guion)</td>
+                    <td data-campo="imagen">@(p.Imagen ?? Guion)</td>
+                    <td data-campo="plugins">
+                        @if (p.Plugins.Count == 0)
+                        {
+                            @Guion
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var pl in p.Plugins)
+                                {
+                                    <li>@pl.Nombre @pl.Version</li>
+                                }
+                            </ul>
+                        }
+                    </td>
+                    <td data-campo="lectura">@TextoLectura(p.Lectura)</td>
+                    <td data-campo="concuerda">@TextoConcuerda(p.Concuerda)</td>
+                    <td data-campo="ultimoDespliegueId">@(p.UltimoDespliegueId is long id ? $"#{id}" : Guion)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private const string Guion = "—";
+
+    private IReadOnlyList<VistaPais>? _paises;
+    private ErrorApiSynkraException? _error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _paises = await Api.VistaGeneralAsync();
+        }
+        catch (ErrorApiSynkraException e)
+        {
+            _error = e;
+        }
+    }
+
+    private static string TextoLectura(LecturaCluster lectura) => lectura switch
+    {
+        LecturaCluster.Vacio => "Vacío",
+        LecturaCluster.Leido => "Leído",
+        LecturaCluster.Inconsistente => "Inconsistente",
+        LecturaCluster.NoDisponible => "No disponible",
+        _ => throw new ArgumentOutOfRangeException(nameof(lectura)),
+    };
+
+    private static string TextoConcuerda(bool? concuerda) => concuerda switch
+    {
+        true => "Sí",
+        false => "No",
+        null => "No se sabe",
+    };
+}
