@@ -22,6 +22,10 @@ for v in "$VB" "$VC" "$VI"; do
   [ -n "$v" ] || { echo "FALLA versiones: no se pudo leer una version de build.gradle.kts o de IMAGEN_INIT_POR_DEFECTO" >&2; exit 1; }
 done
 
+# Las versiones de las etiquetas deben coincidir con las del overlay (newTag y SYNKRA_KUBERNETES_IMAGEN_INIT); si no, FALLA versiones.
+KUBECONFIG=/dev/null kubectl kustomize deploy/overlays/kind | python3 -I scripts/verificar-backend.py --versiones \
+  || { echo "FALLA versiones: el overlay de kind no coincide con el origen de las versiones" >&2; exit 1; }
+
 echo "+ ./gradlew :backend:bootJar :core:bootJar"
 ./gradlew :backend:bootJar :core:bootJar || { echo "FALLA gradle: ./gradlew :backend:bootJar :core:bootJar salió con $?" >&2; exit 1; }
 

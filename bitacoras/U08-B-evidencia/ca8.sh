@@ -56,6 +56,9 @@ imagen sin-digest init-descarga/Dockerfile 's/^\(FROM alpine:3.20\)@sha256:[0-9a
 imagen uid-java backend/src/main/java/io/synkra/kubernetes/ConstructorObjetosPais.java 's/UID_CONTENEDORES = 10001L/UID_CONTENEDORES = 10002L/'
 imagen shellcheck init-descarga/descargar.sh '$a ls $1'
 
+echo; echo "== mutacion versiones (F-06): ronda3-deriva.sh"
+bash bitacoras/U08-B-evidencia/ronda3-deriva.sh 2>&1
+
 echo; echo "== limpieza: docker rmi de las etiquetas mutacion.local:1"
 docker rmi $R/synkra-backend:0.1.0 $R/synkra-core-ejemplo:2.1.0 $R/synkra-init-descarga:1.0.0 2>&1 | grep -c Untagged
 echo "== Id de las imagenes buenas DESPUES"; ids

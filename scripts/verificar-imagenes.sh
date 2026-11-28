@@ -37,6 +37,10 @@ CORE="$REG/synkra-core-ejemplo:$VC"
 INIT="$REG/synkra-init-descarga:$VI"
 ARQ="$(docker version -f '{{.Server.Arch}}')"
 
+# Las versiones de las etiquetas deben coincidir con las del overlay (newTag y SYNKRA_KUBERNETES_IMAGEN_INIT); si no, FALLA versiones.
+KUBECONFIG=/dev/null kubectl kustomize deploy/overlays/kind | python3 -I scripts/verificar-backend.py --versiones \
+  || { echo "FALLA versiones: el overlay de kind no coincide con el origen de las versiones"; FALLOS=$((FALLOS + 1)); }
+
 # 1. Toda linea FROM lleva digest.
 for df in backend/Dockerfile core/Dockerfile init-descarga/Dockerfile; do
   while IFS= read -r linea; do
