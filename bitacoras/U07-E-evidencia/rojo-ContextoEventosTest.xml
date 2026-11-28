@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.synkra.kubernetes.ContextoEventosTest" tests="3" skipped="0" failures="3" errors="0" timestamp="2026-11-28T02:49:05.608Z" hostname="casdav-Legion-Pro-5-16ADR10" time="0.202">
+  <properties/>
+  <testcase name="losEventosDeObjetosAjenosNoAparecen()" classname="io.synkra.kubernetes.ContextoEventosTest" time="0.069">
+    <failure message="org.opentest4j.AssertionFailedError: &#10;expected: &quot;Warning FailedCreate: mio&quot;&#10; but was: &quot;&quot;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+expected: &quot;Warning FailedCreate: mio&quot;
+ but was: &quot;&quot;
+	at io.synkra.kubernetes.ContextoEventosTest.losEventosDeObjetosAjenosNoAparecen(ContextoEventosTest.java:49)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="sinPodsLlegaElFailedCreateDelReplicaSetYElEventoDelDeployment()" classname="io.synkra.kubernetes.ContextoEventosTest" time="0.061">
+    <failure message="org.opentest4j.AssertionFailedError: &#10;expected: &#10;  &quot;Normal ScalingReplicaSet: Scaled up replica set synkra-core-7d9f to 1&#10;  Warning FailedCreate: exceeded quota: cuota-pe&quot;&#10; but was: &#10;  &quot;&quot;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+expected: 
+  &quot;Normal ScalingReplicaSet: Scaled up replica set synkra-core-7d9f to 1
+  Warning FailedCreate: exceeded quota: cuota-pe&quot;
+ but was: 
+  &quot;&quot;
+	at io.synkra.kubernetes.ContextoEventosTest.sinPodsLlegaElFailedCreateDelReplicaSetYElEventoDelDeployment(ContextoEventosTest.java:36)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="conUnPodSusEventosYLosDelReplicaSetSalenMezcladosPorHora()" classname="io.synkra.kubernetes.ContextoEventosTest" time="0.07">
+    <failure message="org.opentest4j.AssertionFailedError: &#10;Expecting actual:&#10;  [&quot;Warning BackOff: del pod&quot;]&#10;to contain exactly (and in same order):&#10;  [&quot;Normal SuccessfulCreate: del replicaset&quot;,&#10;    &quot;Normal ScalingReplicaSet: del deployment&quot;,&#10;    &quot;Warning BackOff: del pod&quot;]&#10;but could not find the following elements:&#10;  [&quot;Normal SuccessfulCreate: del replicaset&quot;,&#10;    &quot;Normal ScalingReplicaSet: del deployment&quot;]&#10;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+Expecting actual:
+  [&quot;Warning BackOff: del pod&quot;]
+to contain exactly (and in same order):
+  [&quot;Normal SuccessfulCreate: del replicaset&quot;,
+    &quot;Normal ScalingReplicaSet: del deployment&quot;,
+    &quot;Warning BackOff: del pod&quot;]
+but could not find the following elements:
+  [&quot;Normal SuccessfulCreate: del replicaset&quot;,
+    &quot;Normal ScalingReplicaSet: del deployment&quot;]
+
+	at io.synkra.kubernetes.ContextoEventosTest.conUnPodSusEventosYLosDelReplicaSetSalenMezcladosPorHora(ContextoEventosTest.java:60)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <system-out><![CDATA[2026-11-27T21:49:05.614-05:00  INFO 619646 --- [    Test worker] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[33897] starting to accept connections on localhost
+2026-11-27T21:49:05.623-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[33897] received request: POST /api/v1/namespaces/synkra-pe/events HTTP/1.1 and responded: HTTP/1.1 201 Created
+2026-11-27T21:49:05.627-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[33897] received request: POST /api/v1/namespaces/synkra-pe/events HTTP/1.1 and responded: HTTP/1.1 201 Created
+2026-11-27T21:49:05.629-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[33897] received request: POST /api/v1/namespaces/synkra-pe/events HTTP/1.1 and responded: HTTP/1.1 201 Created
+2026-11-27T21:49:05.630-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[33897] received request: POST /api/v1/namespaces/synkra-pe/events HTTP/1.1 and responded: HTTP/1.1 201 Created
+2026-11-27T21:49:05.633-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[33897] received request: GET /api/v1/namespaces/synkra-pe/pods?labelSelector=app.kubernetes.io%2Fname%3Dsynkra-core HTTP/1.1 and responded: HTTP/1.1 200 OK
+2026-11-27T21:49:05.654-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[33897] received request: GET /api/v1/namespaces/synkra-pe/events HTTP/1.1 and responded: HTTP/1.1 200 OK
+2026-11-27T21:49:05.667-05:00  INFO 619646 --- [    Test worker] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[33897] done accepting connections
+2026-11-27T21:49:05.683-05:00  INFO 619646 --- [    Test worker] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[33919] starting to accept connections on localhost
+2026-11-27T21:49:05.703-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[33919] received request: POST /api/v1/namespaces/synkra-pe/events HTTP/1.1 and responded: HTTP/1.1 201 Created
+2026-11-27T21:49:05.707-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[33919] received request: POST /api/v1/namespaces/synkra-pe/events HTTP/1.1 and responded: HTTP/1.1 201 Created
+2026-11-27T21:49:05.710-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[33919] received request: GET /api/v1/namespaces/synkra-pe/pods?labelSelector=app.kubernetes.io%2Fname%3Dsynkra-core HTTP/1.1 and responded: HTTP/1.1 200 OK
+2026-11-27T21:49:05.731-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[33919] received request: GET /api/v1/namespaces/synkra-pe/events HTTP/1.1 and responded: HTTP/1.1 200 OK
+2026-11-27T21:49:05.733-05:00  INFO 619646 --- [    Test worker] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[33919] done accepting connections
+2026-11-27T21:49:05.743-05:00  INFO 619646 --- [    Test worker] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40285] starting to accept connections on localhost
+2026-11-27T21:49:05.755-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40285] received request: POST /api/v1/namespaces/synkra-pe/pods HTTP/1.1 and responded: HTTP/1.1 201 Created
+2026-11-27T21:49:05.775-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40285] received request: POST /api/v1/namespaces/synkra-pe/events HTTP/1.1 and responded: HTTP/1.1 201 Created
+2026-11-27T21:49:05.777-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40285] received request: POST /api/v1/namespaces/synkra-pe/events HTTP/1.1 and responded: HTTP/1.1 201 Created
+2026-11-27T21:49:05.779-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40285] received request: POST /api/v1/namespaces/synkra-pe/events HTTP/1.1 and responded: HTTP/1.1 201 Created
+2026-11-27T21:49:05.781-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40285] received request: GET /api/v1/namespaces/synkra-pe/pods?labelSelector=app.kubernetes.io%2Fname%3Dsynkra-core HTTP/1.1 and responded: HTTP/1.1 200 OK
+2026-11-27T21:49:05.792-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40285] received request: GET /api/v1/namespaces/synkra-pe/pods?fieldSelector=metadata.name%3Dsynkra-core-7d9f-abc HTTP/1.1 and responded: HTTP/1.1 200 OK
+2026-11-27T21:49:05.797-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40285] received request: GET /api/v1/namespaces/synkra-pe/pods/synkra-core-7d9f-abc/log?pretty=false&container=core&tailLines=200 HTTP/1.1 and responded: HTTP/1.1 200 OK
+2026-11-27T21:49:05.799-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40285] received request: GET /api/v1/namespaces/synkra-pe/pods?fieldSelector=metadata.name%3Dsynkra-core-7d9f-abc HTTP/1.1 and responded: HTTP/1.1 200 OK
+2026-11-27T21:49:05.800-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40285] received request: GET /api/v1/namespaces/synkra-pe/pods/synkra-core-7d9f-abc/log?pretty=false&container=descarga HTTP/1.1 and responded: HTTP/1.1 200 OK
+2026-11-27T21:49:05.801-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40285] received request: GET /api/v1/namespaces/synkra-pe/events HTTP/1.1 and responded: HTTP/1.1 200 OK
+2026-11-27T21:49:05.806-05:00  INFO 619646 --- [    Test worker] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[40285] done accepting connections
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

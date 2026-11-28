@@ -1,0 +1,30 @@
+fecha: 2026-11-28T03:19:01Z  sha: 03ffd16  mutación: 08-cero-escrituras
+$ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"; (cd "$D" && git init -q)
+$ sed -i -e /\^\ \ \ \ \ \ \ \ if\ \(\!vencido\)\ \{\$/i\\\ \ \ \ \ \ \ \ kubernetes.aplicar\(kubernetes.construir\(new\ io.synkra.kubernetes.api.PlanPais\(d.pais\(\)\,\ d.imagen\(\)\,\ java.util.List.of\(\)\)\)\)\; "$D/backend/src/main/java/io/synkra/despliegue/VigilanciaDespliegues.java"
+--- diff de la mutación (copia vs HEAD)
+91a92
+>         kubernetes.aplicar(kubernetes.construir(new io.synkra.kubernetes.api.PlanPais(d.pais(), d.imagen(), java.util.List.of())));
+$ (cd "$D" && ./gradlew :backend:test --tests '*VigilanciaTest' --tests '*RetomarVigilanciaTest' --tests '*AplicandoTest' --tests '*ReintentosClienteTest' --tests '*EstadoRolloutTest' --tests '*ContextoEventosTest' --tests '*VigilanciaCoincideTest' --tests '*VigilanciaDobleTest')
+30 tests completed, 15 failed
+BUILD FAILED in 23s
+$ grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.RetomarVigilanciaTest.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaCoincideTest.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaDobleTest.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaTest.xml
+--- pruebas que cayeron (clase.método)
+RetomarVigilanciaTest.trasUnReinicioSeRetomaLaVigilanciaSinReaplicarYLosPlanesVencenSolos
+VigilanciaCoincideTest.soloElShaDeUnPluginDifiereNoEsListo
+VigilanciaCoincideTest.soloLosPluginsDifierenNoEsListo
+VigilanciaCoincideTest.soloLaImagenDifiereNoEsListo
+VigilanciaDobleTest.alVencerElPlazoElContextoDelClusterEntraEnElRegistro
+VigilanciaDobleTest.unFallidoConContextoIlegibleSeCierraPorPlazoComoSinLectura
+VigilanciaDobleTest.unaFilaQueOtraPasadaYaCerroSeSaltaSinCortarLaPasada
+VigilanciaTest.pyUnAplicandoSinNadaEnElClusterSeCierraPorPlazo
+VigilanciaTest.coVenceElPlazoExactoConPropiedadDeDosMinutos
+VigilanciaTest.clCrashLoopBackOffCierraEnLaMismaPasadaConElContextoDeVerdad
+VigilanciaTest.arInitErrorCierraConElLogDelInit
+VigilanciaTest.ecSinLecturaNoCierraNadaHastaElPlazo
+VigilanciaTest.uyUnPodViejoListoNoTapaAlNuevoQueFalla
+VigilanciaTest.boLoQueCorreNoEsLoConfirmadoNuncaEsListo
+VigilanciaTest.peListoCuandoLoQueCorreEsLoConfirmado

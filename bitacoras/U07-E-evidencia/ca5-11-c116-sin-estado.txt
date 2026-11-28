@@ -1,0 +1,19 @@
+fecha: 2026-11-28T03:19:37Z  sha: 03ffd16  mutación: 11-c116-sin-estado
+$ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"; (cd "$D" && git init -q)
+$ sed -i -e s/\ where\ estado\ =\ \'aplicando\'\ \"/\ \"/ "$D/backend/src/main/java/io/synkra/registro/RegistroServicio.java"
+--- diff de la mutación (copia vs HEAD)
+172c172
+<         var filas = jdbc.query("select " + COLUMNAS + " from reg_despliegue where estado = 'aplicando' "
+---
+>         var filas = jdbc.query("select " + COLUMNAS + " from reg_despliegue "
+$ (cd "$D" && ./gradlew :backend:test --tests '*VigilanciaTest' --tests '*RetomarVigilanciaTest' --tests '*AplicandoTest' --tests '*ReintentosClienteTest' --tests '*EstadoRolloutTest' --tests '*ContextoEventosTest' --tests '*VigilanciaCoincideTest' --tests '*VigilanciaDobleTest')
+30 tests completed, 4 failed
+BUILD FAILED in 26s
+$ grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaTest.xml
+backend/build/test-results/test/TEST-io.synkra.registro.AplicandoTest.xml
+--- pruebas que cayeron (clase.método)
+VigilanciaTest.coVenceElPlazoExactoConPropiedadDeDosMinutos
+VigilanciaTest.clCrashLoopBackOffCierraEnLaMismaPasadaConElContextoDeVerdad
+VigilanciaTest.peListoCuandoLoQueCorreEsLoConfirmado
+AplicandoTest.soloLosAplicandoDeTodosLosPaisesElMasAntiguoPrimero

@@ -37,6 +37,7 @@ class ConfiguracionKubernetes {
                 .withAutoConfigure(false)
                 .withMasterUrl(cuenta.url())
                 .withOauthTokenProvider(cuenta::token)
+                .withRequestRetryBackoffLimit(0)
                 .withCaCertFile(Files.isReadable(cuenta.archivoCa()) ? cuenta.archivoCa().toString() : null)
                 .build();
         return new KubernetesClientBuilder().withConfig(config).build();

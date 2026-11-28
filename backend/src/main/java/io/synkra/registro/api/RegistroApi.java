@@ -39,4 +39,10 @@ public interface RegistroApi {
      * @throws IllegalArgumentException si el país no son dos letras minúsculas (nulo incluido)
      */
     Optional<DespliegueRegistrado> ultimoListo(String pais);
+
+    /**
+     * C-116: los despliegues en {@code aplicando} de todos los países, el más antiguo primero
+     * ({@code confirmado_en}, y a igualdad el id menor), con sus plugins y sin contexto. No mira {@code synkra.paises}.
+     */
+    List<DespliegueRegistrado> aplicando();
 }

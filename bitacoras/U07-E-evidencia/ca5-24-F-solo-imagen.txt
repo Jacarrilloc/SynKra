@@ -1,0 +1,15 @@
+fecha: 2026-11-28T03:16:43Z  sha: 03ffd16  mutación: 24-F-solo-imagen
+$ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"; (cd "$D" && git init -q)
+$ sed -i -e s/if\ \(\!d.imagen\(\).equals\(corre.imagenCore\(\)\)\)\ \{/if\ \(false\)\ \{/ "$D/backend/src/main/java/io/synkra/despliegue/VigilanciaDespliegues.java"
+--- diff de la mutación (copia vs HEAD)
+147c147
+<         if (!d.imagen().equals(corre.imagenCore())) {
+---
+>         if (false) {
+$ (cd "$D" && ./gradlew :backend:test --tests '*VigilanciaTest' --tests '*RetomarVigilanciaTest' --tests '*AplicandoTest' --tests '*ReintentosClienteTest' --tests '*EstadoRolloutTest' --tests '*ContextoEventosTest' --tests '*VigilanciaCoincideTest' --tests '*VigilanciaDobleTest')
+30 tests completed, 1 failed
+BUILD FAILED in 35s
+$ grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaCoincideTest.xml
+--- pruebas que cayeron (clase.método)
+VigilanciaCoincideTest.soloLaImagenDifiereNoEsListo

@@ -1,0 +1,47 @@
+fecha: 2026-11-28T03:23:11Z  sha: 03ffd16 (ronda 2)  puerto 18094 libre: 0
+$ ./gradlew :backend:bootJar
+BUILD SUCCESSFUL in 904ms
+export SYNKRA_DATA=$(mktemp -d); J=$(mktemp -d); H=$(mktemp -d)
+arranca() { HOME="$H" KUBECONFIG="$H/kubeconfig-falso" SYNKRA_PAISES=co,pe java -Duser.home="$H" -jar backend/build/libs/backend-*.jar --server.port=18094 > "$J/log-$1.txt" 2>&1 & PID=$!; timeout 90 bash -c 'until curl -sf localhost:18094/actuator/health >/dev/null; do sleep 1; done'; }
+# 1. Primer arranque: solo migra.
+arranca 0; kill $PID; wait $PID 2>/dev/null
+# 2. Filas sembradas con SQL: un aplicando viejo (pe), uno reciente (co) y dos planes pendientes (pe).
+python3 -I - "$SYNKRA_DATA/synkra.db" <<'EOF'
+import sqlite3, sys, time
+c = sqlite3.connect(sys.argv[1]); ahora = int(time.time() * 1000); m = 60000
+img = "localhost:5001/synkra-core@sha256:" + "a" * 64
+for i, pais, estado, en in ((91, "pe", "confirmado", ahora - 5 * m), (92, "co", "confirmado", ahora),
+                            (93, "pe", "pendiente", ahora - 31 * m), (94, "pe", "pendiente", ahora)):
+    c.execute("insert into dep_plan (id, pais, tipo, origen_id, core, version_core, plugins, resumen, cambios, estado, creado_por,"
+              " creado_en, vence_en) values (?, ?, 'despliegue', null, 'synkra-core', '2.1.0', '[]', '{}', '{}', ?, 'ana', ?, ?)",
+              (i, pais, estado, en, en + 30 * m))
+for i, pais, en in ((91, "pe", ahora - 4 * m), (92, "co", ahora)):
+    c.execute("insert into reg_despliegue (id, pais, tipo, origen_id, core, version_core, imagen, creado_por, confirmado_por,"
+              " confirmado_en, estado, terminado_en, veredicto) values (?, ?, 'despliegue', null, 'synkra-core', '2.1.0', ?,"
+              " 'ana', 'luis', ?, 'aplicando', null, '{\"global\":\"APROBADA\",\"porPlugin\":[],\"motivosGlobales\":[]}')",
+              (i, pais, img, en))
+c.commit()
+EOF
+# 3. Segundo arranque con los valores por defecto (PT5S, PT3M, PT1M): nadie llama a ninguna ruta.
+arranca 1
+python3 -I - "$SYNKRA_DATA/synkra.db" <<'EOF'
+import sqlite3, sys, time
+fin, r = time.time() + 60, None
+while time.time() < fin:
+    c = sqlite3.connect("file:" + sys.argv[1] + "?mode=ro", uri=True)
+    r = c.execute("select (select estado from reg_despliegue where id = 91), (select estado from dep_plan where id = 93)").fetchone()
+    c.close()
+    if r == ("fallido", "vencido"):
+        break
+    time.sleep(1)
+print("espera=" + ("0" if r == ("fallido", "vencido") else "1 %r" % (r,)))
+EOF
+for id in 91 92; do curl -s localhost:18094/api/despliegues/$id | python3 -I -c "import json,sys; r=json.load(sys.stdin); print(r['id'], r['estado'], r['contexto'])"; done
+kill $PID; wait $PID 2>/dev/null
+python3 -I -c "import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); print(c.execute('select id, estado from dep_plan order by id').fetchall()); print(c.execute('select id, estado from reg_despliegue order by id').fetchall())" "$SYNKRA_DATA/synkra.db"
+--- salida
+espera=0
+91 fallido {'logCore': '', 'logInit': '', 'eventos': 'Venció el plazo de vigilancia sin que el despliegue quedara listo\nNo se pudo leer el estado del despliegue en el clúster'}
+92 aplicando None
+[(91, 'confirmado'), (92, 'confirmado'), (93, 'vencido'), (94, 'pendiente')]
+[(91, 'fallido'), (92, 'aplicando')]

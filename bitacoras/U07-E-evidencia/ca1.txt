@@ -1,0 +1,52 @@
+fecha: 2026-11-28T03:22:39Z  sha: 03ffd16 (ronda 2)
+./gradlew :backend:test --rerun --tests '*VigilanciaTest' 2>&1 | grep -v "INFO\|WARN\|^$"
+grep -ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-*VigilanciaTest.xml
+grep -o 'testcase name="[A-Za-z0-9]*()"' backend/build/test-results/test/TEST-*VigilanciaTest.xml
+python3 -I - backend/build/sqlite-pruebas/VigilanciaTest/synkra.db <<'PY'
+import sqlite3, sys
+c = sqlite3.connect(sys.argv[1])
+q = lambda s: print(c.execute(s).fetchall())
+q("select r.pais, r.estado, x.log_core, x.log_init, x.eventos from reg_despliegue r"
+  " left join reg_contexto x on x.despliegue_id = r.id order by r.pais, r.id")
+q("select (select count(*) from reg_despliegue where estado = 'aplicando'),"
+  " (select count(*) from reg_despliegue where terminado_en is null),"
+  " (select count(*) from reg_despliegue r where r.id not in (select id from dep_plan))")
+PY
+--- salida
+> Task :verificador:compileJava UP-TO-DATE
+> Task :backend:compileJava UP-TO-DATE
+> Task :backend:processResources UP-TO-DATE
+> Task :backend:classes UP-TO-DATE
+> Task :verificador:compileTestFixturesJava UP-TO-DATE
+> Task :backend:compileTestJava UP-TO-DATE
+> Task :backend:processTestResources UP-TO-DATE
+> Task :backend:testClasses UP-TO-DATE
+> Task :verificador:processResources NO-SOURCE
+> Task :verificador:classes UP-TO-DATE
+> Task :verificador:jar UP-TO-DATE
+> Task :verificador:processTestFixturesResources NO-SOURCE
+> Task :verificador:testFixturesClasses UP-TO-DATE
+> Task :verificador:testFixturesJar UP-TO-DATE
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+> Task :backend:test
+[Incubating] Problems report is available at: file:///home/casdav/Projects/Master/wt-m6r-U07-E/build/reports/problems/problems-report.html
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+BUILD SUCCESSFUL in 10s
+9 actionable tasks: 1 executed, 8 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
+tests="2" skipped="0" failures="0" errors="0"
+tests="8" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.RetomarVigilanciaTest.xml:testcase name="unPlazoNoPositivoNoArranca()"
+backend/build/test-results/test/TEST-io.synkra.despliegue.RetomarVigilanciaTest.xml:testcase name="trasUnReinicioSeRetomaLaVigilanciaSinReaplicarYLosPlanesVencenSolos()"
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaTest.xml:testcase name="pyUnAplicandoSinNadaEnElClusterSeCierraPorPlazo()"
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaTest.xml:testcase name="coVenceElPlazoExactoConPropiedadDeDosMinutos()"
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaTest.xml:testcase name="clCrashLoopBackOffCierraEnLaMismaPasadaConElContextoDeVerdad()"
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaTest.xml:testcase name="arInitErrorCierraConElLogDelInit()"
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaTest.xml:testcase name="ecSinLecturaNoCierraNadaHastaElPlazo()"
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaTest.xml:testcase name="uyUnPodViejoListoNoTapaAlNuevoQueFalla()"
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaTest.xml:testcase name="boLoQueCorreNoEsLoConfirmadoNuncaEsListo()"
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaTest.xml:testcase name="peListoCuandoLoQueCorreEsLoConfirmado()"
+[('ar', 'fallido', '', 'descarga: plugins listos\n', 'Warning BackOff: Back-off restarting failed container'), ('bo', 'fallido', '', '', 'Venció el plazo de vigilancia sin que el despliegue quedara listo\nLo que corre en el clúster no es lo que se confirmó'), ('cl', 'fallido', 'core: no arranca\n', 'descarga: plugins listos\n', 'Warning BackOff: Back-off restarting failed container'), ('co', 'fallido', '', '', 'Venció el plazo de vigilancia sin que el despliegue quedara listo'), ('ec', 'fallido', '', '', 'Venció el plazo de vigilancia sin que el despliegue quedara listo\nNo se pudo leer el estado del despliegue en el clúster'), ('pe', 'listo', None, None, None), ('py', 'fallido', '', '', 'Venció el plazo de vigilancia sin que el despliegue quedara listo\nLo que corre en el clúster no es lo que se confirmó'), ('uy', 'fallido', 'core: no arranca\n', 'descarga: plugins listos\n', 'Warning BackOff: Back-off restarting failed container')]
+[(0, 0, 2)]

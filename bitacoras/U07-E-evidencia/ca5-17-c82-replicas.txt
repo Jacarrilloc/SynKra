@@ -1,0 +1,16 @@
+fecha: 2026-11-28T03:21:38Z  sha: 03ffd16  mutación: 17-c82-replicas
+$ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"; (cd "$D" && git init -q)
+$ sed -i -e s/boolean\ replicas\ =\ status.getReplicas\(\)\ ==\ null\ \|\|\ status.getReplicas\(\)\ ==\ deseadas\;/boolean\ replicas\ =\ true\;/ "$D/backend/src/main/java/io/synkra/kubernetes/LectorPais.java"
+--- diff de la mutación (copia vs HEAD)
+82c82
+<         boolean replicas = status.getReplicas() == null || status.getReplicas() == deseadas;
+---
+>         boolean replicas = true;
+$ (cd "$D" && ./gradlew :backend:test --tests '*VigilanciaTest' --tests '*RetomarVigilanciaTest' --tests '*AplicandoTest' --tests '*ReintentosClienteTest' --tests '*EstadoRolloutTest' --tests '*ContextoEventosTest' --tests '*VigilanciaCoincideTest' --tests '*VigilanciaDobleTest')
+30 tests completed, 2 failed
+BUILD FAILED in 43s
+$ grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.kubernetes.EstadoRolloutTest.xml
+--- pruebas que cayeron (clase.método)
+EstadoRolloutTest.unPodNuevoPendienteConElViejoListoEsEnCurso
+EstadoRolloutTest.conPodsViejosSobrandoEsEnCurso

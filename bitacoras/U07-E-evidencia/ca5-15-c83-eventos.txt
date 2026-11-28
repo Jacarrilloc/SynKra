@@ -1,0 +1,17 @@
+fecha: 2026-11-28T03:20:25Z  sha: 03ffd16  mutación: 15-c83-eventos
+$ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"; (cd "$D" && git init -q)
+$ sed -i -e s/\ \|\|\ esDelDeploymentODeSusReplicaSet\(e.getInvolvedObject\(\)\)// "$D/backend/src/main/java/io/synkra/kubernetes/LectorPais.java"
+--- diff de la mutación (copia vs HEAD)
+167c167
+<                         || esDelDeploymentODeSusReplicaSet(e.getInvolvedObject())))
+---
+>                        ))
+$ (cd "$D" && ./gradlew :backend:test --tests '*VigilanciaTest' --tests '*RetomarVigilanciaTest' --tests '*AplicandoTest' --tests '*ReintentosClienteTest' --tests '*EstadoRolloutTest' --tests '*ContextoEventosTest' --tests '*VigilanciaCoincideTest' --tests '*VigilanciaDobleTest')
+30 tests completed, 3 failed
+BUILD FAILED in 23s
+$ grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.kubernetes.ContextoEventosTest.xml
+--- pruebas que cayeron (clase.método)
+ContextoEventosTest.losEventosDeObjetosAjenosNoAparecen
+ContextoEventosTest.sinPodsLlegaElFailedCreateDelReplicaSetYElEventoDelDeployment
+ContextoEventosTest.conUnPodSusEventosYLosDelReplicaSetSalenMezcladosPorHora
