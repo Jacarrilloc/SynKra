@@ -18,6 +18,7 @@ VERBOS_ESCRITURA = ["get", "list", "watch", "create", "update", "patch"]
 VERBOS_LECTURA = ["get", "list", "watch"]
 PARTE = {"app.kubernetes.io/part-of": "synkra"}
 BACKEND = (("PersistentVolumeClaim", "synkra-datos"), ("Deployment", "synkra-backend"), ("Service", "synkra-backend"))
+FRONT = (("Deployment", "synkra-front"), ("Service", "synkra-front"))
 
 
 def reglas(pais):
@@ -36,8 +37,8 @@ def esperados():
         ("ServiceAccount", "synkra", "deployer"): PARTE,
     }
     # El backend (U08-B): aqui solo kind, namespace y nombre; sus campos los mira verificar-backend.py.
-    for k, n in BACKEND:
-        e[(k, "synkra", n)] = None
+    for k, n in BACKEND + FRONT:
+        e[(k, "synkra", n)] = None  # el front (U09-D) lo mira verificar-front.py
     for p in PAISES:
         e[("Namespace", "-", "synkra-" + p)] = dict(PARTE, **{"synkra.io/pais": p})
         e[("Role", "synkra-" + p, "synkra-deployer")] = PARTE

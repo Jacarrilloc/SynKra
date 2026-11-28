@@ -27,6 +27,7 @@ ENV_BASE = {
     "JAVA_TOOL_OPTIONS": "-XX:MaxRAMPercentage=70",
 }
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+FRONT3 = [("Deployment", NS, "synkra-front"), ("Ingress", NS, "synkra-front"), ("Service", NS, "synkra-front")]
 
 
 def leer(ruta, patron):
@@ -42,6 +43,7 @@ def leer(ruta, patron):
 
 
 # Origen unico de las versiones (el mismo que lee scripts/imagenes.sh): el overlay debe coincidir con ellas.
+VERSION_FRONT = leer("front/Synkra.Front.csproj", r"<Version>([^<]+)</Version>")
 VERSION_BACKEND = leer("backend/build.gradle.kts", r'^version *= *"([^"]+)"')
 IMAGEN_INIT = leer("backend/src/main/java/io/synkra/kubernetes/ConstructorObjetosPais.java",
                    r'IMAGEN_INIT_POR_DEFECTO *= *"([^"]+)"')
@@ -77,23 +79,29 @@ def sonda(regla, c, clave, ruta, periodo, umbral):
 
 
 def solo_versiones(objs):
-    """--versiones: el newTag del overlay y la imagen del init de backend-kind.yaml coinciden con el origen."""
-    d = [o for o in objs if o.get("kind") == "Deployment"]
-    if not d:
-        print("FALLA entrada: no hay Deployment en la entrada")
-        return 1
-    c = d[0]["spec"]["template"]["spec"]["containers"][0]
-    env = {e["name"]: e.get("value") for e in c.get("env") or []}
-    tag = lambda i: (i or "").rsplit(":", 1)[-1]
+    """--versiones: los newTag del overlay (backend y front) y la imagen del init de backend-kind.yaml coinciden con el origen."""
+    por_nombre = {o["metadata"]["name"]: o for o in objs if o.get("kind") == "Deployment"}
     malos = []
+    for n in ("synkra-backend", "synkra-front"):
+        if n not in por_nombre:
+            malos.append("no hay Deployment %s en la entrada" % n)
+    if malos:
+        print("\n".join("FALLA versiones: " + m for m in malos))
+        return 1
+    tag = lambda i: (i or "").rsplit(":", 1)[-1]
+    c = por_nombre["synkra-backend"]["spec"]["template"]["spec"]["containers"][0]
+    f = por_nombre["synkra-front"]["spec"]["template"]["spec"]["containers"][0]
+    env = {e["name"]: e.get("value") for e in c.get("env") or []}
     if tag(c.get("image")) != VERSION_BACKEND:
         malos.append("newTag del overlay %r, build.gradle.kts dice %r" % (tag(c.get("image")), VERSION_BACKEND))
     if env.get("SYNKRA_KUBERNETES_IMAGEN_INIT") != IMAGEN_INIT:
         malos.append("SYNKRA_KUBERNETES_IMAGEN_INIT %r, IMAGEN_INIT_POR_DEFECTO dice %r" % (env.get("SYNKRA_KUBERNETES_IMAGEN_INIT"), IMAGEN_INIT))
+    if tag(f.get("image")) != VERSION_FRONT:
+        malos.append("newTag de synkra-front %r, Synkra.Front.csproj dice %r" % (tag(f.get("image")), VERSION_FRONT))
     if malos:
         print("\n".join("FALLA versiones: " + m for m in malos))
         return 1
-    print("OK versiones: backend %s, init %s" % (VERSION_BACKEND, tag(IMAGEN_INIT)))
+    print("OK versiones: backend %s, init %s, front %s" % (VERSION_BACKEND, tag(IMAGEN_INIT), VERSION_FRONT))
     return 0
 
 
@@ -116,7 +124,7 @@ def main():
     if not base:
         esperados.append(("Ingress", NS, "synkra-backend"))
     esperados.sort()
-    # En el overlay completo el resto tiene que ser exactamente los ocho de la base (U08-A).
+    # En el overlay completo el resto tiene que ser exactamente los ocho de la base (U08-A) y los tres del front (U09-D).
     if base:
         propios, resto = objs, []
     else:
@@ -124,7 +132,7 @@ def main():
         resto = [o for o in objs if clave(o) not in esperados]
     igual("objetos", sorted(clave(o) for o in propios), esperados)
     if not base:
-        igual("base", sorted((clave(o) for o in resto), key=str), BASE8)
+        igual("base", sorted((clave(o) for o in resto), key=str), sorted(BASE8 + FRONT3, key=str))
     por = {o["kind"]: o for o in propios}
 
     for o in objs:
@@ -210,7 +218,7 @@ def main():
     if fallos:
         print("\n".join(fallos))
         return 1
-    print("OK backend: %d objetos" % len(propios) + ("" if base else " (más %d de la base)" % len(resto)))
+    print("OK backend: %d objetos" % len(propios) + ("" if base else " (más %d de la base y del front)" % len(resto)))
     return 0
 
 
