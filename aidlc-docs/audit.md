@@ -1150,3 +1150,7 @@ Se despacha el codificador de la ronda 2.
 ## 2026-11-28T10:53Z: fusión de #119 (U09-D)
 
 **Acción del orquestador:** U09-D salió VERDE en la ronda 2. Fusión de #119 en `70b7af1`, `MERGEABLE`/`CLEAN`. Toca `front/Dockerfile`, `deploy/` y `scripts/` (sin Java): no se repite `./gradlew check`; el revisor corrió `make install` en un `kind` recién creado, el front quedó servido y los criterios de U08-C siguen en verde. Siguiente: U09-E, cuya fase del navegador necesita a David.
+
+## 2026-11-28T11:01Z: U09-E fase 1 hecha; la fase 2 espera a David
+
+**Acción del orquestador:** el codificador de U09-E dejó `paso.sh` y `recorrido.md`, recreó `kind-synkra` desde su worktree, corrió la preparación (e2e en verde) y el paso 0. La fase 2 (recorrido en el navegador) necesita una persona: se le pide a David al despertar, con la línea de `/etc/hosts` y el certificado documentados en `recorrido.md`.
