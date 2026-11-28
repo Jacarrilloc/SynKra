@@ -1,0 +1,114 @@
+fecha: 2026-11-28T02:00:47-05:00
+sha: 8d7a11e (ultimo commit de codigo: 8d7a11e)
+arch: x86_64
+imagen: mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
+
+=== mutacion orden-versiones (esperada: MuestraCadaCoreConSusVersionesEImagenes)
+--- diff de la mutacion
+<                     @foreach (var v in core.Versiones)
+>                     @foreach (var v in core.Versiones.OrderByDescending(x => x.Version, StringComparer.Ordinal))
+Failed!  - Failed:     1, Passed:    63, Skipped:     0, Total:    64, Duration: 400 ms - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA MuestraCadaCoreConSusVersionesEImagenes
+
+=== mutacion filtra (esperada: NoFiltraNiComparaVersiones)
+--- diff de la mutacion
+<                         @foreach (var p in plugins)
+>                         @foreach (var p in plugins.Where(q => core.Versiones.Any(v => q.CoreCompatible.StartsWith(v.Version.Split((char)46)[0]))))
+Failed!  - Failed:     1, Passed:    63, Skipped:     0, Total:    64, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA NoFiltraNiComparaVersiones
+
+=== mutacion etiquetas (esperada: EtiquetasSeOrdenanPorClave)
+--- diff de la mutacion
+<                                         @foreach (var e in p.Etiquetas.OrderBy(x => x.Key, StringComparer.Ordinal))
+>                                         @foreach (var e in p.Etiquetas)
+Failed!  - Failed:     1, Passed:    63, Skipped:     0, Total:    64, Duration: 410 ms - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA EtiquetasSeOrdenanPorClave
+
+=== mutacion error-local (esperada: ErrorEnLosPluginsDeUnCoreNoEscondeLosDemas)
+--- diff de la mutacion
+<                 _errores[core.Nombre] = e;
+>                 _error = e;
+Failed!  - Failed:     1, Passed:    63, Skipped:     0, Total:    64, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA ErrorEnLosPluginsDeUnCoreNoEscondeLosDemas
+
+=== mutacion subir (esperada: EnlaceDeSubidaPorCore)
+--- diff de la mutacion
+<             <a data-accion="subir" href="catalogo/@Uri.EscapeDataString(core.Nombre)/subir">Subir un plugin</a>
+>             <a data-accion="subir" href="catalogo/@core.Nombre/subir">Subir un plugin</a>
+Failed!  - Failed:     1, Passed:    63, Skipped:     0, Total:    64, Duration: 387 ms - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA EnlaceDeSubidaPorCore
+
+=== mutacion historial-orden (esperada: MuestraElHistorialDelPaisDelDespliegue)
+--- diff de la mutacion
+<                 @foreach (var h in _historial)
+>                 @foreach (var h in _historial.OrderByDescending(x => x.Id))
+Failed!  - Failed:     1, Passed:    63, Skipped:     0, Total:    64, Duration: 396 ms - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA MuestraElHistorialDelPaisDelDespliegue
+
+=== mutacion contexto-estado (esperada: FallidoSinContextoNoMuestraLaSeccion)
+--- diff de la mutacion
+<         @if (d.Contexto is { } c)
+>         @if (d.Estado == EstadoDespliegue.Fallido && (d.Contexto ?? new ContextoFallo("", "", "")) is { } c)
+Failed!  - Failed:     1, Passed:    63, Skipped:     0, Total:    64, Duration: 451 ms - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA FallidoSinContextoNoMuestraLaSeccion
+
+=== mutacion volver-listo (esperada: CadaRenglonEnlazaAlDetalleYAVolver)
+--- diff de la mutacion
+<                         <td data-campo="accion"><a data-accion="volver" href="despliegues/@h.Id/volver">Volver a este</a></td>
+>                         <td data-campo="accion">@if (h.Estado == EstadoDespliegue.Listo) {<a data-accion="volver" href="despliegues/@h.Id/volver">Volver a este</a>}</td>
+Failed!  - Failed:     1, Passed:    63, Skipped:     0, Total:    64, Duration: 424 ms - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA CadaRenglonEnlazaAlDetalleYAVolver
+
+=== mutacion sin-historial (esperada: MuestraElHistorialDelPaisDelDespliegue)
+--- diff de la mutacion
+<             pais = _despliegue.Pais;
+>             _cargado = true; return;
+Failed!  - Failed:     5, Passed:    59, Skipped:     0, Total:    64, Duration: 5 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA ActualizarVuelveALeer
+FALLA CadaRenglonEnlazaAlDetalleYAVolver
+FALLA ErrorDelHistorialDejaVerElDespliegue
+FALLA MuestraElHistorialDelPaisDelDespliegue
+FALLA SoloHaceLecturas
+
+=== mutacion fecha-local (esperada: FechasSeMuestranEnUtcYNulaComoGuion)
+--- diff de la mutacion
+<         => f is { } v ? v.UtcDateTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture) + " UTC" : Guion;
+>         => f is { } v ? v.ToOffset(TimeSpan.FromHours(-5)).ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture) + " UTC" : Guion;
+Failed!  - Failed:     2, Passed:    62, Skipped:     0, Total:    64, Duration: 404 ms - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA DespliegueMuestraSusCamposYSusPlugins
+FALLA FechasSeMuestranEnUtcYNulaComoGuion
+
+=== mutacion veredicto (esperada: VeredictoSeMuestraTalCual)
+--- diff de la mutacion
+<             <pre data-campo="veredicto">@JsonSerializer.Serialize(d.Veredicto, SangriaJson)</pre>
+>             <pre data-campo="veredicto">@JsonSerializer.Serialize(d.Veredicto.GetProperty("global"), SangriaJson)</pre>
+Failed!  - Failed:     1, Passed:    63, Skipped:     0, Total:    64, Duration: 390 ms - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA VeredictoSeMuestraTalCual
+
+=== mutacion enlace-vista (esperada: UltimoDespliegueEnlazaAlDetalle)
+--- diff de la mutacion
+<                             <a href="despliegues/@id">#@id</a>
+>                             @($"#{id}")
+Failed!  - Failed:     1, Passed:    63, Skipped:     0, Total:    64, Duration: 370 ms - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA UltimoDespliegueEnlazaAlDetalle
+
+=== mutacion menu (esperada: MenuEnlazaLasTresPantallas)
+--- diff de la mutacion
+<     <NavLink href="desplegar">Desplegar</NavLink>
+Failed!  - Failed:     1, Passed:    63, Skipped:     0, Total:    64, Duration: 402 ms - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA MenuEnlazaLasTresPantallas
+
+fin

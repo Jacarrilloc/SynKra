@@ -1,0 +1,98 @@
+[
+  {
+    "id": 5,
+    "pais": "co",
+    "tipo": "reversion",
+    "origenId": 3,
+    "core": "synkra-core",
+    "versionCore": "2.1.0",
+    "imagen": "localhost:5001/synkra-core-ejemplo@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "plugins": [
+      {
+        "nombre": "kyc-co",
+        "version": "1.0.0",
+        "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "etiquetas": {
+          "pais": "co"
+        }
+      }
+    ],
+    "creadoPor": "ana",
+    "confirmadoPor": "luis",
+    "confirmadoEn": "2026-11-27T13:00:00Z",
+    "estado": "aplicando",
+    "terminadoEn": null
+  },
+  {
+    "id": 4,
+    "pais": "co",
+    "tipo": "despliegue",
+    "origenId": null,
+    "core": "synkra-core",
+    "versionCore": "2.1.0",
+    "imagen": "localhost:5001/synkra-core-ejemplo@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "plugins": [
+      {
+        "nombre": "kyc-co",
+        "version": "1.0.0",
+        "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "etiquetas": {
+          "pais": "co"
+        }
+      }
+    ],
+    "creadoPor": "ana",
+    "confirmadoPor": "luis",
+    "confirmadoEn": "2026-11-27T10:00:00Z",
+    "estado": "fallido",
+    "terminadoEn": "2026-11-27T10:05:00Z"
+  },
+  {
+    "id": 7,
+    "pais": "co",
+    "tipo": "despliegue",
+    "origenId": null,
+    "core": "synkra-core",
+    "versionCore": "2.1.0",
+    "imagen": "localhost:5001/synkra-core-ejemplo@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "plugins": [
+      {
+        "nombre": "kyc-co",
+        "version": "1.0.0",
+        "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "etiquetas": {
+          "pais": "co"
+        }
+      }
+    ],
+    "creadoPor": "ana",
+    "confirmadoPor": "luis",
+    "confirmadoEn": "2026-11-27T11:00:00Z",
+    "estado": "listo",
+    "terminadoEn": "2026-11-27T11:05:00Z"
+  },
+  {
+    "id": 3,
+    "pais": "co",
+    "tipo": "despliegue",
+    "origenId": null,
+    "core": "synkra-core",
+    "versionCore": "2.1.0",
+    "imagen": "localhost:5001/synkra-core-ejemplo@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "plugins": [
+      {
+        "nombre": "kyc-co",
+        "version": "1.0.0",
+        "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "etiquetas": {
+          "pais": "co"
+        }
+      }
+    ],
+    "creadoPor": "ana",
+    "confirmadoPor": "luis",
+    "confirmadoEn": "2026-11-27T09:00:00Z",
+    "estado": "listo",
+    "terminadoEn": "2026-11-27T09:05:00Z"
+  }
+]

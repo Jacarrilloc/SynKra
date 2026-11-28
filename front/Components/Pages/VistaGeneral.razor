@@ -47,7 +47,7 @@ else
             @foreach (var p in _paises)
             {
                 <tr data-pais="@p.Pais">
-                    <td data-campo="pais">@p.Pais</td>
+                    <td data-campo="pais"><a href="paises/@Uri.EscapeDataString(p.Pais)">@p.Pais</a></td>
                     <td data-campo="core">@(p.Core ?? Guion)</td>
                     <td data-campo="versionCore">@(p.VersionCore ?? Guion)</td>
                     <td data-campo="imagen">@(p.Imagen ?? Guion)</td>
@@ -68,7 +68,16 @@ else
                     </td>
                     <td data-campo="lectura">@TextoLectura(p.Lectura)</td>
                     <td data-campo="concuerda">@TextoConcuerda(p.Concuerda)</td>
-                    <td data-campo="ultimoDespliegueId">@(p.UltimoDespliegueId is long id ? $"#{id}" : Guion)</td>
+                    <td data-campo="ultimoDespliegueId">
+                        @if (p.UltimoDespliegueId is long id)
+                        {
+                            <a href="despliegues/@id">#@id</a>
+                        }
+                        else
+                        {
+                            @Guion
+                        }
+                    </td>
                 </tr>
             }
         </tbody>

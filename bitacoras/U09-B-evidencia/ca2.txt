@@ -1,0 +1,22 @@
+fecha: 2026-11-28T02:00:33-05:00
+sha: 8d7a11e (ultimo commit de codigo: 8d7a11e)
+arch: x86_64
+imagen: mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
+
++ docker image inspect --format '{{index .RepoDigests 0}}' mcr.microsoft.com/dotnet/sdk:10.0.404
+mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
++ scripts/dotnet-docker.sh build front.Tests
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Synkra.Front -> /src/front/bin/Debug/net10.0/Synkra.Front.dll
+  Synkra.Front.Tests -> /src/front.Tests/bin/Debug/net10.0/Synkra.Front.Tests.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:03.25
++ wc -l
+++ git merge-base HEAD main
++ git diff --name-only 367e09fd5243122b0e7506a6840365945e066f25 HEAD -- '*.csproj'
+0

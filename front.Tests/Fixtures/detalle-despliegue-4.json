@@ -1,0 +1,43 @@
+{
+  "id": 4,
+  "pais": "co",
+  "tipo": "despliegue",
+  "origenId": null,
+  "core": "synkra-core",
+  "versionCore": "3.0.0",
+  "imagen": "localhost:5001/synkra-core-ejemplo@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "plugins": [
+    {
+      "nombre": "kyc-pe",
+      "version": "2.0.0",
+      "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "etiquetas": {
+        "pais": "co"
+      }
+    }
+  ],
+  "creadoPor": "ana",
+  "confirmadoPor": "luis",
+  "confirmadoEn": "2026-11-27T10:00:00Z",
+  "estado": "fallido",
+  "terminadoEn": "2026-11-27T10:05:00Z",
+  "veredicto": {
+    "global": "APROBADA",
+    "plugins": [
+      {
+        "nombre": "kyc-pe",
+        "version": "2.0.0",
+        "core": "synkra-core",
+        "compatible": true,
+        "motivos": [],
+        "alternativas": []
+      }
+    ],
+    "motivosGlobales": []
+  },
+  "contexto": {
+    "logCore": "Error al cargar el plugin kyc-pe\nkyc-pe-2.0.0.jar no es compatible con el core\n",
+    "logInit": "descargado kyc-pe-2.0.0.jar\n",
+    "eventos": "Warning BackOff: Back-off restarting failed container core\n"
+  }
+}
