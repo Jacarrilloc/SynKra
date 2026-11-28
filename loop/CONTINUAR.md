@@ -33,7 +33,7 @@ U01 a U07 están **terminadas y fusionadas en `main`** (`8306ee7`, 894 pruebas e
 
 ### En vuelo
 
-Nada. El redactor de U08-A y U08-B se detuvo al pausar y **no dejó archivos** (`tareas/U08-*` no existe). No se creó ningún clúster: `kind get clusters` solo lista `gitops2` y `m08-gitops1`, que son de otros cursos, están **detenidos a propósito** y no se tocan.
+**Sesión local de Julian (04:40 UTC):** redactor de `tareas/U08-A-*.md` y `tareas/U08-B-*.md` en vuelo; U08 corre en la máquina de Julian (tiene `kind` v0.33, `kubectl` y los puertos 80, 443 y 5001 libres; sus clústeres `gitops2` y `m08-gitops1` están arriba y no se tocan). Si no hay archivos `tareas/U08-*`, se perdió: repetirlo. Antes: el redactor de David se detuvo al pausar y **no dejó archivos** (`tareas/U08-*` no existe). No se creó ningún clúster: `kind get clusters` solo lista `gitops2` y `m08-gitops1`, que son de otros cursos, están **detenidos a propósito** y no se tocan.
 
 ## Lo que sigue (en orden)
 
