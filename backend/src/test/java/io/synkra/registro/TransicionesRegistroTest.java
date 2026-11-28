@@ -146,7 +146,7 @@ class TransicionesRegistroTest {
     void id8UnaReversionGuardaSuOrigen() {
         api.registrar(nuevo(8, TipoDespliegue.REVERSION, 1L, List.of(kyc())));
         assertThat(jdbc.queryForMap("select tipo, origen_id, estado from reg_despliegue where id = 8"))
-                .containsEntry("tipo", "reversion").containsEntry("origen_id", 1L)
+                .containsEntry("tipo", "reversion").containsEntry("origen_id", 1)
                 .containsEntry("estado", "aplicando");
     }
 
