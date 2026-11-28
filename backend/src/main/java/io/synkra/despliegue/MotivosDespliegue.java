@@ -28,6 +28,8 @@ final class MotivosDespliegue {
     static final String APLICACION_FALLIDA_MENSAJE = "No se pudo aplicar el plan en el clúster";
     static final String KUBERNETES_APLICAR_MENSAJE = "No hay clúster al que aplicar el plan";
     static final String USUARIO_MENSAJE = "El usuario no es válido";
+    static final String ORIGEN_NO_LISTO_MENSAJE = "Solo se puede revertir a un despliegue listo";
+    static final String ORIGEN_DESACTUALIZADO_MENSAJE = "El catálogo ya no tiene lo que se desplegó en el origen";
     static final String USUARIO_FORMA = "El usuario debe tener de 1 a 64 caracteres: minúsculas, dígitos, punto, guion o guion bajo";
 
     /** R-D10 (U07-E): partes del texto de eventos de un despliegue que se cierra por plazo. */

@@ -21,12 +21,12 @@ class RutasPlanes {
     /** Sin {@code @Valid}: {@code PlanServicio} valida y devuelve todos los detalles juntos. */
     record SolicitudPlan(String pais, String core, String versionCore, List<PluginPedido> plugins) {}
 
-    record PlanDto(Long id, String pais, String tipo, String estado, String core, String versionCore, String creadoPor,
+    record PlanDto(Long id, String pais, String tipo, Long origenId, String estado, String core, String versionCore, String creadoPor,
             Instant creadoEn, Instant venceEn, Resumen resumen, Cambios cambios) {
 
         static PlanDto de(PlanPreparado p) {
             var plan = p.plan();
-            return new PlanDto(plan.id(), plan.pais(), plan.tipo(), plan.estado(), plan.core(), plan.versionCore(),
+            return new PlanDto(plan.id(), plan.pais(), plan.tipo(), plan.origenId(), plan.estado(), plan.core(), plan.versionCore(),
                     plan.creadoPor(), Instant.ofEpochMilli(plan.creadoEn()), Instant.ofEpochMilli(plan.venceEn()),
                     p.resumen(), p.cambios());
         }
