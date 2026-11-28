@@ -1058,3 +1058,11 @@ Se despacha el codificador de la ronda 2.
 ## 2026-11-28T06:10Z: enmienda del CA-2 de U09-A
 
 **Acción del orquestador:** el arbitraje de F-03 (ronda 1 de U09-A) pidió quitar el comentario de `Program.cs` que solo existía para un `grep`, y con eso el CA-2 escrito ya no podía cumplirse (F-06, ROJO de la ronda 2). Cambiar el criterio es del orquestador: el CA-2 comprueba ahora la clave en `appsettings.json` y `ConfiguracionApi.cs`, y el **uso** en `Program.cs` (`ConfiguracionApi.UrlBase` y `AddHttpClient`). Nuevo hash de la tarea: `d5a5ff409c3f520da348c01bc08f238cfe4bbb8c`. Se repite el revisor (ronda 3) sobre el mismo código.
+
+## 2026-11-28T05:21:55Z: David retoma tras la sesión de Julian
+
+**Input del usuario (05:20:28Z):** "Revisa lo que esta hecho ya que mi compañero no alcanzo a actualizar el continue pero se que ya tenia delantadas cosas de U08"
+
+**Input del usuario (05:21:55Z):** "La sesion si esta detenida, aunque es probable que el continue no este del todo actualizado con el progreso que llevaba"
+
+**Acción del orquestador:** `git fetch`; las ramas `m6r/U08-A`, `m6r/U08-B`, `m6r/U09-A` y `orq/U05-U02-tareas` coinciden con `loop/CONTINUAR.md` de Julian (`8709ceb`). Se repiten los tres revisores en vuelo y la redacción de U08-C y U08-D. Se pide permiso a David para descargar las imágenes fijadas por digest.
