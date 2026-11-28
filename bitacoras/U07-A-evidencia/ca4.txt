@@ -1,0 +1,67 @@
+2026-11-27T19:31:13-05:00
+6fde709
+##### MUTACION lista
+$ sed -i 's/if (!lista.contains(pais))/if (false)/' backend/src/main/java/io/synkra/despliegue/PaisPermitido.java
+PaisPermitidoTest > rechazaUnPaisConFormaValidaFueraDeLaLista() FAILED
+> Task :backend:test FAILED
+18 tests completed, 1 failed
+BUILD FAILED in 5s
+$ grep -l "<failure" TEST-*.xml
+/tmp/tmp.hBmZRqiqlg/backend/build/test-results/test/TEST-io.synkra.despliegue.PaisPermitidoTest.xml
+cae: io.synkra.despliegue.PaisPermitidoTest rechazaUnPaisConFormaValidaFueraDeLaLista()
+##### MUTACION forma
+$ sed -i 's/Pattern.compile("\[a-z\]{2}")/Pattern.compile("[a-z]{2}", Pattern.CASE_INSENSITIVE)/' backend/src/main/java/io/synkra/despliegue/PaisPermitido.java
+PaisPermitidoTest > rechazaTodoLoQueNoTieneLaForma() FAILED
+PaisPermitidoTest > unaListaInvalidaFallaAlArrancarNombrandoLaPropiedad() FAILED
+> Task :backend:test FAILED
+18 tests completed, 2 failed
+BUILD FAILED in 5s
+$ grep -l "<failure" TEST-*.xml
+/tmp/tmp.wP3ncJbjQF/backend/build/test-results/test/TEST-io.synkra.despliegue.PaisPermitidoTest.xml
+cae: io.synkra.despliegue.PaisPermitidoTest rechazaTodoLoQueNoTieneLaForma()
+cae: io.synkra.despliegue.PaisPermitidoTest unaListaInvalidaFallaAlArrancarNombrandoLaPropiedad()
+##### MUTACION sin U05
+$ python3 -I -c "
+p='backend/src/main/java/io/synkra/despliegue/PaisPermitido.java'; s=open(p).read()
+s=s.replace('PaisPermitido(@Value(\"${synkra.paises}\") String valor) {','PaisPermitido(@Value(\"${synkra.paises}\") String valor, io.synkra.kubernetes.api.AdaptadorKubernetes a) {\n        this.a = a;')
+s=s.replace('    private final Set<String> lista;','    private final Set<String> lista;\n    private final io.synkra.kubernetes.api.AdaptadorKubernetes a;')
+s=s.replace('return \"synkra-\" + exigir(pais);','var n = \"synkra-\" + exigir(pais); a.existeNamespace(n); return n;')
+open(p,'w').write(s)"; sed -i 's/new PaisPermitido(\([^)]*\))/new PaisPermitido(\1, null)/' backend/src/test/java/io/synkra/despliegue/PaisPermitidoTest.java
+/bin/bash: línea 7: 
+p='backend/src/main/java/io/synkra/despliegue/PaisPermitido.java'; s=open(p).read()
+s=s.replace('PaisPermitido(@Value("${synkra.paises}") String valor) {','PaisPermitido(@Value("${synkra.paises}") String valor, io.synkra.kubernetes.api.AdaptadorKubernetes a) {\n        this.a = a;')
+s=s.replace('    private final Set<String> lista;','    private final Set<String> lista;\n    private final io.synkra.kubernetes.api.AdaptadorKubernetes a;')
+s=s.replace('return "synkra-" + exigir(pais);','var n = "synkra-" + exigir(pais); a.existeNamespace(n); return n;')
+open(p,'w').write(s): sustitución errónea
+BUILD SUCCESSFUL in 5s
+$ grep -l "<failure" TEST-*.xml
+##### MUTACION esquema
+$ sed -i "s/ CHECK (estado IN ('pendiente', 'confirmado', 'vencido'))//" backend/src/main/resources/db/migration/V4__despliegue.sql
+> Task :backend:test FAILED
+PlanRepositorioTest > rechazaEstadoDesconocido() FAILED
+18 tests completed, 1 failed
+BUILD FAILED in 5s
+$ grep -l "<failure" TEST-*.xml
+/tmp/tmp.kxCrrCKlZX/backend/build/test-results/test/TEST-io.synkra.despliegue.PlanRepositorioTest.xml
+cae: io.synkra.despliegue.PlanRepositorioTest rechazaEstadoDesconocido()
+##### MUTACION sin U05 (reintento; parche en scratchpad, contenido literal abajo)
+$ python3 -I mut-u05.py
+p='backend/src/main/java/io/synkra/despliegue/PaisPermitido.java'
+s=open(p).read()
+s=s.replace('PaisPermitido(@Value("${synkra.paises}") String valor) {','PaisPermitido(@Value("${synkra.paises}") String valor, io.synkra.kubernetes.api.AdaptadorKubernetes a) {\n        this.a = a;')
+s=s.replace('    private final Set<String> lista;','    private final Set<String> lista;\n    private final io.synkra.kubernetes.api.AdaptadorKubernetes a;')
+s=s.replace('return "synkra-" + exigir(pais);','var n = "synkra-" + exigir(pais); a.existeNamespace(n); return n;')
+open(p,'w').write(s)
+t='backend/src/test/java/io/synkra/despliegue/PaisPermitidoTest.java'
+s=open(t).read()
+s=s.replace('new PaisPermitido("co, pe")','new PaisPermitido("co, pe", null)').replace('new PaisPermitido(v)','new PaisPermitido(v, null)')
+open(t,'w').write(s)
+PaisPermitidoTest > aceptaLosPaisesConfiguradosYDerivaElNamespace() FAILED
+PaisPermitidoTest > nadaDeLoAnteriorLlamaAlAdaptadorDeKubernetes() FAILED
+> Task :backend:test FAILED
+18 tests completed, 2 failed
+BUILD FAILED in 5s
+$ grep -l "<failure" TEST-*.xml
+/tmp/tmp.K3IBUky83b/backend/build/test-results/test/TEST-io.synkra.despliegue.PaisPermitidoTest.xml
+cae: io.synkra.despliegue.PaisPermitidoTest aceptaLosPaisesConfiguradosYDerivaElNamespace()
+cae: io.synkra.despliegue.PaisPermitidoTest nadaDeLoAnteriorLlamaAlAdaptadorDeKubernetes()
