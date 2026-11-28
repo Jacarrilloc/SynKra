@@ -1,0 +1,9 @@
+2026-11-27T19:01:16-05:00
+$ docker build -t synkra-init-descarga:1.0.0 init-descarga/
+#8 exporting attestation manifest sha256:13622e7df8d807ab2c80ad500bdd5918c987eea49d69dad358caaeea431236d6 done
+#8 exporting manifest list sha256:bba59c771989a56b13e90b4357bd80beec66231f3d90b3e57001bfc294febe4a done
+#8 naming to docker.io/library/synkra-init-descarga:1.0.0 done
+#8 unpacking to docker.io/library/synkra-init-descarga:1.0.0 done
+#8 DONE 0.0s
+$ docker inspect -f ...
+10001:10001 ["/usr/local/bin/descargar.sh"]

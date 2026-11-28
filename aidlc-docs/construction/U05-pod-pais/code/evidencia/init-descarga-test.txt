@@ -1,0 +1,32 @@
+2026-11-27T19:01:15-05:00
+03943ec
+$ init-descarga/test.sh; echo "salida=$?"
+ok hash-correcto
+ok hash-alterado
+ok catalogo-caido
+ok http-500
+ok http-404-sin-reintento
+ok nombre-malo(../evil.jar)
+ok nombre-malo(/abs.jar)
+ok nombre-malo(a/b.jar)
+ok nombre-malo(..)
+ok hash-mal-formado
+ok linea-mala-tras-buena
+ok segundo-alterado
+ok dos-correctos
+ok lista-vacia
+ok sin-url
+ok sin-lista
+ok espera-creciente
+ok espera-base-invalida(0.5)
+ok espera-base-invalida(-1)
+ok espera-base-invalida(abc)
+ok linea-vacia-en-medio
+ok enlace-en-temporal-antiguo
+ok enlace-en-destino
+ok enlace-a-archivo-en-destino
+ok plugins-es-enlace
+ok archivo-previo-se-reemplaza
+ok set-eu-presente
+todos los casos ok
+salida=0
