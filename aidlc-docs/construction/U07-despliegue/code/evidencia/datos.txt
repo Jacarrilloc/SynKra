@@ -1,0 +1,72 @@
+fecha: 2026-11-27T23:14:46-05:00  sha: ba0b1fd  JAVA_HOME=/home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ ls backend/src/main/java/io/synkra/despliegue/
+CalculoCambios.java
+CambioCore.java
+Cambios.java
+CodigosDespliegue.java
+ConfirmacionServicio.java
+GuardaConfirmacion.java
+MotivosDespliegue.java
+PaisPermitido.java
+Plan.java
+PlanPreparado.java
+PlanRepositorio.java
+PlanServicio.java
+PluginPedido.java
+PluginResumen.java
+ReservaConfirmacion.java
+Resumen.java
+ResumenCatalogo.java
+RutasConfirmacion.java
+RutasPlanes.java
+RutasReversion.java
+RutasVerificacion.java
+TareasProgramadas.java
+Usuario.java
+VencimientoPlanes.java
+VeredictoDto.java
+VerificacionVivo.java
+VigilanciaDespliegues.java
+package-info.java
+$ grep -rn 'Mapping(' backend/src/main/java/io/synkra/despliegue
+backend/src/main/java/io/synkra/despliegue/RutasReversion.java:24:    @PostMapping("/api/despliegues/{id}/reversion")
+backend/src/main/java/io/synkra/despliegue/RutasConfirmacion.java:28:    @PostMapping(RUTA_DESPLIEGUES + "/{id}/confirmacion")
+backend/src/main/java/io/synkra/despliegue/RutasVerificacion.java:11:@RequestMapping("/api/verificaciones")
+backend/src/main/java/io/synkra/despliegue/RutasPlanes.java:18:@RequestMapping("/api/despliegues")
+$ grep -n allowedDependencies backend/src/main/java/io/synkra/despliegue/package-info.java backend/src/main/java/io/synkra/registro/package-info.java
+backend/src/main/java/io/synkra/despliegue/package-info.java:2:@ApplicationModule(allowedDependencies = {"catalogo :: api", "kubernetes :: api", "registro :: api", "plataforma"})
+backend/src/main/java/io/synkra/registro/package-info.java:2:@ApplicationModule(allowedDependencies = {"kubernetes :: api", "plataforma"})
+$ grep -rn leerPais backend/src/main/java/io/synkra/despliegue
+backend/src/main/java/io/synkra/despliegue/VigilanciaDespliegues.java:117:            var lectura = kubernetes.leerPais(d.pais());
+backend/src/main/java/io/synkra/despliegue/PlanServicio.java:120:            return kubernetes.leerPais(pais);
+$ ls backend/src/main/resources/db/migration/
+V1__base.sql
+V2__catalogo.sql
+V3__registro.sql
+V4__despliegue.sql
+$ grep -n 'sharedModules' backend/src/main/java/io/synkra/SynkraApp.java
+8:@Modulithic(sharedModules = "verificador")
+$ git diff --name-status 1d69064^1...1d69064^2 -- backend/src ':!backend/src/main/java/io/synkra/despliegue' ':!backend/src/test/java/io/synkra/despliegue' ':!backend/src/test/java/io/synkra/FronterasModulosTest.java'
+M	backend/src/main/resources/application.properties
+A	backend/src/main/resources/db/migration/V4__despliegue.sql
+$ git diff --name-status 0c83a20^1...0c83a20^2 -- backend/src ':!backend/src/main/java/io/synkra/despliegue' ':!backend/src/test/java/io/synkra/despliegue' ':!backend/src/test/java/io/synkra/FronterasModulosTest.java'
+A	backend/src/test/java/io/synkra/kubernetes/SimuladorKubernetes.java
+$ git diff --name-status 208d5f9^1...208d5f9^2 -- backend/src ':!backend/src/main/java/io/synkra/despliegue' ':!backend/src/test/java/io/synkra/despliegue' ':!backend/src/test/java/io/synkra/FronterasModulosTest.java'
+A	backend/src/main/java/io/synkra/plataforma/Reloj.java
+A	backend/src/test/java/io/synkra/plataforma/RelojTest.java
+$ git diff --name-status 39a242c^1...39a242c^2 -- backend/src ':!backend/src/main/java/io/synkra/despliegue' ':!backend/src/test/java/io/synkra/despliegue' ':!backend/src/test/java/io/synkra/FronterasModulosTest.java'
+M	backend/src/test/java/io/synkra/kubernetes/SimuladorKubernetes.java
+$ git diff --name-status 20ca4e1^1...20ca4e1^2 -- backend/src ':!backend/src/main/java/io/synkra/despliegue' ':!backend/src/test/java/io/synkra/despliegue' ':!backend/src/test/java/io/synkra/FronterasModulosTest.java'
+M	backend/src/main/java/io/synkra/kubernetes/ConfiguracionKubernetes.java
+M	backend/src/main/java/io/synkra/kubernetes/LectorPais.java
+M	backend/src/main/java/io/synkra/registro/RegistroServicio.java
+M	backend/src/main/java/io/synkra/registro/api/RegistroApi.java
+M	backend/src/main/resources/application.properties
+A	backend/src/test/java/io/synkra/kubernetes/ContextoEventosTest.java
+A	backend/src/test/java/io/synkra/kubernetes/EstadoRolloutTest.java
+A	backend/src/test/java/io/synkra/kubernetes/LecturasDePrueba.java
+A	backend/src/test/java/io/synkra/kubernetes/ReintentosClienteTest.java
+M	backend/src/test/java/io/synkra/kubernetes/SimuladorKubernetes.java
+A	backend/src/test/java/io/synkra/registro/AplicandoTest.java
+A	backend/src/test/resources/config/application.properties
+$ git diff --name-status b73d9d0^1...b73d9d0^2 -- backend/src ':!backend/src/main/java/io/synkra/despliegue' ':!backend/src/test/java/io/synkra/despliegue' ':!backend/src/test/java/io/synkra/FronterasModulosTest.java'

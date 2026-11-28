@@ -1,0 +1,56 @@
+fecha: 2026-11-27T23:16:00-05:00  JAVA_HOME=/home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ grep -c BUILD SUCCESSFUL summary.md
+3
+$ grep -c salida=0 summary.md
+3
+$ ls evidencia/
+conteo-por-clase-despliegue.txt
+conteo-por-clase-otros-paquetes.txt
+conteo-xml.txt
+datos.txt
+gradle-check.txt
+gradle-despliegue.txt
+gradle-otros-paquetes.txt
+nombres-kubernetes.txt
+$ head -3 evidencia/*.txt
+==> aidlc-docs/construction/U07-despliegue/code/evidencia/conteo-por-clase-despliegue.txt <==
+fecha: 2026-11-27T23:14:40-05:00  sha: ba0b1fd  JAVA_HOME=/home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ for f in backend/build/test-results/test/TEST-*.xml; do echo "$(basename $f .xml | sed 's/TEST-io.synkra.//') $(grep -o -m1 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' $f)"; 
+despliegue.CambiosPropiedades tests="4" skipped="0" failures="0" errors="0"
+
+==> aidlc-docs/construction/U07-despliegue/code/evidencia/conteo-por-clase-otros-paquetes.txt <==
+fecha: 2026-11-27T22:56:38-05:00  sha: ba0b1fd  JAVA_HOME=/home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ for f in backend/build/test-results/test/TEST-*.xml; do echo "$(basename $f .xml | sed 's/TEST-io.synkra.//') $(grep -o -m1 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' $f)"; 
+FronterasModulosTest tests="15" skipped="0" failures="0" errors="0"
+
+==> aidlc-docs/construction/U07-despliegue/code/evidencia/conteo-xml.txt <==
+fecha: 2026-11-27T22:57:27-05:00  sha: ba0b1fd  JAVA_HOME=/home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ ls backend/build/test-results/test/TEST-*.xml | wc -l
+60
+
+==> aidlc-docs/construction/U07-despliegue/code/evidencia/datos.txt <==
+fecha: 2026-11-27T23:14:46-05:00  sha: ba0b1fd  JAVA_HOME=/home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ ls backend/src/main/java/io/synkra/despliegue/
+CalculoCambios.java
+
+==> aidlc-docs/construction/U07-despliegue/code/evidencia/gradle-check.txt <==
+fecha: 2026-11-27T22:56:38-05:00  sha: ba0b1fd  JAVA_HOME=/home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ ./gradlew :backend:test --rerun :backend:check; echo "salida=$?"
+> Task :verificador:compileJava UP-TO-DATE
+
+==> aidlc-docs/construction/U07-despliegue/code/evidencia/gradle-despliegue.txt <==
+fecha: 2026-11-27T23:14:19-05:00  sha: ba0b1fd  JAVA_HOME=/home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ ./gradlew :backend:test --rerun --tests '*despliegue*'; echo "salida=$?"
+> Task :verificador:compileJava UP-TO-DATE
+
+==> aidlc-docs/construction/U07-despliegue/code/evidencia/gradle-otros-paquetes.txt <==
+fecha: 2026-11-27T22:56:25-05:00  sha: ba0b1fd  JAVA_HOME=/home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ ./gradlew :backend:test --rerun --tests '*FronterasModulosTest' --tests '*RelojTest' --tests '*AplicandoTest' --tests '*ContextoEventosTest' --tests '*EstadoRolloutTest' --tests '*ReintentosClienteT
+> Task :verificador:compileJava UP-TO-DATE
+
+==> aidlc-docs/construction/U07-despliegue/code/evidencia/nombres-kubernetes.txt <==
+fecha: 2026-11-27T23:02:40-05:00  sha: ba0b1fd  JAVA_HOME=/home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ git diff --name-status --diff-filter=A 39a242c...555acad -- backend/src/test/java/io/synkra/kubernetes
+A	backend/src/test/java/io/synkra/kubernetes/ContextoEventosTest.java
+$ git log -1 --format=%h -- backend
+ba0b1fd

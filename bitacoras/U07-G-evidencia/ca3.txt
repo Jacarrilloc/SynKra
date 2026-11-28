@@ -1,0 +1,83 @@
+fecha: 2026-11-27T23:15:47-05:00  sha: ba0b1fd  comando: bash bitacoras/U07-G-evidencia/ca3.sh (ronda 2)
+existe
+10:## Qué expone
+94:## Fronteras
+132:## Cómo se prueba
+144:## Salidas reales
+238:## Desviaciones del diseño
+270:## Trazabilidad
+287:## Tareas
+301:## Candidatas abiertas
+345:## Cifras y su fuente
+Qué expone 1
+Fronteras 1
+Cómo se prueba 1
+Salidas reales 1
+Desviaciones del diseño 1
+Trazabilidad 1
+Tareas 1
+Candidatas abiertas 1
+Cifras y su fuente 1
+H-06 2
+H-08 2
+H-09 2
+H-11 2
+H-12 2
+H-13 2
+H-14 2
+H-16 3
+H-17 3
+H-20 3
+H-24 2
+C-30 2
+C-35 2
+C-76 4
+C-82 5
+C-83 4
+C-87 2
+C-90 1
+C-106 1
+C-107 2
+C-108 2
+C-109 2
+C-110 2
+C-112 1
+C-113 2
+C-114 2
+C-115 2
+C-116 4
+C-117 3
+C-118 1
+C-119 2
+C-121 3
+C-122 2
+C-123 1
+R-D1 6
+R-D2 3
+R-D3 3
+R-D4 3
+R-D5 2
+R-D6 1
+R-D7 1
+R-D8 2
+R-D9 3
+R-D10 1
+R-D11 1
+R-D12 1
+R-D13 2
+63:Las cuatro rutas de la unidad: `POST /api/verificaciones` (R-D2, U07-B), `POST /api/despliegues` (crear plan, R-D3 y 
+68:- U07-B: el ayudante de prueba `backend/src/test/java/io/synkra/kubernetes/SimuladorKubernetes.java` (servidor simula
+85:| R-D8 | `creado_por` y `confirmado_por` (`X-Synkra-Usuario`) | `ConfirmarTest`, `ConfirmarSinClusterTest` |
+136:- El servidor simulado de Fabric8 en modo CRUD (`SimuladorKubernetes`), con `aceptaAplicar(pais)` para el server-sid
+244:3. **U07-B, `leerPais` en vez del último `listo`.** R-D4 dice que los cambios se calculan «contra el último `listo` 
+245:4. **U07-B, `PlanDto` con `Plan.PENDIENTE`.** `PlanDto` respondía `estado` con la constante `Plan.PENDIENTE` para es
+247:6. **U07-C, confirmar respondía 501 temporal.** Hasta U07-D, `POST .../confirmacion` de un plan vigente daba 501 `CO
+249:8. **U07-D, R-D9: `aplicando` antes de aplicar.** El diseño decía confirmar = construir y aplicar, y después registr
+250:9. **U07-D, `X-Synkra-Usuario` sin autenticar.** R-D8 guarda quién crea y quién confirma con la cabecera `X-Synkra-U
+251:10. **U07-D, `SimuladorKubernetes.aceptaAplicar(pais)`.** El modo CRUD de Fabric8 7.9.0 no entiende server-side appl
+293:| U07-C | bean `Clock`, plan vencido, guarda de confirmación (501 temporal) | U07-T06 | #100 | 2: ronda 1 NO-VERDE, 
+315:- **C-115** (un `aplicando` huérfano si el proceso muere antes de aplicar). Decisión en `CANDIDATAS.md`: «Aceptada: 
+318:- **C-114** (`X-Synkra-Usuario` sin autenticar). Decisión en `CANDIDATAS.md`: «Aceptada como candidata: se documenta
+324:| C-90 | `leerPais` valida con `PlanPais.SEGURO`, más laxo que el core | «para U06/U07, alinear `PlanPais` con el ve
+337:| C-126 | una fila `aplicando` cuyo `leerPais` siempre lanza nunca vence | «pulido de U07» |
+0

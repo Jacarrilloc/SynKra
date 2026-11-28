@@ -1,0 +1,20 @@
+fecha: 2026-11-27T23:14:40-05:00  sha: ba0b1fd  JAVA_HOME=/home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ for f in backend/build/test-results/test/TEST-*.xml; do echo "$(basename $f .xml | sed 's/TEST-io.synkra.//') $(grep -o -m1 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' $f)"; done
+despliegue.CambiosPropiedades tests="4" skipped="0" failures="0" errors="0"
+despliegue.CarpetaEquivocadaPlanTest tests="3" skipped="0" failures="0" errors="0"
+despliegue.ConfirmarSinClusterTest tests="2" skipped="0" failures="0" errors="0"
+despliegue.ConfirmarTest tests="10" skipped="0" failures="0" errors="0"
+despliegue.CrearPlanTest tests="9" skipped="0" failures="0" errors="0"
+despliegue.PaisPermitidoTest tests="6" skipped="0" failures="0" errors="0"
+despliegue.PlanPendienteTest tests="9" skipped="0" failures="0" errors="0"
+despliegue.PlanRepositorioTest tests="12" skipped="0" failures="0" errors="0"
+despliegue.RetomarVigilanciaTest tests="2" skipped="0" failures="0" errors="0"
+despliegue.ReversionTest tests="9" skipped="0" failures="0" errors="0"
+despliegue.VencimientoPlanesTest tests="2" skipped="0" failures="0" errors="0"
+despliegue.VerificacionVivoTest tests="15" skipped="0" failures="0" errors="0"
+despliegue.VigilanciaCoincideTest tests="3" skipped="0" failures="0" errors="0"
+despliegue.VigilanciaDobleTest tests="4" skipped="0" failures="0" errors="0"
+despliegue.VigilanciaTest tests="8" skipped="0" failures="0" errors="0"
+FronterasModulosTest tests="2" skipped="0" failures="0" errors="0"
+$ cat backend/build/test-results/test/TEST-*.xml | grep -o -h '<testsuite [^>]*' | grep -o ' tests="[0-9]*"' | grep -o '[0-9]*' | paste -sd+ | bc
+100
