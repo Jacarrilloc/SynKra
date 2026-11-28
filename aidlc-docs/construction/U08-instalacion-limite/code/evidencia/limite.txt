@@ -1,0 +1,18 @@
+fecha: 2026-11-28T04:20:02-05:00
+sha: c1ab806
+comando: make verificar-limite
+docker-servidor-arquitectura: x86_64
+JAVA_HOME: $HOME/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+nota: la ruta personal de la maquina aparece como $HOME
+---
+contexto permitido: kind-synkra (https://127.0.0.1:38973)
+scripts/verificar-limite.sh
+ok create deployments.apps -n synkra-co: yes
+ok create deployments.apps -n synkra-pe: yes
+ok create deployments.apps -n default: no
+ok create deployments.apps -n kube-system: no
+ok create deployments.apps -n synkra: no
+ok create namespaces: no
+OK limite: 6 respuestas esperadas
+salida=0
+segundos=1
