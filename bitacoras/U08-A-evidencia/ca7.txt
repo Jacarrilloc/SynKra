@@ -1,0 +1,78 @@
+fecha: 2026-11-28T05:11:41Z
+sha: 3a738aa
+comando: bash bitacoras/U08-A-evidencia/ca7.sh
+---
+/gitops2-control-plane true
+/m08-gitops1-control-plane true
+kind delete cluster --name synkra --kubeconfig "/home/julian/Escritorio/Proyectos/wt-m6r-U08-A/.kube/kind-synkra.yaml"
+Deleting cluster "synkra" ...
+borrar=0
+existe=1
+registro=1
+kubeconfig sin contextos todavía: lo rellena make cluster
+make cluster
+make[1]: se entra en el directorio '/home/julian/Escritorio/Proyectos/wt-m6r-U08-A'
+kubeconfig sin contextos todavía: lo rellena make cluster
+Creating cluster "synkra" ...
+ • Ensuring node image (kindest/node) 🖼️  ...
+ ✓ Ensuring node image (kindest/node) 🖼️
+ • Preparing nodes 📦 📦   ...
+ ✓ Preparing nodes 📦 📦 
+ • Writing configuration 📜  ...
+ ✓ Writing configuration 📜
+ • Starting control-plane 🕹️  ...
+ ✓ Starting control-plane 🕹️
+ • Installing CNI 🔌  ...
+ ✓ Installing CNI 🔌
+ • Installing StorageClass 💾  ...
+ ✓ Installing StorageClass 💾
+ • Joining worker nodes 🚜  ...
+ ✓ Joining worker nodes 🚜
+ • Waiting ≤ 3m0s for control-plane = Ready ⏳  ...
+ ✓ Waiting ≤ 3m0s for control-plane = Ready ⏳
+ • Ready after 8s 💚
+Set kubectl context to "kind-synkra"
+You can now use your cluster with:
+
+kubectl cluster-info --context kind-synkra --kubeconfig /home/julian/Escritorio/Proyectos/wt-m6r-U08-A/.kube/kind-synkra.yaml
+
+Have a nice day! 👋
+contexto permitido: kind-synkra (https://127.0.0.1:35427)
+kubectl --kubeconfig "/home/julian/Escritorio/Proyectos/wt-m6r-U08-A/.kube/kind-synkra.yaml" wait --for=condition=Ready nodes --all --timeout=180s
+node/synkra-control-plane condition met
+node/synkra-worker condition met
+make[1]: se sale del directorio '/home/julian/Escritorio/Proyectos/wt-m6r-U08-A'
+make registro
+make[1]: se entra en el directorio '/home/julian/Escritorio/Proyectos/wt-m6r-U08-A'
+contexto permitido: kind-synkra (https://127.0.0.1:35427)
+scripts/registro-local.sh
+registro listo en 127.0.0.1:5001
+make[1]: se sale del directorio '/home/julian/Escritorio/Proyectos/wt-m6r-U08-A'
+make aplicar-base
+make[1]: se entra en el directorio '/home/julian/Escritorio/Proyectos/wt-m6r-U08-A'
+contexto permitido: kind-synkra (https://127.0.0.1:35427)
+kubectl --kubeconfig "/home/julian/Escritorio/Proyectos/wt-m6r-U08-A/.kube/kind-synkra.yaml" apply -k deploy/base
+namespace/synkra created
+namespace/synkra-co created
+namespace/synkra-pe created
+serviceaccount/deployer created
+role.rbac.authorization.k8s.io/synkra-deployer created
+role.rbac.authorization.k8s.io/synkra-deployer created
+rolebinding.rbac.authorization.k8s.io/synkra-deployer created
+rolebinding.rbac.authorization.k8s.io/synkra-deployer created
+make[1]: se sale del directorio '/home/julian/Escritorio/Proyectos/wt-m6r-U08-A'
+
+real	0m35,389s
+user	0m2,064s
+sys	0m2,396s
+install=0
+synkra-control-plane Ready
+synkra-worker Ready
+synkra Active
+synkra-co Active
+synkra-pe Active
+{} v2=0
+/gitops2-control-plane true
+/m08-gitops1-control-plane true
+kubeconfig-global-intacto
+--- salida final=0

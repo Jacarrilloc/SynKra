@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: synkra
+  labels:
+    app.kubernetes.io/part-of: synkra
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: synkra-co
+  labels:
+    app.kubernetes.io/part-of: synkra
+    synkra.io/pais: co
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: synkra-pe
+  labels:
+    app.kubernetes.io/part-of: synkra
+    synkra.io/pais: pe

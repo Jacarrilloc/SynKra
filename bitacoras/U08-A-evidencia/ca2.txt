@@ -1,0 +1,20 @@
+fecha: 2026-11-28T05:12:27Z
+sha: 8ee75bf
+comando: bash bitacoras/U08-A-evidencia/ca2.sh
+---
+contexto permitido: kind-synkra (https://127.0.0.1:35427)
+scripts/registro-local.sh
+registro listo en 127.0.0.1:5001
+salida=0
+d8b91831cc43adecaa7eca67272479891276784857b371e503c6461f4855b7ce
+true registry@sha256:1be55279f18a2fe1a74edf2664cac61c1bea305b7b4642dab412e7affdcb3e33 always bridge kind 
+5000/tcp -> 127.0.0.1:5001
+{} v2=0
+[host."http://kind-registry:5000"]
+[host."http://kind-registry:5000"]
+contexto permitido: kind-synkra (https://127.0.0.1:35427)
+scripts/registro-local.sh
+registro listo en 127.0.0.1:5001
+salida=0
+d8b91831cc43adecaa7eca67272479891276784857b371e503c6461f4855b7ce
+--- salida final=0

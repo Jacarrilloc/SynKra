@@ -1,0 +1,45 @@
+fecha: 2026-11-28T05:13:05Z
+sha: 4c21603
+comando: bash bitacoras/U08-A-evidencia/ca10.sh
+---
+4c21603
+1
+ .gitignore                                        |   4 +
+ Makefile                                          |  53 ++++++--
+ bitacoras/U08-A-evidencia/ca1.sh                  |   9 ++
+ bitacoras/U08-A-evidencia/ca1.txt                 |  30 +++++
+ bitacoras/U08-A-evidencia/ca10.sh                 |   5 +
+ bitacoras/U08-A-evidencia/ca2.sh                  |   8 ++
+ bitacoras/U08-A-evidencia/ca2.txt                 |  20 +++
+ bitacoras/U08-A-evidencia/ca3.sh                  |   5 +
+ bitacoras/U08-A-evidencia/ca3.txt                 |  24 ++++
+ bitacoras/U08-A-evidencia/ca4.sh                  |  19 +++
+ bitacoras/U08-A-evidencia/ca4.txt                 |  27 ++++
+ bitacoras/U08-A-evidencia/ca5.sh                  |   5 +
+ bitacoras/U08-A-evidencia/ca5.txt                 |  11 ++
+ bitacoras/U08-A-evidencia/ca6.sh                  |  19 +++
+ bitacoras/U08-A-evidencia/ca6.txt                 |  48 +++++++
+ bitacoras/U08-A-evidencia/ca7.sh                  |  12 ++
+ bitacoras/U08-A-evidencia/ca7.txt                 |  78 ++++++++++++
+ bitacoras/U08-A-evidencia/ca8-todas.sh            |   1 +
+ bitacoras/U08-A-evidencia/ca8.sh                  |  21 ++++
+ bitacoras/U08-A-evidencia/ca8.txt                 | 145 ++++++++++++++++++++++
+ bitacoras/U08-A-evidencia/ca9.sh                  |  11 ++
+ bitacoras/U08-A-evidencia/ca9.txt                 |  20 +++
+ bitacoras/U08-A-evidencia/containerd.txt          |  16 +++
+ bitacoras/U08-A-evidencia/hosts-toml-efectivo.txt |   7 ++
+ bitacoras/U08-A-evidencia/rojo.sh                 |   7 ++
+ bitacoras/U08-A-evidencia/rojo.txt                |  43 +++++++
+ bitacoras/U08-A.md                                |  44 +++++++
+ deploy/base/kustomization.yaml                    |   5 +
+ deploy/base/namespaces.yaml                       |  22 ++++
+ deploy/base/rbac.yaml                             |  83 +++++++++++++
+ deploy/kind/cluster.yaml                          |  19 +++
+ scripts/guardia-contexto.sh                       |  85 +++++++++++++
+ scripts/registro-local.sh                         |  65 ++++++++++
+ scripts/verificar-base.py                         | 103 +++++++++++++++
+ 34 files changed, 1063 insertions(+), 11 deletions(-)
+fuera=1
+0
+0
+--- salida final=0

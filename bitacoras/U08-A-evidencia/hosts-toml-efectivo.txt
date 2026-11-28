@@ -1,0 +1,7 @@
+fecha: 2026-11-28T05:11:00Z
+sha: 8f01030
+comando: docker exec synkra-control-plane curl -s -m 3 http://localhost:5001/v2/; echo "localhost:5001 dentro del nodo curl=$?"; docker exec synkra-control-plane curl -s -m 3 http://kind-registry:5000/v2/; echo "kind-registry:5000 curl=$?"
+---
+localhost:5001 dentro del nodo curl=7
+{}kind-registry:5000 curl=0
+--- salida final=0

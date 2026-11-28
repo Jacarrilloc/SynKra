@@ -1,0 +1,16 @@
+fecha: 2026-11-28T05:10:37Z
+sha: 290430c
+comando: docker exec synkra-control-plane containerd --version; docker exec synkra-control-plane containerd config dump | grep -n config_path; docker exec synkra-worker containerd config dump | grep -n config_path
+---
+containerd github.com/containerd/containerd/v2 v2.3.1 64b425cf570b3b8dd1d4cc46da7c1fce65c6651a
+time="2026-11-28T05:10:37Z" level=warning msg="Configuration migrated from version 2, use `containerd config migrate` to avoid migration" t="11.093µs"
+time="2026-11-28T05:10:37Z" level=warning msg="Ignoring unknown key in TOML for plugin" error="strict mode: fields in the document are missing in the target struct" key=tolerate_missing_hugepages_controller plugin=io.containerd.cri.v1.runtime
+31:      config_path = ''
+170:    plugin_config_path = '/etc/nri/conf.d'
+262:    config_path = ''
+time="2026-11-28T05:10:37Z" level=warning msg="Configuration migrated from version 2, use `containerd config migrate` to avoid migration" t="10.937µs"
+time="2026-11-28T05:10:37Z" level=warning msg="Ignoring unknown key in TOML for plugin" error="strict mode: fields in the document are missing in the target struct" key=tolerate_missing_hugepages_controller plugin=io.containerd.cri.v1.runtime
+31:      config_path = ''
+170:    plugin_config_path = '/etc/nri/conf.d'
+262:    config_path = ''
+--- salida final=0
