@@ -1,0 +1,9 @@
+fecha: 2026-11-27T21:07:09-05:00  sha: 1a01b96
+$ for f in backend/build/test-results/test/TEST-*registro*.xml; do echo "$(basename $f .xml | sed 's/TEST-io.synkra.//') $(grep -o -m1 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' $f)"; done
+registro.ContextoFalloTest tests="9" skipped="0" failures="0" errors="0"
+registro.HistorialTest tests="8" skipped="0" failures="0" errors="0"
+registro.PaisesConfiguradosTest tests="5" skipped="0" failures="0" errors="0"
+registro.RegistroReinicioTest tests="1" skipped="0" failures="0" errors="0"
+registro.RegistroRepositoriosTest tests="13" skipped="0" failures="0" errors="0"
+registro.TransicionesRegistroTest tests="18" skipped="0" failures="0" errors="0"
+registro.VistaGeneralTest tests="12" skipped="0" failures="0" errors="0"

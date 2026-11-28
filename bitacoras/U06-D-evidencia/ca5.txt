@@ -1,0 +1,10 @@
+fecha: 2026-11-27T21:10:18-05:00  sha: 1a01b96
+$ ./gradlew :backend:test --rerun :backend:check 2>&1 | tail -6   (corrida completa en aidlc-docs/construction/U06-registro/code/evidencia/gradle-check.txt)
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 41s
+9 actionable tasks: 1 executed, 8 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
+salida=0
+$ git diff --stat ade68f6...HEAD -- backend core verificador plugin-api plugins init-descarga gradle build.gradle.kts settings.gradle.kts | tail -1
+(vacío = ninguna línea de código tocada)
