@@ -1,9 +1,7 @@
-fecha: 2026-11-28T05:12:31Z
-sha: 8ee75bf
-comando: bash bitacoras/U08-A-evidencia/ca6.sh
----
-contexto permitido: kind-synkra (https://127.0.0.1:35427)
-kubectl --kubeconfig "/home/julian/Escritorio/Proyectos/wt-m6r-U08-A/.kube/kind-synkra.yaml" apply -k deploy/base
+# sha=16740a8 fecha=2026-11-28T00:32:29-05:00 arch=x86_64
+$ bash ca6.sh
+contexto permitido: kind-synkra (https://127.0.0.1:44323)
+kubectl --kubeconfig "/home/casdav/Projects/Master/wt-m6r-U08-A/.kube/kind-synkra.yaml" apply -k deploy/base
 namespace/synkra unchanged
 namespace/synkra-co unchanged
 namespace/synkra-pe unchanged
@@ -45,4 +43,4 @@ lista-pais=0
 Error from server (Forbidden): deployments.apps is forbidden: User "system:serviceaccount:synkra:deployer" cannot list resource "deployments" in API group "apps" in the namespace "synkra"
 lista-synkra=1
 system:serviceaccount:synkra:deployer
---- salida final=0
+T=<redactado>   # el token de create token deployer (10m) nunca se pega

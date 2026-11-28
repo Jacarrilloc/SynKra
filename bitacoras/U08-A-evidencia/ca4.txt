@@ -1,7 +1,5 @@
-fecha: 2026-11-28T05:12:30Z
-sha: 8ee75bf
-comando: bash bitacoras/U08-A-evidencia/ca4.sh
----
+# sha=16740a8 fecha=2026-11-28T00:32:21-05:00 arch=x86_64
+$ bash ca4.sh
 install otro salida=2
 1
 cluster otro salida=2
@@ -22,6 +20,55 @@ falta salida=2
 1
 falso-intacto
 nada-aplicado
-contexto permitido: kind-synkra (https://127.0.0.1:35427)
+contexto permitido: kind-synkra (https://127.0.0.1:44323)
 real salida=0
---- salida final=0
+
+$ KUBECONFIG_SYNKRA=$D/otro.yaml make -n install   (falso, contexto "otro")
+scripts/guardia-contexto.sh --antes-de-crear
+make cluster
+make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U08-A'
+scripts/guardia-contexto.sh --antes-de-crear
+mkdir -p -m 0700 "/tmp/tmp.HBRQ56YOGZ/" && chmod 0700 "/tmp/tmp.HBRQ56YOGZ/"
+if kind get kubeconfig --name synkra >/dev/null 2>&1; then \
+  kind export kubeconfig --name synkra --kubeconfig "/tmp/tmp.HBRQ56YOGZ/otro.yaml"; \
+else \
+  kind create cluster --name synkra --config deploy/kind/cluster.yaml --kubeconfig "/tmp/tmp.HBRQ56YOGZ/otro.yaml" --wait 180s; \
+fi
+scripts/guardia-contexto.sh
+kubectl --kubeconfig "/tmp/tmp.HBRQ56YOGZ/otro.yaml" wait --for=condition=Ready nodes --all --timeout=180s
+make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U08-A'
+make registro
+make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U08-A'
+scripts/guardia-contexto.sh
+scripts/registro-local.sh
+make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U08-A'
+make aplicar-base
+make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U08-A'
+scripts/guardia-contexto.sh
+kubectl --kubeconfig "/tmp/tmp.HBRQ56YOGZ/otro.yaml" apply -k deploy/base
+make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U08-A'
+salida(make -n)=0
+$ make -n install  (kubeconfig real)
+scripts/guardia-contexto.sh --antes-de-crear
+make cluster
+make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U08-A'
+scripts/guardia-contexto.sh --antes-de-crear
+mkdir -p -m 0700 "/home/casdav/Projects/Master/wt-m6r-U08-A/.kube/" && chmod 0700 "/home/casdav/Projects/Master/wt-m6r-U08-A/.kube/"
+if kind get kubeconfig --name synkra >/dev/null 2>&1; then \
+  kind export kubeconfig --name synkra --kubeconfig "/home/casdav/Projects/Master/wt-m6r-U08-A/.kube/kind-synkra.yaml"; \
+else \
+  kind create cluster --name synkra --config deploy/kind/cluster.yaml --kubeconfig "/home/casdav/Projects/Master/wt-m6r-U08-A/.kube/kind-synkra.yaml" --wait 180s; \
+fi
+scripts/guardia-contexto.sh
+kubectl --kubeconfig "/home/casdav/Projects/Master/wt-m6r-U08-A/.kube/kind-synkra.yaml" wait --for=condition=Ready nodes --all --timeout=180s
+make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U08-A'
+make registro
+make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U08-A'
+scripts/guardia-contexto.sh
+scripts/registro-local.sh
+make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U08-A'
+make aplicar-base
+make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U08-A'
+scripts/guardia-contexto.sh
+kubectl --kubeconfig "/home/casdav/Projects/Master/wt-m6r-U08-A/.kube/kind-synkra.yaml" apply -k deploy/base
+make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U08-A'
