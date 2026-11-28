@@ -22,7 +22,7 @@ U01 a U07 **terminadas y fusionadas en `main`** (`8306ee7`, 894 pruebas en verde
 ## Plan para acelerar (aprobado por Julian el 2026-11-28 a las 00:19 UTC, sigue vigente)
 
 - Se cortan U11 y U10 (*Should*, R9). La demo se hace con `curl` si U09 no llega. Mínimo de la North Star: U01 a U08.
-- Hasta **3 tareas en paralelo**; tareas del plan **agrupadas**; **tope de dos rondas** cuando solo quedan AMARILLOS (ROJO y NARANJA nunca se bajan); una tarea en la ronda 4 se para y se lleva al equipo; revisor `sonnet` solo en resúmenes. Ante decisiones, la opción recomendada (autorización permanente de Julian).
+- Hasta **4 tareas en paralelo** (David, 2026-11-28 06:30 UTC; antes 3); tareas del plan **agrupadas**; **tope de dos rondas** cuando solo quedan AMARILLOS (ROJO y NARANJA nunca se bajan); una tarea en la ronda 4 se para y se lleva al equipo; revisor `sonnet` solo en resúmenes. Ante decisiones, la opción recomendada (autorización permanente de Julian).
 
 ## Estado al corte (2026-11-28 05:20 UTC)
 
