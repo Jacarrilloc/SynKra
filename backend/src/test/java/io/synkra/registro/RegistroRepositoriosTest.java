@@ -40,6 +40,7 @@ class RegistroRepositoriosTest {
     void limpiar() {
         jdbc.execute("delete from reg_contexto");
         jdbc.execute("delete from reg_plugin");
+        jdbc.execute("delete from reg_despliegue where tipo = 'reversion'");
         jdbc.execute("delete from reg_despliegue");
     }
 
