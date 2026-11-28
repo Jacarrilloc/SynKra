@@ -1,4 +1,4 @@
-fecha: 2026-11-27T19:05:26-05:00  sha: 587e7a4
+fecha: 2026-11-27T19:08:27-05:00  sha: 82bf33d
 $ init-descarga/test.sh; echo "salida=$?"
 ok hash-correcto
 ok hash-alterado

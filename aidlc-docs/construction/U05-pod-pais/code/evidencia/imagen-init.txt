@@ -1,5 +1,5 @@
-fecha: 2026-11-27T19:05:27-05:00  sha: 587e7a4
-$ docker build --progress=plain -t synkra-init-descarga:1.0.0 init-descarga/
+fecha: 2026-11-27T19:08:27-05:00  sha: 82bf33d
+$ docker build --progress=plain -t synkra-init-descarga:1.0.0 init-descarga/; echo "salida=$?"; docker inspect -f '{{.Config.User}} {{json .Config.Entrypoint}}' synkra-init-descarga:1.0.0
 #0 building with "default" instance using docker driver
 
 #1 [internal] load build definition from Dockerfile
@@ -31,11 +31,10 @@ $ docker build --progress=plain -t synkra-init-descarga:1.0.0 init-descarga/
 #8 exporting layers done
 #8 exporting manifest sha256:984d2a48c90efb344273c80842cafa135adccdd06417b641692ca1159f2e68b5 done
 #8 exporting config sha256:7b356a14c5fe5e5881731c92b61f22f816331104364e4caaae470c20f1cccc72 done
-#8 exporting attestation manifest sha256:d63e4904274db102ae946a13fbb45a5b27c8680b7276b45bd9ec1360136ae632 done
-#8 exporting manifest list sha256:19df46b7a8b9a3feac61f97e6d794cf305495353b13923199574ae625b464eee done
+#8 exporting attestation manifest sha256:4e81f5891c32a9c2e9f9cde1c4b218dee8a096a96e91b65fdb80c8692644d41f done
+#8 exporting manifest list sha256:929f694717221c41184ec5603920e796cf19deed5910dad03f6acf2ad1872f70 done
 #8 naming to docker.io/library/synkra-init-descarga:1.0.0 done
 #8 unpacking to docker.io/library/synkra-init-descarga:1.0.0 done
 #8 DONE 0.0s
 salida=0
-$ docker inspect -f '{{.Config.User}} {{json .Config.Entrypoint}}' synkra-init-descarga:1.0.0
 10001:10001 ["/usr/local/bin/descargar.sh"]

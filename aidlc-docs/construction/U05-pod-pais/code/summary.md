@@ -1,7 +1,7 @@
 # U05 Pod del país: resumen de la unidad
 
 Unidad: U05 (`backend/`, paquete `io.synkra.kubernetes`, y `init-descarga/`). Historia dueña: H-15; contribuye a H-12, H-13, H-14, H-16, H-19 y H-28 (plan de la unidad y `tareas/U05-T10-resumen-unidad.md`).
-Este resumen lo escribe U05-T10 sin cambiar código, pruebas, build ni scripts. Las salidas de abajo se produjeron en esta tarea, el 2026-11-27, con `--rerun`, sobre la rama `m6r/U05-T10`. Cada archivo de `evidencia/` (junto a este resumen) trae su fecha, el sha de la rama (`587e7a4`, la punta al momento de la corrida, sin cambios de código desde `03943ec`, la punta de U05-T09), el comando completo y la salida completa. Nada se corrió contra un clúster: AUTONOMIA-01.
+Este resumen lo escribe U05-T10 sin cambiar código, pruebas, build ni scripts. Las salidas de abajo se produjeron en esta tarea, el 2026-11-27, con `--rerun`, sobre la rama `m6r/U05-T10`. Cada archivo de `evidencia/` (junto a este resumen) trae su fecha, el sha de la rama (`82bf33d`, la punta al momento de la corrida; sin cambios de código desde `03943ec`, la punta de U05-T09), el comando completo y la salida completa. Nada se corrió contra un clúster: AUTONOMIA-01.
 
 ## Qué expone
 
@@ -21,14 +21,18 @@ Este resumen lo escribe U05-T10 sin cambiar código, pruebas, build ni scripts. 
 
 ### Pruebas del adaptador
 
-```
-$ ./gradlew :backend:test --rerun --tests '*kubernetes*' 2>&1 | tail -8
-BUILD SUCCESSFUL in 15s
-9 actionable tasks: 9 executed
-Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
-```
+Comando exacto de `evidencia/gradle-kubernetes.txt` (fecha y sha `82bf33d` en su primera línea) y sus últimas 6 líneas, copiadas literalmente con `tail -6`:
 
-(Se pega la cola; la salida completa, con fecha, sha `587e7a4` y comando, está en `evidencia/gradle-kubernetes.txt`.)
+```
+$ ./gradlew :backend:test --rerun --tests '*kubernetes*'; echo "salida=$?"
+[...]
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 13s
+9 actionable tasks: 1 executed, 8 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
+salida=0
+```
 
 Conteo por clase, de los XML de `backend/build/test-results/test/` (`evidencia/conteo-por-clase.txt`):
 
@@ -82,13 +86,15 @@ todos los casos ok
 salida=0
 ```
 
-(`evidencia/init-descarga-test.txt`, con fecha, sha `587e7a4` y comando.)
+(`evidencia/init-descarga-test.txt`, con fecha, sha `82bf33d`, comando y salida completa.)
 
 ### Imagen del init
 
 ```
-$ docker build -t synkra-init-descarga:1.0.0 init-descarga/
-$ docker inspect -f '{{.Config.User}} {{json .Config.Entrypoint}}' synkra-init-descarga:1.0.0
+$ docker build --progress=plain -t synkra-init-descarga:1.0.0 init-descarga/; echo "salida=$?"; docker inspect -f '{{.Config.User}} {{json .Config.Entrypoint}}' synkra-init-descarga:1.0.0
+[...]
+#8 DONE 0.0s
+salida=0
 10001:10001 ["/usr/local/bin/descargar.sh"]
 ```
 
