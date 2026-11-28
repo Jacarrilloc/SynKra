@@ -1,0 +1,127 @@
+fecha: 2026-11-28T00:01:01-05:00
+sha: 9281e0c
+imagen: mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d arm64
+
+=== mutación: ruta
+$ sed -i 's|"api/paises"|"api/pais"|' front/Api/ApiSynkra.cs
+26c26
+<         => LeerAsync<IReadOnlyList<VistaPais>>("api/paises", ct);
+---
+>         => LeerAsync<IReadOnlyList<VistaPais>>("api/pais", ct);
+salida=1
+Failed!  - Failed:    14, Passed:     9, Skipped:     0, Total:    23, Duration: 7 s - Synkra.Front.Tests.dll (net10.0)
+total=23 executed=23 passed=9 failed=14 notExecuted=0
+FALLA CampoDesconocidoEnLaRespuestaDaRespuestaInvalida
+FALLA ErrorSinCuerpoDeLaApiDaRespuestaInvalida
+FALLA FalloDeConexionDaApiNoDisponible
+FALLA LaUrlBaseConPrefijoSeRespeta
+FALLA TiempoAgotadoDaApiNoDisponible
+FALLA VistaGeneralConListaVaciaDevuelveListaVacia
+FALLA VistaGeneralLeeLosDosPaisesConTodosSusCampos
+FALLA ApiNoDisponibleMuestraElCodigoDelFront
+FALLA ErrorDeLaApiMuestraCodigoYMensaje
+FALLA MuestraUnRenglonPorPaisConLosDatosDeLaApi
+FALLA PaisSinDespliegueMuestraGuiones
+FALLA PaisSinLecturaMuestraNoDisponibleYNoSeSabe
+FALLA SinPaisesMuestraAviso
+FALLA SoloLlamaAGetApiPaises
+ok: cae VistaGeneralLeeLosDosPaisesConTodosSusCampos
+ok: cae MuestraUnRenglonPorPaisConLosDatosDeLaApi
+
+=== mutación: nombre
+$ sed -i 's/"versionCore"/"version_core"/' front.Tests/Fixtures/paises-dos.json
+12c12
+<     "versionCore": "2.1.0"
+---
+>     "version_core": "2.1.0"
+22c22
+<     "versionCore": "2.0.0"
+---
+>     "version_core": "2.0.0"
+salida=1
+Failed!  - Failed:     4, Passed:    19, Skipped:     0, Total:    23, Duration: 3 s - Synkra.Front.Tests.dll (net10.0)
+total=23 executed=23 passed=19 failed=4 notExecuted=0
+FALLA VistaGeneralLeeLosDosPaisesConTodosSusCampos
+FALLA MuestraUnRenglonPorPaisConLosDatosDeLaApi
+FALLA PaisSinLecturaMuestraNoDisponibleYNoSeSabe
+FALLA SoloLlamaAGetApiPaises
+ok: cae VistaGeneralLeeLosDosPaisesConTodosSusCampos
+ok: cae MuestraUnRenglonPorPaisConLosDatosDeLaApi
+
+=== mutación: estricto
+$ sed -i '/UnmappedMemberHandling/d' front/Api/ApiSynkra.cs
+12d11
+<         UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
+salida=1
+Failed!  - Failed:     1, Passed:    22, Skipped:     0, Total:    23, Duration: 249 ms - Synkra.Front.Tests.dll (net10.0)
+total=23 executed=23 passed=22 failed=1 notExecuted=0
+FALLA CampoDesconocidoEnLaRespuestaDaRespuestaInvalida
+ok: cae CampoDesconocidoEnLaRespuestaDaRespuestaInvalida
+
+=== mutación: error
+$ sed -i 's|error = JsonSerializer.Deserialize<ErrorApi>(cuerpo, Opciones);|error = null;|' front/Api/ApiSynkra.cs
+80c80
+<                 error = JsonSerializer.Deserialize<ErrorApi>(cuerpo, Opciones);
+---
+>                 error = null;
+salida=1
+Failed!  - Failed:     3, Passed:    20, Skipped:     0, Total:    23, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
+total=23 executed=23 passed=20 failed=3 notExecuted=0
+FALLA Error404DaCodigoYMensajeDeLaApi
+FALLA Error422DaLosDetallesConCampoYMotivo
+FALLA ErrorDeLaApiMuestraCodigoYMensaje
+ok: cae Error404DaCodigoYMensajeDeLaApi
+ok: cae Error422DaLosDetallesConCampoYMotivo
+ok: cae ErrorDeLaApiMuestraCodigoYMensaje
+
+=== mutación: escape
+$ sed -i 's|Uri.EscapeDataString(pais)|pais|' front/Api/ApiSynkra.cs
+29c29
+<         => LeerAsync<IReadOnlyList<ResumenDespliegue>>($"api/paises/{Uri.EscapeDataString(pais)}/despliegues", ct);
+---
+>         => LeerAsync<IReadOnlyList<ResumenDespliegue>>($"api/paises/{pais}/despliegues", ct);
+salida=1
+Failed!  - Failed:     1, Passed:    22, Skipped:     0, Total:    23, Duration: 250 ms - Synkra.Front.Tests.dll (net10.0)
+total=23 executed=23 passed=22 failed=1 notExecuted=0
+FALLA HistorialEscapaElPais
+ok: cae HistorialEscapaElPais
+
+=== mutación: config
+$ sed -i 's|UriKind.Absolute|UriKind.RelativeOrAbsolute|' front/Api/ConfiguracionApi.cs
+12c12
+<             || !Uri.TryCreate(texto.Trim(), UriKind.Absolute, out var url)
+---
+>             || !Uri.TryCreate(texto.Trim(), UriKind.RelativeOrAbsolute, out var url)
+salida=1
+Failed!  - Failed:     1, Passed:    22, Skipped:     0, Total:    23, Duration: 241 ms - Synkra.Front.Tests.dll (net10.0)
+total=23 executed=23 passed=22 failed=1 notExecuted=0
+FALLA ConfiguracionConUrlRelativaNoArranca
+ok: cae ConfiguracionConUrlRelativaNoArranca
+
+=== mutación: concuerda
+$ sed -i 's|null => "No se sabe"|null => "No"|' front/Components/Pages/VistaGeneral.razor
+109c109
+<         null => "No se sabe",
+---
+>         null => "No",
+salida=1
+Failed!  - Failed:     1, Passed:    22, Skipped:     0, Total:    23, Duration: 247 ms - Synkra.Front.Tests.dll (net10.0)
+total=23 executed=23 passed=22 failed=1 notExecuted=0
+FALLA PaisSinLecturaMuestraNoDisponibleYNoSeSabe
+ok: cae PaisSinLecturaMuestraNoDisponibleYNoSeSabe
+
+=== mutación: otra-llamada
+$ sed -i 's|_paises = await Api.VistaGeneralAsync();|_paises = await Api.VistaGeneralAsync(); await Api.HistorialAsync("co");|' front/Components/Pages/VistaGeneral.razor
+88c88
+<             _paises = await Api.VistaGeneralAsync();
+---
+>             _paises = await Api.VistaGeneralAsync(); await Api.HistorialAsync("co");
+salida=1
+Failed!  - Failed:     5, Passed:    18, Skipped:     0, Total:    23, Duration: 5 s - Synkra.Front.Tests.dll (net10.0)
+total=23 executed=23 passed=18 failed=5 notExecuted=0
+FALLA MuestraUnRenglonPorPaisConLosDatosDeLaApi
+FALLA PaisSinDespliegueMuestraGuiones
+FALLA PaisSinLecturaMuestraNoDisponibleYNoSeSabe
+FALLA SinPaisesMuestraAviso
+FALLA SoloLlamaAGetApiPaises
+ok: cae SoloLlamaAGetApiPaises
