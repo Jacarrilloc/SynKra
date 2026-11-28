@@ -56,7 +56,7 @@ Contratos que fijaron U06-A y U07-A (los asumen las tareas siguientes; están en
 | U06-A registro base | `m6r/U06-A` | `97f9f80` | **VERDE ronda 2**, fusionado (#97) | — |
 | U07-A planes y país | `m6r/U07-A` | `97f9f80` | **VERDE ronda 1**, fusionado (#96) | — |
 | U07-D confirmar | `../wt-m6r-U07-D`, `m6r/U07-D` | `ade68f6` | Ronda 1 **NO-VERDE** (F-01 NARANJA: cinco reglas de la decisión 6 sin prueba que muerda; F-02 a F-05 AMARILLO). **Codificador ronda 2 despachado** (mismo agente) | Sin `revisiones/U07-D/ronda-1-respuesta.md`, redespachar; con ella, revisor ronda 2 (base `ade68f6`) |
-| U07-E y U07-F | (sin rama) | — | **Escritas** (hashes `f4f0ecb` y `b33bc26`). U07-E: `TareasProgramadas` con `synkra.programacion.activa`, apagada en pruebas; toca `kubernetes` por C-76, C-82 y C-83. U07-F: 422 `ORIGEN_NO_LISTO` y `ORIGEN_DESACTUALIZADO` | En cadena tras U07-D |
+| U07-E y U07-F | (sin rama) | — | **Escritas** (hashes `4252363` y `2f97d8d`, tras corregir los greps de C-122). U07-E: `TareasProgramadas` con `synkra.programacion.activa`, apagada en pruebas; toca `kubernetes` por C-76, C-82 y C-83. U07-F: 422 `ORIGEN_NO_LISTO` y `ORIGEN_DESACTUALIZADO` | En cadena tras U07-D |
 | U06-C y U07-C | (sin rama) | — | **Escritas** (hashes `004d66e` y `7dbe5d3`). U07-C crea el bean `Clock` en `plataforma/Reloj.java` (U06-C no puede crear otro); U06-C usa `@MockitoBean AdaptadorKubernetes`; confirmar da 501 hasta U07-D | Despachar U06-C cuando U06-B salga VERDE y U07-C cuando U07-B salga VERDE |
 
 En la máquina de Julian, las sesiones de Julian siguen trabajando mientras no se diga lo contrario: **antes de despachar, David revisa `git fetch` y la fecha del último commit de cada rama** (punto 4 de abajo) para no pisar a nadie.
