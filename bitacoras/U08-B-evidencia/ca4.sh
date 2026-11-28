@@ -6,3 +6,4 @@ r 'bash scripts/verificar-imagenes.sh; echo "verificar=$?"'
 r "grep -n '^FROM' backend/Dockerfile core/Dockerfile init-descarga/Dockerfile"
 r "grep -c '^FROM' init-descarga/Dockerfile backend/Dockerfile core/Dockerfile"
 r "grep -n 'shellcheck' init-descarga/Dockerfile"
+r "grep -nE '0\.1\.0|2\.1\.0|1\.0\.0' scripts/imagenes.sh scripts/verificar-imagenes.sh; echo \"literales=\$?\""

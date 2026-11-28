@@ -1,4 +1,4 @@
-# fecha: 2026-11-28T05:06:45Z  sha: fb00045  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca4.sh
+# fecha: 2026-11-28T05:07:50Z  sha: 5e387bb  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca4.sh
 $ bash scripts/imagenes.sh; echo "imagenes=$?"
 + ./gradlew :backend:bootJar :core:bootJar
 > Task :verificador:compileJava UP-TO-DATE
@@ -28,7 +28,7 @@ You can use '--warning-mode all' to show the individual deprecation warnings and
 
 For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD SUCCESSFUL in 771ms
+BUILD SUCCESSFUL in 682ms
 12 actionable tasks: 12 up-to-date
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
 + docker build -t localhost:5001/synkra-backend:0.1.0 backend
@@ -50,28 +50,28 @@ Consider enabling configuration cache to speed up this build: https://docs.gradl
 #4 DONE 0.0s
 
 #5 [internal] load build context
-#5 transferring context: 68.07MB 0.2s done
-#5 DONE 0.2s
+#5 transferring context: 68.07MB 0.1s done
+#5 DONE 0.1s
 
-#6 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
+#6 [capas 2/4] WORKDIR /app
 #6 CACHED
 
-#7 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
+#7 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un backend-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/backend-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
 #7 CACHED
 
-#8 [capas 2/4] WORKDIR /app
+#8 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
 #8 CACHED
 
-#9 [capas 3/4] COPY build/libs/backend-*.jar /jars/
+#9 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
 #9 CACHED
 
 #10 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
 #10 CACHED
 
-#11 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un backend-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/backend-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
+#11 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
 #11 CACHED
 
-#12 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
+#12 [capas 3/4] COPY build/libs/backend-*.jar /jars/
 #12 CACHED
 
 #13 [stage-1 7/7] RUN addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H synkra  && mkdir /data && chown 10001:10001 /data
@@ -81,8 +81,8 @@ Consider enabling configuration cache to speed up this build: https://docs.gradl
 #14 exporting layers done
 #14 exporting manifest sha256:2d2c4d2ce61ebb1add0780cf792f90181fb982ddcb265c654fc97b4ae96d950f done
 #14 exporting config sha256:c8780ab1a3a90fe6a2290de4026a02f814a8a62142f1613ce66a645df8c94b3b done
-#14 exporting attestation manifest sha256:61bf41fe9385ce01f66e467c8add7973e58eceb2f394b1893ec816009797cc15 done
-#14 exporting manifest list sha256:592bdf96d9974db5fe58b2b8939813c4ad191d8e848fb6fb107033ac789d6228 done
+#14 exporting attestation manifest sha256:78ca4a880bf30d4e9db42e06f7aa3a8c4df3c12abc2e5372a05b9327cf3a5ba5 done
+#14 exporting manifest list sha256:56e68dc15c8593367169dac5ce20bffbdfa841490208755d46c6f01c5ef70f11 done
 #14 naming to localhost:5001/synkra-backend:0.1.0 done
 #14 unpacking to localhost:5001/synkra-backend:0.1.0 done
 #14 DONE 0.0s
@@ -108,25 +108,25 @@ Consider enabling configuration cache to speed up this build: https://docs.gradl
 #5 transferring context: 24.15MB 0.1s done
 #5 DONE 0.1s
 
-#6 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
+#6 [capas 3/4] COPY build/libs/core-*.jar /jars/
 #6 CACHED
 
-#7 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
+#7 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un core-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/core-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
 #7 CACHED
 
-#8 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un core-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/core-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
+#8 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
 #8 CACHED
 
-#9 [capas 2/4] WORKDIR /app
+#9 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
 #9 CACHED
 
-#10 [capas 3/4] COPY build/libs/core-*.jar /jars/
+#10 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
 #10 CACHED
 
-#11 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
+#11 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
 #11 CACHED
 
-#12 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
+#12 [capas 2/4] WORKDIR /app
 #12 CACHED
 
 #13 [stage-1 7/7] RUN addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins /config
@@ -136,8 +136,8 @@ Consider enabling configuration cache to speed up this build: https://docs.gradl
 #14 exporting layers done
 #14 exporting manifest sha256:1332c3009fc6d8aa070aed08b06edd110af6a5b1a0a9928cc1b09357aded9ef7 done
 #14 exporting config sha256:ab1a1cec78778fc39b2041797ac661ea0c1867a71de8c34071196785963cc03c done
-#14 exporting attestation manifest sha256:d91b78aff2d2554bfb1909c6bb5f26d7e24532449c2fe7ca05090980028cb8f4 done
-#14 exporting manifest list sha256:7f8bd90c5e8f9f1de40f7e58d85f97f7d9a21f3351e3a0f911075f1e627953bd done
+#14 exporting attestation manifest sha256:f5a5dbb06e1522641e7f98bf656ac70adf3db9016a81e38a3a7cbcc2c9b9686e 0.0s done
+#14 exporting manifest list sha256:d0d58a0e1c06edd32439c8c93a700b7d8cbe0e333a1603f92d92ac51ecfec029 done
 #14 naming to localhost:5001/synkra-core-ejemplo:2.1.0 done
 #14 unpacking to localhost:5001/synkra-core-ejemplo:2.1.0 done
 #14 DONE 0.0s
@@ -166,13 +166,13 @@ Consider enabling configuration cache to speed up this build: https://docs.gradl
 #6 [stage-1 2/3] RUN apk add --no-cache curl  && addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins && chmod 0755 /config  && apk del --no-cache apk-tools
 #6 CACHED
 
-#7 [revision 3/4] COPY descargar.sh /descargar.sh
+#7 [revision 2/4] RUN apk add --no-cache shellcheck
 #7 CACHED
 
-#8 [revision 4/4] RUN shellcheck -s sh /descargar.sh
+#8 [revision 3/4] COPY descargar.sh /descargar.sh
 #8 CACHED
 
-#9 [revision 2/4] RUN apk add --no-cache shellcheck
+#9 [revision 4/4] RUN shellcheck -s sh /descargar.sh
 #9 CACHED
 
 #10 [stage-1 3/3] COPY --from=revision --chmod=0555 /descargar.sh /usr/local/bin/descargar.sh
@@ -182,8 +182,8 @@ Consider enabling configuration cache to speed up this build: https://docs.gradl
 #11 exporting layers done
 #11 exporting manifest sha256:f03a294aa41de6e82acb051ceff4f0b76eb1aa7e6365ec7d5f749feed26283d1 done
 #11 exporting config sha256:4bf0703cb916f6aa0c2d1f705d4fa419b85c9c78336bfd1bfbf484c50b66ab02 done
-#11 exporting attestation manifest sha256:61f9e74c026ad03468288fe576ea8fcbab82ccef2ca529b9d5fcd5e6fe27680d done
-#11 exporting manifest list sha256:2897fb4b67ee65820c2f19382608ae29566ceecee6443ce679bc96308879a156 done
+#11 exporting attestation manifest sha256:ca055c5b69d6dad0093168325741385a44cf7dffe2d1fdcf6a220b6aa2e3d78b done
+#11 exporting manifest list sha256:89fed51da609f4259d9bb2653af97f988c7b4cfe6f164db5c0108c3dda4008d3 done
 #11 naming to localhost:5001/synkra-init-descarga:1.0.0 done
 #11 unpacking to localhost:5001/synkra-init-descarga:1.0.0 done
 #11 DONE 0.0s
@@ -234,3 +234,5 @@ $ grep -n 'shellcheck' init-descarga/Dockerfile
 5:# Etapa de revision (C-95): si shellcheck encuentra algo en descargar.sh, el build falla.
 7:RUN apk add --no-cache shellcheck
 9:RUN shellcheck -s sh /descargar.sh
+$ grep -nE '0\.1\.0|2\.1\.0|1\.0\.0' scripts/imagenes.sh scripts/verificar-imagenes.sh; echo "literales=$?"
+literales=1
