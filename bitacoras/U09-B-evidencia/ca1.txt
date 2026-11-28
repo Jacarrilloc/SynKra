@@ -1,0 +1,23 @@
+fecha: 2026-11-28T02:00:33-05:00
+sha: 8d7a11e (ultimo commit de codigo: 8d7a11e)
+arch: x86_64
+imagen: mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
+
+++ git merge-base HEAD main
++ B=367e09fd5243122b0e7506a6840365945e066f25
++ git merge-base --is-ancestor 0910a09 367e09fd5243122b0e7506a6840365945e066f25
++ echo base=0
+base=0
++ git diff --stat 0910a09 367e09fd5243122b0e7506a6840365945e066f25 -- front front.Tests scripts/dotnet-docker.sh
++ wc -l
+0
++ git rev-parse HEAD:front/Api/ApiSynkra.cs HEAD:front/Api/ModelosCatalogo.cs HEAD:front/Api/ApiSynkra.Catalogo.cs
+899488ab7d398e08ac192166d114e672bacf350c
+85479d56ec36af6804401d7a23343a576612c611
+d5d7babb78d10f8d445bf2ea6c0a6d78cafaab77
++ git diff -U0 367e09fd5243122b0e7506a6840365945e066f25 HEAD -- front/Api/ApiSynkra.cs
++ grep -E '^[-+][^-+]'
+-/// <summary>Cliente tipado de la API REST de SynKra. Solo lecturas; todo lo que devuelve sale tal cual de la API.</summary>
+-public class ApiSynkra
++/// <summary>Cliente tipado de la API REST de SynKra; todo lo que devuelve sale tal cual de la API.</summary>
++public partial class ApiSynkra
