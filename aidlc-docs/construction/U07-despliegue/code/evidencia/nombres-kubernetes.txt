@@ -1,0 +1,6 @@
+fecha: 2026-11-27T23:02:40-05:00  sha: ba0b1fd  JAVA_HOME=/home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ git diff --name-status --diff-filter=A 39a242c...555acad -- backend/src/test/java/io/synkra/kubernetes
+A	backend/src/test/java/io/synkra/kubernetes/ContextoEventosTest.java
+A	backend/src/test/java/io/synkra/kubernetes/EstadoRolloutTest.java
+A	backend/src/test/java/io/synkra/kubernetes/LecturasDePrueba.java
+A	backend/src/test/java/io/synkra/kubernetes/ReintentosClienteTest.java

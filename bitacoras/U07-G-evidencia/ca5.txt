@@ -1,0 +1,14 @@
+fecha: 2026-11-27T23:03:59-05:00  sha: ba0b1fd  (resumen sobre el árbol de a662ac3 más el resumen sin commitear)  comando: bash bitacoras/U07-G-evidencia/ca5.sh
+      1 ok bitacoras/U07-A.md
+      3 ok bitacoras/U07-D.md
+      2 ok bitacoras/U07-E.md
+      1 ok bitacoras/U07-F.md
+      2 ok revisiones/U07-A/ronda-1.md
+      3 ok revisiones/U07-B/ronda-1.md
+      1 ok revisiones/U07-B/ronda-2.md
+      1 ok revisiones/U07-C/ronda-1.md
+      2 ok revisiones/U07-C/ronda-2.md
+      1 ok revisiones/U07-D/ronda-2.md
+      1 ok revisiones/U07-E/ronda-1.md
+      2 ok revisiones/U07-E/ronda-2.md
+      3 ok revisiones/U07-F/ronda-3.md
