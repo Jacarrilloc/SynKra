@@ -1,0 +1,13 @@
+fecha: 2026-11-28T04:18:36-05:00
+sha: c1ab806
+comando: make cluster-delete
+docker-servidor-arquitectura: x86_64
+JAVA_HOME: $HOME/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+nota: la ruta personal de la maquina aparece como $HOME
+---
+kind delete cluster --name synkra --kubeconfig "$HOME/Projects/Master/wt-m6r-U08-E/.kube/kind-synkra.yaml"
+Deleting cluster "synkra" ...
+Deleted nodes: ["synkra-control-plane" "synkra-worker"]
+kind-registry
+salida=0
+segundos=2

@@ -1,0 +1,54 @@
+fecha: 2026-11-28T04:49:27-05:00
+sha: fd58b80
+$ grep -c '^salida=0$' aidlc-docs/construction/U08-instalacion-limite/code/evidencia/{install,limite,e2e}.txt
+aidlc-docs/construction/U08-instalacion-limite/code/evidencia/install.txt:1
+aidlc-docs/construction/U08-instalacion-limite/code/evidencia/limite.txt:1
+aidlc-docs/construction/U08-instalacion-limite/code/evidencia/e2e.txt:1
+$ grep -F 'OK e2e' aidlc-docs/construction/U08-instalacion-limite/code/evidencia/e2e.txt
+OK e2e: CU1 a CU5, 10 respuestas 4xx con codigo, mensaje y detalles
+$ head -6 de cada archivo (cabeceras)
+== install
+fecha: 2026-11-28T04:18:38-05:00
+sha: c1ab806
+comando: make install
+docker-servidor-arquitectura: x86_64
+JAVA_HOME: $HOME/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+nota: la ruta personal de la maquina aparece como $HOME
+== limite
+fecha: 2026-11-28T04:20:02-05:00
+sha: c1ab806
+comando: make verificar-limite
+docker-servidor-arquitectura: x86_64
+JAVA_HOME: $HOME/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+nota: la ruta personal de la maquina aparece como $HOME
+== e2e
+fecha: 2026-11-28T04:20:03-05:00
+sha: c1ab806
+comando: ./scripts/e2e-api.sh
+docker-servidor-arquitectura: x86_64
+JAVA_HOME: $HOME/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+nota: la ruta personal de la maquina aparece como $HOME
+$ secciones del resumen
+Qué se construyó: 1
+Cómo se prueba: 1
+Salidas reales: 1
+Desviaciones del diseño: 1
+Trazabilidad: 1
+Tareas y rondas: 1
+Candidatas abiertas: 1
+Cifras y su fuente: 1
+$ secciones de la guia
+Requisitos: 1
+Instalar: 1
+Comprobar el límite: 1
+Entrar: 1
+Usar cada función: 1
+El recorrido completo: 1
+Errores comunes: 1
+Desinstalar: 1
+$ orden de las secciones (numero de linea)
+9 19 37 105 121 135 147 165
+13 55 116 147 182 602 626 685
+$ grep -cE 'David|Julian|casdav|/home/' GUIA.md aidlc-docs/construction/U08-instalacion-limite/code/summary.md
+GUIA.md:0
+aidlc-docs/construction/U08-instalacion-limite/code/summary.md:0

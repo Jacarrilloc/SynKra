@@ -1,0 +1,763 @@
+fecha: 2026-11-28T04:37:38-05:00
+sha: f8e708c
+comando: bash bitacoras/U08-E-evidencia/guia.sh
+docker-servidor-arquitectura: x86_64
+JAVA_HOME: $HOME/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+nota: la ruta personal de la maquina aparece como $HOME
+---
+### bloque 1
+$ export JAVA_HOME="${JAVA_HOME:-$HOME/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2}"
+$ docker --version
+$ kind version
+$ kubectl version --client
+$ make --version | head -1
+$ jq --version
+$ curl --version | head -1
+$ python3 --version
+$ "$JAVA_HOME/bin/java" -version 2>&1 | head -1
+$ sysctl fs.inotify.max_user_instances
+--- salida
+Docker version 29.10.1, build c48360f
+kind v0.33.0 go1.26.7 linux/amd64
+Client Version: v1.36.4
+Kustomize Version: v5.8.1
+GNU Make 4.4.1
+jq-1.8.1
+curl 8.18.0 (x86_64-pc-linux-gnu) libcurl/8.18.0 OpenSSL/3.5.5 zlib/1.3.1 brotli/1.2.0 zstd/1.5.7 libidn2/2.3.8 libpsl/0.21.2 libssh2/1.11.1 nghttp2/1.68.0 librtmp/2.3 mit-krb5/1.22.1 OpenLDAP/2.6.10
+Python 3.14.4
+openjdk version "21.0.13.1" 2026-11-17 LTS
+fs.inotify.max_user_instances = 512
+--- fin bloque 1 salida=0
+### bloque 2
+$ make cluster-delete
+--- salida
+kind delete cluster --name synkra --kubeconfig "$HOME/Projects/Master/wt-m6r-U08-E/.kube/kind-synkra.yaml"
+Deleting cluster "synkra" ...
+Deleted nodes: ["synkra-worker" "synkra-control-plane"]
+kind-registry
+--- fin bloque 2 salida=0
+### bloque 3
+$ make install
+--- salida
+kubeconfig sin contextos todavía: lo rellena make cluster
+make cluster
+make[1]: Entering directory '$HOME/Projects/Master/wt-m6r-U08-E'
+kubeconfig sin contextos todavía: lo rellena make cluster
+Creating cluster "synkra" ...
+ • Ensuring node image (kindest/node) 🖼️  ...
+ ✓ Ensuring node image (kindest/node) 🖼️
+ • Preparing nodes 📦 📦   ...
+ ✓ Preparing nodes 📦 📦 
+ • Writing configuration 📜  ...
+ ✓ Writing configuration 📜
+ • Starting control-plane 🕹️  ...
+ ✓ Starting control-plane 🕹️
+ • Installing CNI 🔌  ...
+ ✓ Installing CNI 🔌
+ • Installing StorageClass 💾  ...
+ ✓ Installing StorageClass 💾
+ • Joining worker nodes 🚜  ...
+ ✓ Joining worker nodes 🚜
+ • Waiting ≤ 3m0s for control-plane = Ready ⏳  ...
+ ✓ Waiting ≤ 3m0s for control-plane = Ready ⏳
+ • Ready after 7s 💚
+Set kubectl context to "kind-synkra"
+You can now use your cluster with:
+
+kubectl cluster-info --context kind-synkra --kubeconfig $HOME/Projects/Master/wt-m6r-U08-E/.kube/kind-synkra.yaml
+
+Thanks for using kind! 😊
+contexto permitido: kind-synkra (https://127.0.0.1:43811)
+kubectl --kubeconfig "$HOME/Projects/Master/wt-m6r-U08-E/.kube/kind-synkra.yaml" wait --for=condition=Ready nodes --all --timeout=180s
+node/synkra-control-plane condition met
+node/synkra-worker condition met
+make[1]: Leaving directory '$HOME/Projects/Master/wt-m6r-U08-E'
+make registro
+make[1]: Entering directory '$HOME/Projects/Master/wt-m6r-U08-E'
+contexto permitido: kind-synkra (https://127.0.0.1:43811)
+scripts/registro-local.sh
+registro listo en 127.0.0.1:5001
+make[1]: Leaving directory '$HOME/Projects/Master/wt-m6r-U08-E'
+make aplicar-base
+make[1]: Entering directory '$HOME/Projects/Master/wt-m6r-U08-E'
+contexto permitido: kind-synkra (https://127.0.0.1:43811)
+kubectl --kubeconfig "$HOME/Projects/Master/wt-m6r-U08-E/.kube/kind-synkra.yaml" apply -f deploy/base/namespaces.yaml -f deploy/base/rbac.yaml
+namespace/synkra created
+namespace/synkra-co created
+namespace/synkra-pe created
+serviceaccount/deployer created
+role.rbac.authorization.k8s.io/synkra-deployer created
+rolebinding.rbac.authorization.k8s.io/synkra-deployer created
+role.rbac.authorization.k8s.io/synkra-deployer created
+rolebinding.rbac.authorization.k8s.io/synkra-deployer created
+make[1]: Leaving directory '$HOME/Projects/Master/wt-m6r-U08-E'
+make ingress
+make[1]: Entering directory '$HOME/Projects/Master/wt-m6r-U08-E'
+contexto permitido: kind-synkra (https://127.0.0.1:43811)
+kubectl --kubeconfig "$HOME/Projects/Master/wt-m6r-U08-E/.kube/kind-synkra.yaml" apply -k deploy/ingress-nginx
+namespace/ingress-nginx created
+serviceaccount/ingress-nginx created
+serviceaccount/ingress-nginx-admission created
+role.rbac.authorization.k8s.io/ingress-nginx created
+role.rbac.authorization.k8s.io/ingress-nginx-admission created
+clusterrole.rbac.authorization.k8s.io/ingress-nginx created
+clusterrole.rbac.authorization.k8s.io/ingress-nginx-admission created
+rolebinding.rbac.authorization.k8s.io/ingress-nginx created
+rolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
+clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx created
+clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
+configmap/ingress-nginx-controller created
+service/ingress-nginx-controller created
+service/ingress-nginx-controller-admission created
+deployment.apps/ingress-nginx-controller created
+job.batch/ingress-nginx-admission-create created
+job.batch/ingress-nginx-admission-patch created
+ingressclass.networking.k8s.io/nginx created
+validatingwebhookconfiguration.admissionregistration.k8s.io/ingress-nginx-admission created
+kubectl --kubeconfig "$HOME/Projects/Master/wt-m6r-U08-E/.kube/kind-synkra.yaml" rollout status deployment/ingress-nginx-controller -n ingress-nginx --timeout=300s
+Waiting for deployment "ingress-nginx-controller" rollout to finish: 0 of 1 updated replicas are available...
+deployment "ingress-nginx-controller" successfully rolled out
+make[1]: Leaving directory '$HOME/Projects/Master/wt-m6r-U08-E'
+make tls
+make[1]: Entering directory '$HOME/Projects/Master/wt-m6r-U08-E'
+contexto permitido: kind-synkra (https://127.0.0.1:43811)
+scripts/secreto-tls.sh
+tls: se reutiliza .tls/tls.crt
+secret/synkra-local-tls created
+OK tls: synkra/synkra-local-tls 7536ed1175dcb8d0c5065c6cbd8872814c3f032defea3985c846a7a6a1217a1f
+make[1]: Leaving directory '$HOME/Projects/Master/wt-m6r-U08-E'
+make imagenes
+make[1]: Entering directory '$HOME/Projects/Master/wt-m6r-U08-E'
+scripts/imagenes.sh --subir
+OK versiones: backend 0.1.0, init 1.0.0
++ ./gradlew :backend:bootJar :core:bootJar
+> Task :verificador:compileJava UP-TO-DATE
+> Task :backend:compileJava UP-TO-DATE
+> Task :backend:processResources UP-TO-DATE
+> Task :backend:classes UP-TO-DATE
+> Task :backend:resolveMainClassName UP-TO-DATE
+> Task :verificador:processResources NO-SOURCE
+> Task :verificador:classes UP-TO-DATE
+> Task :verificador:jar UP-TO-DATE
+> Task :backend:bootJar UP-TO-DATE
+> Task :plugin-api:compileJava UP-TO-DATE
+> Task :core:compileJava UP-TO-DATE
+> Task :core:processResources UP-TO-DATE
+> Task :core:classes UP-TO-DATE
+> Task :core:resolveMainClassName UP-TO-DATE
+> Task :plugin-api:processResources NO-SOURCE
+> Task :plugin-api:classes UP-TO-DATE
+> Task :plugin-api:jar UP-TO-DATE
+> Task :core:bootJar UP-TO-DATE
+
+[Incubating] Problems report is available at: file://$HOME/Projects/Master/wt-m6r-U08-E/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 780ms
+12 actionable tasks: 12 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
++ docker build --provenance=false --sbom=false -t localhost:5001/synkra-backend:0.1.0 backend
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.23kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 164B done
+#3 DONE 0.0s
+
+#4 [capas 1/4] FROM docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
+#4 resolve docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 107B done
+#5 DONE 0.0s
+
+#6 [capas 2/4] WORKDIR /app
+#6 CACHED
+
+#7 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
+#7 CACHED
+
+#8 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
+#8 CACHED
+
+#9 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
+#9 CACHED
+
+#10 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
+#10 CACHED
+
+#11 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un backend-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/backend-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
+#11 CACHED
+
+#12 [capas 3/4] COPY build/libs/backend-*.jar /jars/
+#12 CACHED
+
+#13 [stage-1 7/7] RUN addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H synkra  && mkdir /data && chown 10001:10001 /data
+#13 CACHED
+
+#14 exporting to image
+#14 exporting layers done
+#14 exporting manifest sha256:48b554d0a4fa144ecf93cb5403209c06cacd26985f629824920b0facbc5e1baa done
+#14 exporting config sha256:377764b100d5b139bfc43667afd3e12cab88449829b5947563a542687e2bf42e done
+#14 naming to localhost:5001/synkra-backend:0.1.0 done
+#14 unpacking to localhost:5001/synkra-backend:0.1.0 done
+#14 DONE 0.0s
++ docker build --provenance=false --sbom=false -t localhost:5001/synkra-core-ejemplo:2.1.0 core
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.47kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 161B done
+#3 DONE 0.0s
+
+#4 [capas 1/4] FROM docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
+#4 resolve docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 104B done
+#5 DONE 0.0s
+
+#6 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
+#6 CACHED
+
+#7 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
+#7 CACHED
+
+#8 [capas 2/4] WORKDIR /app
+#8 CACHED
+
+#9 [capas 3/4] COPY build/libs/core-*.jar /jars/
+#9 CACHED
+
+#10 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un core-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/core-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
+#10 CACHED
+
+#11 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
+#11 CACHED
+
+#12 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
+#12 CACHED
+
+#13 [stage-1 7/7] RUN addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins /config
+#13 CACHED
+
+#14 exporting to image
+#14 exporting layers done
+#14 exporting manifest sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76 done
+#14 exporting config sha256:c724580ee774dabfaa133af07bc92fd771cc4e920dedb3c620eb14570107eecd done
+#14 naming to localhost:5001/synkra-core-ejemplo:2.1.0 done
+#14 unpacking to localhost:5001/synkra-core-ejemplo:2.1.0 done
+#14 DONE 0.0s
++ docker build --provenance=false --sbom=false -t localhost:5001/synkra-init-descarga:1.0.0 init-descarga
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.13kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 57B done
+#3 DONE 0.0s
+
+#4 [revision 1/4] FROM docker.io/library/alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc
+#4 resolve docker.io/library/alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 34B done
+#5 DONE 0.0s
+
+#6 [stage-1 2/3] RUN apk add --no-cache curl  && addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins && chmod 0755 /config  && apk del --no-cache apk-tools
+#6 CACHED
+
+#7 [revision 2/4] RUN apk add --no-cache shellcheck
+#7 CACHED
+
+#8 [revision 3/4] COPY descargar.sh /descargar.sh
+#8 CACHED
+
+#9 [revision 4/4] RUN shellcheck -s sh /descargar.sh
+#9 CACHED
+
+#10 [stage-1 3/3] COPY --from=revision --chmod=0555 /descargar.sh /usr/local/bin/descargar.sh
+#10 CACHED
+
+#11 exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:d3019aacdfb153d8db5c2ffe3bdab553601f2aa7dfda8ffbcf2ed298e6f12d75 done
+#11 exporting config sha256:bdf6313eb595ed994470d34f137de88605dc5d0a1bcd63e61eb0929aa6027abe done
+#11 naming to localhost:5001/synkra-init-descarga:1.0.0 done
+#11 unpacking to localhost:5001/synkra-init-descarga:1.0.0 done
+#11 DONE 0.0s
+OK imagenes construidas con prefijo localhost:5001
+OK versiones: backend 0.1.0, init 1.0.0
+ok backend/Dockerfile FROM
+ok backend/Dockerfile FROM
+ok core/Dockerfile FROM
+ok core/Dockerfile FROM
+ok init-descarga/Dockerfile FROM
+ok init-descarga/Dockerfile FROM
+ok localhost:5001/synkra-init-descarga:1.0.0 etiqueta
+ok localhost:5001/synkra-backend:0.1.0 User
+ok localhost:5001/synkra-backend:0.1.0 id-u
+ok localhost:5001/synkra-backend:0.1.0 arquitectura
+ok localhost:5001/synkra-core-ejemplo:2.1.0 User
+ok localhost:5001/synkra-core-ejemplo:2.1.0 id-u
+ok localhost:5001/synkra-core-ejemplo:2.1.0 arquitectura
+ok localhost:5001/synkra-init-descarga:1.0.0 User
+ok localhost:5001/synkra-init-descarga:1.0.0 id-u
+ok localhost:5001/synkra-init-descarga:1.0.0 arquitectura
+ok localhost:5001/synkra-backend:0.1.0 ExposedPorts
+ok localhost:5001/synkra-core-ejemplo:2.1.0 ExposedPorts
+ok localhost:5001/synkra-core-ejemplo:2.1.0 Volumes
+ok localhost:5001/synkra-init-descarga:1.0.0 Entrypoint
+ok localhost:5001/synkra-init-descarga:1.0.0 sin-apk
+OK imagenes
++ docker push localhost:5001/synkra-backend:0.1.0
+The push refers to repository [localhost:5001/synkra-backend]
+cb99678e5a4c: Pushed
+95d78c2a8ddf: Pushed
+881fc932939e: Pushed
+2db787ed6893: Pushed
+dd1ebef4bc6a: Pushed
+4f4fb700ef54: Pushed
+7c3a5aabfc1c: Pushed
+d1540b868518: Pushed
+eaeb7fc83754: Pushed
+89406ef15e50: Pushed
+f8e7364513c9: Pushed
+0.1.0: digest: sha256:48b554d0a4fa144ecf93cb5403209c06cacd26985f629824920b0facbc5e1baa size: 2381
++ docker push localhost:5001/synkra-core-ejemplo:2.1.0
+The push refers to repository [localhost:5001/synkra-core-ejemplo]
+ff0cb9c7af64: Pushed
+7c3a5aabfc1c: Mounted from synkra-backend
+881fc932939e: Mounted from synkra-backend
+89406ef15e50: Mounted from synkra-backend
+df17b0c6b739: Pushed
+4f4fb700ef54: Mounted from synkra-backend
+3a719728310e: Pushed
+cb99678e5a4c: Mounted from synkra-backend
+2db787ed6893: Mounted from synkra-backend
+95d78c2a8ddf: Mounted from synkra-backend
+a450f847083e: Pushed
+2.1.0: digest: sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76 size: 2380
++ docker push localhost:5001/synkra-init-descarga:1.0.0
+The push refers to repository [localhost:5001/synkra-init-descarga]
+586e1e534fba: Pushed
+25f1d6b1951a: Pushed
+da0a2cb9f313: Pushed
+1.0.0: digest: sha256:d3019aacdfb153d8db5c2ffe3bdab553601f2aa7dfda8ffbcf2ed298e6f12d75 size: 862
+subida localhost:5001/synkra-backend:0.1.0 sha256:48b554d0a4fa144ecf93cb5403209c06cacd26985f629824920b0facbc5e1baa
+subida localhost:5001/synkra-core-ejemplo:2.1.0 sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76
+subida localhost:5001/synkra-init-descarga:1.0.0 sha256:d3019aacdfb153d8db5c2ffe3bdab553601f2aa7dfda8ffbcf2ed298e6f12d75
+OK imagenes subidas
+make[1]: Leaving directory '$HOME/Projects/Master/wt-m6r-U08-E'
+make desplegar
+make[1]: Entering directory '$HOME/Projects/Master/wt-m6r-U08-E'
+contexto permitido: kind-synkra (https://127.0.0.1:43811)
+scripts/desplegar.sh
+namespace/synkra unchanged (server dry run)
+namespace/synkra-co unchanged (server dry run)
+namespace/synkra-pe unchanged (server dry run)
+serviceaccount/deployer unchanged (server dry run)
+role.rbac.authorization.k8s.io/synkra-deployer unchanged (server dry run)
+role.rbac.authorization.k8s.io/synkra-deployer unchanged (server dry run)
+rolebinding.rbac.authorization.k8s.io/synkra-deployer unchanged (server dry run)
+rolebinding.rbac.authorization.k8s.io/synkra-deployer unchanged (server dry run)
+service/synkra-backend created (server dry run)
+persistentvolumeclaim/synkra-datos created (server dry run)
+deployment.apps/synkra-backend created (server dry run)
+ingress.networking.k8s.io/synkra-backend created (server dry run)
+namespace/synkra unchanged
+namespace/synkra-co unchanged
+namespace/synkra-pe unchanged
+serviceaccount/deployer unchanged
+role.rbac.authorization.k8s.io/synkra-deployer unchanged
+role.rbac.authorization.k8s.io/synkra-deployer unchanged
+rolebinding.rbac.authorization.k8s.io/synkra-deployer unchanged
+rolebinding.rbac.authorization.k8s.io/synkra-deployer unchanged
+service/synkra-backend created
+persistentvolumeclaim/synkra-datos created
+deployment.apps/synkra-backend created
+ingress.networking.k8s.io/synkra-backend created
+Waiting for deployment "synkra-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "synkra-backend" successfully rolled out
+OK desplegar: localhost:5001/synkra-backend:0.1.0 sha256:48b554d0a4fa144ecf93cb5403209c06cacd26985f629824920b0facbc5e1baa
+make[1]: Leaving directory '$HOME/Projects/Master/wt-m6r-U08-E'
+make verificar-limite
+make[1]: Entering directory '$HOME/Projects/Master/wt-m6r-U08-E'
+contexto permitido: kind-synkra (https://127.0.0.1:43811)
+scripts/verificar-limite.sh
+ok create deployments.apps -n synkra-co: yes
+ok create deployments.apps -n synkra-pe: yes
+ok create deployments.apps -n default: no
+ok create deployments.apps -n kube-system: no
+ok create deployments.apps -n synkra: no
+ok create namespaces: no
+OK limite: 6 respuestas esperadas
+make[1]: Leaving directory '$HOME/Projects/Master/wt-m6r-U08-E'
+--- fin bloque 3 salida=0
+### bloque 4
+$ kubectl --kubeconfig .kube/kind-synkra.yaml get ns | grep synkra
+$ kubectl --kubeconfig .kube/kind-synkra.yaml get pods -n synkra
+$ docker ps --format '{{.Names}} {{.Ports}}' | grep -E 'synkra|kind-registry' | sed 's/ *$//'
+--- salida
+synkra               Active   57s
+synkra-co            Active   57s
+synkra-pe            Active   57s
+NAME                              READY   STATUS    RESTARTS   AGE
+synkra-backend-5b58475c6d-xsr7d   1/1     Running   0          26s
+kind-registry 127.0.0.1:5001->5000/tcp
+synkra-worker
+synkra-control-plane 127.0.0.1:80->80/tcp, 127.0.0.1:443->443/tcp, 127.0.0.1:43811->6443/tcp
+--- fin bloque 4 salida=0
+### bloque 5
+$ make verificar-limite
+--- salida
+contexto permitido: kind-synkra (https://127.0.0.1:43811)
+scripts/verificar-limite.sh
+ok create deployments.apps -n synkra-co: yes
+ok create deployments.apps -n synkra-pe: yes
+ok create deployments.apps -n default: no
+ok create deployments.apps -n kube-system: no
+ok create deployments.apps -n synkra: no
+ok create namespaces: no
+OK limite: 6 respuestas esperadas
+--- fin bloque 5 salida=0
+### bloque 6
+$ curl -sS --resolve synkra.local:443:127.0.0.1 --cacert .tls/tls.crt https://synkra.local/actuator/health
+--- salida
+{"status":"UP","groups":["liveness","readiness"],"components":{"db":{"status":"UP"},"diskSpace":{"status":"UP"},"livenessState":{"status":"UP"},"ping":{"status":"UP"},"readinessState":{"status":"UP"},"ssl":{"status":"UP"}}}
+--- fin bloque 6 salida=0
+### bloque 7
+$ API=https://synkra.local
+$ sk() { curl -sS --resolve synkra.local:443:127.0.0.1 --cacert .tls/tls.crt -H 'X-Synkra-Usuario: demo' "$@"; }
+$ skj() { sk -H 'Content-Type: application/json' "$@"; }
+$ sk "$API/actuator/health" | jq -c .
+--- salida
+{"status":"UP","groups":["liveness","readiness"],"components":{"db":{"status":"UP"},"diskSpace":{"status":"UP"},"livenessState":{"status":"UP"},"ping":{"status":"UP"},"readinessState":{"status":"UP"},"ssl":{"status":"UP"}}}
+--- fin bloque 7 salida=0
+### bloque 8
+$ ./gradlew :plugins:kyc-co:jar :plugins:kyc-pe:assemble -q
+$ ls plugins/kyc-co/build/libs plugins/kyc-pe/build/libs
+--- salida
+plugins/kyc-co/build/libs:
+kyc-co-1.0.0.jar
+
+plugins/kyc-pe/build/libs:
+kyc-pe-1.3.0.jar
+kyc-pe-2.0.0.jar
+--- fin bloque 8 salida=0
+### bloque 9
+$ VC=$(grep -E '^version *= *"' core/build.gradle.kts | head -1 | sed -E 's/.*"([^"]+)".*/\1/')
+$ ACEPTA='application/vnd.oci.image.index.v1+json, application/vnd.docker.distribution.manifest.list.v2+json, application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json'
+$ DIGEST=$(curl -sS -I -H "Accept: $ACEPTA" "http://127.0.0.1:5001/v2/synkra-core-ejemplo/manifests/$VC" | tr -d '\r' | awk -F': ' 'tolower($1)=="docker-content-digest"{print $2}')
+$ IMAGEN="localhost:5001/synkra-core-ejemplo:$VC@$DIGEST"
+$ echo "$IMAGEN"
+--- salida
+localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76
+--- fin bloque 9 salida=0
+### bloque 10
+$ jq -n --arg v "$VC" --arg i "$IMAGEN" '{nombre:"synkra-core", version:$v, imagen:$i}' \
+$   | skj -X POST "$API/api/cores" --data-binary @- -w '\nHTTP %{http_code}\n'
+--- salida
+{"nombre":"synkra-core","versiones":[{"version":"2.1.0","imagen":"localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76"}]}
+HTTP 201
+--- fin bloque 10 salida=0
+### bloque 11
+$ jq -n --arg v "$VC" --arg i "$IMAGEN" '{nombre:"synkra-core", version:$v, imagen:$i}' \
+$   | skj -X POST "$API/api/cores" --data-binary @- -w '\nHTTP %{http_code}\n'
+--- salida
+{"codigo":"CONFLICTO","mensaje":"La solicitud entra en conflicto con el estado actual","detalles":[{"campo":"version","motivo":"La versión 2.1.0 del core ya está registrada"}]}
+HTTP 409
+--- fin bloque 11 salida=0
+### bloque 12
+$ sk -X POST "$API/api/cores/synkra-core/plugins" \
+$   --form "archivo=@plugins/kyc-co/build/libs/kyc-co-1.0.0.jar;type=application/java-archive" \
+$   --form-string 'etiquetas={"cliente":"demo"}' -w '\nHTTP %{http_code}\n'
+$ sk -X POST "$API/api/cores/synkra-core/plugins" \
+$   --form "archivo=@plugins/kyc-pe/build/libs/kyc-pe-1.3.0.jar;type=application/java-archive" -w '\nHTTP %{http_code}\n'
+$ sk -X POST "$API/api/cores/synkra-core/plugins" \
+$   --form "archivo=@plugins/kyc-pe/build/libs/kyc-pe-2.0.0.jar;type=application/java-archive" -w '\nHTTP %{http_code}\n'
+--- salida
+{"core":"synkra-core","nombre":"kyc-co","version":"1.0.0","coreCompatible":"2.x","etiquetas":{"cliente":"demo","pais":"co"},"sha256":"90f9ef4d8fde6c3103f346df6270c1edb64170fb00f2c81c0ff4366925376d3c","tamano":2251}
+HTTP 201
+{"core":"synkra-core","nombre":"kyc-pe","version":"1.3.0","coreCompatible":"2.x","etiquetas":{"pais":"pe"},"sha256":"3bccc0bdbeabce892015da00b4fbda4487db214a324314950036ef316564974f","tamano":2237}
+HTTP 201
+{"core":"synkra-core","nombre":"kyc-pe","version":"2.0.0","coreCompatible":"3.x","etiquetas":{"pais":"pe"},"sha256":"fbf5ddf18ec87b248af1d8878af429a576dce4f59e30a733f2efdf89121126e2","tamano":2236}
+HTTP 201
+--- fin bloque 12 salida=0
+### bloque 13
+$ sk "$API/api/cores" | jq -c .
+--- salida
+[{"nombre":"synkra-core","versiones":[{"version":"2.1.0","imagen":"localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76"}]}]
+--- fin bloque 13 salida=0
+### bloque 14
+$ sk "$API/api/cores/synkra-core/plugins?pais=co" | jq -c .
+$ sk "$API/api/cores/synkra-core/plugins?pais=pe" | jq -c '.[] | {nombre, version, coreCompatible}'
+--- salida
+[{"core":"synkra-core","nombre":"kyc-co","version":"1.0.0","coreCompatible":"2.x","etiquetas":{"cliente":"demo","pais":"co"},"sha256":"90f9ef4d8fde6c3103f346df6270c1edb64170fb00f2c81c0ff4366925376d3c","tamano":2251}]
+{"nombre":"kyc-pe","version":"1.3.0","coreCompatible":"2.x"}
+{"nombre":"kyc-pe","version":"2.0.0","coreCompatible":"3.x"}
+--- fin bloque 14 salida=0
+### bloque 15
+$ sk "$API/api/cores/synkra-core/plugins/kyc-pe/1.3.0" | jq -c .
+$ SHA=$(sk "$API/api/cores/synkra-core/plugins/kyc-pe/1.3.0" | jq -r .sha256)
+$ sk "$API/api/artefactos/$SHA" -o /tmp/kyc-pe-descargado.jar
+$ sha256sum /tmp/kyc-pe-descargado.jar plugins/kyc-pe/build/libs/kyc-pe-1.3.0.jar | cut -c1-64
+$ rm -f /tmp/kyc-pe-descargado.jar
+--- salida
+{"core":"synkra-core","nombre":"kyc-pe","version":"1.3.0","coreCompatible":"2.x","etiquetas":{"pais":"pe"},"sha256":"3bccc0bdbeabce892015da00b4fbda4487db214a324314950036ef316564974f","tamano":2237}
+3bccc0bdbeabce892015da00b4fbda4487db214a324314950036ef316564974f
+3bccc0bdbeabce892015da00b4fbda4487db214a324314950036ef316564974f
+--- fin bloque 15 salida=0
+### bloque 16
+$ skj -X POST "$API/api/verificaciones" \
+$   -d "{\"core\":\"synkra-core\",\"versionCore\":\"$VC\",\"plugins\":[{\"nombre\":\"kyc-co\",\"version\":\"1.0.0\"},{\"nombre\":\"kyc-pe\",\"version\":\"1.3.0\"}]}" | jq -c '{global, plugins: [.plugins[] | {nombre, version, compatible}]}'
+--- salida
+{"global":"APROBADA","plugins":[{"nombre":"kyc-co","version":"1.0.0","compatible":true},{"nombre":"kyc-pe","version":"1.3.0","compatible":true}]}
+--- fin bloque 16 salida=0
+### bloque 17
+$ skj -X POST "$API/api/verificaciones" \
+$   -d "{\"core\":\"synkra-core\",\"versionCore\":\"$VC\",\"plugins\":[{\"nombre\":\"kyc-pe\",\"version\":\"2.0.0\"}]}" | jq .
+--- salida
+{
+  "global": "RECHAZADA",
+  "plugins": [
+    {
+      "nombre": "kyc-pe",
+      "version": "2.0.0",
+      "core": "synkra-core",
+      "compatible": false,
+      "motivos": [
+        {
+          "codigo": "VERSION_INCOMPATIBLE",
+          "plugin": "kyc-pe",
+          "mensaje": "El plugin 'kyc-pe' 2.0.0 requiere el core 'synkra-core' en 3.x y se pidió 2.1.0",
+          "campo": "coreCompatible"
+        }
+      ],
+      "alternativas": [
+        {
+          "tipo": "PLUGIN",
+          "nombre": "kyc-pe",
+          "version": "1.3.0"
+        }
+      ]
+    }
+  ],
+  "motivosGlobales": []
+}
+--- fin bloque 17 salida=0
+### bloque 18
+$ skj -X POST "$API/api/despliegues" \
+$   -d "{\"pais\":\"co\",\"core\":\"synkra-core\",\"versionCore\":\"$VC\",\"plugins\":[{\"nombre\":\"kyc-co\",\"version\":\"1.0.0\"}]}" > /tmp/plan1.json
+$ PLAN1=$(jq -r .id /tmp/plan1.json)
+$ jq 'del(.veredicto)' /tmp/plan1.json
+--- salida
+{
+  "id": 1,
+  "pais": "co",
+  "tipo": "despliegue",
+  "origenId": null,
+  "estado": "pendiente",
+  "core": "synkra-core",
+  "versionCore": "2.1.0",
+  "creadoPor": "demo",
+  "creadoEn": "2026-11-28T09:39:18.550Z",
+  "venceEn": "2026-11-28T10:09:18.550Z",
+  "resumen": {
+    "namespace": "synkra-co",
+    "core": "synkra-core",
+    "versionCore": "2.1.0",
+    "imagen": "localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76",
+    "plugins": [
+      {
+        "nombre": "kyc-co",
+        "version": "1.0.0",
+        "sha256": "90f9ef4d8fde6c3103f346df6270c1edb64170fb00f2c81c0ff4366925376d3c"
+      }
+    ]
+  },
+  "cambios": {
+    "core": {
+      "antes": null,
+      "despues": "localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76",
+      "igual": false
+    },
+    "anadidos": [
+      {
+        "nombre": "kyc-co",
+        "version": "1.0.0",
+        "sha256": "90f9ef4d8fde6c3103f346df6270c1edb64170fb00f2c81c0ff4366925376d3c"
+      }
+    ],
+    "quitados": [],
+    "iguales": [],
+    "sinCambios": false
+  }
+}
+--- fin bloque 18 salida=0
+### bloque 19
+$ sk -X POST "$API/api/despliegues/$PLAN1/confirmacion" -w '\nHTTP %{http_code}\n'
+--- salida
+{"id":1,"pais":"co","estado":"aplicando","creadoPor":"demo","confirmadoPor":"demo","confirmadoEn":"2026-11-28T09:39:18.949076366Z"}
+HTTP 202
+--- fin bloque 19 salida=0
+### bloque 20
+$ esperar() { # esperar <id>: sondea cada 3 s, hasta 300 s, hasta listo o fallido
+$   local t0=$SECONDS e
+$   while :; do
+$     e=$(sk "$API/api/despliegues/$1" | jq -r .estado)
+$     case "$e" in
+$       listo | fallido) echo "despliegue $1: $e"; return 0 ;;
+$     esac
+$     [ $((SECONDS - t0)) -lt 300 ] || { echo "ERROR: el despliegue $1 sigue en $e"; return 1; }
+$     sleep 3
+$   done
+$ }
+$ esperar "$PLAN1"
+$ kubectl --kubeconfig .kube/kind-synkra.yaml get deploy,pods -n synkra-co
+--- salida
+despliegue 1: listo
+NAME                          READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/synkra-core   1/1     1            1           19s
+
+NAME                              READY   STATUS    RESTARTS   AGE
+pod/synkra-core-c6fc84b85-mt6tf   1/1     Running   0          19s
+--- fin bloque 20 salida=0
+### bloque 21
+$ sk "$API/api/paises" | jq -c '.[] | {pais, lectura, concuerda, ultimoDespliegueId, versionCore, plugins: [.plugins[] | "\(.nombre) \(.version)"]}'
+--- salida
+{"pais":"co","lectura":"leido","concuerda":true,"ultimoDespliegueId":1,"versionCore":"2.1.0","plugins":["kyc-co 1.0.0"]}
+{"pais":"pe","lectura":"vacio","concuerda":true,"ultimoDespliegueId":null,"versionCore":null,"plugins":[]}
+--- fin bloque 21 salida=0
+### bloque 22
+$ sk "$API/api/paises/co/despliegues" | jq -c '.[] | {id, tipo, estado, creadoPor, confirmadoPor}'
+$ sk "$API/api/despliegues/$PLAN1" | jq '{id, pais, tipo, estado, confirmadoPor, plugins: [.plugins[] | .nombre + " " + .version], contexto}'
+--- salida
+{"id":1,"tipo":"despliegue","estado":"listo","creadoPor":"demo","confirmadoPor":"demo"}
+{
+  "id": 1,
+  "pais": "co",
+  "tipo": "despliegue",
+  "estado": "listo",
+  "confirmadoPor": "demo",
+  "plugins": [
+    "kyc-co 1.0.0"
+  ],
+  "contexto": null
+}
+--- fin bloque 22 salida=0
+### bloque 23
+$ skj -X POST "$API/api/despliegues" \
+$   -d "{\"pais\":\"co\",\"core\":\"synkra-core\",\"versionCore\":\"$VC\",\"plugins\":[{\"nombre\":\"kyc-co\",\"version\":\"1.0.0\"},{\"nombre\":\"kyc-pe\",\"version\":\"1.3.0\"}]}" > /tmp/plan2.json
+$ PLAN2=$(jq -r .id /tmp/plan2.json)
+$ jq -c '{id, estado, core: .cambios.core.igual, anadidos: [.cambios.anadidos[] | .nombre + " " + .version], quitados: [.cambios.quitados[] | .nombre + " " + .version], iguales: [.cambios.iguales[] | .nombre + " " + .version]}' /tmp/plan2.json
+$ sk -X POST "$API/api/despliegues/$PLAN2/confirmacion" -o /dev/null -w 'HTTP %{http_code}\n'
+$ esperar "$PLAN2"
+$ sk "$API/api/paises" | jq -c '.[] | select(.pais=="co") | {concuerda, ultimoDespliegueId, plugins: [.plugins[] | "\(.nombre) \(.version)"]}'
+--- salida
+{"id":2,"estado":"pendiente","core":true,"anadidos":["kyc-pe 1.3.0"],"quitados":[],"iguales":["kyc-co 1.0.0"]}
+HTTP 202
+despliegue 2: listo
+{"concuerda":true,"ultimoDespliegueId":2,"plugins":["kyc-co 1.0.0","kyc-pe 1.3.0"]}
+--- fin bloque 23 salida=0
+### bloque 24
+$ IMG_ANTES=$(kubectl --kubeconfig .kube/kind-synkra.yaml get deploy -n synkra-co -o jsonpath='{..image}' | tr ' ' '\n' | sort | paste -sd' ' -)
+$ sk "$API/api/paises/co/despliegues" | jq 'length'
+$ skj -X POST "$API/api/despliegues" \
+$   -d "{\"pais\":\"co\",\"core\":\"synkra-core\",\"versionCore\":\"$VC\",\"plugins\":[{\"nombre\":\"kyc-co\",\"version\":\"1.0.0\"},{\"nombre\":\"kyc-pe\",\"version\":\"2.0.0\"}]}" -w '\nHTTP %{http_code}\n'
+$ sk "$API/api/paises/co/despliegues" | jq 'length'
+$ IMG_DESPUES=$(kubectl --kubeconfig .kube/kind-synkra.yaml get deploy -n synkra-co -o jsonpath='{..image}' | tr ' ' '\n' | sort | paste -sd' ' -)
+$ [ "$IMG_ANTES" = "$IMG_DESPUES" ] && echo "las imágenes del namespace no cambiaron"
+--- salida
+2
+{"codigo":"COMBINACION_RECHAZADA","mensaje":"La combinación no es compatible","detalles":[{"campo":"plugins.kyc-pe","motivo":"El plugin 'kyc-pe' 2.0.0 requiere el core 'synkra-core' en 3.x y se pidió 2.1.0"}]}
+HTTP 422
+2
+las imágenes del namespace no cambiaron
+--- fin bloque 24 salida=0
+### bloque 25
+$ jq -n --arg i "$IMAGEN" '{nombre:"synkra-core", version:"3.0.0", imagen:$i}' | skj -X POST "$API/api/cores" --data-binary @- -o /dev/null -w 'core 3.0.0: HTTP %{http_code}\n'
+$ skj -X POST "$API/api/despliegues" \
+$   -d '{"pais":"co","core":"synkra-core","versionCore":"3.0.0","plugins":[{"nombre":"kyc-pe","version":"2.0.0"}]}' > /tmp/plan3.json
+$ PLAN3=$(jq -r .id /tmp/plan3.json)
+$ sk -X POST "$API/api/despliegues/$PLAN3/confirmacion" -o /dev/null -w 'HTTP %{http_code}\n'
+$ esperar "$PLAN3"
+$ sk "$API/api/despliegues/$PLAN3" | jq '{id, estado, terminadoEn, aviso: (.contexto.eventos | split("\n") | .[0]), logCore: (.contexto.logCore | split("\n") | map(select(contains("kyc-pe"))) | .[0:2])}'
+$ sk "$API/api/paises" | jq -c '.[] | select(.pais=="co") | {concuerda, ultimoDespliegueId}'
+--- salida
+core 3.0.0: HTTP 201
+HTTP 202
+despliegue 3: fallido
+{
+  "id": 3,
+  "estado": "fallido",
+  "terminadoEn": "2026-11-28T09:42:58.314Z",
+  "aviso": "Venció el plazo de vigilancia sin que el despliegue quedara listo",
+  "logCore": [
+    "2026-11-28T09:42:05.876Z ERROR 1 --- [           main] io.synkra.core.ArranquePlugins           : Arranque rechazado: VERSION_INCOMPATIBLE plugin=kyc-pe: El plugin 'kyc-pe' 2.0.0 requiere el core 'synkra-core' en 3.x y se pidió 2.1.0",
+    "Caused by: io.synkra.core.ArranqueRechazado: Arranque rechazado por el verificador: VERSION_INCOMPATIBLE plugin=kyc-pe: El plugin 'kyc-pe' 2.0.0 requiere el core 'synkra-core' en 3.x y se pidió 2.1.0"
+  ]
+}
+{"concuerda":false,"ultimoDespliegueId":2}
+--- fin bloque 25 salida=0
+### bloque 26
+$ sk -X POST "$API/api/despliegues/$PLAN2/reversion" > /tmp/plan4.json
+$ PLAN4=$(jq -r .id /tmp/plan4.json)
+$ jq -c '{id, tipo, origenId, estado}' /tmp/plan4.json
+$ sk -X POST "$API/api/despliegues/$PLAN4/confirmacion" -o /dev/null -w 'HTTP %{http_code}\n'
+$ esperar "$PLAN4"
+$ sk "$API/api/paises" | jq -c '.[] | select(.pais=="co") | {concuerda, ultimoDespliegueId, plugins: [.plugins[] | "\(.nombre) \(.version)"]}'
+$ sk "$API/api/paises/co/despliegues" | jq -c '.[] | {id, tipo, estado, origenId}'
+$ kubectl --kubeconfig .kube/kind-synkra.yaml get pods -n synkra-co
+--- salida
+{"id":4,"tipo":"reversion","origenId":2,"estado":"pendiente"}
+HTTP 202
+despliegue 4: listo
+{"concuerda":true,"ultimoDespliegueId":4,"plugins":["kyc-co 1.0.0","kyc-pe 1.3.0"]}
+{"id":4,"tipo":"reversion","estado":"listo","origenId":2}
+{"id":3,"tipo":"despliegue","estado":"fallido","origenId":null}
+{"id":2,"tipo":"despliegue","estado":"listo","origenId":null}
+{"id":1,"tipo":"despliegue","estado":"listo","origenId":null}
+NAME                           READY   STATUS    RESTARTS   AGE
+synkra-core-846b8569bf-tgh88   1/1     Running   0          3m26s
+--- fin bloque 26 salida=0
+### bloque 27
+$ sk "$API/api/cores/no-existe" -w '\nHTTP %{http_code}\n'
+$ sk -X POST "$API/api/despliegues" -H 'Content-Type: application/json' -H 'X-Synkra-Usuario: No Valido' \
+$   -d "{\"pais\":\"co\",\"core\":\"synkra-core\",\"versionCore\":\"$VC\",\"plugins\":[]}" -w '\nHTTP %{http_code}\n'
+$ skj -X POST "$API/api/despliegues" \
+$   -d "{\"pais\":\"mx\",\"core\":\"synkra-core\",\"versionCore\":\"$VC\",\"plugins\":[]}" -w '\nHTTP %{http_code}\n'
+--- salida
+{"codigo":"NO_ENCONTRADO","mensaje":"Recurso no encontrado","detalles":[]}
+HTTP 404
+{"codigo":"USUARIO_INVALIDO","mensaje":"El usuario no es válido","detalles":[{"campo":"X-Synkra-Usuario","motivo":"El usuario debe tener de 1 a 64 caracteres: minúsculas, dígitos, punto, guion o guion bajo"}]}
+HTTP 422
+{"codigo":"PAIS_NO_PERMITIDO","mensaje":"El país no está permitido","detalles":[{"campo":"pais","motivo":"El país no está entre los configurados (SYNKRA_PAISES)"}]}
+HTTP 422
+--- fin bloque 27 salida=0
+bloques=27 fallados=0

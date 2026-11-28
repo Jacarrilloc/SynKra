@@ -1,0 +1,18 @@
+fecha: 2026-11-28T04:43:52-05:00
+sha: fd58b80
+--- rojo: cifra cambiada (84 a 85 s), cifra de criterios cambiada (8 a 7), cita cambiada, fragmento de la guia cambiado
+FALTA cifra «Tiempo de `make install`»: aidlc-docs/construction/U08-instalacion-limite/code/evidencia/install.txt no contiene «segundos=85»
+FALTA cifra «Criterios de U08-D»: bitacoras/U08-D.md no contiene «criterios de aceptación: 7 (CA-1 a CA-7)»
+filas de la tabla: 23
+FALTA cita: revisiones/U08-D/ronda-1.md no contiene «La acepto. Lo único que había es `configmap/kube-root-ca.crt`»
+citas: 41
+FALTA fragmento de GUIA.md: synkra-cx Active   57s
+lineas de fragmentos de la guia comprobadas: 203
+ok=263 falta=4
+cifras-rojo salida=1
+--- verde: los archivos buenos
+filas de la tabla: 23
+citas: 41
+lineas de fragmentos de la guia comprobadas: 203
+ok=267 falta=0
+cifras-verde salida=0
