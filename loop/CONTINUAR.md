@@ -29,7 +29,7 @@ U01 a U07 están **terminadas y fusionadas en `main`** (`8306ee7`, 894 pruebas e
 
 ### PRs
 
-#95 a #108 **fusionados**. No hay PRs abiertos del loop. El #6 es antiguo y no se toca.
+#95 a #108 **fusionados**. Abierto: #109 (`m6r/postman` → `main`, colección de Postman del backend, pedida por Julian a las 04:54 UTC; se fusiona junto con U08). El #6 es antiguo y no se toca.
 
 ### En vuelo
 
