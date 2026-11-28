@@ -85,6 +85,9 @@ El #6 es antiguo y no se toca.
 
 | U02-T08 el core no conoce países (ola 34) | `../wt-m6r-U02-T08`, `m6r/U02-T08` | `9d84b4c` (punta VERDE de U02-T07, #84 sin fusionar) | **VERDE en la ronda 1** (informe en `d99cf36`). PR #86, apilado. | Esperar fusión humana; U02-T09 sale de esta punta |
 
+| U06-A registro base (T01+T02+T03) | `../wt-m6r-U06-A`, `m6r/U06-A` | `97f9f80` (`main` tras fusionar #84 a #94) | **En vuelo (00:35 UTC del 28-nov):** codificador ronda 1, tarea con hash `74dc0ba`. | Si la rama no tiene commits del codificador, redespacharlo; si los tiene, revisor ronda 1 |
+| U07-A planes y país permitido (T01+T02) | `../wt-m6r-U07-A`, `m6r/U07-A` | `97f9f80` | **En vuelo (00:35 UTC del 28-nov):** codificador ronda 1, tarea con hash `c6bdfd7`. | Igual |
+
 ### Tareas escritas y sin despachar
 
 Están en `tareas/` de `orq/U05-U02-tareas`. Antes de despachar, sacar el hash con `git hash-object` y releer la tarea contra lo que dejaron las previas.
