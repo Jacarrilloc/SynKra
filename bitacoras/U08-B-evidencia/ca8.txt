@@ -1,4 +1,4 @@
-# fecha: 2026-11-28T04:56:10Z  sha: be53706  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca8.sh
+# fecha: 2026-11-28T04:56:41Z  sha: 40c992e  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca8.sh
 == Id de las imagenes buenas ANTES
 sha256:e614317d28b2e213333423a4469ca7a60c9aa9a25f598ce53a53bee3060c1658
 sha256:7d57e7d359f907b2af8e6ecdeb642b6264be90940b46eb0865a4224387462c3e
@@ -41,112 +41,103 @@ salida=1
 
 == mutacion user-0: sed -i 's/^USER 10001:10001/USER 0/' backend/Dockerfile
 $ SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/imagenes.sh && SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/verificar-imagenes.sh
-#12 [capas 2/4] WORKDIR /app
-#13 [stage-1 7/7] RUN addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H synkra  && mkdir /data && chown 10001:10001 /data
-+ docker build -t mutacion.local:1/synkra-core-ejemplo:2.1.0 core
-#0 building with "default" instance using docker driver
-#1 [internal] load build definition from Dockerfile
-#2 [internal] load metadata for docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
-#3 [internal] load .dockerignore
-#4 [capas 1/4] FROM docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
-#5 [internal] load build context
-#6 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
-#7 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
-#8 [capas 2/4] WORKDIR /app
-#9 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
-#10 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un core-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/core-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
-#11 [capas 3/4] COPY build/libs/core-*.jar /jars/
-#12 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
-#13 [stage-1 7/7] RUN addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins /config
-+ docker build -t mutacion.local:1/synkra-init-descarga:1.0.0 init-descarga
-#0 building with "default" instance using docker driver
-#1 [internal] load build definition from Dockerfile
-#2 [internal] load metadata for docker.io/library/alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc
-#3 [internal] load .dockerignore
-#4 [revision 1/4] FROM docker.io/library/alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc
-#5 [internal] load build context
-#6 [stage-1 2/3] RUN apk add --no-cache curl  && addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins && chmod 0755 /config  && apk del --no-cache apk-tools
-#7 [revision 2/4] RUN apk add --no-cache shellcheck
-#8 [revision 3/4] COPY descargar.sh /descargar.sh
-#9 [revision 4/4] RUN shellcheck -s sh /descargar.sh
-#10 [stage-1 3/3] COPY --from=revision --chmod=0555 /descargar.sh /usr/local/bin/descargar.sh
++ ./gradlew :backend:bootJar :core:bootJar
+> Task :verificador:compileJava
+> Task :backend:compileJava
+> Task :backend:processResources
+> Task :backend:classes
+> Task :backend:resolveMainClassName
+> Task :verificador:processResources NO-SOURCE
+> Task :verificador:classes
+> Task :verificador:jar
+> Task :backend:bootJar
+> Task :plugin-api:compileJava
+> Task :core:compileJava
+> Task :core:processResources
+> Task :core:classes
+> Task :core:resolveMainClassName
+> Task :plugin-api:processResources NO-SOURCE
+> Task :plugin-api:classes
+> Task :plugin-api:jar
+> Task :core:bootJar
+[Incubating] Problems report is available at: file:///tmp/tmp.BJ50Vv3TbT/build/reports/problems/problems-report.html
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+BUILD SUCCESSFUL in 1s
+12 actionable tasks: 12 executed
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
 OK imagenes construidas con prefijo mutacion.local:1
 imagenes.sh salida=0
 FALLA mutacion.local:1/synkra-backend:0.1.0 User: esperado 10001:10001 / visto 0
 FALLA mutacion.local:1/synkra-backend:0.1.0 User-no-root: esperado distinto de vacio/root/0 / visto 0
 FALLA mutacion.local:1/synkra-backend:0.1.0 id-u: esperado 10001 / visto 0
 FALLAN 3 comprobaciones
-verificar-imagenes.sh salida=0
+verificar-imagenes.sh salida=1
 
 == mutacion sin-digest: sed -i 's/^\(FROM alpine:3.20\)@sha256:[0-9a-f]*/\1/' init-descarga/Dockerfile
 $ SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/imagenes.sh && SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/verificar-imagenes.sh
-#12 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
-#13 [stage-1 7/7] RUN addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H synkra  && mkdir /data && chown 10001:10001 /data
-+ docker build -t mutacion.local:1/synkra-core-ejemplo:2.1.0 core
-#0 building with "default" instance using docker driver
-#1 [internal] load build definition from Dockerfile
-#2 [internal] load metadata for docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
-#3 [internal] load .dockerignore
-#4 [capas 1/4] FROM docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
-#5 [internal] load build context
-#6 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un core-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/core-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
-#7 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
-#8 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
-#9 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
-#10 [capas 3/4] COPY build/libs/core-*.jar /jars/
-#11 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
-#12 [capas 2/4] WORKDIR /app
-#13 [stage-1 7/7] RUN addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins /config
-+ docker build -t mutacion.local:1/synkra-init-descarga:1.0.0 init-descarga
-#0 building with "default" instance using docker driver
-#1 [internal] load build definition from Dockerfile
-#2 [internal] load metadata for docker.io/library/alpine:3.20
-#3 [internal] load .dockerignore
-#4 [revision 1/4] FROM docker.io/library/alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc
-#5 [internal] load build context
-#6 [revision 4/4] RUN shellcheck -s sh /descargar.sh
-#7 [stage-1 2/3] RUN apk add --no-cache curl  && addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins && chmod 0755 /config  && apk del --no-cache apk-tools
-#8 [revision 3/4] COPY descargar.sh /descargar.sh
-#9 [revision 2/4] RUN apk add --no-cache shellcheck
-#10 [stage-1 3/3] COPY --from=revision --chmod=0555 /descargar.sh /usr/local/bin/descargar.sh
++ ./gradlew :backend:bootJar :core:bootJar
+> Task :verificador:compileJava
+> Task :backend:compileJava
+> Task :backend:processResources
+> Task :backend:classes
+> Task :backend:resolveMainClassName
+> Task :verificador:processResources NO-SOURCE
+> Task :verificador:classes
+> Task :verificador:jar
+> Task :backend:bootJar
+> Task :plugin-api:compileJava
+> Task :core:compileJava
+> Task :core:processResources
+> Task :core:classes
+> Task :core:resolveMainClassName
+> Task :plugin-api:processResources NO-SOURCE
+> Task :plugin-api:classes
+> Task :plugin-api:jar
+> Task :core:bootJar
+[Incubating] Problems report is available at: file:///tmp/tmp.2ODVe0oDOl/build/reports/problems/problems-report.html
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+BUILD SUCCESSFUL in 1s
+12 actionable tasks: 12 executed
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
 OK imagenes construidas con prefijo mutacion.local:1
 imagenes.sh salida=0
 FALLA init-descarga/Dockerfile FROM: esperado @sha256:<64 hex> / visto FROM alpine:3.20 AS revision
 FALLA init-descarga/Dockerfile FROM: esperado @sha256:<64 hex> / visto FROM alpine:3.20
 FALLAN 2 comprobaciones
-verificar-imagenes.sh salida=0
+verificar-imagenes.sh salida=1
 
 == mutacion uid-java: sed -i 's/UID_CONTENEDORES = 10001L/UID_CONTENEDORES = 10002L/' backend/src/main/java/io/synkra/kubernetes/ConstructorObjetosPais.java
 $ SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/imagenes.sh && SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/verificar-imagenes.sh
-#12 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
-#13 [stage-1 7/7] RUN addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H synkra  && mkdir /data && chown 10001:10001 /data
-+ docker build -t mutacion.local:1/synkra-core-ejemplo:2.1.0 core
-#0 building with "default" instance using docker driver
-#1 [internal] load build definition from Dockerfile
-#2 [internal] load metadata for docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
-#3 [internal] load .dockerignore
-#4 [capas 1/4] FROM docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
-#5 [internal] load build context
-#6 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
-#7 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
-#8 [capas 2/4] WORKDIR /app
-#9 [capas 3/4] COPY build/libs/core-*.jar /jars/
-#10 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un core-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/core-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
-#11 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
-#12 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
-#13 [stage-1 7/7] RUN addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins /config
-+ docker build -t mutacion.local:1/synkra-init-descarga:1.0.0 init-descarga
-#0 building with "default" instance using docker driver
-#1 [internal] load build definition from Dockerfile
-#2 [internal] load metadata for docker.io/library/alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc
-#3 [internal] load .dockerignore
-#4 [revision 1/4] FROM docker.io/library/alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc
-#5 [internal] load build context
-#6 [revision 3/4] COPY descargar.sh /descargar.sh
-#7 [stage-1 2/3] RUN apk add --no-cache curl  && addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins && chmod 0755 /config  && apk del --no-cache apk-tools
-#8 [revision 4/4] RUN shellcheck -s sh /descargar.sh
-#9 [revision 2/4] RUN apk add --no-cache shellcheck
-#10 [stage-1 3/3] COPY --from=revision --chmod=0555 /descargar.sh /usr/local/bin/descargar.sh
++ ./gradlew :backend:bootJar :core:bootJar
+> Task :verificador:compileJava
+> Task :backend:compileJava
+> Task :backend:processResources
+> Task :backend:classes
+> Task :backend:resolveMainClassName
+> Task :verificador:processResources NO-SOURCE
+> Task :verificador:classes
+> Task :verificador:jar
+> Task :backend:bootJar
+> Task :plugin-api:compileJava
+> Task :core:compileJava
+> Task :core:processResources
+> Task :core:classes
+> Task :core:resolveMainClassName
+> Task :plugin-api:processResources NO-SOURCE
+> Task :plugin-api:classes
+> Task :plugin-api:jar
+> Task :core:bootJar
+[Incubating] Problems report is available at: file:///tmp/tmp.eA4TKryTOb/build/reports/problems/problems-report.html
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+BUILD SUCCESSFUL in 1s
+12 actionable tasks: 12 executed
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
 OK imagenes construidas con prefijo mutacion.local:1
 imagenes.sh salida=0
 FALLA mutacion.local:1/synkra-backend:0.1.0 User: esperado 10002:10001 / visto 10001:10001
@@ -156,29 +147,29 @@ FALLA mutacion.local:1/synkra-core-ejemplo:2.1.0 id-u: esperado 10002 / visto 10
 FALLA mutacion.local:1/synkra-init-descarga:1.0.0 User: esperado 10002:10001 / visto 10001:10001
 FALLA mutacion.local:1/synkra-init-descarga:1.0.0 id-u: esperado 10002 / visto 10001
 FALLAN 6 comprobaciones
-verificar-imagenes.sh salida=0
+verificar-imagenes.sh salida=1
 
 == mutacion shellcheck: sed -i '$a ls $1' init-descarga/descargar.sh
 $ SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/imagenes.sh && SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/verificar-imagenes.sh
-#8 0.151 
-#8 0.151 Did you mean: 
-#8 0.151 ls "$1"
-#8 0.151 
-#8 0.151 For more information:
-#8 0.151   https://www.shellcheck.net/wiki/SC2086 -- Double quote to prevent globbing ...
+#8 0.158 
+#8 0.158 Did you mean: 
+#8 0.158 ls "$1"
+#8 0.158 
+#8 0.158 For more information:
+#8 0.158   https://www.shellcheck.net/wiki/SC2086 -- Double quote to prevent globbing ...
 #8 ERROR: process "/bin/sh -c shellcheck -s sh /descargar.sh" did not complete successfully: exit code: 1
 ------
  > [revision 4/4] RUN shellcheck -s sh /descargar.sh:
-0.151 
-0.151 In /descargar.sh line 134:
-0.151 ls $1
-0.151    ^-- SC2086 (info): Double quote to prevent globbing and word splitting.
-0.151 
-0.151 Did you mean: 
-0.151 ls "$1"
-0.151 
-0.151 For more information:
-0.151   https://www.shellcheck.net/wiki/SC2086 -- Double quote to prevent globbing ...
+0.158 
+0.158 In /descargar.sh line 134:
+0.158 ls $1
+0.158    ^-- SC2086 (info): Double quote to prevent globbing and word splitting.
+0.158 
+0.158 Did you mean: 
+0.158 ls "$1"
+0.158 
+0.158 For more information:
+0.158   https://www.shellcheck.net/wiki/SC2086 -- Double quote to prevent globbing ...
 ------
 Dockerfile:9
 --------------------
@@ -189,7 +180,7 @@ Dockerfile:9
   11 |     FROM alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc
 --------------------
 ERROR: failed to build: failed to solve: process "/bin/sh -c shellcheck -s sh /descargar.sh" did not complete successfully: exit code: 1
-FALLA mutacion.local: docker build -t mutacion.local:1/synkra-init-descarga:1.0.0 init-descarga salió con 1
+FALLA synkra-init-descarga: docker build -t mutacion.local:1/synkra-init-descarga:1.0.0 init-descarga salió con 1
 imagenes.sh salida=1
 
 == limpieza: docker rmi de las etiquetas mutacion.local:1
