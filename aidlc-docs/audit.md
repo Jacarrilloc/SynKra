@@ -1122,3 +1122,7 @@ Se despacha el codificador de la ronda 2.
 ## 2026-11-28T07:03Z: U09-D, primera parte (sin clúster)
 
 **Acción del orquestador:** el codificador de U09-D terminó la parte sin clúster en `5cbaa9d` (código en `2cd582c`): CA-2 a CA-6 verificados; CA-1, CA-7 y CA-8 pendientes hasta la unión de U09-B y U09-C y el cierre de U08. **Arbitraje:** se acepta la desviación de la decisión 4 (`COPY . .` antes de `dotnet restore` en lugar de copiar solo el `.csproj`), porque sin los `.razor` y `wwwroot` el SDK web no restaura `Microsoft.AspNetCore.App.Internal.Assets` y `/_framework/blazor.web.js` daba 404; `ca4.sh` ahora comprueba que responde 200.
+
+## 2026-11-28T07:04Z: enmienda del CA-5 de U09-B y U09-C
+
+**Acción del orquestador:** el codificador de U09-B señaló que la decisión 6 (cabecera `<th>Core compatible</th>`) y el segundo `grep` del CA-5 (decisión 10, `resto=1`) se contradicen. Cambiar el criterio es del orquestador: el `grep` ignora ahora el texto visible entre etiquetas (`th`, `td`, `span`, `label`, `caption`, `h1-h6`), que no es una regla de versión. La misma enmienda se aplica a U09-C, que tiene el mismo patrón. Hashes nuevos: U09-B `d8040d5f4ea6778623ee254cff508bb223b6eb07`, U09-C `81b92afc69bc8ba3e1c402f0ab8eca2d2eb36777`. Otras notas del codificador de U09-B (mutación «filtra» reforzada, «enlace-vista» con `@($"#{id}")`, `[Parameter]` en el rojo, dos fixtures nuevos) se dejan al revisor.

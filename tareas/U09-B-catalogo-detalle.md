@@ -202,11 +202,11 @@ Todos se corren desde la raíz del worktree. En las líneas `Passed!` / `Failed!
   python3 -I bitacoras/U09-A-evidencia/trx.py front.Tests/TestResults/todo.trx | head -1
   grep -rnE '\[(Fact|Theory)\([^)]*Skip|\[Theory' front.Tests --include='*.cs'; echo "saltos=$?"
   grep -rniE "semver|compatib" front/ --include='*.cs' --include='*.razor'; echo "grep-plan=$?"
-  grep -rniE "semver|compatib" front/ --exclude-dir=bin --exclude-dir=obj | grep -vE '(\bstring |\.)CoreCompatible\b'; echo "resto=$?"
+  grep -rniE "semver|compatib" front/ --exclude-dir=bin --exclude-dir=obj | grep -vE '(\bstring |\.)CoreCompatible\b' | grep -vE '>[^<>]*[Cc]ompatib[^<>]*</(th|td|span|label|caption|h[1-6])>'; echo "resto=$?"
   grep -rnE 'System\.Version|Version\.(Try)?Parse|NuGet\.Versioning|Semver' front/ --include='*.cs' --include='*.razor' --include='*.csproj'; echo "versiones=$?"
   grep -rnE 'Http(Method\.)?(Post|Put|Delete|Patch)|PostAsync|PutAsync|DeleteAsync|PatchAsync|X-Synkra-Usuario|MultipartFormDataContent' front/ --include='*.cs' --include='*.razor'; echo "escrituras=$?"
   ```
-  Esperado: `Passed!` con `Failed: 0`, `Skipped: 0` y la suite completa (la de la base más 35; con `0910a09`, 64), `salida=0`; `trx.py` con `passed` = `total` y `failed=0 notExecuted=0`; `saltos=1`; el `grep` del plan, corrido **después** de compilar, solo da líneas con `CoreCompatible` (la declaración en `front/Api/ModelosCatalogo.cs` y la lectura en `Catalogo.razor`) y el segundo `grep` da `resto=1` (decisión 10); `versiones=1`; `escrituras=1`.
+  Esperado: `Passed!` con `Failed: 0`, `Skipped: 0` y la suite completa (la de la base más 35; con `0910a09`, 64), `salida=0`; `trx.py` con `passed` = `total` y `failed=0 notExecuted=0`; `saltos=1`; el `grep` del plan, corrido **después** de compilar, solo da líneas con `CoreCompatible` (la declaración en `front/Api/ModelosCatalogo.cs` y la lectura en `Catalogo.razor`) y el segundo `grep` da `resto=1` (decisión 10; enmienda del orquestador del 2026-11-28: el texto visible de una cabecera o etiqueta, como `<th>Core compatible</th>` que manda la decisión 6, no cuenta como regla de versión); `versiones=1`; `escrituras=1`.
 
 - [ ] **CA-6**: rojo primero y cada regla muerde, demostrado en copias
   Guardar como `bitacoras/U09-B-evidencia/ca6.sh` (se versiona). Una copia por mutación (`git archive HEAD | tar -x -C "$D"` y `git init -q` dentro), sin `git stash` ni cambios en el worktree:
