@@ -1092,3 +1092,7 @@ Se despacha el codificador de la ronda 2.
 ## 2026-11-28T05:43Z: fusión de #112 (U08-B); tareas U08-C y U08-D
 
 **Acción del orquestador:** U08-B salió VERDE en la ronda 3. Fusión de #112 en `05a709e`, `MERGEABLE`/`CLEAN`; `./gradlew test --rerun check` pasó (`salida=0`; 894 pruebas, 0 saltos, 0 fallos). Se commitean las tareas U08-C (`make install` y `make verificar-limite`, Ingress NGINX `controller-v1.15.1` por URL fija y sha256) y U08-D (e2e por la API, con la corrección de C-138: un cambio solo de plugins no reiniciaba el core). U08-C sale de `05a709e`, que ya es la unión de U08-A y U08-B.
+
+## 2026-11-28T06:20Z: fusión de #113 (U08-C)
+
+**Acción del orquestador:** U08-C salió VERDE en la ronda 3 (las rondas 1 y 2 fueron solo por la regla de la evidencia que comprueba que todo `kubectl` lleva `--kubeconfig`; el código no cambió desde la ronda 1). Fusión de #113 en `367e09f`, `MERGEABLE`/`CLEAN`. No toca el backend (`Makefile`, `deploy/`, `scripts/`), así que no se repite `./gradlew check`; el revisor corrió `make install` sobre un `kind` recién creado en esta máquina. U08-D sale de `367e09f`.
