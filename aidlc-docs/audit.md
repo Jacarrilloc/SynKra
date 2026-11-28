@@ -1142,3 +1142,7 @@ Se despacha el codificador de la ronda 2.
 ## 2026-11-28T09:10Z: fusión de #116 (U08-D) y #109 (Postman); tarea U08-E
 
 **Acción del orquestador:** U08-D salió VERDE en la ronda 2. Fusión de #116 en `37e89a0`; `./gradlew test --rerun check` pasó (`salida=0`; 897 pruebas, 0 saltos, 0 fallos). Fusión de #109 (colección de Postman, pedido de Julian) en `4881428`. Se escribe U08-E: resumen de U08 y `GUIA.md` (instalación y uso, prometida a David y Julian), con una corrida fresca en esta máquina. Hash: `e4db42567c8de575c596e5a5d609857e709d3979`. Revisor `sonnet`.
+
+## 2026-11-28T10:01Z: fusión de #117 y cierre de U08
+
+**Acción del orquestador:** U08-E salió VERDE en la ronda 1. Fusión de #117 en `ecd4c45` (solo documentación). U08 queda terminada: se marcan U08-T01 a T12 en el plan y se actualiza la línea de Code Generation Parte 2 en `aidlc-state.md`. La guía de uso está en `GUIA.md`. El clúster `kind-synkra` pasa a U09-D para su criterio en el clúster.
