@@ -2,7 +2,7 @@
 
 > Pega este archivo completo al abrir una sesión nueva. Responde en español.
 > Lo mantiene al día el orquestador después de cada hito (ver «Puntos de continuidad»).
-> Última actualización: 2026-11-28 00:40 UTC (19:40 en Bogotá), sesión **local** de Julian (`/home/julian/Escritorio/Proyectos/SynKra`). Traspaso para David.
+> Última actualización: 2026-11-28 00:55 UTC (19:55 en Bogotá), sesión **local** de David (`/home/casdav/Projects/Master/SynKra`, worktree del orquestador `../wt-orq-U04`). David confirmó a las 00:46 UTC que la sesión de Julian está detenida.
 > **Punto de retomar:** el commit de este archivo en `orq/U05-U02-tareas` (el sha lo da `git log -1 --format=%h -- loop/CONTINUAR.md`).
 
 ---
@@ -54,13 +54,14 @@ Contratos que fijaron U06-A y U07-A (los asumen las tareas siguientes; están en
 
 El #6 es antiguo y no se toca.
 
-### En vuelo cuando se escribió este archivo (si la sesión de Julian se cortó, se perdieron)
+### En vuelo (sesión de David, 2026-11-28 00:55 UTC; si la sesión se cortó, se perdieron)
 
 | Tarea | Worktree / rama | Desde | Estado | Qué hacer al retomar |
 |---|---|---|---|---|
-| U06-A registro base | `../wt-m6r-U06-A`, `m6r/U06-A` | `97f9f80` | Codificador ronda 1 corriendo (tarea con hash `74dc0ba`) | `git fetch` y mirar `origin/m6r/U06-A`. Sin commits del codificador: redespacharlo. Con commits y bitácora completa: despachar el revisor ronda 1 (base `97f9f80`) |
-| U07-A planes y país | `../wt-m6r-U07-A`, `m6r/U07-A` | `97f9f80` | **VERDE en la ronda 1** (informe en `8182b9d`). PR #96 a `main`, abierto | Fusionar el #96; U07-B sale de esta punta (`8182b9d`) |
-| U06-B y U07-B | (sin rama todavía) | — | Un ayudante las está redactando en `tareas/` de `orq/U05-U02-tareas` | Si `tareas/U06-B-historial-reinicio.md` y `tareas/U07-B-crear-plan.md` no están commiteadas, escribirlas desde el plan y la tabla de arriba, con U06-A y U07-A como plantilla |
+| U06-A registro base | `../wt-m6r-U06-A`, `m6r/U06-A` | `97f9f80` | Codificador ronda 1 terminó (`839e25a`, bitácora completa). **Revisor ronda 1 despachado** | Repetir el revisor ronda 1 (base `97f9f80`) si no hay `revisiones/U06-A/ronda-1.md` |
+| U07-A planes y país | `m6r/U07-A` | `97f9f80` | **VERDE ronda 1** (`8182b9d`). PR #96 abierto | Lo fusiona un humano |
+| U07-B crear plan | `../wt-m6r-U07-B`, `m6r/U07-B` | `8182b9d` | **Codificador ronda 1 despachado** (tarea con hash `b4a557b`) | Mirar `origin/m6r/U07-B`: sin commits, redespachar; con bitácora completa, despachar el revisor ronda 1 (base `8182b9d`) |
+| U06-B historial y reinicio | (sin rama) | punta VERDE de U06-A | Escrita (hash `c729f5f`), espera a U06-A | Despachar cuando U06-A salga VERDE |
 
 En la máquina de Julian, las sesiones de Julian siguen trabajando mientras no se diga lo contrario: **antes de despachar, David revisa `git fetch` y la fecha del último commit de cada rama** (punto 4 de abajo) para no pisar a nadie.
 
