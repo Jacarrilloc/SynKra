@@ -1,12 +1,251 @@
 @page "/despliegues/{Id:long}"
 @page "/paises/{Pais}"
+@using System.Globalization
+@using System.Text.Json
+@inject ApiSynkra Api
 
 <PageTitle>Detalle · SynKra</PageTitle>
 
 <h1>Detalle</h1>
 
+<button data-accion="actualizar" @onclick="CargarAsync">Actualizar</button>
+
+@if (_error is not null)
+{
+    <div data-estado="error">
+        <p data-campo="error">@_error.Codigo: @_error.Message</p>
+        @if (_error.Detalles.Count > 0)
+        {
+            <ul>
+                @foreach (var d in _error.Detalles)
+                {
+                    <li>@d.Campo: @d.Motivo</li>
+                }
+            </ul>
+        }
+    </div>
+}
+else if (!_cargado)
+{
+    <p data-estado="cargando">Cargando…</p>
+}
+else
+{
+    @if (_despliegue is not null)
+    {
+        var d = _despliegue;
+        <section id="despliegue" data-id="@d.Id">
+            <dl>
+                <dt>Despliegue</dt>
+                <dd data-campo="id">#@d.Id</dd>
+                <dt>País</dt>
+                <dd data-campo="pais">@d.Pais</dd>
+                <dt>Tipo</dt>
+                <dd data-campo="tipo">@TextoTipo(d.Tipo)</dd>
+                <dt>Origen</dt>
+                <dd data-campo="origenId">@(d.OrigenId is long o ? $"#{o}" : Guion)</dd>
+                <dt>Estado</dt>
+                <dd data-campo="estado">@TextoEstado(d.Estado)</dd>
+                <dt>Core</dt>
+                <dd data-campo="core">@d.Core</dd>
+                <dt>Versión del core</dt>
+                <dd data-campo="versionCore">@d.VersionCore</dd>
+                <dt>Imagen</dt>
+                <dd data-campo="imagen">@d.Imagen</dd>
+                <dt>Creado por</dt>
+                <dd data-campo="creadoPor">@d.CreadoPor</dd>
+                <dt>Confirmado por</dt>
+                <dd data-campo="confirmadoPor">@d.ConfirmadoPor</dd>
+                <dt>Confirmado</dt>
+                <dd data-campo="confirmadoEn">@Fecha(d.ConfirmadoEn)</dd>
+                <dt>Terminado</dt>
+                <dd data-campo="terminadoEn">@Fecha(d.TerminadoEn)</dd>
+            </dl>
+            <table data-tabla="plugins">
+                <thead>
+                    <tr>
+                        <th>Plugin</th>
+                        <th>Versión</th>
+                        <th>sha256</th>
+                        <th>Etiquetas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in d.Plugins)
+                    {
+                        <tr data-plugin="@p.Nombre" data-version="@p.Version">
+                            <td data-campo="nombre">@p.Nombre</td>
+                            <td data-campo="version">@p.Version</td>
+                            <td data-campo="sha256">@p.Sha256</td>
+                            <td data-campo="etiquetas">
+                                <ul>
+                                    @foreach (var e in p.Etiquetas.OrderBy(x => x.Key, StringComparer.Ordinal))
+                                    {
+                                        <li>@e.Key=@e.Value</li>
+                                    }
+                                </ul>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <pre data-campo="veredicto">@JsonSerializer.Serialize(d.Veredicto, SangriaJson)</pre>
+        </section>
+        @if (d.Contexto is { } c)
+        {
+            <section id="contexto">
+                <pre data-campo="logCore">@c.LogCore</pre>
+                <pre data-campo="logInit">@c.LogInit</pre>
+                <pre data-campo="eventos">@c.Eventos</pre>
+            </section>
+        }
+    }
+
+    @if (_errorHistorial is not null)
+    {
+        <div data-estado="error">
+            <p data-campo="error">@_errorHistorial.Codigo: @_errorHistorial.Message</p>
+            @if (_errorHistorial.Detalles.Count > 0)
+            {
+                <ul>
+                    @foreach (var d in _errorHistorial.Detalles)
+                    {
+                        <li>@d.Campo: @d.Motivo</li>
+                    }
+                </ul>
+            }
+        </div>
+    }
+    else if (_historial is { Count: 0 })
+    {
+        <p data-estado="sin-historial">Este país no tiene despliegues registrados.</p>
+    }
+    else if (_historial is not null)
+    {
+        <table id="historial">
+            <thead>
+                <tr>
+                    <th>Despliegue</th>
+                    <th>Tipo</th>
+                    <th>Origen</th>
+                    <th>Estado</th>
+                    <th>Core</th>
+                    <th>Versión</th>
+                    <th>Plugins</th>
+                    <th>Creado por</th>
+                    <th>Confirmado por</th>
+                    <th>Confirmado</th>
+                    <th>Terminado</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var h in _historial)
+                {
+                    <tr data-id="@h.Id" data-actual="@(_despliegue is not null && h.Id == _despliegue.Id ? "true" : null)">
+                        <td data-campo="id"><a href="despliegues/@h.Id">#@h.Id</a></td>
+                        <td data-campo="tipo">@TextoTipo(h.Tipo)</td>
+                        <td data-campo="origenId">@(h.OrigenId is long o ? $"#{o}" : Guion)</td>
+                        <td data-campo="estado">@TextoEstado(h.Estado)</td>
+                        <td data-campo="core">@h.Core</td>
+                        <td data-campo="versionCore">@h.VersionCore</td>
+                        <td data-campo="plugins">
+                            @if (h.Plugins.Count == 0)
+                            {
+                                @Guion
+                            }
+                            else
+                            {
+                                <ul>
+                                    @foreach (var pl in h.Plugins)
+                                    {
+                                        <li>@pl.Nombre @pl.Version</li>
+                                    }
+                                </ul>
+                            }
+                        </td>
+                        <td data-campo="creadoPor">@h.CreadoPor</td>
+                        <td data-campo="confirmadoPor">@h.ConfirmadoPor</td>
+                        <td data-campo="confirmadoEn">@Fecha(h.ConfirmadoEn)</td>
+                        <td data-campo="terminadoEn">@Fecha(h.TerminadoEn)</td>
+                        <td data-campo="accion"><a data-accion="volver" href="despliegues/@h.Id/volver">Volver a este</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
 @code {
+    private const string Guion = "—";
+
+    private static readonly JsonSerializerOptions SangriaJson = new() { WriteIndented = true, Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
+
     [Parameter] public long? Id { get; set; }
 
     [Parameter] public string? Pais { get; set; }
+
+    private bool _cargado;
+    private Despliegue? _despliegue;
+    private IReadOnlyList<ResumenDespliegue>? _historial;
+    private ErrorApiSynkraException? _error;
+    private ErrorApiSynkraException? _errorHistorial;
+
+    protected override Task OnParametersSetAsync() => CargarAsync();
+
+    private async Task CargarAsync()
+    {
+        _error = null;
+        _errorHistorial = null;
+        _despliegue = null;
+        _historial = null;
+        string pais;
+        if (Id is long id)
+        {
+            try
+            {
+                _despliegue = await Api.DespliegueAsync(id);
+            }
+            catch (ErrorApiSynkraException e)
+            {
+                _error = e;
+                return;
+            }
+
+            pais = _despliegue.Pais;
+        }
+        else
+        {
+            pais = Pais ?? string.Empty;
+        }
+
+        try
+        {
+            _historial = await Api.HistorialAsync(pais);
+        }
+        catch (ErrorApiSynkraException e)
+        {
+            _errorHistorial = e;
+        }
+
+        _cargado = true;
+    }
+
+    private static string Fecha(DateTimeOffset? f)
+        => f is { } v ? v.UtcDateTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture) + " UTC" : Guion;
+
+    private static string TextoTipo(TipoDespliegue t) => t switch
+    {
+        TipoDespliegue.Despliegue => "Despliegue",
+        TipoDespliegue.Reversion => "Reversión",
+        _ => throw new ArgumentOutOfRangeException(nameof(t)),
+    };
+
+    private static string TextoEstado(EstadoDespliegue e) => e switch
+    {
+        EstadoDespliegue.Aplicando => "Aplicando",
+        EstadoDespliegue.Listo => "Listo",
+        EstadoDespliegue.Fallido => "Fallido",
+        _ => throw new ArgumentOutOfRangeException(nameof(e)),
+    };
 }

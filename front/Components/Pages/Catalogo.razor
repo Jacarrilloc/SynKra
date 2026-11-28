@@ -1,5 +1,147 @@
 @page "/catalogo"
+@inject ApiSynkra Api
 
 <PageTitle>Catálogo · SynKra</PageTitle>
 
 <h1>Catálogo</h1>
+
+@if (_error is not null)
+{
+    <div data-estado="error">
+        <p data-campo="error">@_error.Codigo: @_error.Message</p>
+        @if (_error.Detalles.Count > 0)
+        {
+            <ul>
+                @foreach (var d in _error.Detalles)
+                {
+                    <li>@d.Campo: @d.Motivo</li>
+                }
+            </ul>
+        }
+    </div>
+}
+else if (_cores is null)
+{
+    <p data-estado="cargando">Cargando…</p>
+}
+else if (_cores.Count == 0)
+{
+    <p data-estado="vacio">No hay cores registrados en la API.</p>
+}
+else
+{
+    @foreach (var core in _cores)
+    {
+        <section data-core="@core.Nombre">
+            <h2>@core.Nombre</h2>
+            <table data-tabla="versiones">
+                <thead>
+                    <tr>
+                        <th>Versión</th>
+                        <th>Imagen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var v in core.Versiones)
+                    {
+                        <tr data-version="@v.Version">
+                            <td>@v.Version</td>
+                            <td>@v.Imagen</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @if (_errores.TryGetValue(core.Nombre, out var errorCore))
+            {
+                <div data-estado="error">
+                    <p data-campo="error">@errorCore.Codigo: @errorCore.Message</p>
+                    @if (errorCore.Detalles.Count > 0)
+                    {
+                        <ul>
+                            @foreach (var d in errorCore.Detalles)
+                            {
+                                <li>@d.Campo: @d.Motivo</li>
+                            }
+                        </ul>
+                    }
+                </div>
+            }
+            else if (!_plugins.TryGetValue(core.Nombre, out var plugins))
+            {
+                <p data-estado="cargando">Cargando…</p>
+            }
+            else if (plugins.Count == 0)
+            {
+                <p data-estado="sin-plugins">Este core no tiene plugins todavía.</p>
+            }
+            else
+            {
+                <table data-tabla="plugins">
+                    <thead>
+                        <tr>
+                            <th>Plugin</th>
+                            <th>Versión</th>
+                            <th>Core compatible</th>
+                            <th>Etiquetas</th>
+                            <th>sha256</th>
+                            <th>Tamaño (bytes)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in plugins)
+                        {
+                            <tr data-plugin="@p.Nombre" data-version="@p.Version">
+                                <td data-campo="nombre">@p.Nombre</td>
+                                <td data-campo="version">@p.Version</td>
+                                <td data-campo="coreCompatible">@p.CoreCompatible</td>
+                                <td data-campo="etiquetas">
+                                    <ul>
+                                        @foreach (var e in p.Etiquetas.OrderBy(x => x.Key, StringComparer.Ordinal))
+                                        {
+                                            <li>@e.Key=@e.Value</li>
+                                        }
+                                    </ul>
+                                </td>
+                                <td data-campo="sha256">@p.Sha256</td>
+                                <td data-campo="tamano">@p.Tamano.ToString(System.Globalization.CultureInfo.InvariantCulture)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            <a data-accion="subir" href="catalogo/@Uri.EscapeDataString(core.Nombre)/subir">Subir un plugin</a>
+        </section>
+    }
+}
+
+@code {
+    private IReadOnlyList<CoreRegistrado>? _cores;
+    private ErrorApiSynkraException? _error;
+    private readonly Dictionary<string, IReadOnlyList<PluginRegistrado>> _plugins = new();
+    private readonly Dictionary<string, ErrorApiSynkraException> _errores = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _cores = await Api.CoresAsync();
+        }
+        catch (ErrorApiSynkraException e)
+        {
+            _error = e;
+            return;
+        }
+
+        foreach (var core in _cores)
+        {
+            try
+            {
+                _plugins[core.Nombre] = await Api.PluginsAsync(core.Nombre);
+            }
+            catch (ErrorApiSynkraException e)
+            {
+                _errores[core.Nombre] = e;
+            }
+        }
+    }
+}
