@@ -1,0 +1,33 @@
+# fecha: 2026-11-28T01:28:38Z  sha: f73b9f0
+$ ./gradlew :backend:test --rerun --tests '*FronterasModulosTest'
+$ grep -E 'BUILD|FAILED'
+BUILD SUCCESSFUL in 6s
+$ grep -ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.FronterasModulosTest.xml
+tests="12" skipped="0" failures="0" errors="0"
+$ grep -o 'testcase name="[A-Za-z]*"' backend/build/test-results/test/TEST-io.synkra.FronterasModulosTest.xml
+$ grep -n allowedDependencies backend/src/main/java/io/synkra/registro/package-info.java
+2:@ApplicationModule(allowedDependencies = {"kubernetes :: api", "plataforma"})
+$ grep -rn 'io.synkra.despliegue\|io.synkra.catalogo' backend/src/main/java/io/synkra/registro
+$ echo ajenos=1
+ajenos=1
+$ grep -rnE 'io\.synkra\.kubernetes\.' backend/src/main/java/io/synkra/registro
+$ grep -vE 'io\.synkra\.kubernetes\.api\.'
+$ echo internos=1
+internos=1
+$ grep -rnE '\.(aplicar|construir|contextoFallo|existeNamespace)\(' backend/src/main/java/io/synkra/registro
+$ echo k8s-escrituras=1
+k8s-escrituras=1
+$ grep -rn @Bean backend/src/main/java/io/synkra/registro
+$ echo beans=1
+beans=1
+
+# El grep literal de la tarea no imprime nada porque los nombres traen paréntesis (name="x()"). Variante corregida, mismo XML:
+$ grep -o 'testcase name="[A-Za-z]*()"' backend/build/test-results/test/TEST-*FronterasModulosTest.xml
+testcase name="generaLaDocumentacionDeModulos()"
+testcase name="elBackendRealRespetaSusFronteras()"
+testcase name="laDocumentacionGeneradaNoSeVersiona()"
+testcase name="laApiDeRegistroSoloMencionaTiposPropios()"
+testcase name="verifyFallaCuandoUnModuloImportaUnPaqueteInternoDeOtro()"
+testcase name="verificadorEsModuloCompartido()"
+testcase name="registroSoloDependeDeKubernetesApiYPlataforma()"
+testcase name="registroNoTieneRutasDeEscritura()"

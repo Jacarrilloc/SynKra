@@ -1,0 +1,10 @@
+# fecha: 2026-11-28T01:27:56Z  sha: f73b9f0
+$ ./gradlew :backend:test --rerun --tests '*VistaGeneralTest'
+$ grep -E 'BUILD|FAILED'
+BUILD SUCCESSFUL in 6s
+$ grep -ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.registro.VistaGeneralTest.xml
+tests="10" skipped="0" failures="0" errors="0"
+$ python3 -I -c 'import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); print(c.execute('\''select id, pais, estado from reg_despliegue order by id'\'').fetchall()); print(c.execute("select d.pais, d.id from reg_despliegue d where d.id = (select e.id from reg_despliegue e where e.pais = d.pais and e.estado = '\''listo'\'' order by e.confirmado_en desc, e.id desc limit 1) order by d.pais").fetchall()); print(c.execute('\''select despliegue_id, group_concat(nombre) from (select * from reg_plugin order by despliegue_id, nombre) group by despliegue_id having count(*) > 1'\'').fetchall())' backend/build/sqlite-pruebas/VistaGeneralTest/synkra.db
+[(41, 'pe', 'listo'), (42, 'pe', 'listo'), (43, 'pe', 'fallido'), (44, 'co', 'listo'), (45, 'cl', 'listo'), (46, 'uy', 'listo'), (47, 'pe', 'aplicando'), (48, 'cl', 'listo'), (49, 'mx', 'listo'), (50, 'sv', 'listo')]
+[('cl', 48), ('co', 44), ('mx', 49), ('pe', 41), ('sv', 50), ('uy', 46)]
+[(41, 'kyc-aml,kyc-pe')]
