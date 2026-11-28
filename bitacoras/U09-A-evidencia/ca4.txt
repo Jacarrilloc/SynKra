@@ -1,5 +1,5 @@
-fecha: 2026-11-28T00:02:40-05:00
-sha: 0fd4b82
+fecha: 2026-11-28T00:11:05-05:00
+sha: c41f004
 imagen: mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d arm64
 
 + scripts/dotnet-docker.sh build front

@@ -1,5 +1,5 @@
-fecha: 2026-11-28T00:02:38-05:00
-sha: 0fd4b82
+fecha: 2026-11-28T00:11:03-05:00
+sha: c41f004
 imagen: mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d arm64
 
 + rm -rf front.Tests/TestResults
@@ -12,14 +12,17 @@ Test run for /src/front.Tests/bin/Debug/net10.0/Synkra.Front.Tests.dll (.NETCore
 A total of 1 test files matched the specified pattern.
 Results File: /src/front.Tests/TestResults/vista.trx
 
-Passed!  - Failed:     0, Passed:     7, Skipped:     0, Total:     7, Duration: 268 ms - Synkra.Front.Tests.dll (net10.0)
+Passed!  - Failed:     0, Passed:    10, Skipped:     0, Total:    10, Duration: 279 ms - Synkra.Front.Tests.dll (net10.0)
 + echo salida=0
 salida=0
 + python3 -I bitacoras/U09-A-evidencia/trx.py front.Tests/TestResults/vista.trx
-total=7 executed=7 passed=7 failed=0 notExecuted=0
+total=10 executed=10 passed=10 failed=0 notExecuted=0
 ApiNoDisponibleMuestraElCodigoDelFront
+ErrorConDetallesMuestraCampoYMotivo
 ErrorDeLaApiMuestraCodigoYMensaje
 MuestraUnRenglonPorPaisConLosDatosDeLaApi
+PaisInconsistenteMuestraInconsistente
+PaisQueNoConcuerdaMuestraNo
 PaisSinDespliegueMuestraGuiones
 PaisSinLecturaMuestraNoDisponibleYNoSeSabe
 SinPaisesMuestraAviso

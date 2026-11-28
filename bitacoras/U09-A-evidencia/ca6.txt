@@ -1,5 +1,5 @@
-fecha: 2026-11-28T00:02:44-05:00
-sha: 0fd4b82
+fecha: 2026-11-28T00:11:09-05:00
+sha: c41f004
 imagen: mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d arm64
 
 === mutación: ruta
@@ -9,18 +9,22 @@ $ sed -i 's|"api/paises"|"api/pais"|' front/Api/ApiSynkra.cs
 ---
 >         => LeerAsync<IReadOnlyList<VistaPais>>("api/pais", ct);
 salida=1
-Failed!  - Failed:    14, Passed:     9, Skipped:     0, Total:    23, Duration: 7 s - Synkra.Front.Tests.dll (net10.0)
-total=23 executed=23 passed=9 failed=14 notExecuted=0
+Failed!  - Failed:    18, Passed:    11, Skipped:     0, Total:    29, Duration: 9 s - Synkra.Front.Tests.dll (net10.0)
+total=29 executed=29 passed=11 failed=18 notExecuted=0
 FALLA CampoDesconocidoEnLaRespuestaDaRespuestaInvalida
 FALLA ErrorSinCuerpoDeLaApiDaRespuestaInvalida
 FALLA FalloDeConexionDaApiNoDisponible
 FALLA LaUrlBaseConPrefijoSeRespeta
+FALLA PideConAcceptJson
 FALLA TiempoAgotadoDaApiNoDisponible
 FALLA VistaGeneralConListaVaciaDevuelveListaVacia
 FALLA VistaGeneralLeeLosDosPaisesConTodosSusCampos
 FALLA ApiNoDisponibleMuestraElCodigoDelFront
+FALLA ErrorConDetallesMuestraCampoYMotivo
 FALLA ErrorDeLaApiMuestraCodigoYMensaje
 FALLA MuestraUnRenglonPorPaisConLosDatosDeLaApi
+FALLA PaisInconsistenteMuestraInconsistente
+FALLA PaisQueNoConcuerdaMuestraNo
 FALLA PaisSinDespliegueMuestraGuiones
 FALLA PaisSinLecturaMuestraNoDisponibleYNoSeSabe
 FALLA SinPaisesMuestraAviso
@@ -39,8 +43,8 @@ $ sed -i 's/"versionCore"/"version_core"/' front.Tests/Fixtures/paises-dos.json
 ---
 >     "version_core": "2.0.0"
 salida=1
-Failed!  - Failed:     4, Passed:    19, Skipped:     0, Total:    23, Duration: 3 s - Synkra.Front.Tests.dll (net10.0)
-total=23 executed=23 passed=19 failed=4 notExecuted=0
+Failed!  - Failed:     4, Passed:    25, Skipped:     0, Total:    29, Duration: 3 s - Synkra.Front.Tests.dll (net10.0)
+total=29 executed=29 passed=25 failed=4 notExecuted=0
 FALLA VistaGeneralLeeLosDosPaisesConTodosSusCampos
 FALLA MuestraUnRenglonPorPaisConLosDatosDeLaApi
 FALLA PaisSinLecturaMuestraNoDisponibleYNoSeSabe
@@ -53,22 +57,23 @@ $ sed -i '/UnmappedMemberHandling/d' front/Api/ApiSynkra.cs
 12d11
 <         UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
 salida=1
-Failed!  - Failed:     1, Passed:    22, Skipped:     0, Total:    23, Duration: 246 ms - Synkra.Front.Tests.dll (net10.0)
-total=23 executed=23 passed=22 failed=1 notExecuted=0
+Failed!  - Failed:     1, Passed:    28, Skipped:     0, Total:    29, Duration: 254 ms - Synkra.Front.Tests.dll (net10.0)
+total=29 executed=29 passed=28 failed=1 notExecuted=0
 FALLA CampoDesconocidoEnLaRespuestaDaRespuestaInvalida
 ok: cae CampoDesconocidoEnLaRespuestaDaRespuestaInvalida
 
 === mutación: error
 $ sed -i 's|error = JsonSerializer.Deserialize<ErrorApi>(cuerpo, Opciones);|error = null;|' front/Api/ApiSynkra.cs
-80c80
-<                 error = JsonSerializer.Deserialize<ErrorApi>(cuerpo, Opciones);
+79c79
+<             error = JsonSerializer.Deserialize<ErrorApi>(cuerpo, Opciones);
 ---
->                 error = null;
+>             error = null;
 salida=1
-Failed!  - Failed:     3, Passed:    20, Skipped:     0, Total:    23, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
-total=23 executed=23 passed=20 failed=3 notExecuted=0
+Failed!  - Failed:     4, Passed:    25, Skipped:     0, Total:    29, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
+total=29 executed=29 passed=25 failed=4 notExecuted=0
 FALLA Error404DaCodigoYMensajeDeLaApi
 FALLA Error422DaLosDetallesConCampoYMotivo
+FALLA ErrorConDetallesMuestraCampoYMotivo
 FALLA ErrorDeLaApiMuestraCodigoYMensaje
 ok: cae Error404DaCodigoYMensajeDeLaApi
 ok: cae Error422DaLosDetallesConCampoYMotivo
@@ -81,8 +86,8 @@ $ sed -i 's|Uri.EscapeDataString(pais)|pais|' front/Api/ApiSynkra.cs
 ---
 >         => LeerAsync<IReadOnlyList<ResumenDespliegue>>($"api/paises/{pais}/despliegues", ct);
 salida=1
-Failed!  - Failed:     1, Passed:    22, Skipped:     0, Total:    23, Duration: 249 ms - Synkra.Front.Tests.dll (net10.0)
-total=23 executed=23 passed=22 failed=1 notExecuted=0
+Failed!  - Failed:     1, Passed:    28, Skipped:     0, Total:    29, Duration: 273 ms - Synkra.Front.Tests.dll (net10.0)
+total=29 executed=29 passed=28 failed=1 notExecuted=0
 FALLA HistorialEscapaElPais
 ok: cae HistorialEscapaElPais
 
@@ -93,8 +98,8 @@ $ sed -i 's|UriKind.Absolute|UriKind.RelativeOrAbsolute|' front/Api/Configuracio
 ---
 >             || !Uri.TryCreate(texto.Trim(), UriKind.RelativeOrAbsolute, out var url)
 salida=1
-Failed!  - Failed:     1, Passed:    22, Skipped:     0, Total:    23, Duration: 249 ms - Synkra.Front.Tests.dll (net10.0)
-total=23 executed=23 passed=22 failed=1 notExecuted=0
+Failed!  - Failed:     1, Passed:    28, Skipped:     0, Total:    29, Duration: 267 ms - Synkra.Front.Tests.dll (net10.0)
+total=29 executed=29 passed=28 failed=1 notExecuted=0
 FALLA ConfiguracionConUrlRelativaNoArranca
 ok: cae ConfiguracionConUrlRelativaNoArranca
 
@@ -105,8 +110,8 @@ $ sed -i 's|null => "No se sabe"|null => "No"|' front/Components/Pages/VistaGene
 ---
 >         null => "No",
 salida=1
-Failed!  - Failed:     1, Passed:    22, Skipped:     0, Total:    23, Duration: 249 ms - Synkra.Front.Tests.dll (net10.0)
-total=23 executed=23 passed=22 failed=1 notExecuted=0
+Failed!  - Failed:     1, Passed:    28, Skipped:     0, Total:    29, Duration: 276 ms - Synkra.Front.Tests.dll (net10.0)
+total=29 executed=29 passed=28 failed=1 notExecuted=0
 FALLA PaisSinLecturaMuestraNoDisponibleYNoSeSabe
 ok: cae PaisSinLecturaMuestraNoDisponibleYNoSeSabe
 
@@ -117,11 +122,83 @@ $ sed -i 's|_paises = await Api.VistaGeneralAsync();|_paises = await Api.VistaGe
 ---
 >             _paises = await Api.VistaGeneralAsync(); await Api.HistorialAsync("co");
 salida=1
-Failed!  - Failed:     5, Passed:    18, Skipped:     0, Total:    23, Duration: 5 s - Synkra.Front.Tests.dll (net10.0)
-total=23 executed=23 passed=18 failed=5 notExecuted=0
+Failed!  - Failed:     7, Passed:    22, Skipped:     0, Total:    29, Duration: 7 s - Synkra.Front.Tests.dll (net10.0)
+total=29 executed=29 passed=22 failed=7 notExecuted=0
 FALLA MuestraUnRenglonPorPaisConLosDatosDeLaApi
+FALLA PaisInconsistenteMuestraInconsistente
+FALLA PaisQueNoConcuerdaMuestraNo
 FALLA PaisSinDespliegueMuestraGuiones
 FALLA PaisSinLecturaMuestraNoDisponibleYNoSeSabe
 FALLA SinPaisesMuestraAviso
 FALLA SoloLlamaAGetApiPaises
 ok: cae SoloLlamaAGetApiPaises
+
+=== mutación: concuerda-false
+$ sed -i 's|false => "No",|false => "Sí",|' front/Components/Pages/VistaGeneral.razor
+108c108
+<         false => "No",
+---
+>         false => "Sí",
+salida=1
+Failed!  - Failed:     1, Passed:    28, Skipped:     0, Total:    29, Duration: 262 ms - Synkra.Front.Tests.dll (net10.0)
+total=29 executed=29 passed=28 failed=1 notExecuted=0
+FALLA PaisQueNoConcuerdaMuestraNo
+ok: cae PaisQueNoConcuerdaMuestraNo
+
+=== mutación: inconsistente
+$ sed -i 's|LecturaCluster.Inconsistente => "Inconsistente"|LecturaCluster.Inconsistente => "Leído"|' front/Components/Pages/VistaGeneral.razor
+100c100
+<         LecturaCluster.Inconsistente => "Inconsistente",
+---
+>         LecturaCluster.Inconsistente => "Leído",
+salida=1
+Failed!  - Failed:     1, Passed:    28, Skipped:     0, Total:    29, Duration: 287 ms - Synkra.Front.Tests.dll (net10.0)
+total=29 executed=29 passed=28 failed=1 notExecuted=0
+FALLA PaisInconsistenteMuestraInconsistente
+ok: cae PaisInconsistenteMuestraInconsistente
+
+=== mutación: detalles
+$ sed -i 's|<li>@d.Campo: @d.Motivo</li>|<li>x</li>|' front/Components/Pages/VistaGeneral.razor
+17c17
+<                     <li>@d.Campo: @d.Motivo</li>
+---
+>                     <li>x</li>
+salida=1
+Failed!  - Failed:     1, Passed:    28, Skipped:     0, Total:    29, Duration: 298 ms - Synkra.Front.Tests.dll (net10.0)
+total=29 executed=29 passed=28 failed=1 notExecuted=0
+FALLA ErrorConDetallesMuestraCampoYMotivo
+ok: cae ErrorConDetallesMuestraCampoYMotivo
+
+=== mutación: cancelacion
+$ sed -i 's| when (!ct.IsCancellationRequested)||' front/Api/ApiSynkra.cs
+49c49
+<         catch (TaskCanceledException e) when (!ct.IsCancellationRequested)
+---
+>         catch (TaskCanceledException e)
+salida=1
+Failed!  - Failed:     1, Passed:    28, Skipped:     0, Total:    29, Duration: 287 ms - Synkra.Front.Tests.dll (net10.0)
+total=29 executed=29 passed=28 failed=1 notExecuted=0
+FALLA CancelacionPedidaSePropagaSinEnvolver
+ok: cae CancelacionPedidaSePropagaSinEnvolver
+
+=== mutación: accept
+$ sed -i '/Headers.Accept.Add/d' front/Api/ApiSynkra.cs
+37d36
+<         peticion.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+salida=1
+Failed!  - Failed:     1, Passed:    28, Skipped:     0, Total:    29, Duration: 312 ms - Synkra.Front.Tests.dll (net10.0)
+total=29 executed=29 passed=28 failed=1 notExecuted=0
+FALLA PideConAcceptJson
+ok: cae PideConAcceptJson
+
+=== mutación: esquema
+$ sed -i '/url.Scheme != Uri.UriSchemeHttp/c\            )' front/Api/ConfiguracionApi.cs
+13c13
+<             || (url.Scheme != Uri.UriSchemeHttp && url.Scheme != Uri.UriSchemeHttps))
+---
+>             )
+salida=1
+Failed!  - Failed:     1, Passed:    28, Skipped:     0, Total:    29, Duration: 316 ms - Synkra.Front.Tests.dll (net10.0)
+total=29 executed=29 passed=28 failed=1 notExecuted=0
+FALLA ConfiguracionConEsquemaAjenoNoArranca
+ok: cae ConfiguracionConEsquemaAjenoNoArranca
