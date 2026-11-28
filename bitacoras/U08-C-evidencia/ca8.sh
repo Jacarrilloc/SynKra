@@ -39,7 +39,7 @@ nueva limite-sin-as scripts/verificar-limite.sh 's| --as=system:serviceaccount:s
 nueva limite-sin-comparar scripts/verificar-limite.sh 's|elif \[ "\$respuesta" = "\$esperado" \]; then|elif true; then|'
 (cd "$D" && KC="$KC" KUBECONFIG_SYNKRA="$KC" bash "$E/ca7.sh")
 
-nueva desplegar-sin-digest scripts/desplegar.sh 's|^if \[ "\$EN_REGISTRO" != "\$EN_POD" \]; then|if false; then|; s|^\[ -n "\$EN_REGISTRO" \] \&\& \[ "\$EN_REGISTRO" = "\$EN_POD" \] |\| |[ -n "$EN_REGISTRO" ] \|\| |'
+nueva desplegar-sin-digest scripts/desplegar.sh 's#^if \[ "\$EN_REGISTRO" != "\$EN_POD" \]; then#if false; then#; s#^\[ -n "\$EN_REGISTRO" \] && \[ "\$EN_REGISTRO" = "\$EN_POD" \] ||#[ -n "$EN_REGISTRO" ] ||#'
 (cd "$D" && W="$W" KUBECONFIG_SYNKRA="$KC" bash "$E/ca5-variante.sh" 2>&1 | grep -E '^(variante=|registro-cambio|desplegar=|corre-la-variante|restaurado=|corre-lo-subido|OK desplegar|desplegar:)')
 
 echo; echo "=== despues de las mutaciones que tocan el cluster, desde el worktree"

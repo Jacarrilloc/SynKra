@@ -46,9 +46,11 @@ echo "+ ./gradlew :backend:bootJar :core:bootJar"
 IMAGENES=()
 construir() { # imagen directorio
   IMAGENES+=("$1")
-  echo "+ docker build -t $1 $2"
+  # Sin atestaciones (provenance/SBOM): llevan una marca de tiempo y cambian el digest del indice en cada build aunque el contenido
+  # sea el mismo; con ellas, el digest que el pod reporta (el menor de los que el nodo conoce) no identifica lo ultimo que se subio.
+  echo "+ docker build --provenance=false --sbom=false -t $1 $2"
   local rc=0 nombre="${1##*/}"
-  docker build -t "$1" "$2" || rc=$?
+  docker build --provenance=false --sbom=false -t "$1" "$2" || rc=$?
   [ "$rc" -eq 0 ] || { echo "FALLA ${nombre%%:*}: docker build -t $1 $2 salió con $rc" >&2; exit 1; }
 }
 construir "$REG/synkra-backend:$VB" backend
