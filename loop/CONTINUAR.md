@@ -48,7 +48,7 @@ Para que eso no vuelva a pasar:
 ## Estado al corte (2026-11-27 22:10 UTC)
 
 - `main` en `9289073`. U01, U03 y U04 terminadas. PRs #54 a #83 fusionados (#77 a #83 los fusionó el orquestador a las 21:55 UTC, según la regla de David).
-- `CANDIDATAS.md` llega hasta **C-103**. La siguiente libre es **C-104**.
+- `CANDIDATAS.md` llega hasta **C-104**. La siguiente libre es **C-105**.
 - **Nadie corre en este momento** (pausa de David a las 22:08 UTC). No hay agentes en vuelo.
 
 ### PRs abiertos
@@ -63,6 +63,7 @@ Para que eso no vuelva a pasar:
 | 6 | #89 | `m6r/U02-T10` → `m6r/U02-T09` | U02-T10 plugin `kyc-pe`, VERDE ronda 1 (apilado sobre #88) |
 | 7 | #90 | `m6r/U05-T09` → `m6r/U05-T08` | U05-T09 fronteras `kubernetes`, VERDE ronda 2 (apilado sobre #87) |
 | 8 | #91 | `m6r/U02-T11` → `m6r/U02-T10` | U02-T11 imagen del core, VERDE ronda 1 (apilado sobre #89) |
+| 9 | #92 | `m6r/U05-T10` → `m6r/U05-T09` | U05-T10 resumen de U05, VERDE ronda 3 (apilado sobre #90) |
 
 El #6 es antiguo y no se toca.
 
@@ -73,7 +74,7 @@ El #6 es antiguo y no se toca.
 | U05-T07 script de descarga (ola 33) | `../wt-m6r-U05-T07`, `m6r/U05-T07` | `5e7a45e` | **VERDE en la ronda 2** (informe en `696eecc`). PR #85. | Esperar fusión humana |
 | U05-T08 imagen del init (ola 34) | `../wt-m6r-U05-T08`, `m6r/U05-T08` | `696eecc` | **VERDE en la ronda 1** (informe en `26b6124`). PR #87, apilado sobre #85. | Esperar fusión humana; U05-T09 sale de esta punta |
 | U05-T09 fronteras `kubernetes` (ola 35) | `../wt-m6r-U05-T09`, `m6r/U05-T09` | `26b6124` | **VERDE en la ronda 2** (informe en `03943ec`). PR #90, apilado sobre #87. | Esperar fusión humana; U05-T10 sale de esta punta |
-| U05-T10 resumen de U05 (ola 36) | `../wt-m6r-U05-T10`, `m6r/U05-T10` | `03943ec` (punta VERDE de U05-T09) | Ronda 2 NO-VERDE (`82bf33d`: F-07 la cola de Gradle del resumen no sale de la evidencia que cita). Codificador ronda 3 hecho, `8c5e713`. **En vuelo (02:30 UTC del 28-nov):** revisor ronda 3. | Si no hay `revisiones/U05-T10/ronda-3.md`, repetir el revisor ronda 3 (base `03943ec`, HEAD `8c5e713`). Si la ronda 3 no sale VERDE, se para y se lleva al equipo |
+| U05-T10 resumen de U05 (ola 36) | `../wt-m6r-U05-T10`, `m6r/U05-T10` | `03943ec` | **VERDE en la ronda 3** (informe en `b91f7d1`). PR #92, apilado sobre #90. | Cuando la pila de U05 (#85, #87, #90, #92) esté fusionada: commit de cierre de U05 en la rama del orquestador (plan marcado, línea de Code Generation Parte 2 en `aidlc-state.md`, `audit.md`), como el `113bda9` de U04 |
 | U02-T09 plugin `kyc-co` (ola 35) | `../wt-m6r-U02-T09`, `m6r/U02-T09` | `d99cf36` | **VERDE en la ronda 2** (informe en `288e5c0`). PR #88, apilado sobre #86. | Esperar fusión humana; U02-T10 sale de esta punta |
 | U02-T10 plugin `kyc-pe` (ola 36) | `../wt-m6r-U02-T10`, `m6r/U02-T10` | `288e5c0` | **VERDE en la ronda 1** (informe en `3538d67`). PR #89, apilado sobre #88. | Esperar fusión humana; U02-T11 sale de esta punta |
 | U02-T11 imagen del core (ola 37) | `../wt-m6r-U02-T11`, `m6r/U02-T11` | `3538d67` | **VERDE en la ronda 1** (informe en `28a6ac3`). PR #91, apilado sobre #89. | Esperar fusión humana; U02-T12 sale de esta punta |
