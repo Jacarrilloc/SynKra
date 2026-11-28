@@ -1,0 +1,7 @@
+{
+  "codigo": "COMBINACION_RECHAZADA",
+  "mensaje": "La combinación no es compatible",
+  "detalles": [
+    { "campo": "plugins.kyc-pe", "motivo": "VERSION_INCOMPATIBLE: El plugin 'kyc-pe' 2.0.0 requiere el core 'synkra-core' en 3.x y se pidió 2.1.0" }
+  ]
+}

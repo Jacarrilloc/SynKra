@@ -1,0 +1,7 @@
+{
+  "codigo": "ENTIDAD_NO_PROCESABLE",
+  "mensaje": "La solicitud no se puede procesar",
+  "detalles": [
+    { "campo": "version", "motivo": "DESCRIPTOR_FALTA_CAMPO: Falta el campo obligatorio 'version'" }
+  ]
+}
