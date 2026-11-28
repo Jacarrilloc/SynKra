@@ -33,7 +33,7 @@ U01 a U07 están **terminadas y fusionadas en `main`** (`8306ee7`, 894 pruebas e
 
 ### En vuelo
 
-**Sesión local de Julian (04:55 UTC):** tareas `U08-A-cluster-guardia-rbac.md` (`eedd724`) y `U08-B-backend-ingress-imagenes.md` (`73f5a26`) escritas (commit `c454107`). **En vuelo:** codificador ronda 1 de U08-A (`../wt-m6r-U08-A`, `m6r/U08-A`) y de U08-B (`../wt-m6r-U08-B`, `m6r/U08-B`), las dos desde `8306ee7`; redactor de `tareas/U09-A-proyecto-cliente-vista.md` (U09-T01+T02+T06; el front corre en paralelo con U08 y se construye con la imagen `mcr.microsoft.com/dotnet/sdk`, porque no hay .NET instalado). Si una rama no tiene commits del codificador, redespacharlo; si los tiene, revisor ronda 1. U08 corre en la máquina de Julian: `kind` v0.33, `kubectl`, puertos 80, 443 y 5001 libres; sus clústeres `gitops2` y `m08-gitops1` no se tocan.
+**Sesión local de Julian (04:55 UTC):** tareas `U08-A-cluster-guardia-rbac.md` (`eedd724`) y `U08-B-backend-ingress-imagenes.md` (`73f5a26`) escritas (commit `c454107`). **En vuelo:** codificador ronda 1 de U08-A (`../wt-m6r-U08-A`, `m6r/U08-A`) y de U08-B (`../wt-m6r-U08-B`, `m6r/U08-B`), las dos desde `8306ee7`; codificador ronda 1 de U09-A (`../wt-m6r-U09-A`, `m6r/U09-A`, tarea `16d8ea7`, commit `f7a0410`; U09-T01+T02+T06; reparto propuesto para el resto: U09-B = T03, U09-C = T04+T07+T08, U09-D = T05+T09; el front corre en paralelo con U08 y se construye con la imagen `mcr.microsoft.com/dotnet/sdk`, porque no hay .NET instalado). Si una rama no tiene commits del codificador, redespacharlo; si los tiene, revisor ronda 1. U08 corre en la máquina de Julian: `kind` v0.33, `kubectl`, puertos 80, 443 y 5001 libres; sus clústeres `gitops2` y `m08-gitops1` no se tocan.
 
 ## Lo que sigue (en orden)
 
