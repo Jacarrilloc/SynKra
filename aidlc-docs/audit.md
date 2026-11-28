@@ -972,3 +972,11 @@ Se despacha el codificador de la ronda 2.
 **Input del usuario:** "FUsinalos en orden"
 
 **Acción del orquestador (01:13Z):** fusión con merge commit, en orden: #95 (`b0f9d48`), #96 (`1d69064`), #97 (`f466591`). Los tres estaban `MERGEABLE`/`CLEAN` y sus diffs de código no se tocan. Con `main` en `f466591`, `./gradlew test --rerun check` pasó (`salida=0`; 768 pruebas, 0 saltos, 0 fallos, 0 errores).
+
+## 2026-11-28T01:25:21Z: David autoriza fusionar #98 y #99 y las tandas siguientes
+
+**Pregunta del orquestador:** "¿Fusiono #98 y #99 en orden, como los anteriores?"
+
+**Input del usuario:** "¿Fusiono #98 y #99 en orden, como los anteriores? Si o si puedes esperar  mas prrs tambein, lo que sea más practico y potenciaamete pueda ahorrar mas de tu consumo"
+
+**Acción del orquestador (01:26Z):** fusión con merge commit, en orden: #98 U07-B (`0c83a20`), #99 U06-B (`4bd2ad4`). Con `main` en `4bd2ad4`, `./gradlew test --rerun check` pasó (`salida=0`; 805 pruebas, 0 saltos, 0 fallos, 0 errores). Las siguientes fusiones se hacen por tandas de PRs VERDES bajo esta misma autorización.

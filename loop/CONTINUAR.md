@@ -17,7 +17,7 @@ U01, U02, U03, U04 y U05 están **terminadas y fusionadas en `main`** (`97f9f80`
 - **Fusión**: Julian pidió (00:25 UTC) que el orquestador fusionara. Se fusionaron en orden, con merge commit y cambiando antes la base a `main`: U05 (#85, #87, #90, #92) y U02 (#84, #86, #88, #89, #91, #93, #94). Está en `aidlc-docs/audit.md`.
 - **Comprobación**: `./gradlew test --rerun check` sobre `main` `97f9f80` → `salida=0`, 710 pruebas, 0 saltos, 0 fallos.
 - **Cierre de U05 y U02**: planes marcados, `aidlc-state.md` y auditoría, en la rama `orq/U05-U02-tareas`. Va en el **PR #95** (rama del loop → `main`), **abierto**. El control de permisos de la sesión de Julian bloqueó la fusión porque no era uno de los PRs que él nombró: lo fusiona un humano.
-- `CANDIDATAS.md` llega hasta **C-111**. La siguiente libre es **C-112**.
+- `CANDIDATAS.md` llega hasta **C-116**. La siguiente libre es **C-117**.
 
 ## Plan para acelerar (aprobado por Julian el 2026-11-28 a las 00:19 UTC)
 
@@ -47,7 +47,7 @@ Contratos que fijaron U06-A y U07-A (los asumen las tareas siguientes; están en
 
 ### PRs
 
-#95, #96 (U07-A) y #97 (U06-A) **fusionados** por pedido de David (01:13 UTC). `main` en `f466591`, 768 pruebas en verde. El #6 es antiguo y no se toca. La rama `orq/U05-U02-tareas` ya incluye `main` y sigue como rama del orquestador (su próximo PR a `main` lleva lo nuevo).
+#95 a #99 **fusionados** por pedido de David (01:13 y 01:26 UTC). `main` en `4bd2ad4`, 805 pruebas en verde. David (01:25 UTC) deja fusionar por tandas lo que salga VERDE («lo que sea más práctico»). El #6 es antiguo y no se toca.
 
 ### En vuelo (sesión de David, 2026-11-28 00:55 UTC; si la sesión se cortó, se perdieron)
 
@@ -55,9 +55,8 @@ Contratos que fijaron U06-A y U07-A (los asumen las tareas siguientes; están en
 |---|---|---|---|---|
 | U06-A registro base | `m6r/U06-A` | `97f9f80` | **VERDE ronda 2**, fusionado (#97) | — |
 | U07-A planes y país | `m6r/U07-A` | `97f9f80` | **VERDE ronda 1**, fusionado (#96) | — |
-| U07-B crear plan | `m6r/U07-B` | `8182b9d` | **VERDE ronda 2** (informe en `285ef22`). **PR #98** a `main`, abierto | Lo fusiona un humano; U07-C sale de `285ef22` |
+| U07-D confirmar | (sin rama) | unión de U07-C y U06-C | **Escrita** (hash `2d710b0`). Registra `aplicando` antes de aplicar (desviación de R-D9 por el pool de una conexión); usuario por `X-Synkra-Usuario` | Despachar cuando U07-C y U06-C salgan VERDES |
 | U07-C plan vence | `../wt-m6r-U07-C`, `m6r/U07-C` | `285ef22` | **Codificador ronda 1 despachado** (tarea con hash `7dbe5d3`) | Sin commits, redespachar; con bitácora completa, revisor ronda 1 (base `285ef22`) |
-| U06-B historial y reinicio | `m6r/U06-B` | `66c7e5a` | **VERDE ronda 1** (informe en `e0f5c62`). **PR #99** a `main`, abierto | Lo fusiona un humano; U06-C sale de `e0f5c62` |
 | U06-C vista general | `../wt-m6r-U06-C`, `m6r/U06-C` | `e0f5c62` | **Codificador ronda 1 despachado** (tarea con hash `004d66e`) | Sin commits, redespachar; con bitácora completa, revisor ronda 1 (base `e0f5c62`) |
 | U06-C y U07-C | (sin rama) | — | **Escritas** (hashes `004d66e` y `7dbe5d3`). U07-C crea el bean `Clock` en `plataforma/Reloj.java` (U06-C no puede crear otro); U06-C usa `@MockitoBean AdaptadorKubernetes`; confirmar da 501 hasta U07-D | Despachar U06-C cuando U06-B salga VERDE y U07-C cuando U07-B salga VERDE |
 
