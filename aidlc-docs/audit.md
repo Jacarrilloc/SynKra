@@ -948,3 +948,7 @@ Se despacha el codificador de la ronda 2.
 **Input del usuario:** "fusionalas tu"
 
 **Acción del orquestador (00:27Z):** fusión en orden con merge commit, cambiando antes la base de cada PR apilado a `main`. Pila de U05: #85, #87, #90, #92. Pila de U02: #84, #86, #88, #89, #91, #93, #94. Los 11 quedaron fusionados (`mergeable_state: clean` en todos).
+
+## 2026-11-28T00:45Z: cierre de U05 y U02
+
+**Acción del orquestador:** con `main` en `97f9f80`, `./gradlew test --rerun check` pasó (`salida=0`; 710 pruebas, 0 saltos, 0 fallos, 0 errores). Se marcan los planes de U05 (T01 a T10) y U02 (T01 a T13) y se actualiza la línea de Code Generation Parte 2 en `aidlc-state.md`. U10 y U11 quedan cortadas por R9, según el plan aprobado por Julian a las 00:19:53Z.
