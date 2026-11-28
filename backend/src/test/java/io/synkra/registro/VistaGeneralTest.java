@@ -199,6 +199,32 @@ class VistaGeneralTest {
         verifyNoMoreInteractions(adaptador);
     }
 
+
+    /** H-19: imagen y plugins son lo que corre en el clúster, no lo registrado (cl, sv y co difieren). */
+    @Test
+    void imagenYPluginsSonLosDelClusterNoLosDelRegistro() {
+        var v = vista.vistaGeneral();
+        assertThat(de(v, "cl").imagen()).isEqualTo(A).isNotEqualTo(B);
+        assertThat(de(v, "sv").plugins()).containsExactly(new PluginCorriendo("kyc-extra", "1.0.0", sha('9')),
+                new PluginCorriendo("kyc-pe", "1.3.0", sha('b')));
+        assertThat(de(v, "co").plugins()).containsExactly(new PluginCorriendo("kyc-co", "1.0.0", sha('f')));
+        assertThat(de(v, "bo").plugins()).containsExactly(new PluginCorriendo("kyc-pe", "1.3.0", sha('b')));
+    }
+
+    @Test
+    void elJsonTambienTraeLaImagenYLosPluginsDelCluster() throws IOException {
+        var lista = json.readTree(http.getForEntity("/api/paises", String.class).getBody());
+        assertThat(porPais(lista, "cl").get("imagen").asText()).isEqualTo(A);
+        var sv = porPais(lista, "sv").get("plugins");
+        assertThat(sv).hasSize(2);
+        assertThat(sv.get(0).get("nombre").asText()).isEqualTo("kyc-extra");
+        assertThat(sv.get(0).get("sha256").asText()).isEqualTo(sha('9'));
+        var co = porPais(lista, "co").get("plugins");
+        assertThat(co).hasSize(1);
+        assertThat(co.get(0).get("sha256").asText()).isEqualTo(sha('f'));
+        assertThat(porPais(lista, "cl").get("ultimoDespliegueId").asLong()).isEqualTo(48);
+    }
+
     @Test
     void getApiPaisesDa200ConElMismoContenidoYLasClavesExactas() throws IOException {
         var r = http.getForEntity("/api/paises", String.class);
