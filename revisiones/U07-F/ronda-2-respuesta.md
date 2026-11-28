@@ -1,0 +1,1 @@
+F-04: Corregido en 8cd0286: se quitaron los dos SIM.nuevasPeticiones() de cl que drenaban antes de sinFilasNiPeticiones; la sonda P3 ahora cae en cl y m8 vuelve a tumbar cl (bitacoras/U07-F-evidencia/r3/ca3.txt). Ningún otro caso drena entre la acción medida y su afirmación.

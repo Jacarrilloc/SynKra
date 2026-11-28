@@ -1,0 +1,22 @@
+CA-1  2026-11-27T22:15:11-05:00  sha b13084a
+$ ./gradlew :backend:test --rerun --tests '*ReversionTest'
+BUILD SUCCESSFUL in 8s
+$ grep -ho tests=... TEST-*ReversionTest.xml
+tests="9" skipped="0" failures="0" errors="0"
+$ grep -o testcase name=...
+testcase name="coElOrigenQueNoEstaListoNoSeRevierte()"
+testcase name="pyRevertirAlQueCorreEsUnPlanSinCambiosQueTambienVence()"
+testcase name="peRevertirAUnListoCreaUnPlanNuevoQueSeConfirmaYSeVigila()"
+testcase name="unOrigenQueNoExisteODeIdInvalidoDa404Y400()"
+testcase name="boUnUsuarioInvalidoSeRechazaAntesDeTodo()"
+testcase name="arElCatalogoYaNoTieneLoQueCorrioDaOrigenDesactualizado()"
+testcase name="mxUnPaisQueYaNoEstaPermitidoNoSeRevierte()"
+testcase name="clUnPluginQueYaNoEsCompatibleODesaparecioDaElMismoRechazoDeLaCreacion()"
+testcase name="ecConfirmarLaReversionConOtroAplicandoEnElPaisDaDespliegueEnCurso()"
+$ python3 -I - backend/build/sqlite-pruebas/ReversionTest/synkra.db
+[('ec', 'despliegue', 0, 'confirmado', 'ana', 'despliegue', 'listo', 'luis'), ('ec', 'despliegue', 0, 'confirmado', 'ana', 'despliegue', 'fallido', 'luis'), ('ec', 'reversion', 1, 'pendiente', 'marta', None, None, None), ('pe', 'despliegue', 0, 'confirmado', 'ana', 'despliegue', 'listo', 'luis'), ('pe', 'despliegue', 0, 'confirmado', 'ana', 'despliegue', 'fallido', 'luis'), ('pe', 'reversion', 1, 'confirmado', 'marta', 'reversion', 'listo', 'luis'), ('py', 'despliegue', 0, 'confirmado', 'ana', 'despliegue', 'listo', 'luis'), ('py', 'reversion', 1, 'vencido', 'marta', None, None, None)]
+[('ec', 1), ('pe', 1), ('py', 1)]
+[('pe', 1, 1, 1)]
+[(1,)]
+[(970, 'co', 'fallido'), (971, 'co', 'fallido'), (972, 'cl', 'listo'), (973, 'ar', 'listo'), (974, 'mx', 'listo'), (975, 'ar', 'listo'), (976, 'bo', 'listo'), (977, 'cl', 'listo')]
+[(0, 0)]
