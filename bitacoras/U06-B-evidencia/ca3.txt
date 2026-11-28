@@ -1,0 +1,16 @@
+# fecha: 2026-11-28T01:13:33Z  sha: c4a4c1c
+$ bash ca3.sh (comandos literales de CA-3; java -> $JAVA_HOME/bin/java)
+puerto18089-ocupado=1
+BUILD SUCCESSFUL in 1s
+--- a.txt
+[12, 13, 11] 2026-11-18T11:06:43.456Z ['confirmadoEn', 'confirmadoPor', 'core', 'creadoPor', 'estado', 'id', 'imagen', 'origenId', 'pais', 'plugins', 'terminadoEn', 'tipo', 'versionCore']
+fallido luis ['eventos', 'logCore', 'logInit'] Warning BackOff: x APROBADA {'pais': 'pe'}
+404
+422
+--- b.txt
+[12, 13, 11] 2026-11-18T11:06:43.456Z ['confirmadoEn', 'confirmadoPor', 'core', 'creadoPor', 'estado', 'id', 'imagen', 'origenId', 'pais', 'plugins', 'terminadoEn', 'tipo', 'versionCore']
+fallido luis ['eventos', 'logCore', 'logInit'] Warning BackOff: x APROBADA {'pais': 'pe'}
+404
+422
+diff=0
+[('1',), ('2',), ('3',)]
