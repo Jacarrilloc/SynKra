@@ -1,4 +1,4 @@
-fecha: 2026-11-28T03:02:08Z  sha: 4869522
+fecha: 2026-11-28T03:23:21Z  sha: 03ffd16 (ronda 2)
 ./gradlew :backend:test --rerun :backend:check 2>&1 | grep "^BUILD\|FAILED"
 for f in backend/build/test-results/test/TEST-*.xml; do grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' "$f"; done
 grep -rlE "kubernetes\.(aplicar|construir)\(" backend/src/main/java/io/synkra/despliegue
@@ -12,7 +12,7 @@ grep -rnE 'Propagation\.REQUIRES_NEW|PROPAGATION_REQUIRES_NEW|setPropagationBeha
 grep -rlE "Clock\.system" backend/src/main/java | sort
 cat backend/src/test/resources/config/application.properties
 --- salida
-BUILD SUCCESSFUL in 44s
+BUILD SUCCESSFUL in 51s
 backend/build/test-results/test/TEST-io.synkra.catalogo.ArtefactosPorHashTest.xml:tests="10" skipped="0" failures="0" errors="0"
 backend/build/test-results/test/TEST-io.synkra.catalogo.CatalogoRepositoriosTest.xml:tests="19" skipped="0" failures="0" errors="0"
 backend/build/test-results/test/TEST-io.synkra.catalogo.CatalogoVerificadorTest.xml:tests="14" skipped="0" failures="0" errors="0"
@@ -38,6 +38,8 @@ backend/build/test-results/test/TEST-io.synkra.despliegue.PlanRepositorioTest.xm
 backend/build/test-results/test/TEST-io.synkra.despliegue.RetomarVigilanciaTest.xml:tests="2" skipped="0" failures="0" errors="0"
 backend/build/test-results/test/TEST-io.synkra.despliegue.VencimientoPlanesTest.xml:tests="2" skipped="0" failures="0" errors="0"
 backend/build/test-results/test/TEST-io.synkra.despliegue.VerificacionVivoTest.xml:tests="15" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaCoincideTest.xml:tests="3" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaDobleTest.xml:tests="4" skipped="0" failures="0" errors="0"
 backend/build/test-results/test/TEST-io.synkra.despliegue.VigilanciaTest.xml:tests="8" skipped="0" failures="0" errors="0"
 backend/build/test-results/test/TEST-io.synkra.FronterasModulosTest.xml:tests="12" skipped="0" failures="0" errors="0"
 backend/build/test-results/test/TEST-io.synkra.kubernetes.AplicarTest.xml:tests="10" skipped="0" failures="0" errors="0"

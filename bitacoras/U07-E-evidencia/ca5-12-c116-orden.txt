@@ -1,4 +1,4 @@
-fecha: 2026-11-28T02:57:05Z  sha: 4869522  mutación: 12-c116-orden
+fecha: 2026-11-28T03:19:37Z  sha: 03ffd16  mutación: 12-c116-orden
 $ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"; (cd "$D" && git init -q)
 $ sed -i -e s/order\ by\ confirmado_en\ asc\,\ id\ asc/order\ by\ confirmado_en\ desc\,\ id\ asc/ "$D/backend/src/main/java/io/synkra/registro/RegistroServicio.java"
 --- diff de la mutación (copia vs HEAD)
@@ -6,9 +6,9 @@ $ sed -i -e s/order\ by\ confirmado_en\ asc\,\ id\ asc/order\ by\ confirmado_en\
 <                 + "order by confirmado_en asc, id asc", RegistroServicio::fila);
 ---
 >                 + "order by confirmado_en desc, id asc", RegistroServicio::fila);
-$ (cd "$D" && ./gradlew :backend:test --tests '*VigilanciaTest' --tests '*RetomarVigilanciaTest' --tests '*AplicandoTest' --tests '*ReintentosClienteTest' --tests '*EstadoRolloutTest' --tests '*ContextoEventosTest')
-23 tests completed, 1 failed
-BUILD FAILED in 20s
+$ (cd "$D" && ./gradlew :backend:test --tests '*VigilanciaTest' --tests '*RetomarVigilanciaTest' --tests '*AplicandoTest' --tests '*ReintentosClienteTest' --tests '*EstadoRolloutTest' --tests '*ContextoEventosTest' --tests '*VigilanciaCoincideTest' --tests '*VigilanciaDobleTest')
+30 tests completed, 1 failed
+BUILD FAILED in 27s
 $ grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml
 backend/build/test-results/test/TEST-io.synkra.registro.AplicandoTest.xml
 --- pruebas que cayeron (clase.método)
