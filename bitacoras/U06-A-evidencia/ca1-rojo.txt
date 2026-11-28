@@ -1,0 +1,43 @@
+2026-11-27T19:29:16-05:00
+97f9f80
+$ ./gradlew :backend:test --rerun --tests *RegistroRepositoriosTest (sin V3)
+
+RegistroRepositoriosTest > elCheckDeTerminadoEnExigeNuloSoloEnAplicando() FAILED
+    org.springframework.jdbc.UncategorizedSQLException at RegistroRepositoriosTest.java:41
+        Caused by: org.sqlite.SQLiteException at RegistroRepositoriosTest.java:41
+
+RegistroRepositoriosTest > confirmadoEnVuelveConElMismoInstanteEnMilisegundosComoInteger() FAILED
+    org.springframework.jdbc.UncategorizedSQLException at RegistroRepositoriosTest.java:41
+        Caused by: org.sqlite.SQLiteException at RegistroRepositoriosTest.java:41
+
+RegistroRepositoriosTest > losRepositoriosNoOfreceOperacionesCrud() FAILED
+    org.springframework.jdbc.UncategorizedSQLException at RegistroRepositoriosTest.java:41
+        Caused by: org.sqlite.SQLiteException at RegistroRepositoriosTest.java:41
+
+RegistroRepositoriosTest > altaYLecturaDeUnDespliegueConDosPluginsYSuContexto() FAILED
+    org.springframework.jdbc.UncategorizedSQLException at RegistroRepositoriosTest.java:41
+        Caused by: org.sqlite.SQLiteException at RegistroRepositoriosTest.java:41
+
+13 tests completed, 13 failed
+
+> Task :backend:test FAILED
+
+[Incubating] Problems report is available at: file:///home/julian/Escritorio/Proyectos/wt-m6r-U06-A/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':backend:test'.
+> There were failing tests. See the report at: file:///home/julian/Escritorio/Proyectos/wt-m6r-U06-A/backend/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 10s
+9 actionable tasks: 9 executed
