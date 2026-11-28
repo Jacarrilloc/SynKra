@@ -1042,3 +1042,9 @@ Se despacha el codificador de la ronda 2.
 **Input del usuario (04:35:04Z):** "en una sesion en otra cuenta, david adelantó el proyecto quiero que leas el puinto de recuperacion del trabajo que dice la sesion de david "Punto de retomar para Julian: el último commit de loop/CONTINUAR.md en la rama orq/U05-U02-tareas, ya en GitHub. Lo da git log -1 --format=%h -- loop/CONTINUAR.md (hoy es 6994ff1)." y sigue con el trabajo, intentemos terminar lo mas pronto posible"
 
 **Acción del orquestador:** `orq/U05-U02-tareas` local avanzada a `ab090d0`; `main` en `8306ee7`. La máquina de Julian tiene `kind` v0.33, `kubectl` v1.37 y los puertos 80, 443 y 5001 libres, así que U08 corre aquí y no en la de David. Solo se crea el clúster `kind-synkra` con kubeconfig propio del proyecto (`$PWD/.kube/kind-synkra.yaml`); los clústeres `gitops2` y `m08-gitops1` de Julian no se tocan (AUTONOMIA-01).
+
+## 2026-11-28T04:54:49Z: Julian pide fusionar U08 y una colección de Postman
+
+**Input del usuario:** "cuando el u8 este completo, fusionalo al main y dame las instrucciones para correrlo, y de paso genera una postman collection para probar todo el backend"
+
+**Acción del orquestador:** cuando cada PR de U08 salga VERDE, el orquestador lo fusiona en `main` (merge commit, en orden). La colección de Postman se genera desde las rutas reales del backend en `main` y va en su propia rama y PR.
