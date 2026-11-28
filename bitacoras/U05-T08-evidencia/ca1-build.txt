@@ -1,0 +1,25 @@
+#6 1.157 (4/10) Installing libunistring (1.2-r0)
+#6 1.246 (5/10) Installing libidn2 (2.3.7-r0)
+#6 1.263 (6/10) Installing nghttp2-libs (1.62.1-r0)
+#6 1.277 (7/10) Installing libpsl (0.21.5-r1)
+#6 1.289 (8/10) Installing zstd-libs (1.5.6-r0)
+#6 1.335 (9/10) Installing libcurl (8.14.1-r2)
+#6 1.378 (10/10) Installing curl (8.14.1-r2)
+#6 1.404 Executing busybox-1.36.1-r31.trigger
+#6 1.411 Executing ca-certificates-20261020-r0.trigger
+#6 1.429 OK: 15 MiB in 24 packages
+#6 DONE 1.5s
+
+#7 [3/3] COPY --chmod=0555 descargar.sh /usr/local/bin/descargar.sh
+#7 DONE 0.0s
+
+#8 exporting to image
+#8 exporting layers
+#8 exporting layers 0.2s done
+#8 exporting manifest sha256:fe633308603c9c33080683cbc2589a1f1f88233a1497678c90c3a0594b26223c done
+#8 exporting config sha256:cc8696adb7ad474ff8a17133468c865e9d595c303061898324609d92a60ab156 done
+#8 exporting attestation manifest sha256:db454f6f746e9557ec6ad2e1ea124f01636983611325f2ff4de1d5bbffe753ba done
+#8 exporting manifest list sha256:f6b5db648df17f0696075fed206ac38179ccedfa9bc53ef3d2cf16cb57d32f73 done
+#8 naming to docker.io/library/synkra-init-descarga:1.0.0 done
+#8 unpacking to docker.io/library/synkra-init-descarga:1.0.0 0.1s done
+#8 DONE 0.3s

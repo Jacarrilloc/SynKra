@@ -1,0 +1,22 @@
+$ git rev-parse --short HEAD   (ultimo commit de codigo)
+cdea5b5
+$ git diff --stat 28a6ac3...HEAD
+ bitacoras/U02-T12-evidencia/ca1.txt       |  96 ++++++++++++++++++++++++++
+ bitacoras/U02-T12-evidencia/ca2.txt       |  13 ++++
+ bitacoras/U02-T12-evidencia/ca3.txt       |  16 +++++
+ bitacoras/U02-T12-evidencia/f01-rojo.txt  |   5 ++
+ bitacoras/U02-T12-evidencia/f01-verde.txt |   6 ++
+ bitacoras/U02-T12-evidencia/f02.txt       |   5 ++
+ bitacoras/U02-T12-evidencia/f05-rojo.txt  |  12 ++++
+ bitacoras/U02-T12-evidencia/f05-verde.txt |  11 +++
+ bitacoras/U02-T12-evidencia/f06.txt       |   5 ++
+ bitacoras/U02-T12-evidencia/rojo.txt      |   3 +
+ bitacoras/U02-T12-evidencia/senal.txt     |   4 ++
+ bitacoras/U02-T12.md                      |  33 +++++++++
+ core/smoke.sh                             | 111 ++++++++++++++++++++++++++++++
+ revisiones/U02-T12/ronda-1-respuesta.md   |   4 ++
+ revisiones/U02-T12/ronda-1.md             |  71 +++++++++++++++++++
+ revisiones/U02-T12/ronda-2.md             |  62 +++++++++++++++++
+ 16 files changed, 457 insertions(+)
+$ git ls-files -s core/smoke.sh
+100755 deb633116303bd654ad375bb226b0b36d8a21c70 0	core/smoke.sh

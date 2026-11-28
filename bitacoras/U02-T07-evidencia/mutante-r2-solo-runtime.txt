@@ -1,0 +1,4 @@
+EndpointsCoreTest > pluginQueLanzaUnErrorDeEnlaceDa500PluginFallo() FAILED
+12 tests completed, 1 failed
+> Task :core:test FAILED
+BUILD FAILED in 10s

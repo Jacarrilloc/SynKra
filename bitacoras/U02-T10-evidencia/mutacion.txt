@@ -1,0 +1,5 @@
+> Task :plugins:kyc-pe:test FAILED
+KycPeTest > rechazaPorLongitud(String) > [1] "1234567" FAILED
+KycPeTest > rechazaPorLongitud(String) > [3] "" FAILED
+KycPeTest > rechazaPorLongitud(String) > [4] "1" FAILED
+BUILD FAILED in 1s

@@ -1,0 +1,9 @@
+ bitacoras/U05-T08-evidencia/ca1-build.txt     | 25 ++++++++++++++++
+ bitacoras/U05-T08-evidencia/ca1-run.txt       | 11 +++++++
+ bitacoras/U05-T08-evidencia/ca1-sha256sum.txt |  3 ++
+ bitacoras/U05-T08-evidencia/ca2-salida.txt    | 18 ++++++++++++
+ bitacoras/U05-T08-evidencia/ca2.sh            | 38 +++++++++++++++++++++++++
+ bitacoras/U05-T08.md                          | 41 +++++++++++++++++++++++++++
+ init-descarga/.dockerignore                   |  2 ++
+ init-descarga/Dockerfile                      |  8 ++++++
+ 8 files changed, 146 insertions(+)

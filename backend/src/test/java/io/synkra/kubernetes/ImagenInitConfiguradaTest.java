@@ -17,7 +17,7 @@ class ImagenInitConfiguradaTest {
             new ApplicationContextRunner().withUserConfiguration(ConfiguracionKubernetes.class);
 
     private static String imagenInit(AdaptadorKubernetes adaptador) {
-        return adaptador.construir(PLAN).deployment().getSpec().getTemplate().getSpec()
+        return ObjetosPaisFabric8.de(adaptador.construir(PLAN)).deployment().getSpec().getTemplate().getSpec()
                 .getInitContainers().get(0).getImage();
     }
 

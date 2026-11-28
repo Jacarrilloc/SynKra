@@ -1,0 +1,6 @@
+$ SMOKE_RAIZ=$PWD $D/mut.sh; echo "salida=$?"  (misma mutacion, script DESPUES del arreglo)
+FALLA caso1-kyc-pe-1.3.0: curl a GET /plugins fallo
+ok caso2-kyc-pe-2.0.0
+salida=1
+$ docker ps -a | grep -c smoke
+0

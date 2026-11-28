@@ -1,0 +1,16 @@
+# fecha: 2026-11-28T00:20:55Z
+# sha: 63d99fa (rama m6r/U02-T13)
+# cwd: raiz del worktree
+$ for m in core plugins/kyc-co plugins/kyc-pe; do echo "== $m"; for f in $m/build/test-results/test/TEST-*.xml; do echo "$(basename $f .xml | sed "s/^TEST-//") $(grep -o -m1 "tests=\"[0-9]*\" skipped=\"[0-9]*\" failures=\"[0-9]*\" errors=\"[0-9]*\"" $f)"; done; done
+== core
+io.synkra.core.ArranquePluginsTest tests="10" skipped="0" failures="0" errors="0"
+io.synkra.core.CargadorPluginsTest tests="10" skipped="0" failures="0" errors="0"
+io.synkra.core.ConcordanciaSuiteTest tests="10" skipped="0" failures="0" errors="0"
+io.synkra.core.CoreSinPaisesTest tests="1" skipped="0" failures="0" errors="0"
+io.synkra.core.EndpointsCoreTest tests="12" skipped="0" failures="0" errors="0"
+io.synkra.core.FalloInicioPluginTest tests="7" skipped="0" failures="0" errors="0"
+io.synkra.core.VersionCoreTest tests="4" skipped="0" failures="0" errors="0"
+== plugins/kyc-co
+io.synkra.kycco.KycCoTest tests="17" skipped="0" failures="0" errors="0"
+== plugins/kyc-pe
+io.synkra.kycpe.KycPeTest tests="18" skipped="0" failures="0" errors="0"

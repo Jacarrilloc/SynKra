@@ -1,0 +1,5 @@
+$ D=$(mktemp -d); sed 's#http://127.0.0.1:$puerto/plugins#http://127.0.0.1:1/plugins#' core/smoke.sh > $D/mut.sh; chmod +x $D/mut.sh
+$ SMOKE_RAIZ=$PWD $D/mut.sh; echo "salida=$?"  (script ANTES del arreglo)
+salida=7
+$ docker ps -a | grep -c smoke
+0

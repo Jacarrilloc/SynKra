@@ -8,6 +8,8 @@ import org.springframework.core.env.Environment;
 /** Dónde está la cuenta de servicio del pod y a qué clúster apunta; nada sale de otro sitio. */
 record CuentaServicio(Path directorio, String url) {
 
+    static final String PUERTO_POR_DEFECTO = "443";
+
     static final String RUTA_POR_DEFECTO = "/var/run/secrets/kubernetes.io/serviceaccount";
 
     /**
@@ -17,7 +19,7 @@ record CuentaServicio(Path directorio, String url) {
     static CuentaServicio de(Environment env, VariablesPod variables) {
         var directorio = Path.of(env.getProperty("synkra.kubernetes.cuenta", RUTA_POR_DEFECTO));
         String host = variables.valores().getOrDefault("KUBERNETES_SERVICE_HOST", "");
-        String puerto = variables.valores().getOrDefault("KUBERNETES_SERVICE_PORT", "443");
+        String puerto = variables.valores().getOrDefault("KUBERNETES_SERVICE_PORT", PUERTO_POR_DEFECTO);
         String url = host.isBlank() ? "" : "https://" + (host.contains(":") ? "[" + host + "]" : host) + ":" + puerto;
         return new CuentaServicio(directorio, url);
     }

@@ -1,0 +1,11 @@
+--- /home/user/wt-m6r-U02-T07/core/src/main/java/io/synkra/core/EndpointsCore.java	2026-11-27 21:26:08.338129372 +0000
++++ /tmp/claude-0/-home-user/311bec3f-8f32-5470-935c-db8e1e6d6a2d/scratchpad/m-traza-filtrada/core/src/main/java/io/synkra/core/EndpointsCore.java	2026-11-27 21:27:01.483466315 +0000
+@@ -85,7 +85,7 @@
+             return ResponseEntity.ok(resultado);
+         } catch (Exception | LinkageError e) {
+             LOG.error("Plugin fallo al validar KYC plugin=" + nombre + ": " + e, e);
+-            return error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCore.PLUGIN_FALLO, ErrorCore.MENSAJE_PLUGIN_FALLO + nombre);
++            return error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCore.PLUGIN_FALLO, ErrorCore.MENSAJE_PLUGIN_FALLO + nombre + " " + e);
+         } finally {
+             hilo.setContextClassLoader(anterior);
+         }

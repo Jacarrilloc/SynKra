@@ -1,0 +1,11 @@
+--- /home/user/wt-m6r-U02-T07/core/src/main/java/io/synkra/core/EndpointsCore.java	2026-11-27 21:26:08.338129372 +0000
++++ /tmp/claude-0/-home-user/311bec3f-8f32-5470-935c-db8e1e6d6a2d/scratchpad/m-sin-tccl/core/src/main/java/io/synkra/core/EndpointsCore.java	2026-11-27 21:26:49.926495604 +0000
+@@ -80,7 +80,7 @@
+         var hilo = Thread.currentThread();
+         var anterior = hilo.getContextClassLoader();
+         try {
+-            hilo.setContextClassLoader(cargado.cargador());
++
+             ResultadoKyc resultado = punto.validar(solicitud);
+             return ResponseEntity.ok(resultado);
+         } catch (Exception | LinkageError e) {

@@ -1,0 +1,7 @@
+nombre: kyc-pe
+version: ${version}
+core: synkra-core
+coreCompatible: ${coreCompatible}
+etiquetas:
+  pais: pe
+descripcion: Validación KYC simulada para Perú

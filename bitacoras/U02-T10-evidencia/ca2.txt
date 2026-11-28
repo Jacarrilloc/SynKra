@@ -1,0 +1,29 @@
+BUILD SUCCESSFUL in 1s
+core=core/build/libs/core-2.1.0.jar
+=== kyc-pe 1.3.0: ls plugins; activos:
+- nombre: kyc-pe
+  version: "1.3.0"
+[{"nombre":"kyc-pe","version":"1.3.0"}]
+{"codigo":"SOLICITUD_INVALIDA","mensaje":"El cuerpo debe ser una solicitud KYC con documento (texto) y datos (mapa de texto)"}
+{"codigo":"SOLICITUD_INVALIDA","mensaje":"El cuerpo debe ser una solicitud KYC con documento (texto) y datos (mapa de texto)"}
+{"codigo":"SOLICITUD_INVALIDA","mensaje":"El cuerpo debe ser una solicitud KYC con documento (texto) y datos (mapa de texto)"}
+{"codigo":"SOLICITUD_INVALIDA","mensaje":"El cuerpo debe ser una solicitud KYC con documento (texto) y datos (mapa de texto)"}
+muerto: /bin/bash: línea 17: kill: (9
+=== kyc-pe 2.0.0: ls plugins; activos:
+- nombre: kyc-pe
+  version: "2.0.0"
+salida=1
+VERSION_INCOMPATIBLE count: 2
+2026-11-27T18:52:27.622-05:00 ERROR 90865 --- [           main] io.synkra.core.ArranquePlugins           : Arranque rechazado: VERSION_INCOMPATIBLE plugin=kyc-pe: El plugin 'kyc-pe' 2.0.0 requiere el core 'synkra-core' en 3.x y se pidió 2.1.0
+Caused by: io.synkra.core.ArranqueRechazado: Arranque rechazado por el verificador: VERSION_INCOMPATIBLE plugin=kyc-pe: El plugin 'kyc-pe' 2.0.0 requiere el core 'synkra-core' en 3.x y se pidió 2.1.0
+=== reintento 1.3.0 con datos:{}
+[{"nombre":"kyc-pe","version":"1.3.0"}]
+doc=12345678
+{"aprobado":true,"motivo":"DNI válido"}
+doc=1234567
+{"aprobado":false,"motivo":"El DNI debe tener exactamente 8 caracteres"}
+doc=123456789
+{"aprobado":false,"motivo":"El DNI debe tener exactamente 8 caracteres"}
+doc=1234567a
+{"aprobado":false,"motivo":"El DNI solo admite dígitos ASCII (0-9)"}
+proceso muerto

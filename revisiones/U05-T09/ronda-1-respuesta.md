@@ -1,0 +1,8 @@
+# U05-T09: respuesta a la ronda 1
+
+F-01: Corregido en 11216ee: YamlObjetosPaisTest llama a construir y lee yamlConfigMap/yamlService/yamlDeployment desde la interfaz (kind, nombre, namespace synkra-pe, imagen del core y del init) y los compara con pais-pe-esperado.yaml. Par falla-pasa: en una copia en mktemp -d, yamlService devolviendo el Deployment hace fallar las dos pruebas (bitacoras/U05-T09-evidencia/rojo-r2.txt); en el worktree pasan.
+F-02: Corregido en 11216ee: ClienteKubernetesTest.alCerrarElContextoElClienteQuedaCerrado lee el cliente del adaptador, comprueba que responde, cierra el contexto y comprueba que ya no responde con el servidor aún arriba. Elegí dejar la deducción de Spring (AdaptadorFabric8 es AutoCloseable) porque la prueba demuestra que funciona; con close() vacío en la copia mktemp la prueba falla (rojo-r2.txt).
+F-03: Corregido en 11216ee: quité SynkraAppTest.elClienteDeKubernetesNoEsUnBeanDeLaAplicacion (no se puede dar cuenta completa al contexto real: las variables del pod salen del entorno del proceso). CA-2 sigue cubierto por ConfiguracionKubernetesTest, que sí usa cuenta completa.
+F-04: Corregido en 11216ee: la regla cubre argumentos de tipo de superclase e interfaces, throws, límites de parámetros de tipo (clase y método) y anotaciones (clase, método y campo). Un juguete muerde cada uno (ApiSuperGenerica, ApiInterfazGenerica, ApiThrows, ApiLimite, ApiAnotada) y la prueba exige que el mensaje los nombre.
+F-05: Corregido en 11216ee: ca1.txt trae ahora fuera=1 y api=1 capturados.
+F-06: Corregido en 11216ee: el Javadoc de cliente() lo marca como costura de prueba.

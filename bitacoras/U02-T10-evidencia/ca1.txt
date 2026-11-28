@@ -1,0 +1,25 @@
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 1s
+12 actionable tasks: 5 executed, 7 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
+tests="18" skipped="0" failures="0" errors="0"
+== 1.3.0
+nombre: kyc-pe
+version: 1.3.0
+core: synkra-core
+coreCompatible: 2.x
+etiquetas:
+  pais: pe
+descripcion: Validación KYC simulada para Perú
+== 2.0.0
+nombre: kyc-pe
+version: 2.0.0
+core: synkra-core
+coreCompatible: 3.x
+etiquetas:
+  pais: pe
+descripcion: Validación KYC simulada para Perú

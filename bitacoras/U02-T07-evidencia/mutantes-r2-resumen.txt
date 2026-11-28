@@ -1,0 +1,7 @@
+sin-trailing: 12 tests completed, 1 failed BUILD FAILED in 9s 
+sin-duplicados: 12 tests completed, 1 failed BUILD FAILED in 9s 
+sin-desconocidas: 12 tests completed, 1 failed BUILD FAILED in 9s 
+null-es-200: 12 tests completed, 1 failed BUILD FAILED in 8s 
+solo-runtime: 12 tests completed, 1 failed BUILD FAILED in 10s 
+igual-ignorando-mayusculas: 12 tests completed, 1 failed BUILD FAILED in 9s 
+404-sin-nombre: 12 tests completed, 2 failed BUILD FAILED in 9s 

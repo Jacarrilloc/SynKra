@@ -1,0 +1,16 @@
+> Task :plugins:kyc-co:test FAILED
+KycCoTest > rechazaPorNoAscii(String) > [1] "12ab56" FAILED
+KycCoTest > rechazaPorNoAscii(String) > [2] "١٢٣٤٥٦" FAILED
+KycCoTest > rechazaPorNoAscii(String) > [3] "123 456" FAILED
+KycCoTest > rechazaPorNoAscii(String) > [4] "-123456" FAILED
+KycCoTest > rechazaPorNoAscii(String) > [5] "123456a" FAILED
+KycCoTest > rechazaSolicitudNulaSinLanzar() FAILED
+KycCoTest > aprueba6a10Digitos(String) > [1] "123456" FAILED
+KycCoTest > aprueba6a10Digitos(String) > [2] "1234567890" FAILED
+KycCoTest > aprueba6a10Digitos(String) > [3] "1234567" FAILED
+KycCoTest > rechazaPorLongitud(String) > [1] "12345" FAILED
+KycCoTest > rechazaPorLongitud(String) > [2] "12345678901" FAILED
+KycCoTest > rechazaPorLongitud(String) > [3] "" FAILED
+KycCoTest > rechazaPorLongitud(String) > [4] "1" FAILED
+17 tests completed, 13 failed
+BUILD FAILED in 6s

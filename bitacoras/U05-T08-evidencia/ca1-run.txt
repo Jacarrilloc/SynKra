@@ -1,0 +1,11 @@
+10001:10001 ["/usr/local/bin/descargar.sh"]
+uid=10001(synkra) gid=10001(synkra) groups=10001(synkra)
+/usr/bin/curl
+-r-xr-xr-x    1 root     root          4258 Nov 27 23:40 /usr/local/bin/descargar.sh
+drwxr-xr-x    2 root     root          4096 Nov 27 23:41 /config
+drwxr-xr-x    2 synkra   synkra        4096 Nov 27 23:41 /plugins
+touch: /usr/local/bin/x: Permission denied
+escribir_bin=1
+plugins_escribible
+-r-xr-xr-x    1 root     root          4258 Nov 27 23:40 /usr/local/bin/descargar.sh
+escribible=1

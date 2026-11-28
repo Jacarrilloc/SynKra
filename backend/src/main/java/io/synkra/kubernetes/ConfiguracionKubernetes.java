@@ -9,32 +9,30 @@ import java.nio.file.Files;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Condition;
-import org.springframework.context.annotation.ConditionContext;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.core.type.AnnotatedTypeMetadata;
 
 /**
  * Cliente de Kubernetes armado solo con la cuenta de servicio del pod. Parte de {@link Config#empty()}:
  * no lee ~/.kube/config, ni KUBECONFIG, ni propiedades o variables de autoconfiguración de Fabric8.
- * Sin token (o sin clúster) no hay bean {@link KubernetesClient}: el módulo queda deshabilitado.
+ * El cliente no es un bean: sin token (o sin clúster) el adaptador queda sin cliente y el módulo deshabilitado.
  */
 @Configuration(proxyBeanMethods = false)
 class ConfiguracionKubernetes {
 
-    static class HayCuentaDeServicio implements Condition {
-        @Override
-        public boolean matches(ConditionContext contexto, AnnotatedTypeMetadata metadatos) {
-            return CuentaServicio.de(contexto.getEnvironment(), VariablesPod.de(contexto)).completa();
-        }
+    /**
+     * El único bean que sale de aquí es el adaptador: el cliente de Fabric8 nace dentro de él y se cierra con él,
+     * así que ningún otro módulo puede inyectarlo y saltarse la guardia de namespace. Sin cuenta completa
+     * (token y clúster) el adaptador no tiene cliente y queda no disponible.
+     */
+    @Bean
+    AdaptadorKubernetes adaptadorKubernetes(Environment env, ObjectProvider<VariablesPod> variables,
+            @Value("${synkra.kubernetes.imagen-init:" + ConstructorObjetosPais.IMAGEN_INIT_POR_DEFECTO + "}") String imagenInit) {
+        var cuenta = CuentaServicio.de(env, variables.getIfAvailable(VariablesPod::delProceso));
+        return new AdaptadorFabric8(cuenta.completa() ? cliente(cuenta) : null, imagenInit);
     }
 
-    @Bean(destroyMethod = "close")
-    @Conditional(HayCuentaDeServicio.class)
-    KubernetesClient clienteKubernetes(Environment env, ObjectProvider<VariablesPod> variables) {
-        var cuenta = CuentaServicio.de(env, variables.getIfAvailable(VariablesPod::delProceso));
+    private static KubernetesClient cliente(CuentaServicio cuenta) {
         var config = new ConfigBuilder(Config.empty())
                 .withAutoConfigure(false)
                 .withMasterUrl(cuenta.url())
@@ -42,11 +40,5 @@ class ConfiguracionKubernetes {
                 .withCaCertFile(Files.isReadable(cuenta.archivoCa()) ? cuenta.archivoCa().toString() : null)
                 .build();
         return new KubernetesClientBuilder().withConfig(config).build();
-    }
-
-    @Bean
-    AdaptadorKubernetes adaptadorKubernetes(ObjectProvider<KubernetesClient> cliente,
-            @Value("${synkra.kubernetes.imagen-init:" + ConstructorObjetosPais.IMAGEN_INIT_POR_DEFECTO + "}") String imagenInit) {
-        return new AdaptadorFabric8(cliente.getIfAvailable(), imagenInit);
     }
 }

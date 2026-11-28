@@ -1,0 +1,23 @@
+$ sh -n init-descarga/descargar.sh && echo sintaxis-ok
+sintaxis-ok
+$ command -v shellcheck
+shellcheck=ausente (rc=1)
+$ init-descarga/test.sh
+ok hash-correcto
+ok hash-alterado
+ok catalogo-caido
+ok http-500
+ok http-404-sin-reintento
+ok nombre-malo(../evil.jar)
+ok nombre-malo(/abs.jar)
+ok nombre-malo(a/b.jar)
+ok nombre-malo(..)
+ok hash-mal-formado
+ok linea-mala-tras-buena
+ok segundo-alterado
+ok dos-correctos
+ok lista-vacia
+ok sin-url
+ok sin-lista
+todos los casos ok
+salida=0

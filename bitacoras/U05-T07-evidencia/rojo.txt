@@ -1,0 +1,18 @@
+FALLA hash-correcto: cod=0 plugins=
+FALLA hash-alterado: cod=0 plugins=
+FALLA catalogo-caido: cod=0 intentos=0
+FALLA http-500: cod=0 intentos=0 peticiones=0
+FALLA http-404-sin-reintento: cod=0 peticiones=0
+FALLA nombre-malo(../evil.jar): cod=0 peticiones=0
+FALLA nombre-malo(/abs.jar): cod=0 peticiones=0
+FALLA nombre-malo(a/b.jar): cod=0 peticiones=0
+FALLA nombre-malo(..): cod=0 peticiones=0
+FALLA hash-mal-formado: cod=0
+FALLA linea-mala-tras-buena: cod=0 peticiones=0
+FALLA segundo-alterado: cod=0 plugins=
+FALLA dos-correctos: cod=0 plugins=
+ok lista-vacia
+FALLA sin-url: cod=0
+FALLA sin-lista: cod=0
+15 caso(s) con FALLA
+salida=1

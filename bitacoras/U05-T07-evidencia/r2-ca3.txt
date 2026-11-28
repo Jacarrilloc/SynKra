@@ -1,0 +1,15 @@
+ bitacoras/U05-T07-evidencia/ca1.txt          |  23 +++
+ bitacoras/U05-T07-evidencia/ca2-mutantes.txt |  96 +++++++++
+ bitacoras/U05-T07-evidencia/ca3.txt          |  10 +
+ bitacoras/U05-T07-evidencia/r2-mutantes.txt  |  13 ++
+ bitacoras/U05-T07-evidencia/r2-rojo.txt      |  29 +++
+ bitacoras/U05-T07-evidencia/r2-verde.txt     |  29 +++
+ bitacoras/U05-T07-evidencia/rojo.txt         |  18 ++
+ bitacoras/U05-T07.md                         |  43 ++++
+ init-descarga/descargar.sh                   | 133 +++++++++++++
+ init-descarga/test.sh                        | 286 +++++++++++++++++++++++++++
+ revisiones/U05-T07/ronda-1-respuesta.md      |   8 +
+ revisiones/U05-T07/ronda-1.md                |  76 +++++++
+ 12 files changed, 764 insertions(+)
+100755 88cea58ebe22470c06c009b11b518261ea4bf7d8 0	init-descarga/descargar.sh
+100755 ca62228336e96e298fb653e07edb960eed64915b 0	init-descarga/test.sh

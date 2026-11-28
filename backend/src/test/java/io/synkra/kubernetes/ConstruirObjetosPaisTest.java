@@ -10,7 +10,6 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.server.mock.KubernetesMockServer;
 import io.fabric8.kubernetes.client.utils.Serialization;
 import io.synkra.kubernetes.api.NamespaceNoPermitidoException;
-import io.synkra.kubernetes.api.ObjetosPais;
 import io.synkra.kubernetes.api.PlanPais;
 import io.synkra.kubernetes.api.PlanPais.PluginPlan;
 import java.io.InputStream;
@@ -67,7 +66,7 @@ class ConstruirObjetosPaisTest {
                 new PluginPlan("facturacion", "1.2.0", "1".repeat(64))));
     }
 
-    private static List<JsonNode> comoArboles(ObjetosPais o) throws Exception {
+    private static List<JsonNode> comoArboles(ObjetosPaisFabric8 o) throws Exception {
         List<JsonNode> r = new ArrayList<>();
         for (Object obj : List.of(o.configMap(), o.service(), o.deployment())) {
             r.add(YAML.readTree(Serialization.asYaml(obj)));

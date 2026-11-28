@@ -1,0 +1,2 @@
+47d46
+<         this.json.enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS);

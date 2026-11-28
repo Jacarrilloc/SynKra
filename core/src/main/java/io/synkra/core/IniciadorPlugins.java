@@ -31,6 +31,7 @@ public class IniciadorPlugins {
 
     private final ArranquePlugins arranque;
     private volatile String fallido;
+    private volatile List<PluginActivo> iniciadosOk = List.of();
 
     public IniciadorPlugins(ArranquePlugins arranque) {
         this.arranque = arranque;
@@ -41,6 +42,11 @@ public class IniciadorPlugins {
         return fallido != null;
     }
 
+    /** Los plugins iniciados con éxito, en orden de carga; vacía si el arranque falló o aún no terminó. */
+    public List<PluginActivo> iniciados() {
+        return iniciadosOk;
+    }
+
     /** Nombre del plugin que falló al iniciar, o null si ninguno falló. */
     String pluginFallido() {
         return fallido;
@@ -49,9 +55,9 @@ public class IniciadorPlugins {
     /** Corre al terminar el arranque. */
     @EventListener
     void iniciar(ApplicationReadyEvent evento) {
-        var iniciados = new ArrayList<PluginCargado>();
-        for (var c : arranque.cargados()) {
-            var plugin = c.plugin();
+        var iniciados = new ArrayList<PluginActivo>();
+        for (var c : arranque.activos()) {
+            var plugin = c.cargado().plugin();
             try {
                 var contexto = new ContextoPlugin(Map.of(), System.getLogger(plugin.nombre()));
                 plugin.iniciar(contexto);
@@ -63,11 +69,12 @@ public class IniciadorPlugins {
                 return;
             }
         }
+        iniciadosOk = List.copyOf(iniciados);
     }
 
-    private void detener(List<PluginCargado> iniciados) {
+    private void detener(List<PluginActivo> iniciados) {
         for (int i = iniciados.size() - 1; i >= 0; i--) {
-            var plugin = iniciados.get(i).plugin();
+            var plugin = iniciados.get(i).cargado().plugin();
             try {
                 plugin.detener();
             } catch (Exception | LinkageError e) {

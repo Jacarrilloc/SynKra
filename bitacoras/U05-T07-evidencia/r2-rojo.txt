@@ -1,0 +1,29 @@
+ok hash-correcto
+ok hash-alterado
+ok catalogo-caido
+ok http-500
+ok http-404-sin-reintento
+ok nombre-malo(../evil.jar)
+ok nombre-malo(/abs.jar)
+ok nombre-malo(a/b.jar)
+ok nombre-malo(..)
+ok hash-mal-formado
+ok linea-mala-tras-buena
+ok segundo-alterado
+ok dos-correctos
+ok lista-vacia
+ok sin-url
+ok sin-lista
+ok espera-creciente
+FALLA espera-base-invalida(0.5): cod=4
+FALLA espera-base-invalida(-1): cod=4
+FALLA espera-base-invalida(abc): cod=4
+ok linea-vacia-en-medio
+FALLA enlace-en-temporal-antiguo: cod=0 victima=uno
+FALLA enlace-en-destino: cod=0 fuera=.a-1.jar.parcial
+FALLA enlace-a-archivo-en-destino: cod=0
+FALLA plugins-es-enlace: cod=0
+ok archivo-previo-se-reemplaza
+ok set-eu-presente
+7 caso(s) con FALLA
+salida=1

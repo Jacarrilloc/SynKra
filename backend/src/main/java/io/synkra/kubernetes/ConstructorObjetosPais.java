@@ -12,7 +12,6 @@ import io.fabric8.kubernetes.api.model.Service;
 import io.fabric8.kubernetes.api.model.ServiceBuilder;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
-import io.synkra.kubernetes.api.ObjetosPais;
 import io.synkra.kubernetes.api.PlanPais;
 import io.synkra.kubernetes.api.PlanPais.PluginPlan;
 import java.util.Comparator;
@@ -93,11 +92,11 @@ final class ConstructorObjetosPais {
         return imagen;
     }
 
-    static ObjetosPais construir(PlanPais plan, String namespace, String imagenInit) {
+    static ObjetosPaisFabric8 construir(PlanPais plan, String namespace, String imagenInit) {
         List<PluginPlan> plugins = plan.plugins().stream()
                 .sorted(Comparator.comparing(PluginPlan::nombre).thenComparing(PluginPlan::version))
                 .toList();
-        return new ObjetosPais(deployment(plan, namespace, imagenInit), configMap(plugins, namespace), service(namespace));
+        return new ObjetosPaisFabric8(deployment(plan, namespace, imagenInit), configMap(plugins, namespace), service(namespace));
     }
 
     private static Map<String, String> etiquetaGestor() {
