@@ -1,5 +1,11 @@
-# fecha: 2026-11-28T05:06:26Z sha: 8532284
+# fecha: 2026-11-28T05:07:19Z sha: fb00045
 $ F-01: SYNKRA_REGISTRO_IMAGENES=rojo-revisor.local:1 bash scripts/verificar-imagenes.sh   (sin esa imagen en local)
+ok backend/Dockerfile FROM
+ok backend/Dockerfile FROM
+ok core/Dockerfile FROM
+ok core/Dockerfile FROM
+ok init-descarga/Dockerfile FROM
+ok init-descarga/Dockerfile FROM
 ok rojo-revisor.local:1/synkra-init-descarga:1.0.0 etiqueta
 FALLA rojo-revisor.local:1/synkra-backend:0.1.0 existe: esperado imagen construida / visto no existe
 FALLA rojo-revisor.local:1/synkra-core-ejemplo:2.1.0 existe: esperado imagen construida / visto no existe
@@ -9,6 +15,9 @@ FALLA rojo-revisor.local:1/synkra-core-ejemplo:2.1.0 ExposedPorts: esperado 8080
 FALLA rojo-revisor.local:1/synkra-core-ejemplo:2.1.0 Volumes: esperado /config /plugins / visto 
 FALLA rojo-revisor.local:1/synkra-init-descarga:1.0.0 Entrypoint: esperado ["/usr/local/bin/descargar.sh"] / visto 
 FALLA rojo-revisor.local:1/synkra-init-descarga:1.0.0 sin-apk: esperado  / visto docker: Error response from daemon: No such image: rojo-revisor.local:1/synkra-init-descarga:1.0.0
+
+Run 'docker run --help' for more information
+FALLAN 8 comprobaciones
 salida=1
 
 $ F-02: copia de HEAD con `from alpine:3.20 AS revision` (minusculas, sin digest) en init-descarga/Dockerfile; verificar-imagenes.sh contra las imagenes buenas
@@ -21,13 +30,12 @@ ok core/Dockerfile FROM
 FALLA init-descarga/Dockerfile FROM: esperado @sha256:<64 hex> / visto from alpine:3.20 AS revision
 ok init-descarga/Dockerfile FROM
 FALLAN 1 comprobaciones
-salida=0
+salida=1
 
 $ F-04: openssl falso que escribe un diagnostico y sale con 7
 openssl: diagnostico-de-prueba
 FALLA certificado: openssl req -x509 salió con 7
 salida=1
 $ F-04: mv falso que falla en el segundo mv (tls.crt) -> queda tls.key sin tls.crt?
------
-FALLA certificado: no se pudieron mover los archivos a /tmp/tmp.uC8ObbCXIL/c
+FALLA certificado: no se pudieron mover los archivos a /tmp/tmp.YbCXWiMoR0/c
 salida=1

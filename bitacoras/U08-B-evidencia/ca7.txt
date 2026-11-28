@@ -1,8 +1,8 @@
-# fecha: 2026-11-28T04:57:29Z  sha: 0ae9306  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca7.sh
+# fecha: 2026-11-28T05:07:03Z  sha: fb00045  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca7.sh
 $ bash -n scripts/imagenes.sh scripts/verificar-imagenes.sh scripts/certificado-tls.sh; echo "sintaxis=$?"
 sintaxis=0
 $ grep -n "set -euo pipefail" scripts/imagenes.sh scripts/verificar-imagenes.sh scripts/certificado-tls.sh
-scripts/imagenes.sh:5:set -euo pipefail
+scripts/imagenes.sh:6:set -euo pipefail
 scripts/verificar-imagenes.sh:4:set -euo pipefail
 scripts/certificado-tls.sh:4:set -euo pipefail
 $ echo 'no: [yaml' | python3 -I scripts/verificar-backend.py; echo "yaml=$?"

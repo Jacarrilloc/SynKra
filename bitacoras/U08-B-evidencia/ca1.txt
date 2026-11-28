@@ -1,4 +1,4 @@
-# fecha: 2026-11-28T04:57:09Z  sha: 0ae9306  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca1.sh
+# fecha: 2026-11-28T05:06:44Z  sha: fb00045  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca1.sh
 $ kubectl kustomize deploy/base/backend | python3 -I scripts/verificar-backend.py --base; echo "salida=$?"
 OK backend: 3 objetos
 salida=0

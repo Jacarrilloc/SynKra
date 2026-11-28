@@ -1,11 +1,11 @@
-# fecha: 2026-11-28T04:57:09Z  sha: 0ae9306  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca3.sh
+# fecha: 2026-11-28T05:06:45Z  sha: fb00045  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca3.sh
 $ bash scripts/certificado-tls.sh "$D"; echo "salida=$?"
-OK certificado: /tmp/tmp.z1zSrbvaUD/tls.crt y /tmp/tmp.z1zSrbvaUD/tls.key
+OK certificado: /tmp/tmp.4xbCFYIUoU/tls.crt y /tmp/tmp.4xbCFYIUoU/tls.key
 salida=0
 $ ls "$D"; stat -c "%a %n" "$D/tls.key"
 tls.crt
 tls.key
-600 /tmp/tmp.z1zSrbvaUD/tls.key
+600 /tmp/tmp.4xbCFYIUoU/tls.key
 $ openssl x509 -in "$D/tls.crt" -noout -subject -ext subjectAltName
 subject=CN=synkra.local
 X509v3 Subject Alternative Name: 
@@ -16,14 +16,14 @@ vigente=0
 $ [ "$(openssl x509 -in "$D/tls.crt" -noout -pubkey)" = "$(openssl pkey -in "$D/tls.key" -pubout)" ] && echo "par-ok"
 par-ok
 $ sha256sum "$D/tls.crt" "$D/tls.key" | sed "s|$D|<dir>|"
-7c28e9572efe4fa23acfb573a013e816e9132af62076bd421b6277b2aec087e5  <dir>/tls.crt
-e4324298d3f9dbb111a3e6c95b98f51eeee9c89cb821b9a82652212bdb258066  <dir>/tls.key
+0adfe3998a8849f693507a9df5fc3dd1dfc7de8707903fa2841f7eb7ee80e235  <dir>/tls.crt
+50468e0d527ab5948fa781843fef97ff631a4d48150a8d223907c43d09012b6c  <dir>/tls.key
 $ bash scripts/certificado-tls.sh "$D"; echo "repetido=$?"
-FALLA certificado: ya hay tls.crt o tls.key en /tmp/tmp.z1zSrbvaUD; no se sobrescriben
+FALLA certificado: ya hay tls.crt o tls.key en /tmp/tmp.4xbCFYIUoU; no se sobrescriben
 repetido=1
 $ sha256sum "$D/tls.crt" "$D/tls.key" | sed "s|$D|<dir>|"
-7c28e9572efe4fa23acfb573a013e816e9132af62076bd421b6277b2aec087e5  <dir>/tls.crt
-e4324298d3f9dbb111a3e6c95b98f51eeee9c89cb821b9a82652212bdb258066  <dir>/tls.key
+0adfe3998a8849f693507a9df5fc3dd1dfc7de8707903fa2841f7eb7ee80e235  <dir>/tls.crt
+50468e0d527ab5948fa781843fef97ff631a4d48150a8d223907c43d09012b6c  <dir>/tls.key
 $ bash scripts/certificado-tls.sh "$D/no-existe"; echo "sin-dir=$?"
-FALLA certificado: el directorio '/tmp/tmp.z1zSrbvaUD/no-existe' no existe
+FALLA certificado: el directorio '/tmp/tmp.4xbCFYIUoU/no-existe' no existe
 sin-dir=1
