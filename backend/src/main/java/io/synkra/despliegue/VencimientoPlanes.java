@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 class VencimientoPlanes {
 
-    private static final String SQL = "UPDATE dep_plan SET estado = '" + Plan.VENCIDO + "' WHERE estado = '"
-            + Plan.PENDIENTE + "' AND vence_en <= ?";
+    private static final String SQL =
+            "UPDATE dep_plan SET estado = 'vencido' WHERE estado = 'pendiente' AND vence_en <= ?";
 
     private final JdbcTemplate jdbc;
     private final Clock reloj;
