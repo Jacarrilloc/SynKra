@@ -1,0 +1,160 @@
+fecha: 2026-11-28T00:57:45-05:00
+sha: b7d41a5 (arbol: 10 cambios sin confirmar)
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U08-C-evidencia/ca8.sh
+
+=== mutacion base-sin-backend
+$ sed -i '/^  - backend$/d' deploy/base/kustomization.yaml
+6d5
+<   - backend
+FALLA objetos: falta ('Deployment', 'synkra', 'synkra-backend')
+FALLA objetos: falta ('PersistentVolumeClaim', 'synkra', 'synkra-datos')
+FALLA objetos: falta ('Service', 'synkra', 'synkra-backend')
+base=1
+FALLA entrada: no hay manifiestos en la entrada estandar
+overlay=1
+OK backend: 3 objetos
+solo-backend=0
+
+=== mutacion overlay-solo-backend
+$ sed -i 's|^  - ../../base$|  - ../../base/backend|' deploy/overlays/kind/kustomization.yaml
+4c4
+<   - ../../base
+---
+>   - ../../base/backend
+OK base: 11 objetos
+base=0
+FALLA base: esperado [('Namespace', None, 'synkra'), ('Namespace', None, 'synkra-co'), ('Namespace', None, 'synkra-pe'), ('Role', 'synkra-co', 'synkra-deployer'), ('Role', 'synkra-pe', 'synkra-deployer'), ('RoleBinding', 'synkra-co', 'synkra-deployer'), ('RoleBinding', 'synkra-pe', 'synkra-deployer'), ('ServiceAccount', 'synkra', 'deployer')] / visto []
+overlay=1
+OK backend: 3 objetos
+solo-backend=0
+
+=== mutacion pull-ifnotpresent
+$ sed -i '/imagePullPolicy: Always/d' deploy/overlays/kind/backend-kind.yaml
+11d10
+<           imagePullPolicy: Always # la misma etiqueta puede volver a subirse con otro contenido (scripts/desplegar.sh lo comprueba)
+OK base: 11 objetos
+base=0
+FALLA pull: esperado 'Always' / visto 'IfNotPresent'
+overlay=1
+OK backend: 3 objetos
+solo-backend=0
+
+=== mutacion ingress-sin-nodo
+$ sed -i '/controlador-kind.yaml/d;/^patches:/d' deploy/ingress-nginx/kustomization.yaml
+8,9d7
+< patches:
+<   - path: controlador-kind.yaml
+manifiesto-ok
+ingress-nginx ingress-nginx-controller [('kubernetes.io/os', 'linux')]
+2 True
+(sin 'ingress-ok' arriba: cae)
+
+=== mutacion manifiesto-tocado
+$ sed -i '1i # comentario anadido' deploy/ingress-nginx/deploy.yaml
+0a1
+> # comentario anadido
+ingress-ok
+(sin 'manifiesto-ok' arriba: cae)
+
+=== mutacion aplicar-base-k
+$ sed -i 's|apply -f deploy/base/namespaces.yaml -f deploy/base/rbac.yaml|apply -k deploy/base|' Makefile
+37c37
+< 	kubectl --kubeconfig "$(KUBECONFIG_SYNKRA)" apply -f deploy/base/namespaces.yaml -f deploy/base/rbac.yaml
+---
+> 	kubectl --kubeconfig "$(KUBECONFIG_SYNKRA)" apply -k deploy/base
+1
+
+=== mutacion install-sin-limite
+$ sed -i '/\$(MAKE) verificar-limite/d' Makefile
+64d63
+< 	$(MAKE) verificar-limite
+0
+
+=== mutacion limite-sin-as
+$ sed -i 's| --as=system:serviceaccount:synkra:deployer||' scripts/verificar-limite.sh
+23c23
+<   respuesta="$(kubectl --kubeconfig "$KC" auth can-i $pregunta --as=system:serviceaccount:synkra:deployer 2>/dev/null)" || rc=$?
+---
+>   respuesta="$(kubectl --kubeconfig "$KC" auth can-i $pregunta 2>/dev/null)" || rc=$?
+ok create deployments.apps -n synkra-co: yes
+ok create deployments.apps -n synkra-pe: yes
+FALLA create deployments.apps -n default: yes (esperado no)
+FALLA create deployments.apps -n kube-system: yes (esperado no)
+FALLA create deployments.apps -n synkra: yes (esperado no)
+FALLA create namespaces: yes (esperado no)
+FALLA limite: 4 respuestas no esperadas
+salida=1
+
+=== mutacion limite-sin-comparar
+$ sed -i 's|elif \[ "\$respuesta" = "\$esperado" \]; then|elif true; then|' scripts/verificar-limite.sh
+28c28
+<   elif [ "$respuesta" = "$esperado" ]; then
+---
+>   elif true; then
+clusterrolebinding.rbac.authorization.k8s.io/synkra-prueba-limite created
+edit synkra/deployer
+contexto permitido: kind-synkra (https://127.0.0.1:33577)
+scripts/verificar-limite.sh
+ok create deployments.apps -n synkra-co: yes
+ok create deployments.apps -n synkra-pe: yes
+ok create deployments.apps -n default: yes
+ok create deployments.apps -n kube-system: yes
+ok create deployments.apps -n synkra: yes
+ok create namespaces: no
+OK limite: 6 respuestas esperadas
+con-crb=0
+clusterrolebinding.rbac.authorization.k8s.io "synkra-prueba-limite" deleted
+Error from server (NotFound): clusterrolebindings.rbac.authorization.k8s.io "synkra-prueba-limite" not found
+crb-borrado=1
+rolebinding.rbac.authorization.k8s.io/synkra-prueba-limite created
+contexto permitido: kind-synkra (https://127.0.0.1:33577)
+scripts/verificar-limite.sh
+ok create deployments.apps -n synkra-co: yes
+ok create deployments.apps -n synkra-pe: yes
+ok create deployments.apps -n default: no
+ok create deployments.apps -n kube-system: no
+ok create deployments.apps -n synkra: yes
+ok create namespaces: no
+OK limite: 6 respuestas esperadas
+con-rb=0
+rolebinding.rbac.authorization.k8s.io "synkra-prueba-limite" deleted from synkra namespace
+Error from server (NotFound): rolebindings.rbac.authorization.k8s.io "synkra-prueba-limite" not found
+rb-borrado=1
+contexto permitido: kind-synkra (https://127.0.0.1:33577)
+scripts/verificar-limite.sh
+ok create deployments.apps -n synkra-co: yes
+ok create deployments.apps -n synkra-pe: yes
+ok create deployments.apps -n default: no
+ok create deployments.apps -n kube-system: no
+ok create deployments.apps -n synkra: no
+ok create namespaces: no
+OK limite: 6 respuestas esperadas
+limpio=0
+
+=== mutacion desplegar-sin-digest
+$ sed -i 's#^if \[ "\$EN_REGISTRO" != "\$EN_POD" \]; then#if false; then#; s#^\[ -n "\$EN_REGISTRO" \] && \[ "\$EN_REGISTRO" = "\$EN_POD" \] ||#[ -n "$EN_REGISTRO" ] ||#' scripts/desplegar.sh
+54c54
+< if [ "$EN_REGISTRO" != "$EN_POD" ]; then
+---
+> if false; then
+62c62
+< [ -n "$EN_REGISTRO" ] && [ "$EN_REGISTRO" = "$EN_POD" ] || { echo "FALLA desplegar: corre ${EN_POD:-nada} y el registro tiene ${EN_REGISTRO:-nada}" >&2; exit 1; }
+---
+> [ -n "$EN_REGISTRO" ] || { echo "FALLA desplegar: corre ${EN_POD:-nada} y el registro tiene ${EN_REGISTRO:-nada}" >&2; exit 1; }
+variante=0
+registro-cambio
+OK desplegar: localhost:5001/synkra-backend:0.1.0 sha256:ac33f7275f378f42c9998c4a4fde217a7e895e95c543c9bebdd03b71c5604d48
+desplegar=0
+restaurado=0
+corre-lo-subido
+
+=== despues de las mutaciones que tocan el cluster, desde el worktree
+deployment "synkra-backend" successfully rolled out
+OK desplegar: localhost:5001/synkra-backend:0.1.0 sha256:38d18ff75383d719a077c95a97f3a3d9e67b5074fdce0a0ec5d223075857b549
+desplegar=0
+ok create namespaces: no
+OK limite: 6 respuestas esperadas
+limite=0

@@ -1,0 +1,23 @@
+fecha: 2026-11-28T00:58:11-05:00
+sha: b7d41a5 (arbol: 11 cambios sin confirmar)
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U08-C-evidencia/ca9.sh
+sintaxis=0
+scripts/secreto-tls.sh:4:set -euo pipefail
+scripts/desplegar.sh:4:set -euo pipefail
+scripts/verificar-limite.sh:4:set -euo pipefail
+12:trap limpiar EXIT                  # registrado antes de crear el temporal
+13:TMP="$(mktemp -d)"
+sin-kubeconfig=1
+registro-caido=1
+1
+0
+FALLA subir: el registro 127.0.0.1:1 no responde: corre make registro
+FALLA tls: .tls tiene solo tls.crt; no se regenera ni se borra
+media-pareja=1
+tls.crt
+secreto-intacto
+scripts/desplegar.sh:10:k() { kubectl "$@"; }
+sin-kubeconfig-mutado=0

@@ -1,0 +1,63 @@
+fecha: 2026-11-28T00:54:41-05:00
+sha: b7d41a5 (arbol: 1 cambios sin confirmar)
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U08-C-evidencia/ca1.sh
+05a709e17c92ba46897d211b63581e93b2e84659 2eb1fe7a02bc8285cbc89f2b4e00a314167312ca d6ca8b9274ab47f3f226e15023e5d7c27146bb96
+# padres: el primero lleva la punta de U08-A (via su PR), el segundo es la punta de U08-B
+d6ca8b9274ab47f3f226e15023e5d7c27146bb96
+a=0
+b=0
+segundo-padre-es-B
+2eb1fe7a02bc8285cbc89f2b4e00a314167312ca 0910a09c9567dabc48f1ebccfeaaeb846a15584c 9272914626cbe5b68a874b5e7a41acf1900b40b3
+A-en-2eb1fe7=0
+# merges entre la punta de A y la base (la tarea esperaba 1; main trae ademas U09-A):
+05a709e Merge pull request #112 from Jacarrilloc/m6r/U08-B
+2eb1fe7 Merge pull request #111 from Jacarrilloc/m6r/U08-A
+0910a09 Merge pull request #110 from Jacarrilloc/m6r/U09-A
+# merge-limpio adaptado: los archivos de cada punta (frente a su base comun 8306ee7) son identicos en 05a709e
+archivos-de-9272914-identicos-en-05a709e (40 archivos)
+archivos-de-d6ca8b9-identicos-en-05a709e (52 archivos)
+# la rama m6r/U08-C sale de 05a709e y no tiene merges propios:
+0
+* b7d41a5 U08-C: imagenes sin atestaciones (el digest del indice no cambia con el mismo contenido), ca1, ca9, ca10, ca8 corregido
+* 486bcb1 U08-C: guiones ca4, ca5, ca8 y evidencia de apoyo
+* a00fe29 U08-C: Ingress NGINX fijado, base con backend, make install/imagenes/desplegar/tls/verificar-limite
+* f379e71 U08-C: rojo, verificadores con las listas de la union y guiones ca2, ca3, ca6, ca7
+* ae087ba U08-C: acuse de lectura
+*   05a709e Merge pull request #112 from Jacarrilloc/m6r/U08-B
+|\  
+| * d6ca8b9 U08-B: informe del revisor, ronda 3 (VERDE)
+| * 60c81f5 U08-B ronda 3: evidencia ca9
+| * a2b9abd U08-B ronda 3: respuesta, bitacora y evidencia fresca
+| * 63c85b9 U08-B ronda 3: las versiones se atan al overlay (F-06)
+| * 917a238 U08-B: informe del revisor, ronda 2 (NO-VERDE)
+| * 8a6b076 U08-B ronda 2: evidencia ca9
+| * 6eb0066 U08-B ronda 2: ca4 comprueba que no quedan versiones literales
+| * 5e387bb U08-B ronda 2: respuesta, bitacora y evidencia fresca
+| * fb00045 U08-B ronda 2: openssl muestra su diagnostico solo si falla; guiones de ronda 2
+| * 8532284 U08-B ronda 2: --pull=never, FROM insensible a mayusculas, versiones de un origen, openssl con diagnostico y sin tls.key huerfano
+| * ab3a42e U08-B: informe del revisor, ronda 1 (NO-VERDE)
+| * a06869b U08-B: evidencia ca9
+| * aa1cf23 U08-B: bitacora y evidencia final (ca1 a ca8, ca4-shellcheck)
+| * 0ae9306 U08-B: evidencia ca8 final
+| * 40c992e U08-B: imagenes.sh nombra la imagen en FALLA; ca8 con salidas reales
+| * be53706 U08-B: ca8 con mutacion shellcheck efectiva y salidas correctas
+| * 7a67d21 U08-B: guiones de evidencia ca1 a ca9 y correr.sh
+| * f8f1c42 U08-B: manifiestos del backend, overlay kind, Dockerfiles con digest y scripts de imagenes y TLS
+| * 345adc4 U08-B: verificadores primero (rojo): verificar-backend.py y verificar-imagenes.sh
+* 2eb1fe7 Merge pull request #111 from Jacarrilloc/m6r/U08-A
+* 0910a09 Merge pull request #110 from Jacarrilloc/m6r/U09-A
+* c80d41f U09-A: informe del revisor, ronda 4 corta (VERDE)
+* 68738cb U09-A: informe del revisor, ronda 3 (NO-VERDE)
+* bfbe91b U09-A: informe del revisor, ronda 2 (NO-VERDE)
+* 5d64939 U09-A ronda 2: CA-7, diff acotado
+* 4239398 U09-A ronda 2: respuesta del codificador y bitácora
+* c41f004 U09-A ronda 2: pruebas de concuerda=false, inconsistente, detalles, cancelación y Accept; URL relativa y esquema ajeno separados; liberar la respuesta; sin comentario para el grep
+* 7c01549 U09-A: informe del revisor, ronda 1 (NO-VERDE)
+* 4429f9f U09-A: CA-7, diff acotado (ca7.sh, ca7.txt y línea de la bitácora)
+* 0ff8944 U09-A: evidencia de CA-1 a CA-6 regenerada con el sha final del código
+* 0fd4b82 U09-A: Program.cs nombra la clave Synkra:ApiUrl
+* 56e3814 U09-A: bitácora y evidencia de CA-1 a CA-6
+* 9281e0c U09-A: HistorialEscapaElPais también prueba / y ? (la mutación de escape sobrevivía con «p e»)

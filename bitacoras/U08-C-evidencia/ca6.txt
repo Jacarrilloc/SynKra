@@ -1,0 +1,27 @@
+fecha: 2026-11-28T00:57:22-05:00
+sha: b7d41a5 (arbol: 7 cambios sin confirmar)
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U08-C-evidencia/ca6.sh
+contexto permitido: kind-synkra (https://127.0.0.1:33577)
+scripts/verificar-limite.sh
+ok create deployments.apps -n synkra-co: yes
+ok create deployments.apps -n synkra-pe: yes
+ok create deployments.apps -n default: no
+ok create deployments.apps -n kube-system: no
+ok create deployments.apps -n synkra: no
+ok create namespaces: no
+OK limite: 6 respuestas esperadas
+salida=0
+solo-pregunta
+1
+escrituras=1
+FALLA create deployments.apps -n synkra-co: kubectl auth can-i salió con 7
+FALLA create deployments.apps -n synkra-pe: kubectl auth can-i salió con 7
+FALLA create deployments.apps -n default: kubectl auth can-i salió con 7
+FALLA create deployments.apps -n kube-system: kubectl auth can-i salió con 7
+FALLA create deployments.apps -n synkra: kubectl auth can-i salió con 7
+FALLA create namespaces: kubectl auth can-i salió con 7
+FALLA limite: 6 respuestas no esperadas
+roto=1

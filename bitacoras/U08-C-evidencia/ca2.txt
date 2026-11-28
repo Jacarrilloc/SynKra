@@ -1,0 +1,19 @@
+fecha: 2026-11-28T00:54:41-05:00
+sha: b7d41a5 (arbol: 2 cambios sin confirmar)
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U08-C-evidencia/ca2.sh
+OK base: 11 objetos
+base=0
+OK backend: 4 objetos (más 8 de la base)
+overlay=0
+OK backend: 3 objetos
+solo-backend=0
+[('Deployment', 'synkra', 'synkra-backend'), ('Ingress', 'synkra', 'synkra-backend'), ('Namespace', '-', 'synkra'), ('Namespace', '-', 'synkra-co'), ('Namespace', '-', 'synkra-pe'), ('PersistentVolumeClaim', 'synkra', 'synkra-datos'), ('Role', 'synkra-co', 'synkra-deployer'), ('Role', 'synkra-pe', 'synkra-deployer'), ('RoleBinding', 'synkra-co', 'synkra-deployer'), ('RoleBinding', 'synkra-pe', 'synkra-deployer'), ('Service', 'synkra', 'synkra-backend'), ('ServiceAccount', 'synkra', 'deployer')]
+manifiesto-ok
+ingress-nginx ingress-nginx-controller [('ingress-ready', 'true'), ('kubernetes.io/os', 'linux')]
+2 True
+ingress-ok
+literales=1
+arquitectura=1

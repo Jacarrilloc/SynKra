@@ -1,0 +1,30 @@
+fecha: 2026-11-28T00:56:14-05:00
+sha: b7d41a5 (arbol: 4 cambios sin confirmar)
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U08-C-evidencia/ca3.sh
+aplicar-base salida=2
+1
+ingress salida=2
+1
+tls salida=2
+1
+desplegar salida=2
+1
+verificar-limite salida=2
+1
+install salida=2
+1
+install: ## Clúster, registro, base, Ingress, TLS, imágenes, backend y límite
+	@scripts/guardia-contexto.sh --antes-de-crear
+	$(MAKE) cluster
+	$(MAKE) registro
+	$(MAKE) aplicar-base
+	$(MAKE) ingress
+	$(MAKE) tls
+	$(MAKE) imagenes
+	$(MAKE) desplegar
+	$(MAKE) verificar-limite
+
+nada-aplicado
