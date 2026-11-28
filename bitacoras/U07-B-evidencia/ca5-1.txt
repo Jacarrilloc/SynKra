@@ -1,0 +1,30 @@
+=== M1 R-D2 alternativas (VerificacionVivo no pasa por alternativas)
+2026-11-27T19:57:32-05:00
+sha dd3c3a7
+$ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"
+$ sed -i 's/Verificador.alternativas(seleccion, Verificador.verificar(seleccion, vista), vista)/Verificador.verificar(seleccion, vista)/'  "$D/backend/src/main/java/io/synkra/despliegue/VerificacionVivo.java"
+$ diff -u (original, mutado)
+@@ -87,7 +87,7 @@
+             descriptores.add(descriptorDe(vista, core, version.get(), pedidos.get(i).nombre(), versiones.get(i).get()));
+         }
+         var seleccion = new Seleccion(core, version.get(), descriptores);
+-        var veredicto = Verificador.alternativas(seleccion, Verificador.verificar(seleccion, vista), vista);
++        var veredicto = Verificador.verificar(seleccion, vista);
+         return new Verificado(seleccion, veredicto);
+     }
+ 
+$ (cd "$D" && ./gradlew :backend:test --tests '*VerificacionVivoTest' --tests '*CrearPlanTest' --tests '*CambiosPropiedades')
+VerificacionVivoTest > s4DaLasDosAlternativasEnOrden() FAILED
+VerificacionVivoTest > laSeleccionDaElVeredictoDeLaSuiteConAlternativas(Caso) > Caso[id=S4, grupo=VERSION_INCOMPATIBLE, descripcion=kyc-pe 2.0.0 (3.x) sobre synkra-core 2.1.0, entrada=PorSeleccion[seleccion=Seleccion[core=synkra-core, versionCore=2.1.0, plugins=[Descriptor[nombre=kyc-pe, version=2.0.0, core=synkra-core, coreCompatible=RangoVersion[minimo=3.0.0, maximo=Optional[4.0.0], texto=3.x], etiquetas={}, descripcion=Optional.empty]]]], esperado=Esperado[origen=VEREDICTO, global=Optional[RECHAZADA], motivos=[MotivoEsperado[codigo=VERSION_INCOMPATIBLE, plugin=Optional[kyc-pe], cam… FAILED
+VerificacionVivoTest > laSeleccionDaElVeredictoDeLaSuiteConAlternativas(Caso) > Caso[id=S5, grupo=VERSION_INCOMPATIBLE, descripcion=kyc-co 1.0.0 (2.x) sobre synkra-core 3.0.0, entrada=PorSeleccion[seleccion=Seleccion[core=synkra-core, versionCore=3.0.0, plugins=[Descriptor[nombre=kyc-co, version=1.0.0, core=synkra-core, coreCompatible=RangoVersion[minimo=2.0.0, maximo=Optional[3.0.0], texto=2.x], etiquetas={}, descripcion=Optional.empty]]]], esperado=Esperado[origen=VEREDICTO, global=Optional[RECHAZADA], motivos=[MotivoEsperado[codigo=VERSION_INCOMPATIBLE, plugin=Optional[kyc-co], cam… FAILED
+> Task :backend:test FAILED
+28 tests completed, 3 failed
+BUILD FAILED in 12s
+$ grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.VerificacionVivoTest.xml
+pruebas caídas en la clase dueña (VerificacionVivoTest):
+   s4DaLasDosAlternativasEnOrden()
+   Caso[id=S4, grupo=VERSION_INCOMPATIBLE, descripcion=kyc-pe 2.0.0 (3.x) sobre synkra-core 2.1.0, entrada=PorSeleccion[seleccion=Seleccion[core=synkra-core, versionCore=2.1.0, plugins=[Descriptor[nombre=kyc-pe, version=2.0.0, core=synkra-core, coreCompatible=RangoVersion[minimo=3.0.0, maximo=Optional[4.0.0], texto=3.x], etiquetas={}, descripcion=Optional.empty]]]], esperado=Esperado[origen=VEREDICTO, global=Optional[RECHAZADA], motivos=[MotivoEsperado[codigo=VERSION_INCOMPATIBLE, plugin=Optional[kyc-pe], cam…
+   Caso[id=S5, grupo=VERSION_INCOMPATIBLE, descripcion=kyc-co 1.0.0 (2.x) sobre synkra-core 3.0.0, entrada=PorSeleccion[seleccion=Seleccion[core=synkra-core, versionCore=3.0.0, plugins=[Descriptor[nombre=kyc-co, version=1.0.0, core=synkra-core, coreCompatible=RangoVersion[minimo=2.0.0, maximo=Optional[3.0.0], texto=2.x], etiquetas={}, descripcion=Optional.empty]]]], esperado=Esperado[origen=VEREDICTO, global=Optional[RECHAZADA], motivos=[MotivoEsperado[codigo=VERSION_INCOMPATIBLE, plugin=Optional[kyc-co], cam…
+$ rm -rf "$D"
+archivos rastreados modificados en el worktree: 0

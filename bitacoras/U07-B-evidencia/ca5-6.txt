@@ -1,0 +1,36 @@
+=== M6 R-D4 terna (comparar solo por nombre)
+2026-11-27T19:58:33-05:00
+sha dd3c3a7
+$ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"
+$ sed -i 's/anadidos.removeAll(actuales);/anadidos.removeIf(s -> actuales.stream().anyMatch(a -> a.nombre().equals(s.nombre())));/' 's/quitados.removeAll(elegidos);/quitados.removeIf(a -> elegidos.stream().anyMatch(s -> s.nombre().equals(a.nombre())));/' 's/iguales.retainAll(actuales);/iguales.removeIf(s -> actuales.stream().noneMatch(a -> a.nombre().equals(s.nombre())));/'  "$D/backend/src/main/java/io/synkra/despliegue/CalculoCambios.java"
+$ diff -u (original, mutado)
+@@ -24,11 +24,11 @@
+         var elegidos = new LinkedHashSet<>(seleccion);
+ 
+         var anadidos = new LinkedHashSet<>(elegidos);
+-        anadidos.removeAll(actuales);
++        anadidos.removeIf(s -> actuales.stream().anyMatch(a -> a.nombre().equals(s.nombre())));
+         var quitados = new LinkedHashSet<>(actuales);
+-        quitados.removeAll(elegidos);
++        quitados.removeIf(a -> elegidos.stream().anyMatch(s -> s.nombre().equals(a.nombre())));
+         var iguales = new LinkedHashSet<>(elegidos);
+-        iguales.retainAll(actuales);
++        iguales.removeIf(s -> actuales.stream().noneMatch(a -> a.nombre().equals(s.nombre())));
+ 
+         var antes = corre.map(LecturaPais::imagenCore).orElse(null);
+         var core = new CambioCore(antes, imagen, imagen.equals(antes));
+$ (cd "$D" && ./gradlew :backend:test --tests '*VerificacionVivoTest' --tests '*CrearPlanTest' --tests '*CambiosPropiedades')
+CambiosPropiedades > lasTresListasParticionanLaSeleccionYLoQueCorre FAILED
+CambiosPropiedades > aplicarLosCambiosAlEstadoQueCorreDaLaSeleccion FAILED
+CambiosPropiedades > sinCambiosEsCoreIgualYMismosPluginsYElCoreDicePorLaImagen FAILED
+> Task :backend:test FAILED
+28 tests completed, 3 failed
+BUILD FAILED in 10s
+$ grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.CambiosPropiedades.xml
+pruebas caídas en la clase dueña (CambiosPropiedades):
+   lasTresListasParticionanLaSeleccionYLoQueCorre
+   aplicarLosCambiosAlEstadoQueCorreDaLaSeleccion
+   sinCambiosEsCoreIgualYMismosPluginsYElCoreDicePorLaImagen
+$ rm -rf "$D"
+archivos rastreados modificados en el worktree: 0
