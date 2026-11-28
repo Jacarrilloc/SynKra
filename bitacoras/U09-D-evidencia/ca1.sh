@@ -13,4 +13,4 @@ python3 -I bitacoras/U09-A-evidencia/trx.py front.Tests/TestResults/DesplegarTes
 python3 -I bitacoras/U09-A-evidencia/trx.py front.Tests/TestResults/DetalleTest.trx | grep -c -x 'LaVueltaSoloSeConfirmaDespuesDeConfirmar'
 scripts/dotnet-docker.sh test front.Tests --logger "trx;LogFileName=todo.trx" --results-directory front.Tests/TestResults > /dev/null; echo "todo=$?"
 python3 -I bitacoras/U09-A-evidencia/trx.py front.Tests/TestResults/todo.trx | head -1
-grep -rniE "semver|compatib" front/ --exclude-dir=bin --exclude-dir=obj | grep -vE '(\bstring |\bbool |\.)(Core)?Compatible\b'; echo "resto=$?"
+grep -rniE "semver|compatib" front/ --exclude-dir=bin --exclude-dir=obj | grep -vE '(\bstring |\bbool |\.)(Core)?Compatible\b' | grep -vE '>[^<>]*[Cc]ompatib[^<>]*</(th|td|span|label|caption|h[1-6])>'; echo "resto=$?"

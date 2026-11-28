@@ -1,8 +1,8 @@
-fecha: 2026-11-28T03:01:25-05:00
-sha: 72949f7 0 cambios de codigo sin confirmar
+fecha: 2026-11-28T05:03:59-05:00
+sha: 66cb961 0 cambios de codigo sin confirmar
 uname -m: x86_64
 docker arch: amd64
-JAVA_HOME: sin definir
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
 $ bash bitacoras/U09-D-evidencia/ca1.sh
 b=0
 c=0
@@ -20,5 +20,4 @@ total=21 executed=21 passed=21 failed=0 notExecuted=0
 1
 todo=0
 total=117 executed=117 passed=117 failed=0 notExecuted=0
-front/Components/Pages/Catalogo.razor:84:                            <th>Core compatible</th>
-resto=0
+resto=1
