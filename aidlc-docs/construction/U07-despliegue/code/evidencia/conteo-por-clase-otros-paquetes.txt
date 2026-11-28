@@ -1,0 +1,8 @@
+fecha: 2026-11-27T22:56:38-05:00  sha: ba0b1fd  JAVA_HOME=/home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ for f in backend/build/test-results/test/TEST-*.xml; do echo "$(basename $f .xml | sed 's/TEST-io.synkra.//') $(grep -o -m1 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' $f)"; done
+FronterasModulosTest tests="15" skipped="0" failures="0" errors="0"
+kubernetes.ContextoEventosTest tests="3" skipped="0" failures="0" errors="0"
+kubernetes.EstadoRolloutTest tests="6" skipped="0" failures="0" errors="0"
+kubernetes.ReintentosClienteTest tests="3" skipped="0" failures="0" errors="0"
+plataforma.RelojTest tests="1" skipped="0" failures="0" errors="0"
+registro.AplicandoTest tests="1" skipped="0" failures="0" errors="0"
