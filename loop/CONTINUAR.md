@@ -1,57 +1,53 @@
-# Prompt para continuar SynKra (loop del módulo 6: U08 en adelante)
+# Prompt para continuar SynKra (loop del módulo 6: U08 y U09)
 
 > Pega este archivo completo al abrir una sesión nueva. Responde en español.
 > Lo mantiene al día el orquestador después de cada hito (ver «Puntos de continuidad»).
-> Última actualización: 2026-11-28 04:35 UTC (23:35 en Bogotá), sesión **local** de David (`/home/casdav/Projects/Master/SynKra`, worktree del orquestador `../wt-orq-U04`). **David pausó (04:31 UTC) para que Julian continúe.** No hay ningún agente corriendo.
-> **Punto de retomar:** el commit de este archivo en `orq/U05-U02-tareas` (el sha lo da `git log -1 --format=%h -- loop/CONTINUAR.md`).
+> Última actualización: 2026-11-28 05:20 UTC (00:20 en Bogotá), sesión **local** de Julian (`/home/julian/Escritorio/Proyectos/SynKra`; la rama del orquestador está en el checkout principal; **comprobar `git branch --show-current` antes de cada commit**: una vez apareció cambiado a `main`).
+> **Punto de retomar:** el commit de este archivo en `orq/U05-U02-tareas` (`git log -1 --format=%h -- loop/CONTINUAR.md`).
 
 ---
 
 ## Resumen en una línea
 
-U01 a U07 están **terminadas y fusionadas en `main`** (`8306ee7`, 894 pruebas en verde, `./gradlew test --rerun check` con `salida=0`). U10 y U11 están cortadas (R9). **Lo que sigue es U08** (instalación y límite en `kind-synkra`); sus tareas **todavía no están escritas**. U09 (front) solo si sobra tiempo.
+U01 a U07 **terminadas y fusionadas en `main`** (`8306ee7`, 894 pruebas en verde). U10 y U11 cortadas (R9). **El mínimo que falta es U08** (instalación en `kind`); U09 (front) va en paralelo porque solo necesita la API. Julian pidió (04:54 UTC): **al terminar U08, fusionar a `main` sus PRs y la colección de Postman (#109) y darle las instrucciones para correrlo**; las fusiones de U08 las hace el orquestador.
 
-## Lo que se hizo en la sesión de David (28 de noviembre, 00:44 a 04:31 UTC)
+## Lo que se hizo en la sesión de Julian (28 de noviembre, desde las 04:35 UTC)
 
-- **U06 terminada** (registro y vista general): U06-A (#97, 2 rondas), U06-B (#99, 1), U06-C (#101, 2), U06-D resumen (#103, 1, revisor `sonnet`). Resumen en `aidlc-docs/construction/U06-registro/code/summary.md`.
-- **U07 terminada** (despliegue y reversión): U07-A (#96, 1), U07-B (#98, 2), U07-C (#100, 2), U07-D (#104, 2), U07-E (#105, 2), U07-F (#106, 3), U07-G fronteras y resumen (#108, 2). Resumen en `aidlc-docs/construction/U07-despliegue/code/summary.md`.
-- **Rama del orquestador** fusionada en #95, #102 y #107. El cierre de U07 (plan marcado, `aidlc-state.md`, auditoría, C-128) está en `orq/U05-U02-tareas` **sin fusionar todavía**: abrir PR a `main` con lo que se acumule.
-- Plan de U03: T01 a T07 marcadas (estaban fusionadas desde el PR #26); U03-T08 (OpenAPI, *Should*) queda pendiente opcional.
-- Decisiones de David, todas en `aidlc-docs/audit.md`: fusionar por tandas los PRs VERDES sin preguntar (01:25 UTC); en U07-D, registrar `aplicando` antes de aplicar (desviación de R-D9, 01:30 UTC); U07-F en paralelo con U07-E (03:07 UTC); U08 se corre en la máquina de David, que tiene `kind`, al cerrar U07 (01:29 UTC).
-- `CANDIDATAS.md` llega hasta **C-130** (en `orq`). La siguiente libre es **C-131**.
+- Retomó desde el punto de David (`6994ff1`/`ab090d0`). U08 corre en la **máquina de Julian**: tiene `kind` v0.33 y `kubectl` v1.37 (aarch64). Julian subió `fs.inotify.max_user_instances` a 512 y `max_user_watches` a 524288 (05:09 UTC; vuelve al valor anterior si reinicia: entonces repetir `sudo sysctl fs.inotify.max_user_instances=512 fs.inotify.max_user_watches=524288`).
+- **Colección de Postman** del backend en el **PR #109** (`m6r/postman`, abierto): colección v2.1, entorno local y de `kind`, README; 112 tests en verde contra el backend real sin clúster.
+- Tareas escritas (agrupadas, en `tareas/`): U08-A, U08-B, U09-A. En redacción: U08-C y U08-D.
+- `CANDIDATAS.md` llega hasta **C-134**. La siguiente libre es **C-135**.
 
 ## Plan para acelerar (aprobado por Julian el 2026-11-28 a las 00:19 UTC, sigue vigente)
 
 - Se cortan U11 y U10 (*Should*, R9). La demo se hace con `curl` si U09 no llega. Mínimo de la North Star: U01 a U08.
-- Hasta **3 tareas en paralelo**; tareas del plan **agrupadas** en un solo despacho; **tope de dos rondas** cuando solo quedan AMARILLOS (los ROJO y NARANJA nunca se bajan); revisor `sonnet` solo en tareas de documentación (resúmenes).
+- Hasta **3 tareas en paralelo**; tareas del plan **agrupadas**; **tope de dos rondas** cuando solo quedan AMARILLOS (ROJO y NARANJA nunca se bajan); una tarea en la ronda 4 se para y se lleva al equipo; revisor `sonnet` solo en resúmenes. Ante decisiones, la opción recomendada (autorización permanente de Julian).
 
-## Estado al corte (2026-11-28 04:35 UTC)
+## Estado al corte (2026-11-28 05:20 UTC)
 
-### PRs
+### PRs abiertos
 
-#95 a #108 **fusionados**. Abierto: #109 (`m6r/postman` → `main`, colección de Postman del backend, pedida por Julian a las 04:54 UTC; se fusiona junto con U08). El #6 es antiguo y no se toca.
+| PR | Rama → base | Contenido |
+|---|---|---|
+| #109 | `m6r/postman` → `main` | Colección de Postman. Se fusiona junto con U08 |
 
-### En vuelo
+### Tareas en curso (todas salen de `main` `8306ee7`)
 
-**Sesión local de Julian (04:55 UTC):** tareas `U08-A-cluster-guardia-rbac.md` (`eedd724`) y `U08-B-backend-ingress-imagenes.md` (`73f5a26`) escritas (commit `c454107`). **U08-A: codificador ronda 1 completo en `4799a82` (código en `3a738aa`), 10 de 10 CA; `kind-synkra` y `kind-registry` arriba con la base aplicada; kubeconfig en `../wt-m6r-U08-A/.kube/kind-synkra.yaml`. Revisor ronda 1 en vuelo (06:00 UTC).** Antes, BLOQUEADA: código escrito en `c3fcff0`, pero `kind create cluster` falla en la máquina de Julian por `fs.inotify.max_user_instances=128` («Too many open files»; lo consumen sus otros clústeres). Hace falta que Julian corra `sudo sysctl fs.inotify.max_user_instances=512` (o pare un clúster suyo); después, redespachar al codificador de U08-A para correr los CA de clúster (`bitacoras/U08-A-evidencia/caN.sh`). **En vuelo:** codificador ronda 1 de U08-A (terminado, bloqueado) y de U08-B (`../wt-m6r-U08-B`, `m6r/U08-B`; ronda 1 NO-VERDE: F-01 NARANJA, `verificar-imagenes.sh` sale a la red sin `--pull=never`; ronda 2 NO-VERDE: F-06 NARANJA, el chequeo de versiones de la decisión 10 ya no puede fallar; codificador ronda 3 hecho en `a2b9abd` (código en `63c85b9`), **revisor ronda 3 en vuelo** (última antes de llevarlo al equipo), base `8306ee7`), las dos desde `8306ee7`; U09-A (`../wt-m6r-U09-A`, `m6r/U09-A`, tarea `16d8ea7`; ronda 1 NO-VERDE: F-01 NARANJA, cinco comportamientos de las decisiones 7 y 12 sin prueba; ronda 2 NO-VERDE por F-06 ROJO (el CA-2 escrito ya no se cumplía tras el arbitraje de F-03); el orquestador enmendó el CA-2 (ver `audit.md`); **revisor ronda 3 en vuelo** sobre el mismo código (`bfbe91b`), base `8306ee7`; commit `f7a0410`; U09-T01+T02+T06; reparto propuesto para el resto: U09-B = T03, U09-C = T04+T07+T08, U09-D = T05+T09; el front corre en paralelo con U08 y se construye con la imagen `mcr.microsoft.com/dotnet/sdk`, porque no hay .NET instalado). Si una rama no tiene commits del codificador, redespacharlo; si los tiene, revisor ronda 1. U08 corre en la máquina de Julian: `kind` v0.33, `kubectl`, puertos 80, 443 y 5001 libres; sus clústeres `gitops2` y `m08-gitops1` no se tocan.
+| Tarea | Worktree / rama | Estado | Qué hacer al retomar |
+|---|---|---|---|
+| U08-A clúster, guardia, namespaces, RBAC (T01 a T04) | `../wt-m6r-U08-A`, `m6r/U08-A` | Codificador ronda 1 completo en `4799a82` (código en `3a738aa`), 10 de 10 CA. **`kind-synkra` y `kind-registry` están ARRIBA** con la base aplicada; kubeconfig del proyecto en `../wt-m6r-U08-A/.kube/kind-synkra.yaml`. **Revisor ronda 1 en vuelo** | Si no hay `revisiones/U08-A/ronda-1.md` en la rama: repetir el revisor (base `8306ee7`, HEAD `4799a82`) |
+| U08-B backend, Ingress con TLS, imágenes (T05 a T07) | `../wt-m6r-U08-B`, `m6r/U08-B` | Ronda 1 NO-VERDE (red sin `--pull=never`), ronda 2 NO-VERDE (el chequeo de versiones no podía fallar). Codificador ronda 3 en `a2b9abd` (código en `63c85b9`). **Revisor ronda 3 en vuelo** | Si no hay `revisiones/U08-B/ronda-3.md`: repetir el revisor ronda 3. Si sale NO-VERDE, la tarea llega a la ronda 4: parar y llevarla al equipo |
+| U09-A proyecto Blazor, cliente de la API, Vista general (T01+T02+T06) | `../wt-m6r-U09-A`, `m6r/U09-A` | Ronda 1 NO-VERDE (5 comportamientos sin prueba), ronda 2 NO-VERDE solo porque el CA-2 escrito no se cumplía tras el arbitraje de F-03: **el orquestador enmendó el CA-2** (hash nuevo `d5a5ff4`, ver `audit.md`). Código sin cambios (`c41f004`, HEAD `bfbe91b`). **Revisor ronda 3 en vuelo** | Si no hay `revisiones/U09-A/ronda-3.md`: repetir el revisor ronda 3 con la tarea enmendada |
+| U08-C y U08-D (redacción) | `tareas/` de `orq/U05-U02-tareas` | Un ayudante (`general-purpose`) las está redactando | Si no existen `tareas/U08-C-install-limite.md` y `tareas/U08-D-e2e-api.md`, redactarlas con U08-A y U08-B como plantilla y contrato |
 
 ## Lo que sigue (en orden)
 
-1. `git fetch`; comprobar que `main` sigue en `8306ee7` o después y que `orq/U05-U02-tareas` tiene el cierre de U07.
-2. **U08 en la máquina de David** (en la de Julian no hay `kind`). Agrupación propuesta, por escribir en `tareas/`:
-   - **U08-A** = T01+T02+T03+T04: clúster `kind` `synkra` y registro `kind-registry` en `localhost:5001`, guardia de contexto del `Makefile`, namespaces, RBAC sin ClusterRole.
-   - **U08-B** = T05+T06+T07: PVC y Deployment del backend, overlay `kind` con Ingress `synkra.local` y TLS, imágenes multi-stage sin root (ver C-95, C-98, C-101, C-103). En paralelo con U08-A, con reparto de archivos fijado para no chocar (p. ej. el `Makefile` solo para U08-A).
-   - **U08-C** = T08+T09: `make install` y `make verificar-limite` (sobre la unión de A y B).
-   - **U08-D** = T10+T11: `scripts/e2e-api.sh` (CU1 a CU5) y formato único de error.
-   - **U08-E** = T12: resumen (revisor `sonnet`).
-   - Reglas que las tareas deben fijar: el único clúster es `kind-synkra` (AUTONOMIA-01); **kubeconfig propio del proyecto** (`KUBECONFIG=$PWD/.kube/kind-synkra.yaml`, ignorado por git; nunca `~/.kube/config`); la guardia comprueba el contexto de ese archivo; sin `sudo` ni `/etc/hosts` (`curl --resolve`); recursos en el `trap` antes de crearlos.
-   - Herramientas en la máquina de David: `kind` v0.33, `kubectl`, `docker`, `make`, `jq`, `curl`, `python3` con PyYAML 6; imágenes `kindest/node:v1.37.0` y `registry` en caché. **No hay `yq` ni `kubeconform`**: usar `kubectl kustomize | python3 -I` y `kubectl apply --dry-run=server` (desviación del plan) en vez de descargarlos.
-   - El plan de U08 dice que la Parte 2 lleva **aviso previo a Julian**: con Julian al mando, queda cumplido.
-3. Al cerrar U08: plan marcado, línea de Code Generation Parte 2 en `aidlc-state.md`, `audit.md`.
-4. U09 (front) solo si sobra tiempo; si no, la demo es con `curl`.
-5. Pendiente de decidir con el equipo: pulido de U04 (C-57, C-60, C-61, C-63, C-65 a C-67); de U01/U02 (C-77, C-78, C-80, C-84 a C-86, C-88, C-89, C-96, C-99, C-100, C-105); de U05 (C-93, C-94, C-97, C-102, C-104); imágenes en U08 (C-95, C-98, C-101, C-103); de U06 y U07 (C-90, C-106 a C-128 abiertas, ver los resúmenes de U06 y U07).
-
----
+1. Cerrar U08-A, U08-B y U09-A (guardar cada informe tal cual, PR a `main` con la VERDE, asignado a Jacarrilloc). Las de U08 las **fusiona el orquestador** (pedido de Julian); U09-A también puede fusionarse si sale VERDE.
+2. **U08-C** (`make install` y `make verificar-limite`, T08+T09): sale de la **unión** de `m6r/U08-A` y `m6r/U08-B` (o de `main` tras fusionarlas). Usa el clúster `kind-synkra` que dejó U08-A.
+3. **U08-D** (`scripts/e2e-api.sh` de CU1 a CU5 con `curl --resolve synkra.local:443:127.0.0.1` y formato único de error, T10+T11): sale de U08-C.
+4. **U08-E** (resumen de U08, T12, revisor `sonnet`). Después: fusionar U08 y el #109 a `main`, cierre de U08 (plan marcado, `aidlc-state.md`, `audit.md`) y **mensaje a Julian con las instrucciones para correr SynKra en `kind`** (`make install`, `curl --resolve`, Postman con `baseUrlKind`, el `sysctl` de inotify si hay otros clústeres `kind`, C-130).
+5. U09 en paralelo con U08-C a U08-E. Reparto propuesto: **U09-B** = T03 (Catálogo); **U09-C** = T04+T07+T08 (Desplegar, imagen, manifiesto; el arranque de F-04 de U09-A va aquí); **U09-D** = T05+T09 (Detalle, resumen). Aplicar C-133 (escape con `/` y `?`) y C-134 (comprobar uso, no texto de la clave).
+6. Pendiente de decidir con el equipo: pulido de U04, de U01/U02, de U05, de imágenes en U08 y de U06/U07 (ver los resúmenes y `CANDIDATAS.md`).
 
 ## Puntos de continuidad (metodología de varios commits)
 
@@ -98,9 +94,9 @@ U01 a U07 están **terminadas y fusionadas en `main`** (`8306ee7`, 894 pruebas e
 
 ## Reglas del entorno
 
-- **Máquina de Julian**: no hay `java` en el PATH: `JAVA_HOME=~/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2` (aarch64). Docker funciona sin arrancar `dockerd`. `gh` configurado con Jacarrilloc; `git push` funciona.
+- **Máquina de Julian**: `kind` v0.33, `kubectl` v1.37, `make`, `jq`; sin SDK de .NET (U09 usa `scripts/dotnet-docker.sh` con la imagen `mcr.microsoft.com/dotnet/sdk:10.0.404`). No hay `java` en el PATH: `JAVA_HOME=~/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2` (aarch64). Docker funciona sin arrancar `dockerd`. `gh` configurado con Jacarrilloc; `git push` funciona.
 - **Máquina de David**: JDK 25 en el PATH; Java 21 lo provisiona Gradle en `~/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2` (x86_64). `git push` por HTTPS con `credential.https://github.com.helper '!gh auth git-credential'` en la config del repo. `kind`, `kubectl` y `docker` disponibles.
-- **Nada de `kubectl` ni de clúster real.** Solo el servidor simulado de Fabric8, con `kubeconfig`, `KUBECONFIG`, `HOME` y `user.home` falsos (`mktemp -d`), y `GRADLE_USER_HOME` real.
+- **Nada de `kubectl` ni de clúster real salvo `kind-synkra` en U08** (AUTONOMIA-01): solo con el kubeconfig del proyecto (`$PWD/.kube/kind-synkra.yaml`), nunca `~/.kube/config`; los clústeres `kind` de Julian (`gitops2`, `m08-gitops1`) no se tocan ni se listan. Fuera de U08, solo el servidor simulado de Fabric8, con `kubeconfig`, `KUBECONFIG`, `HOME` y `user.home` falsos (`mktemp -d`), y `GRADLE_USER_HOME` real.
 - No hay cliente `sqlite3`: se lee con `python3 -I -c "import sqlite3..."`.
 - Nada de `git stash` para el «rojo primero»: copia (`git archive HEAD | tar -x -C $(mktemp -d)`) o worktree temporal.
 - Pasar `</dev/null` a `git commit` y a `gh`.
