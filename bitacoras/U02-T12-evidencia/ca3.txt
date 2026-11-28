@@ -1,8 +1,16 @@
-sha=19b9683
- bitacoras/U02-T12-evidencia/ca1.txt  | 38 +++++++++++++++
- bitacoras/U02-T12-evidencia/ca2.txt  | 10 ++++
- bitacoras/U02-T12-evidencia/rojo.txt |  3 ++
- bitacoras/U02-T12.md                 | 19 ++++++++
- core/smoke.sh                        | 95 ++++++++++++++++++++++++++++++++++++
- 5 files changed, 165 insertions(+)
-100755 c9a2cccc9228ab8dea3df01bc5e915881f99fe67 0	core/smoke.sh
+$ git rev-parse --short HEAD
+1cfe87d
+$ git diff --stat 28a6ac3...HEAD
+ bitacoras/U02-T12-evidencia/ca1.txt       |  96 +++++++++++++++++++++++++++
+ bitacoras/U02-T12-evidencia/ca2.txt       |  10 +++
+ bitacoras/U02-T12-evidencia/ca3.txt       |   8 +++
+ bitacoras/U02-T12-evidencia/f01-rojo.txt  |   5 ++
+ bitacoras/U02-T12-evidencia/f01-verde.txt |   6 ++
+ bitacoras/U02-T12-evidencia/f02.txt       |   5 ++
+ bitacoras/U02-T12-evidencia/rojo.txt      |   3 +
+ bitacoras/U02-T12.md                      |  20 ++++++
+ core/smoke.sh                             | 106 ++++++++++++++++++++++++++++++
+ revisiones/U02-T12/ronda-1.md             |  71 ++++++++++++++++++++
+ 10 files changed, 330 insertions(+)
+$ git ls-files -s core/smoke.sh
+100755 1d29c7862ad216fc33f70143296a6881368aa93b 0	core/smoke.sh

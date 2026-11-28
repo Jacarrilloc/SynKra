@@ -1,0 +1,4 @@
+F-01: Corregido en 1cfe87d: todo comando externo fuera de un if (docker run, docker port, curl, docker wait, docker logs, preparar) convierte su fallo en `falla "$caso" <motivo>` y el script sigue; par falla-pasa con la mutación del revisor en `f01-rojo.txt` (sin mensaje, salida=7, caso 2 no corre) y `f01-verde.txt` (FALLA caso1, caso 2 corre, salida=1).
+F-02: Corregido en 1cfe87d: el chequeo exige el par exacto nombre kyc-pe con versión 1.3.0 en el mismo elemento; `f02.txt` muestra que rechaza el cuerpo engañoso y acepta el real.
+F-03: Corregido en 1cfe87d: el cuerpo y los logs se leen a variable y se busca con `grep <<<`, sin pipe bajo pipefail.
+F-04: Corregido en 1cfe87d: línea vieja de CA-3 borrada, `ca1.txt` con el docker build completo sin recorte, `ca2.txt` muestra la definición de $D.
