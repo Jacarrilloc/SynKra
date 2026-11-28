@@ -1,0 +1,12 @@
+@page "/despliegues/{Id:long}"
+@page "/paises/{Pais}"
+
+<PageTitle>Detalle · SynKra</PageTitle>
+
+<h1>Detalle</h1>
+
+@code {
+    [Parameter] public long? Id { get; set; }
+
+    [Parameter] public string? Pais { get; set; }
+}

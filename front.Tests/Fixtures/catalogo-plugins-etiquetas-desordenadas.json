@@ -1,0 +1,15 @@
+[
+  {
+    "core": "synkra-core",
+    "nombre": "kyc-co",
+    "version": "1.0.0",
+    "coreCompatible": "2.x",
+    "etiquetas": {
+      "pais": "co",
+      "cliente": "e2e",
+      "Zona": "norte"
+    },
+    "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "tamano": 1111
+  }
+]

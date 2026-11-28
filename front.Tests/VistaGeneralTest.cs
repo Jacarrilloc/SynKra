@@ -158,4 +158,38 @@ public class VistaGeneralTest : BunitContext
         Assert.Equal(["pais: El país debe ser un código de dos letras en minúscula (S4)"], items);
         Assert.Empty(cut.FindAll("table"));
     }
+
+    [Fact]
+    public void PaisEnlazaASuHistorial()
+    {
+        Paises(ManejadorHttpSimulado.Fixture("paises-dos.json"));
+
+        var cut = Pinta();
+
+        cut.WaitForAssertion(() => cut.Find("tr[data-pais='co']"));
+        var enlace = cut.Find("tr[data-pais='co'] td[data-campo='pais'] a");
+        Assert.Equal("paises/co", enlace.GetAttribute("href"));
+        Assert.Equal("co", enlace.TextContent.Trim());
+        Assert.Equal("paises/pe", cut.Find("tr[data-pais='pe'] td[data-campo='pais'] a").GetAttribute("href"));
+    }
+
+    [Fact]
+    public void UltimoDespliegueEnlazaAlDetalle()
+    {
+        Paises(ManejadorHttpSimulado.Fixture("paises-dos.json"));
+
+        var cut = Pinta();
+
+        cut.WaitForAssertion(() => cut.Find("tr[data-pais='co']"));
+        var enlace = cut.Find("tr[data-pais='co'] td[data-campo='ultimoDespliegueId'] a");
+        Assert.Equal("despliegues/7", enlace.GetAttribute("href"));
+        Assert.Equal("#7", enlace.TextContent.Trim());
+
+        _m.Responde(HttpMethod.Get, "/api/paises", HttpStatusCode.OK, ManejadorHttpSimulado.Fixture("paises-sin-despliegue.json"));
+        var otra = Render<VistaGeneral>();
+        otra.WaitForAssertion(() => otra.Find("tr[data-pais='mx']"));
+        var celda = otra.Find("tr[data-pais='mx'] td[data-campo='ultimoDespliegueId']");
+        Assert.Equal("—", celda.TextContent.Trim());
+        Assert.Empty(celda.QuerySelectorAll("a"));
+    }
 }
