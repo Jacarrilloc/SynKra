@@ -1,0 +1,50 @@
+fecha: 2026-11-28T05:12:20-05:00
+$ bash bitacoras/U09-D-evidencia/ca8.sh
+064410f
+0
+ bitacoras/U09-D-evidencia/blazor-antes.txt   |   6 +
+ bitacoras/U09-D-evidencia/blazor-despues.txt |   6 +
+ bitacoras/U09-D-evidencia/blazor.sh          |  10 +
+ bitacoras/U09-D-evidencia/ca1.sh             |  16 +
+ bitacoras/U09-D-evidencia/ca1.txt            |  23 ++
+ bitacoras/U09-D-evidencia/ca2.sh             |   9 +
+ bitacoras/U09-D-evidencia/ca2.txt            | 255 ++++++++++++++
+ bitacoras/U09-D-evidencia/ca3.sh             |   9 +
+ bitacoras/U09-D-evidencia/ca3.txt            |  52 +++
+ bitacoras/U09-D-evidencia/ca4.sh             |  15 +
+ bitacoras/U09-D-evidencia/ca4.txt            |  16 +
+ bitacoras/U09-D-evidencia/ca5.sh             |  11 +
+ bitacoras/U09-D-evidencia/ca5.txt            |  21 ++
+ bitacoras/U09-D-evidencia/ca6.sh             |  37 ++
+ bitacoras/U09-D-evidencia/ca6.txt            |  77 ++++
+ bitacoras/U09-D-evidencia/ca7-mutacion.sh    |   7 +
+ bitacoras/U09-D-evidencia/ca7-mutacion.txt   | 246 +++++++++++++
+ bitacoras/U09-D-evidencia/ca7-variante.sh    |  16 +
+ bitacoras/U09-D-evidencia/ca7-variante.txt   | 252 ++++++++++++++
+ bitacoras/U09-D-evidencia/ca7.sh             |  20 ++
+ bitacoras/U09-D-evidencia/ca7.txt            | 504 +++++++++++++++++++++++++++
+ bitacoras/U09-D-evidencia/ca8.sh             |   9 +
+ bitacoras/U09-D-evidencia/corre.sh           |  13 +
+ bitacoras/U09-D-evidencia/rojo.txt           |  46 +++
+ bitacoras/U09-D.md                           |  53 +++
+ deploy/base/front/deployment.yaml            |  76 ++++
+ deploy/base/front/kustomization.yaml         |   5 +
+ deploy/base/front/service.yaml               |  17 +
+ deploy/base/kustomization.yaml               |   1 +
+ deploy/overlays/kind/front-kind.yaml         |  11 +
+ deploy/overlays/kind/ingress-front.yaml      |  24 ++
+ deploy/overlays/kind/kustomization.yaml      |   5 +
+ front/.dockerignore                          |   3 +
+ front/Dockerfile                             |  23 ++
+ front/Synkra.Front.csproj                    |   1 +
+ scripts/desplegar.sh                         |  72 ++--
+ scripts/imagenes.sh                          |  10 +-
+ scripts/verificar-backend.py                 |  32 +-
+ scripts/verificar-base.py                    |   5 +-
+ scripts/verificar-front.py                   | 161 +++++++++
+ scripts/verificar-imagenes.sh                |  25 +-
+ 41 files changed, 2149 insertions(+), 51 deletions(-)
+fuera=1
++    <Version>0.1.0</Version>
+0
+0
