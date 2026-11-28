@@ -1024,3 +1024,125 @@ Se despacha el codificador de la ronda 2.
 ## 2026-11-28T03:48Z: fusión de #106 (U07-F) y #107 (rama del orquestador)
 
 **Acción del orquestador:** bajo la autorización de David de las 01:25:21Z, fusión de #106 (U07-F, reversión, VERDE en la ronda 3) y de #107 (rama del orquestador: cierre de U06, plan de U03, tareas U07-E a U07-G, candidatas C-121 a C-127), para que U07-G salga de un `main` con todo eso. Resultado de `./gradlew test --rerun check` en la sección siguiente.
+
+**Resultado (#106 y #107):** `main` en `2f47340`; `./gradlew test --rerun check` pasó (`salida=0`; 891 pruebas, 0 saltos, 0 fallos, 0 errores). U07-G sale de `2f47340`.
+
+## 2026-11-28T04:23Z: fusión de #108 y cierre de U07
+
+**Acción del orquestador:** bajo la autorización de David de las 01:25:21Z, fusión de #108 (U07-G, fronteras y resumen) en `8306ee7`, `MERGEABLE`/`CLEAN`. Con `main` en `8306ee7`, `./gradlew test --rerun check` pasó (`salida=0`; 894 pruebas, 0 saltos, 0 fallos, 0 errores). U07 queda terminada: se marcan U07-T01 a T13 en el plan y se actualiza la línea de Code Generation Parte 2 en `aidlc-state.md`. Siguiente: U08 en `kind-synkra`, según lo aprobado por David a las 01:29:47Z.
+
+## 2026-11-28T04:31:59Z: David pausa el loop para que Julian continúe
+
+**Input del usuario:** "Pausemos, y dejemoes que mi compañero continue"
+
+**Acción del orquestador:** se detuvo el redactor de U08-A y U08-B (no dejó archivos). No hay agentes corriendo ni clúster creado. `loop/CONTINUAR.md` queda al día con el punto de retomar (U08 por escribir) en `orq/U05-U02-tareas`.
+
+## 2026-11-28T04:40Z: Julian retoma desde el punto de David
+
+**Input del usuario (04:35:04Z):** "en una sesion en otra cuenta, david adelantó el proyecto quiero que leas el puinto de recuperacion del trabajo que dice la sesion de david "Punto de retomar para Julian: el último commit de loop/CONTINUAR.md en la rama orq/U05-U02-tareas, ya en GitHub. Lo da git log -1 --format=%h -- loop/CONTINUAR.md (hoy es 6994ff1)." y sigue con el trabajo, intentemos terminar lo mas pronto posible"
+
+**Acción del orquestador:** `orq/U05-U02-tareas` local avanzada a `ab090d0`; `main` en `8306ee7`. La máquina de Julian tiene `kind` v0.33, `kubectl` v1.37 y los puertos 80, 443 y 5001 libres, así que U08 corre aquí y no en la de David. Solo se crea el clúster `kind-synkra` con kubeconfig propio del proyecto (`$PWD/.kube/kind-synkra.yaml`); los clústeres `gitops2` y `m08-gitops1` de Julian no se tocan (AUTONOMIA-01).
+
+## 2026-11-28T04:54:49Z: Julian pide fusionar U08 y una colección de Postman
+
+**Input del usuario:** "cuando el u8 este completo, fusionalo al main y dame las instrucciones para correrlo, y de paso genera una postman collection para probar todo el backend"
+
+**Acción del orquestador:** cuando cada PR de U08 salga VERDE, el orquestador lo fusiona en `main` (merge commit, en orden). La colección de Postman se genera desde las rutas reales del backend en `main` y va en su propia rama y PR.
+
+## 2026-11-28T05:09:09Z: Julian sube el límite de inotify
+
+**Input del usuario:** "ya ejecute el comando y salio esto ... fs.inotify.max_user_instances = 512 fs.inotify.max_user_watches = 524288"
+
+**Acción del orquestador:** se redespacha al codificador de U08-A para crear `kind-synkra` y correr los criterios que necesitan clúster.
+
+## 2026-11-28T06:10Z: enmienda del CA-2 de U09-A
+
+**Acción del orquestador:** el arbitraje de F-03 (ronda 1 de U09-A) pidió quitar el comentario de `Program.cs` que solo existía para un `grep`, y con eso el CA-2 escrito ya no podía cumplirse (F-06, ROJO de la ronda 2). Cambiar el criterio es del orquestador: el CA-2 comprueba ahora la clave en `appsettings.json` y `ConfiguracionApi.cs`, y el **uso** en `Program.cs` (`ConfiguracionApi.UrlBase` y `AddHttpClient`). Nuevo hash de la tarea: `d5a5ff409c3f520da348c01bc08f238cfe4bbb8c`. Se repite el revisor (ronda 3) sobre el mismo código.
+
+## 2026-11-28T05:21:55Z: David retoma tras la sesión de Julian
+
+**Input del usuario (05:20:28Z):** "Revisa lo que esta hecho ya que mi compañero no alcanzo a actualizar el continue pero se que ya tenia delantadas cosas de U08"
+
+**Input del usuario (05:21:55Z):** "La sesion si esta detenida, aunque es probable que el continue no este del todo actualizado con el progreso que llevaba"
+
+**Acción del orquestador:** `git fetch`; las ramas `m6r/U08-A`, `m6r/U08-B`, `m6r/U09-A` y `orq/U05-U02-tareas` coinciden con `loop/CONTINUAR.md` de Julian (`8709ceb`). Se repiten los tres revisores en vuelo y la redacción de U08-C y U08-D. Se pide permiso a David para descargar las imágenes fijadas por digest.
+
+**Input del usuario (05:23:09Z):** "Listo tiene smi presmiso" (permiso para descargar `kindest/node@sha256:3489c76…`, `eclipse-temurin:21-jre-alpine@sha256:5d7689f…`, `alpine:3.20@sha256:d9e853e…`, `mcr.microsoft.com/dotnet/sdk:10.0.404` y, en U08-C, el Ingress NGINX).
+
+**Input del usuario (05:24:55Z):** salida de `sudo sysctl fs.inotify.max_user_instances=512 fs.inotify.max_user_watches=524288`.
+
+**Acción del orquestador:** imágenes descargadas; revisores de U09-A (ronda 3) y U08-A (ronda 1) despachados.
+
+## 2026-11-28T05:31:12Z: enmienda del CA-1 de U09-A (máquina de David)
+
+**Pregunta del orquestador:** U09-A salió NO-VERDE en la ronda 3 solo por el CA-1, que esperaba `arm64` y «sin SDK local» (hechos de la máquina de Julian). Recomendación: enmendar el CA-1 y correr una ronda 4 corta solo de ese criterio.
+
+**Input del usuario:** "No solo va correr en mi maquina así que simplifiquemos is en mi maquina corre y deberia de funcionar sin probelmas entonces mejor que mejor"
+
+**Acción del orquestador:** el CA-1 espera ahora `amd64` (máquina de David) y deja de comprobar «sin SDK local»; que `scripts/dotnet-docker.sh --version` dé `10.0.404` (y no el 10.0.115 del sistema) muestra que se usó el contenedor. Nuevo hash de la tarea: `0d01d83a7c08a791f308010c8fb6c4cd692e418e`. Ronda 4 del revisor limitada al CA-1, por decisión de David.
+
+## 2026-11-28T05:34Z: fusión de #110 (U09-A)
+
+**Acción del orquestador:** U09-A salió VERDE en la ronda 4 corta (solo el CA-1 enmendado). Bajo la autorización de David de las 01:25:21Z (y el pedido de Julian de fusionar U09-A si salía VERDE), fusión de #110 en `0910a09`, `MERGEABLE`/`CLEAN`. El diff solo toca `front/`, `front.Tests/`, `scripts/dotnet-docker.sh`, bitácoras y revisiones: el backend no cambia, así que no se repite `./gradlew check`; el revisor corrió las 29 pruebas del front en la ronda 3 y el CA-1 en la 4.
+
+## 2026-11-28T05:35Z: fusión de #111 (U08-A)
+
+**Acción del orquestador:** U08-A salió VERDE en la ronda 2. Fusión de #111 en `2eb1fe7` (las fusiones de U08 las hace el orquestador, pedido de Julian; autorización de David de las 01:25:21Z), `MERGEABLE`/`CLEAN`. No toca el backend (solo `Makefile`, `deploy/`, `scripts/` y `.gitignore`), así que no se repite `./gradlew check`; el revisor corrió sus diez criterios en esta máquina. `kind-synkra` queda arriba con el kubeconfig `../wt-m6r-U08-A/.kube/kind-synkra.yaml`.
+
+## 2026-11-28T05:43Z: fusión de #112 (U08-B); tareas U08-C y U08-D
+
+**Acción del orquestador:** U08-B salió VERDE en la ronda 3. Fusión de #112 en `05a709e`, `MERGEABLE`/`CLEAN`; `./gradlew test --rerun check` pasó (`salida=0`; 894 pruebas, 0 saltos, 0 fallos). Se commitean las tareas U08-C (`make install` y `make verificar-limite`, Ingress NGINX `controller-v1.15.1` por URL fija y sha256) y U08-D (e2e por la API, con la corrección de C-138: un cambio solo de plugins no reiniciaba el core). U08-C sale de `05a709e`, que ya es la unión de U08-A y U08-B.
+
+## 2026-11-28T06:20Z: fusión de #113 (U08-C)
+
+**Acción del orquestador:** U08-C salió VERDE en la ronda 3 (las rondas 1 y 2 fueron solo por la regla de la evidencia que comprueba que todo `kubectl` lleva `--kubeconfig`; el código no cambió desde la ronda 1). Fusión de #113 en `367e09f`, `MERGEABLE`/`CLEAN`. No toca el backend (`Makefile`, `deploy/`, `scripts/`), así que no se repite `./gradlew check`; el revisor corrió `make install` sobre un `kind` recién creado en esta máquina. U08-D sale de `367e09f`.
+
+## 2026-11-28T06:27:54Z a 06:30:50Z: David pone a marchar el resto del front (U09) en paralelo con U08
+
+**Input del usuario (06:27:54Z):** "Por cierto veo que tenemos codigo blazor, ya esta listo el front?? si no pongamoslo a marchar"
+
+**Input del usuario (06:29:22Z):** "No se si sea necesario que se libere  U08, no podemos paralelizar??"
+
+**Input del usuario (06:29:37Z):** "Y no sueltes U8 hasta que termines"
+
+**Input del usuario (06:30:50Z):** "Si sube los agete y por el moento sigamos tu recomendacion de que U09 trabaje en lo que no entra enconflicto con U8 y cuando este terminado U( si vamos con esa parte de U9"
+
+**Acción del orquestador:** el tope sube de 3 a **4 agentes en paralelo**. U08 sigue con prioridad y el clúster `kind-synkra` es de U08 hasta cerrarla; U09-B, U09-C y la parte de U09-D que no usa el clúster (imagen y manifiesto validado sin aplicar) corren a la par; el criterio de U09-D en `kind` se corre al cerrar U08. Redactor de U09-B a U09-E en vuelo.
+
+**Input del usuario (06:31:21Z):** "Si descarga" (imagen base de ASP.NET para U09-D). **Acción:** `docker pull mcr.microsoft.com/dotnet/aspnet:10.0.15` (la versión de runtime que trae el SDK 10.0.404).
+
+**Input del usuario (06:52:49Z):** "Si autorizo" (descarga de `Microsoft.AspNetCore.App.Internal.Assets` 10.0.15 de nuget.org dentro del `docker build` del front, U09-D).
+
+## 2026-11-28T06:58:50Z: autorización de David para seguir mientras duerme
+
+**Input del usuario:** "ya me voy  a dormir, toma las acciones recomendadas, si llegas a necesitar algo, claro siempre y cuando todo sea en un limite razonable y se mantenga dentro de los lineamientos de proyectoy el contexto que tienes"
+
+**Acción del orquestador:** se sigue con las acciones recomendadas dentro de los lineamientos (AUTONOMIA-01, solo `kind-synkra`, sin `sudo`, sin descargas nuevas no declaradas, fusiones por tandas de lo VERDE). Lo que pida a una persona (el recorrido de U09-E en el navegador, con `/etc/hosts`) se deja preparado y se le pide al despertar. Una tarea que llegue a la ronda 4 se para y se anota para David.
+
+## 2026-11-28T07:03Z: U09-D, primera parte (sin clúster)
+
+**Acción del orquestador:** el codificador de U09-D terminó la parte sin clúster en `5cbaa9d` (código en `2cd582c`): CA-2 a CA-6 verificados; CA-1, CA-7 y CA-8 pendientes hasta la unión de U09-B y U09-C y el cierre de U08. **Arbitraje:** se acepta la desviación de la decisión 4 (`COPY . .` antes de `dotnet restore` en lugar de copiar solo el `.csproj`), porque sin los `.razor` y `wwwroot` el SDK web no restaura `Microsoft.AspNetCore.App.Internal.Assets` y `/_framework/blazor.web.js` daba 404; `ca4.sh` ahora comprueba que responde 200.
+
+## 2026-11-28T07:04Z: enmienda del CA-5 de U09-B y U09-C
+
+**Acción del orquestador:** el codificador de U09-B señaló que la decisión 6 (cabecera `<th>Core compatible</th>`) y el segundo `grep` del CA-5 (decisión 10, `resto=1`) se contradicen. Cambiar el criterio es del orquestador: el `grep` ignora ahora el texto visible entre etiquetas (`th`, `td`, `span`, `label`, `caption`, `h1-h6`), que no es una regla de versión. La misma enmienda se aplica a U09-C, que tiene el mismo patrón. Hashes nuevos: U09-B `d8040d5f4ea6778623ee254cff508bb223b6eb07`, U09-C `81b92afc69bc8ba3e1c402f0ab8eca2d2eb36777`. Otras notas del codificador de U09-B (mutación «filtra» reforzada, «enlace-vista» con `@($"#{id}")`, `[Parameter]` en el rojo, dos fixtures nuevos) se dejan al revisor.
+
+## 2026-11-28T07:12Z: fusión de #114 (U09-B)
+
+**Acción del orquestador:** U09-B salió VERDE en la ronda 1. Fusión de #114 en `00c54ef` (autorización de David de las 01:25:21Z y 06:58:50Z), `MERGEABLE`/`CLEAN`. Solo toca `front/` y `front.Tests/`: no se repite `./gradlew check`; el revisor corrió las 64 pruebas del front.
+
+## 2026-11-28T08:01Z: fusión de #115 (U09-C)
+
+**Acción del orquestador:** U09-C salió VERDE en la ronda 2. Fusión de #115 en `5e00878`, `MERGEABLE`/`CLEAN` (solo `front/` y `front.Tests/`; el revisor corrió las 117 pruebas de la unión con U09-B). U09-D sigue con la parte que necesita la unión (CA-1 y CA-4) sin tocar el clúster.
+
+## 2026-11-28T08:03Z: enmienda de U09-D (CA-1 y decisión 4)
+
+**Acción del orquestador:** el codificador de U09-D hizo la unión (merge de `main` `5e00878` en `72949f7`) y corrió CA-1: conteos 25/21/21 y 117 (por las pruebas que pidió el arbitraje de U09-C) y `resto=0` por la cabecera `<th>Core compatible</th>`. Se enmienda U09-D como U09-B y U09-C: el `grep` `resto` ignora el texto visible entre etiquetas, y los conteos pasan a 25/21/21 y 117. La decisión 4 se enmienda con la desviación ya aceptada (`COPY . .` antes del `restore`). Nuevo hash: `529ca4f3faaa8c5176f77029b96d0770baad67e5`.
+
+## 2026-11-28T09:10Z: fusión de #116 (U08-D) y #109 (Postman); tarea U08-E
+
+**Acción del orquestador:** U08-D salió VERDE en la ronda 2. Fusión de #116 en `37e89a0`; `./gradlew test --rerun check` pasó (`salida=0`; 897 pruebas, 0 saltos, 0 fallos). Fusión de #109 (colección de Postman, pedido de Julian) en `4881428`. Se escribe U08-E: resumen de U08 y `GUIA.md` (instalación y uso, prometida a David y Julian), con una corrida fresca en esta máquina. Hash: `e4db42567c8de575c596e5a5d609857e709d3979`. Revisor `sonnet`.
+
+## 2026-11-28T10:01Z: fusión de #117 y cierre de U08
+
+**Acción del orquestador:** U08-E salió VERDE en la ronda 1. Fusión de #117 en `ecd4c45` (solo documentación). U08 queda terminada: se marcan U08-T01 a T12 en el plan y se actualiza la línea de Code Generation Parte 2 en `aidlc-state.md`. La guía de uso está en `GUIA.md`. El clúster `kind-synkra` pasa a U09-D para su criterio en el clúster.
