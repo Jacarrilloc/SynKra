@@ -1,0 +1,236 @@
+# fecha: 2026-11-28T04:51:17Z  sha: f8f1c42  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca4.sh
+$ bash scripts/imagenes.sh; echo "imagenes=$?"
++ ./gradlew :backend:bootJar :core:bootJar
+> Task :verificador:compileJava UP-TO-DATE
+> Task :backend:compileJava UP-TO-DATE
+> Task :backend:processResources UP-TO-DATE
+> Task :backend:classes UP-TO-DATE
+> Task :backend:resolveMainClassName UP-TO-DATE
+> Task :verificador:processResources NO-SOURCE
+> Task :verificador:classes UP-TO-DATE
+> Task :verificador:jar UP-TO-DATE
+> Task :backend:bootJar UP-TO-DATE
+> Task :plugin-api:compileJava UP-TO-DATE
+> Task :core:compileJava UP-TO-DATE
+> Task :core:processResources UP-TO-DATE
+> Task :core:classes UP-TO-DATE
+> Task :core:resolveMainClassName UP-TO-DATE
+> Task :plugin-api:processResources NO-SOURCE
+> Task :plugin-api:classes UP-TO-DATE
+> Task :plugin-api:jar UP-TO-DATE
+> Task :core:bootJar UP-TO-DATE
+
+[Incubating] Problems report is available at: file:///home/julian/Escritorio/Proyectos/wt-m6r-U08-B/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 1s
+12 actionable tasks: 12 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
++ docker build -t localhost:5001/synkra-backend:0.1.0 backend
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.23kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 164B done
+#3 DONE 0.0s
+
+#4 [capas 1/4] FROM docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
+#4 resolve docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70 done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 107B done
+#5 DONE 0.0s
+
+#6 [capas 3/4] COPY build/libs/backend-*.jar /jars/
+#6 CACHED
+
+#7 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
+#7 CACHED
+
+#8 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
+#8 CACHED
+
+#9 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
+#9 CACHED
+
+#10 [capas 2/4] WORKDIR /app
+#10 CACHED
+
+#11 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un backend-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/backend-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
+#11 CACHED
+
+#12 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
+#12 CACHED
+
+#13 [stage-1 7/7] RUN addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H synkra  && mkdir /data && chown 10001:10001 /data
+#13 CACHED
+
+#14 exporting to image
+#14 exporting layers done
+#14 exporting manifest sha256:2d2c4d2ce61ebb1add0780cf792f90181fb982ddcb265c654fc97b4ae96d950f done
+#14 exporting config sha256:c8780ab1a3a90fe6a2290de4026a02f814a8a62142f1613ce66a645df8c94b3b done
+#14 exporting attestation manifest sha256:8337f042d4bcc171386bfb19558d4d321ec1ba275a64b88d76fb6dac9e0f0899 done
+#14 exporting manifest list sha256:e614317d28b2e213333423a4469ca7a60c9aa9a25f598ce53a53bee3060c1658 done
+#14 naming to localhost:5001/synkra-backend:0.1.0 done
+#14 unpacking to localhost:5001/synkra-backend:0.1.0 done
+#14 DONE 0.0s
++ docker build -t localhost:5001/synkra-core-ejemplo:2.1.0 core
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.47kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 161B done
+#3 DONE 0.0s
+
+#4 [capas 1/4] FROM docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
+#4 resolve docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 104B done
+#5 DONE 0.0s
+
+#6 [capas 3/4] COPY build/libs/core-*.jar /jars/
+#6 CACHED
+
+#7 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
+#7 CACHED
+
+#8 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
+#8 CACHED
+
+#9 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
+#9 CACHED
+
+#10 [capas 2/4] WORKDIR /app
+#10 CACHED
+
+#11 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un core-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/core-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
+#11 CACHED
+
+#12 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
+#12 CACHED
+
+#13 [stage-1 7/7] RUN addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins /config
+#13 CACHED
+
+#14 exporting to image
+#14 exporting layers done
+#14 exporting manifest sha256:1332c3009fc6d8aa070aed08b06edd110af6a5b1a0a9928cc1b09357aded9ef7 done
+#14 exporting config sha256:ab1a1cec78778fc39b2041797ac661ea0c1867a71de8c34071196785963cc03c done
+#14 exporting attestation manifest sha256:d8adf57f51eb9910833960116fb7da8b038ee7297d2d127cebcd1afd18412f20 0.0s done
+#14 exporting manifest list sha256:7d57e7d359f907b2af8e6ecdeb642b6264be90940b46eb0865a4224387462c3e done
+#14 naming to localhost:5001/synkra-core-ejemplo:2.1.0 done
+#14 unpacking to localhost:5001/synkra-core-ejemplo:2.1.0 done
+#14 DONE 0.1s
++ docker build -t localhost:5001/synkra-init-descarga:1.0.0 init-descarga
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.13kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 57B done
+#3 DONE 0.0s
+
+#4 [revision 1/4] FROM docker.io/library/alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc
+#4 resolve docker.io/library/alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 34B done
+#5 DONE 0.0s
+
+#6 [stage-1 2/3] RUN apk add --no-cache curl  && addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins && chmod 0755 /config  && apk del --no-cache apk-tools
+#6 CACHED
+
+#7 [revision 2/4] RUN apk add --no-cache shellcheck
+#7 CACHED
+
+#8 [revision 4/4] RUN shellcheck -s sh /descargar.sh
+#8 CACHED
+
+#9 [revision 3/4] COPY descargar.sh /descargar.sh
+#9 CACHED
+
+#10 [stage-1 3/3] COPY --from=revision --chmod=0555 /descargar.sh /usr/local/bin/descargar.sh
+#10 CACHED
+
+#11 exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:89eab0d6d8a5b5a81875d43eff3d09bd019b64bc1798471a2c365dd901e2751f done
+#11 exporting config sha256:57ed701fc9ba5538c1dd22d63d1205e90bab98b060f028211ede8bc7de7a064e done
+#11 exporting attestation manifest sha256:1e60d51a55f6d4cc75e5e9979245bd019f2ffd4f196ae20f90bab9ec7f5be1d2 done
+#11 exporting manifest list sha256:1aef4bcb46225d87d235c3e48b0a3680326344cbe9e6b5e21def43d15514a053 done
+#11 naming to localhost:5001/synkra-init-descarga:1.0.0 done
+#11 unpacking to localhost:5001/synkra-init-descarga:1.0.0 done
+#11 DONE 0.0s
+OK imagenes construidas con prefijo localhost:5001
+imagenes=0
+$ for i in synkra-backend:0.1.0 synkra-core-ejemplo:2.1.0 synkra-init-descarga:1.0.0; do docker image inspect -f "{{index .RepoTags 0}} user={{.Config.User}} arch={{.Architecture}}" localhost:5001/$i; done
+localhost:5001/synkra-backend:0.1.0 user=10001:10001 arch=arm64
+localhost:5001/synkra-core-ejemplo:2.1.0 user=10001:10001 arch=arm64
+localhost:5001/synkra-init-descarga:1.0.0 user=10001:10001 arch=arm64
+$ docker version -f '{{.Server.Arch}}'
+arm64
+$ bash scripts/verificar-imagenes.sh; echo "verificar=$?"
+ok backend/Dockerfile FROM
+ok backend/Dockerfile FROM
+ok core/Dockerfile FROM
+ok core/Dockerfile FROM
+ok init-descarga/Dockerfile FROM
+ok init-descarga/Dockerfile FROM
+ok localhost:5001/synkra-init-descarga:1.0.0 etiqueta
+ok localhost:5001/synkra-backend:0.1.0 User
+ok localhost:5001/synkra-backend:0.1.0 id-u
+ok localhost:5001/synkra-backend:0.1.0 arquitectura
+ok localhost:5001/synkra-core-ejemplo:2.1.0 User
+ok localhost:5001/synkra-core-ejemplo:2.1.0 id-u
+ok localhost:5001/synkra-core-ejemplo:2.1.0 arquitectura
+ok localhost:5001/synkra-init-descarga:1.0.0 User
+ok localhost:5001/synkra-init-descarga:1.0.0 id-u
+ok localhost:5001/synkra-init-descarga:1.0.0 arquitectura
+ok localhost:5001/synkra-backend:0.1.0 ExposedPorts
+ok localhost:5001/synkra-core-ejemplo:2.1.0 ExposedPorts
+ok localhost:5001/synkra-core-ejemplo:2.1.0 Volumes
+ok localhost:5001/synkra-init-descarga:1.0.0 Entrypoint
+ok localhost:5001/synkra-init-descarga:1.0.0 sin-apk
+OK imagenes
+verificar=0
+$ grep -n '^FROM' backend/Dockerfile core/Dockerfile init-descarga/Dockerfile
+backend/Dockerfile:3:FROM eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70 AS capas
+backend/Dockerfile:10:FROM eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
+core/Dockerfile:3:FROM eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70 AS capas
+core/Dockerfile:10:FROM eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
+init-descarga/Dockerfile:6:FROM alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc AS revision
+init-descarga/Dockerfile:11:FROM alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc
+$ grep -c '^FROM' init-descarga/Dockerfile backend/Dockerfile core/Dockerfile
+init-descarga/Dockerfile:2
+backend/Dockerfile:2
+core/Dockerfile:2
+$ grep -n 'shellcheck' init-descarga/Dockerfile
+5:# Etapa de revision (C-95): si shellcheck encuentra algo en descargar.sh, el build falla.
+7:RUN apk add --no-cache shellcheck
+9:RUN shellcheck -s sh /descargar.sh

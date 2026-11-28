@@ -1,0 +1,4 @@
+r() { echo "\$ $*"; eval "$@"; }
+r 'kubectl kustomize deploy/base/backend | python3 -I scripts/verificar-backend.py --base; echo "salida=$?"'
+r "kubectl kustomize deploy/base/backend | python3 -I -c \"import sys,yaml; os_=[o for o in yaml.safe_load_all(sys.stdin) if o]; print(sorted((o['kind'], o['metadata']['namespace'], o['metadata']['name']) for o in os_)); d=[o for o in os_ if o['kind']=='Deployment' and o['metadata']['name']=='synkra-backend'][0]; s=d['spec']['template']['spec']; print(d['spec']['strategy']['type'], s['serviceAccountName'], s['automountServiceAccountToken'], s['securityContext']['runAsNonRoot'], s['securityContext']['runAsUser'], s['securityContext']['fsGroup']); print(sorted((m['name'], m['mountPath']) for m in s['containers'][0]['volumeMounts']))\""
+r "kubectl kustomize deploy/base/backend | grep -cE 'kind: Cluster|localhost:5001|SYNKRA_REGISTRO_PERMITIDO'"

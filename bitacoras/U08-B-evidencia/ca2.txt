@@ -1,0 +1,15 @@
+# fecha: 2026-11-28T04:51:17Z  sha: f8f1c42  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca2.sh
+$ kubectl kustomize deploy/overlays/kind > /dev/null; echo "kustomize=$?"
+kustomize=0
+$ kubectl kustomize deploy/overlays/kind | python3 -I scripts/verificar-backend.py; echo "salida=$?"
+OK backend: 4 objetos
+salida=0
+$ kubectl kustomize deploy/overlays/kind | python3 -I -c "import sys,yaml; os_=[o for o in yaml.safe_load_all(sys.stdin) if o]; d=[o for o in os_ if o['kind']=='Deployment'][0]['spec']['template']['spec']['containers'][0]; print(d['image']); print(sorted((e['name'], e['value']) for e in d['env'])); i=[o for o in os_ if o['kind']=='Ingress'][0]['spec']; print(i['ingressClassName'], i['tls']); print([(r['host'], [(p['path'], p['pathType'], p['backend']['service']['name'], p['backend']['service']['port']) for p in r['http']['paths']]) for r in i['rules']])"
+localhost:5001/synkra-backend:0.1.0
+[('JAVA_TOOL_OPTIONS', '-XX:MaxRAMPercentage=70'), ('MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED', 'true'), ('SYNKRA_DATA', '/data'), ('SYNKRA_KUBERNETES_IMAGEN_INIT', 'localhost:5001/synkra-init-descarga:1.0.0'), ('SYNKRA_PAISES', 'co,pe'), ('SYNKRA_REGISTRO_PERMITIDO', 'localhost:5001')]
+nginx [{'hosts': ['synkra.local'], 'secretName': 'synkra-local-tls'}]
+[('synkra.local', [('/api', 'Prefix', 'synkra-backend', {'name': 'http'}), ('/actuator/health', 'Prefix', 'synkra-backend', {'name': 'http'})])]
+$ grep -c 'synkra-front' deploy/overlays/kind/*.yaml
+deploy/overlays/kind/backend-kind.yaml:0
+deploy/overlays/kind/ingress.yaml:0
+deploy/overlays/kind/kustomization.yaml:0

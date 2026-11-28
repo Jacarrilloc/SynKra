@@ -1,0 +1,10 @@
+# fecha: 2026-11-28T04:51:17Z  sha: f8f1c42  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca1.sh
+$ kubectl kustomize deploy/base/backend | python3 -I scripts/verificar-backend.py --base; echo "salida=$?"
+OK backend: 3 objetos
+salida=0
+$ kubectl kustomize deploy/base/backend | python3 -I -c "import sys,yaml; os_=[o for o in yaml.safe_load_all(sys.stdin) if o]; print(sorted((o['kind'], o['metadata']['namespace'], o['metadata']['name']) for o in os_)); d=[o for o in os_ if o['kind']=='Deployment' and o['metadata']['name']=='synkra-backend'][0]; s=d['spec']['template']['spec']; print(d['spec']['strategy']['type'], s['serviceAccountName'], s['automountServiceAccountToken'], s['securityContext']['runAsNonRoot'], s['securityContext']['runAsUser'], s['securityContext']['fsGroup']); print(sorted((m['name'], m['mountPath']) for m in s['containers'][0]['volumeMounts']))"
+[('Deployment', 'synkra', 'synkra-backend'), ('PersistentVolumeClaim', 'synkra', 'synkra-datos'), ('Service', 'synkra', 'synkra-backend')]
+Recreate deployer True True 10001 10001
+[('datos', '/data'), ('tmp', '/tmp')]
+$ kubectl kustomize deploy/base/backend | grep -cE 'kind: Cluster|localhost:5001|SYNKRA_REGISTRO_PERMITIDO'
+0
