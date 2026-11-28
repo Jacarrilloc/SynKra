@@ -1,0 +1,7 @@
+ M bitacoras/U07-B-evidencia/ca1.txt
+ M bitacoras/U07-B-evidencia/ca5-1.txt
+ M bitacoras/U07-B-evidencia/ca5-2.txt
+ M bitacoras/U07-B-evidencia/ca5-3.txt
+ M bitacoras/U07-B-evidencia/ca5-4.txt
+ M bitacoras/U07-B-evidencia/ca5-5.txt
+ M bitacoras/U07-B-evidencia/ca5-6.txt

@@ -1,6 +1,6 @@
 === M5 cluster despues (leerPais antes de verificar)
-2026-11-27T19:58:22-05:00
-sha dd3c3a7
+2026-11-27T20:01:23-05:00
+sha 09439f4
 $ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"
 $ sed -i 's/var verificado = verificacion.verificar(core, versionCore, plugins);/kubernetes.leerPais(pais); var verificado = verificacion.verificar(core, versionCore, plugins);/'  "$D/backend/src/main/java/io/synkra/despliegue/PlanServicio.java"
 $ diff -u (original, mutado)
@@ -31,4 +31,4 @@ pruebas caídas en la clase dueña (CrearPlanTest):
    unCoreNoRegistradoDa422SinFilaNiPeticiones()
    unPaisConSoloElDeploymentDa409SinFila()
 $ rm -rf "$D"
-archivos rastreados modificados en el worktree: 0
+archivos rastreados modificados en el worktree: 5
