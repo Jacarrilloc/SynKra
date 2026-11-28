@@ -1,0 +1,26 @@
+# ROJO F-06 contra 8a6b076: fecha 2026-11-28T05:13:07Z sha 917a238 JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2
+7:version = "0.2.0"
+35:    static final String IMAGEN_INIT_POR_DEFECTO = "localhost:5001/synkra-init-descarga:1.1.0";
+$ SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/imagenes.sh   (copia)
++ ./gradlew :backend:bootJar :core:bootJar
+> Task :verificador:compileJava
+> Task :backend:compileJava
+> Task :backend:processResources
+> Task :backend:classes
+> Task :backend:resolveMainClassName
+> Task :verificador:processResources NO-SOURCE
+> Task :verificador:classes
+imagenes.sh salida=0
+3
+$ bash scripts/verificar-imagenes.sh   (copia, contra las imagenes buenas)
+FALLA localhost:5001/synkra-backend:0.2.0 existe: esperado imagen construida / visto no existe
+FALLA localhost:5001/synkra-init-descarga:1.1.0 existe: esperado imagen construida / visto no existe
+FALLA localhost:5001/synkra-backend:0.2.0 ExposedPorts: esperado 8080/tcp / visto 
+FALLA localhost:5001/synkra-init-descarga:1.1.0 Entrypoint: esperado ["/usr/local/bin/descargar.sh"] / visto 
+FALLA localhost:5001/synkra-init-descarga:1.1.0 sin-apk: esperado  / visto docker: Error response from daemon: No such image: localhost:5001/synkra-init-descarga:1.1.0
+FALLAN 5 comprobaciones
+verificar-imagenes.sh salida=1
+$ kubectl kustomize deploy/overlays/kind | python3 -I scripts/verificar-backend.py   (copia)
+OK backend: 4 objetos
+verificar-backend.py salida=0
+3

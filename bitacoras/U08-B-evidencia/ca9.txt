@@ -1,0 +1,63 @@
+# fecha: 2026-11-28T05:15:38Z  sha: a2b9abd  script: ca9.sh (salida fuera del arbol)
+$ git rev-parse --short HEAD; git status --porcelain | wc -l
+a2b9abd
+0
+$ git diff --stat 8306ee7...HEAD
+ backend/.dockerignore                              |   6 +-
+ backend/Dockerfile                                 |   5 +-
+ bitacoras/U08-B-evidencia/ca1.sh                   |   4 +
+ bitacoras/U08-B-evidencia/ca1.txt                  |  10 +
+ bitacoras/U08-B-evidencia/ca2.sh                   |   5 +
+ bitacoras/U08-B-evidencia/ca2.txt                  |  15 ++
+ bitacoras/U08-B-evidencia/ca3.sh                   |  11 +
+ bitacoras/U08-B-evidencia/ca3.txt                  |  29 +++
+ bitacoras/U08-B-evidencia/ca4-shellcheck.sh        |   4 +
+ bitacoras/U08-B-evidencia/ca4-shellcheck.txt       |  63 ++++++
+ bitacoras/U08-B-evidencia/ca4.sh                   |   9 +
+ bitacoras/U08-B-evidencia/ca4.txt                  | 240 +++++++++++++++++++++
+ bitacoras/U08-B-evidencia/ca5.sh                   |   8 +
+ bitacoras/U08-B-evidencia/ca5.txt                  |  42 ++++
+ .../U08-B-evidencia/ca6-rojo-tmpfs-noexec.txt      |  15 ++
+ bitacoras/U08-B-evidencia/ca6.sh                   |  15 ++
+ bitacoras/U08-B-evidencia/ca6.txt                  |  14 ++
+ bitacoras/U08-B-evidencia/ca7.sh                   |  11 +
+ bitacoras/U08-B-evidencia/ca7.txt                  |  20 ++
+ bitacoras/U08-B-evidencia/ca8.sh                   |  64 ++++++
+ bitacoras/U08-B-evidencia/ca8.txt                  | 222 +++++++++++++++++++
+ bitacoras/U08-B-evidencia/ca9.sh                   |   6 +
+ bitacoras/U08-B-evidencia/ca9.txt                  |  58 +++++
+ bitacoras/U08-B-evidencia/correr.sh                |   8 +
+ bitacoras/U08-B-evidencia/rojo.sh                  |  17 ++
+ bitacoras/U08-B-evidencia/rojo.txt                 |  38 ++++
+ bitacoras/U08-B-evidencia/ronda2-rojo.sh           |  18 ++
+ bitacoras/U08-B-evidencia/ronda2-rojo.txt          |  30 +++
+ bitacoras/U08-B-evidencia/ronda2-verde.sh          |  18 ++
+ bitacoras/U08-B-evidencia/ronda2-verde.txt         |  41 ++++
+ bitacoras/U08-B-evidencia/ronda3-deriva.sh         |  15 ++
+ bitacoras/U08-B-evidencia/ronda3-rojo.txt          |  26 +++
+ bitacoras/U08-B-evidencia/ronda3-verde.txt         |  22 ++
+ bitacoras/U08-B.md                                 | 102 +++++++++
+ core/.dockerignore                                 |   4 +-
+ deploy/base/backend/deployment.yaml                |  91 ++++++++
+ deploy/base/backend/kustomization.yaml             |   6 +
+ deploy/base/backend/pvc.yaml                       |  14 ++
+ deploy/base/backend/service.yaml                   |  17 ++
+ deploy/overlays/kind/backend-kind.yaml             |  15 ++
+ deploy/overlays/kind/ingress.yaml                  |  33 +++
+ deploy/overlays/kind/kustomization.yaml            |  11 +
+ init-descarga/Dockerfile                           |  18 +-
+ revisiones/U08-B/ronda-1-respuesta.md              |   8 +
+ revisiones/U08-B/ronda-1.md                        |  74 +++++++
+ revisiones/U08-B/ronda-2-respuesta.md              |   4 +
+ revisiones/U08-B/ronda-2.md                        |  76 +++++++
+ scripts/certificado-tls.sh                         |  30 +++
+ scripts/imagenes.sh                                |  41 ++++
+ scripts/verificar-backend.py                       | 202 +++++++++++++++++
+ scripts/verificar-imagenes.sh                      |  76 +++++++
+ 51 files changed, 1917 insertions(+), 14 deletions(-)
+$ git diff --name-only 8306ee7...HEAD | grep -v -E '^(deploy/base/backend/(kustomization|pvc|deployment|service)\.yaml|deploy/overlays/kind/(kustomization|backend-kind|ingress)\.yaml|backend/Dockerfile|backend/\.dockerignore|core/\.dockerignore|init-descarga/Dockerfile|scripts/imagenes\.sh|scripts/verificar-imagenes\.sh|scripts/verificar-backend\.py|scripts/certificado-tls\.sh|bitacoras/U08-B\.md|bitacoras/U08-B-evidencia/.*|revisiones/U08-B/.*)$'; echo "fuera=$?"
+fuera=1
+$ git diff --name-only 8306ee7...HEAD -- Makefile .gitignore deploy/kind deploy/base/kustomization.yaml deploy/base/namespaces.yaml deploy/base/rbac.yaml | wc -l
+0
+$ git ls-files | grep -cE '(^|/)tls\.(crt|key)$|\.pem$'
+0

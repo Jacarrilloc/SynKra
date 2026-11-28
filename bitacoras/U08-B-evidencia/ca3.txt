@@ -1,0 +1,29 @@
+# fecha: 2026-11-28T05:13:39Z  sha: 63c85b9  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca3.sh
+$ bash scripts/certificado-tls.sh "$D"; echo "salida=$?"
+OK certificado: /tmp/tmp.Qa7ByQi1B6/tls.crt y /tmp/tmp.Qa7ByQi1B6/tls.key
+salida=0
+$ ls "$D"; stat -c "%a %n" "$D/tls.key"
+tls.crt
+tls.key
+600 /tmp/tmp.Qa7ByQi1B6/tls.key
+$ openssl x509 -in "$D/tls.crt" -noout -subject -ext subjectAltName
+subject=CN=synkra.local
+X509v3 Subject Alternative Name: 
+    DNS:synkra.local
+$ openssl x509 -in "$D/tls.crt" -noout -checkend 86400; echo "vigente=$?"
+Certificate will not expire
+vigente=0
+$ [ "$(openssl x509 -in "$D/tls.crt" -noout -pubkey)" = "$(openssl pkey -in "$D/tls.key" -pubout)" ] && echo "par-ok"
+par-ok
+$ sha256sum "$D/tls.crt" "$D/tls.key" | sed "s|$D|<dir>|"
+eade4467cf11524578efc02420e0f321f45a1d6dcb7b268ecbd5dbdcf433f98d  <dir>/tls.crt
+6e9d96d2e6e9bd98f8c2c10718414e2ff2df5925f9c11ba07755af1e93e37c25  <dir>/tls.key
+$ bash scripts/certificado-tls.sh "$D"; echo "repetido=$?"
+FALLA certificado: ya hay tls.crt o tls.key en /tmp/tmp.Qa7ByQi1B6; no se sobrescriben
+repetido=1
+$ sha256sum "$D/tls.crt" "$D/tls.key" | sed "s|$D|<dir>|"
+eade4467cf11524578efc02420e0f321f45a1d6dcb7b268ecbd5dbdcf433f98d  <dir>/tls.crt
+6e9d96d2e6e9bd98f8c2c10718414e2ff2df5925f9c11ba07755af1e93e37c25  <dir>/tls.key
+$ bash scripts/certificado-tls.sh "$D/no-existe"; echo "sin-dir=$?"
+FALLA certificado: el directorio '/tmp/tmp.Qa7ByQi1B6/no-existe' no existe
+sin-dir=1

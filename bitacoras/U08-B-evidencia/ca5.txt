@@ -1,0 +1,42 @@
+# fecha: 2026-11-28T05:13:42Z  sha: 63c85b9  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca5.sh
+$ docker run --rm --entrypoint id "$I"
+uid=10001(synkra) gid=10001(synkra) groups=10001(synkra)
+$ docker run --rm --entrypoint sh "$I" -c 'command -v apk; echo "apk=$?"; command -v curl sha256sum'
+apk=127
+/usr/bin/curl
+$ docker run --rm --entrypoint sh "$I" -c 'ls -l /usr/local/bin/descargar.sh'
+-r-xr-xr-x    1 root     root          4258 Nov 28 04:48 /usr/local/bin/descargar.sh
+$ [ "$(docker run --rm --entrypoint cat "$I" /usr/local/bin/descargar.sh | sha256sum)" = "$(sha256sum < init-descarga/descargar.sh)" ] && echo "mismo-script"
+mismo-script
+$ docker run --rm --entrypoint sh "$I" -c 'command -v sha256sum'
+/usr/bin/sha256sum
+$ sh init-descarga/test.sh; echo "test=$?"
+ok hash-correcto
+ok hash-alterado
+ok catalogo-caido
+ok http-500
+ok http-404-sin-reintento
+ok nombre-malo(../evil.jar)
+ok nombre-malo(/abs.jar)
+ok nombre-malo(a/b.jar)
+ok nombre-malo(..)
+ok hash-mal-formado
+ok linea-mala-tras-buena
+ok segundo-alterado
+ok dos-correctos
+ok lista-vacia
+ok sin-url
+ok sin-lista
+ok espera-creciente
+ok espera-base-invalida(0.5)
+ok espera-base-invalida(-1)
+ok espera-base-invalida(abc)
+ok linea-vacia-en-medio
+ok enlace-en-temporal-antiguo
+ok enlace-en-destino
+ok enlace-a-archivo-en-destino
+ok plugins-es-enlace
+ok archivo-previo-se-reemplaza
+ok set-eu-presente
+todos los casos ok
+test=0

@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Construye las tres imagenes de SynKra en el Docker local (no sube nada; subir es de U08-C).
+# Uso: JAVA_HOME=<java 21> bash scripts/imagenes.sh
+# Versiones: salen de build.gradle.kts (backend, core) y de IMAGEN_INIT_POR_DEFECTO; scripts/verificar-imagenes.sh lee las mismas.
+# Prefijo: SYNKRA_REGISTRO_IMAGENES (por defecto localhost:5001).
+set -euo pipefail
+
+RAIZ="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$RAIZ"
+REG="${SYNKRA_REGISTRO_IMAGENES:-localhost:5001}"
+JAVA_FUENTE=backend/src/main/java/io/synkra/kubernetes/ConstructorObjetosPais.java
+
+if ! "${JAVA_HOME:-/no/definido}/bin/java" -version 2>&1 | grep -q '"21'; then
+  echo "FALLA entorno: JAVA_HOME (${JAVA_HOME:-sin definir}) no es Java 21" >&2
+  exit 1
+fi
+
+version_gradle() { grep -E '^version *= *"' "$1/build.gradle.kts" | head -1 | sed -E 's/.*"([^"]+)".*/\1/'; }
+VB="$(version_gradle backend)"; VC="$(version_gradle core)"
+VI="$(grep -E 'IMAGEN_INIT_POR_DEFECTO *= *"' "$JAVA_FUENTE" | head -1 | sed -E 's/.*:([^:"]+)".*/\1/')"
+for v in "$VB" "$VC" "$VI"; do
+  [ -n "$v" ] || { echo "FALLA versiones: no se pudo leer una version de build.gradle.kts o de IMAGEN_INIT_POR_DEFECTO" >&2; exit 1; }
+done
+
+# Las versiones de las etiquetas deben coincidir con las del overlay (newTag y SYNKRA_KUBERNETES_IMAGEN_INIT); si no, FALLA versiones.
+KUBECONFIG=/dev/null kubectl kustomize deploy/overlays/kind | python3 -I scripts/verificar-backend.py --versiones \
+  || { echo "FALLA versiones: el overlay de kind no coincide con el origen de las versiones" >&2; exit 1; }
+
+echo "+ ./gradlew :backend:bootJar :core:bootJar"
+./gradlew :backend:bootJar :core:bootJar || { echo "FALLA gradle: ./gradlew :backend:bootJar :core:bootJar salió con $?" >&2; exit 1; }
+
+construir() { # imagen directorio
+  echo "+ docker build -t $1 $2"
+  local rc=0 nombre="${1##*/}"
+  docker build -t "$1" "$2" || rc=$?
+  [ "$rc" -eq 0 ] || { echo "FALLA ${nombre%%:*}: docker build -t $1 $2 salió con $rc" >&2; exit 1; }
+}
+construir "$REG/synkra-backend:$VB" backend
+construir "$REG/synkra-core-ejemplo:$VC" core
+construir "$REG/synkra-init-descarga:$VI" init-descarga
+echo "OK imagenes construidas con prefijo $REG"
