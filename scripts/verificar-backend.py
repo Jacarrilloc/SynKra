@@ -2,7 +2,7 @@
 """Verifica los manifiestos del backend (U08-B).
 
 Uso:
-  kubectl kustomize deploy/overlays/kind | python3 -I scripts/verificar-backend.py   (cuatro del backend + los ocho de la base)
+  kubectl kustomize deploy/overlays/kind | python3 -I scripts/verificar-backend.py   (cuatro del backend + los ocho de la base + los tres del front)
   kubectl kustomize deploy/base/backend  | python3 -I scripts/verificar-backend.py --base
   kubectl kustomize deploy/overlays/kind | python3 -I scripts/verificar-backend.py --versiones   (solo versiones)
 Imprime `OK backend: N objetos` y sale con 0, o una linea `FALLA <regla>: <detalle>` por fallo y sale con 1.
