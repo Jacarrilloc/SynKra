@@ -1,0 +1,90 @@
+2026-11-27T21:04:15-05:00
+ade68f6
+$ git log -1 --format=%H\ %P
+ade68f69b7b1cf8d3ee1135916c4d975ec1a50a3 208d5f95e2a5bb9408b473e7ef185699293a4d9f 5b471bc1d0da422cf73fbfae02b0eddb18a743ff
+$ git ls-files -u | wc -l
+0
+$ git show --cc --format= HEAD | wc -l
+0
+$ git diff f9d38c9 HEAD -- backend/src/main/resources/application.properties | wc -l
+0
+$ git diff 5b471bc HEAD -- backend/src/main/resources/application.properties | wc -l
+0
+$ grep -cx 'synkra.paises=${SYNKRA_PAISES:co,pe}' backend/src/main/resources/application.properties
+0
+$ grep -rlE 'Clock\.system' backend/src/main/java | sort
+backend/src/main/java/io/synkra/plataforma/Reloj.java
+backend/src/main/java/io/synkra/registro/RegistroServicio.java
+$ grep -rnE '^\s*((public|static|protected|private)\s+)*Clock\s+[a-zA-Z]+\s*\(' backend/src/main/java
+backend/src/main/java/io/synkra/plataforma/Reloj.java:12:    Clock reloj() {
+padres: 208d5f9 5b471bc
+f9d38c92a4db48936c45747b63e019c8e30312d0
+5b471bc1d0da422cf73fbfae02b0eddb18a743ff
+$ grep -cxF 'synkra.paises=${SYNKRA_PAISES:co,pe}' application.properties (con -F; el grep -cx literal da 0, ver bitacora)
+1
+$ grep -c synkra.paises
+1
+$ ./gradlew :backend:test --rerun :backend:check
+2026-11-27T21:05:05.633-05:00  INFO 403514 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+
+> Task :backend:check
+
+[Incubating] Problems report is available at: file:///home/casdav/Projects/Master/wt-m6r-U07-D/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 40s
+9 actionable tasks: 9 executed
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
+backend/build/test-results/test/TEST-io.synkra.catalogo.ArtefactosPorHashTest.xml:tests="10" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.CatalogoRepositoriosTest.xml:tests="19" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.CatalogoVerificadorTest.xml:tests="14" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.CoreRegistradoTest.xml:tests="4" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.InterfazCatalogoTest.xml:tests="6" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.ListarPluginsTest.xml:tests="14" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.RecepcionArtefactoTest.xml:tests="67" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.RegistrarCoreTest.xml:tests="19" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.RegistroPermitidoCaracterizacionTest.xml:tests="2" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.RegistroPermitidoTest.xml:tests="7" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.RutasCoresTest.xml:tests="15" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.RutasPluginsTest.xml:tests="28" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.RutasSegurasPropiedades.xml:tests="4" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.SubirPluginTest.xml:tests="52" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.CambiosPropiedades.xml:tests="4" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.CrearPlanTest.xml:tests="9" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.PaisPermitidoTest.xml:tests="6" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.PlanPendienteTest.xml:tests="9" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.PlanRepositorioTest.xml:tests="12" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.VencimientoPlanesTest.xml:tests="2" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.VerificacionVivoTest.xml:tests="15" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.FronterasModulosTest.xml:tests="12" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.AplicarTest.xml:tests="10" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.ClienteKubernetesTest.xml:tests="10" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.ConfiguracionKubernetesTest.xml:tests="2" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.ConstruirObjetosPaisTest.xml:tests="32" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.EstadoYContextoTest.xml:tests="20" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.GuardiaNamespaceTest.xml:tests="22" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.ImagenInitCaracterizacionTest.xml:tests="2" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.ImagenInitConfiguradaTest.xml:tests="3" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.LeerPaisTest.xml:tests="24" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.YamlObjetosPaisTest.xml:tests="2" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.plataforma.BaseDeDatosTest.xml:tests="4" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.plataforma.DialectoSqliteTest.xml:tests="6" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.plataforma.ErrorApiTest.xml:tests="13" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.plataforma.RelojTest.xml:tests="1" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.plataforma.RepositorioSqliteTest.xml:tests="4" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.plataforma.RutaDatosPorDefectoTest.xml:tests="1" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.plataforma.SaludTest.xml:tests="3" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.plataforma.ValidacionErroresTest.xml:tests="8" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.registro.ContextoFalloTest.xml:tests="9" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.registro.HistorialTest.xml:tests="8" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.registro.PaisesConfiguradosTest.xml:tests="5" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.registro.RegistroReinicioTest.xml:tests="1" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.registro.RegistroRepositoriosTest.xml:tests="13" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.registro.TransicionesRegistroTest.xml:tests="18" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.registro.VistaGeneralTest.xml:tests="12" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.SynkraAppTest.xml:tests="3" skipped="0" failures="0" errors="0"
