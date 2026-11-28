@@ -1,0 +1,23 @@
+2026-11-27T19:29:54-05:00
+6c472f4
+$ ./gradlew :backend:test --rerun --tests "*PaisPermitidoTest"  (sin PaisPermitido)
+
+> Task :backend:compileTestJava FAILED
+/home/julian/Escritorio/Proyectos/wt-m6r-U07-A/backend/src/test/java/io/synkra/despliegue/PaisPermitidoTest.java:37: error: cannot find symbol
+    @Autowired PaisPermitido paises;
+               ^
+  symbol:   class PaisPermitido
+  location: class PaisPermitidoTest
+/home/julian/Escritorio/Proyectos/wt-m6r-U07-A/backend/src/test/java/io/synkra/despliegue/PaisPermitidoTest.java:93: error: cannot find symbol
+        assertThat(new PaisPermitido("co, pe").exigir("pe")).isEqualTo("pe");
+                       ^
+  symbol:   class PaisPermitido
+  location: class PaisPermitidoTest
+/home/julian/Escritorio/Proyectos/wt-m6r-U07-A/backend/src/test/java/io/synkra/despliegue/PaisPermitidoTest.java:99: error: cannot find symbol
+            assertThatThrownBy(() -> new PaisPermitido(v)).isInstanceOf(IllegalStateException.class)
+                                         ^
+  symbol:   class PaisPermitido
+--
+Execution failed for task ':backend:compileTestJava' (registered by plugin class 'org.gradle.api.plugins.JavaBasePlugin').
+> Compilation failed; see the compiler output below.
+  /home/julian/Escritorio/Proyectos/wt-m6r-U07-A/backend/src/test/java/io/synkra/despliegue/PaisPermitidoTest.java:37: error: cannot find symbol

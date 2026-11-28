@@ -1,6 +1,6 @@
 # Plan de tareas: U07 Despliegue y reversión
 
-> **Parte 1 de Code Generation.** No se ejecuta en el módulo 5; la Parte 2 requiere aprobación y aviso previo a Julian.
+> **Parte 1 de Code Generation.** No se ejecuta en el módulo 5; la Parte 2 requiere aprobación y aviso previo al responsable del proyecto.
 
 Raíz del proyecto. Añade el paquete `despliegue` a `backend/` y la migración `V4__despliegue.sql`.
 Las tareas van en capas (plan → confirmación → vigilancia → reversión), cada una con su prueba.

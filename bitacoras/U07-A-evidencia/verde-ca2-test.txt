@@ -1,0 +1,7 @@
+2026-11-27T19:30:13-05:00
+6c472f4
+$ ./gradlew :backend:test --rerun --tests "*PaisPermitidoTest"
+[Incubating] Problems report is available at: file:///home/julian/Escritorio/Proyectos/wt-m6r-U07-A/build/reports/problems/problems-report.html
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+BUILD SUCCESSFUL in 4s
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
