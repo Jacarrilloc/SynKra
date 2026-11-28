@@ -1,5 +1,5 @@
-fecha: 2026-11-28T02:02:24-05:00
-sha: 2cd582c 0 cambios de codigo sin confirmar
+fecha: 2026-11-28T03:01:49-05:00
+sha: 72949f7 0 cambios de codigo sin confirmar
 uname -m: x86_64
 docker arch: amd64
 JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
@@ -9,7 +9,7 @@ $ bash bitacoras/U09-D-evidencia/ca2.sh
 10001:10001
 plan=0
 Untagged: localhost:5001/synkra-front:latest
-Deleted: sha256:175dabd1e61d1ec9c7cf0c77baf93de1b0104bfd8fb4529aaeccb5225dc4947e
+Deleted: sha256:308609dbaeb5ee704eea3dc2e5e5817bb62aa7d81f3a4f1304669ddc03cc3246
 OK versiones: backend 0.1.0, init 1.0.0, front 0.1.0
 + ./gradlew :backend:bootJar :core:bootJar
 > Task :verificador:compileJava UP-TO-DATE
@@ -39,7 +39,7 @@ You can use '--warning-mode all' to show the individual deprecation warnings and
 
 For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD SUCCESSFUL in 832ms
+BUILD SUCCESSFUL in 834ms
 12 actionable tasks: 12 up-to-date
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
 + docker build --provenance=false --sbom=false -t localhost:5001/synkra-backend:0.1.0 backend
@@ -61,28 +61,28 @@ Consider enabling configuration cache to speed up this build: https://docs.gradl
 #4 DONE 0.0s
 
 #5 [internal] load build context
-#5 transferring context: 68.07MB 0.1s done
+#5 transferring context: 68.07MB 0.2s done
 #5 DONE 0.2s
 
-#6 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
+#6 [capas 3/4] COPY build/libs/backend-*.jar /jars/
 #6 CACHED
 
-#7 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
+#7 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
 #7 CACHED
 
-#8 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
+#8 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
 #8 CACHED
 
 #9 [capas 2/4] WORKDIR /app
 #9 CACHED
 
-#10 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un backend-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/backend-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
+#10 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
 #10 CACHED
 
-#11 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
+#11 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un backend-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/backend-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
 #11 CACHED
 
-#12 [capas 3/4] COPY build/libs/backend-*.jar /jars/
+#12 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
 #12 CACHED
 
 #13 [stage-1 7/7] RUN addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H synkra  && mkdir /data && chown 10001:10001 /data
@@ -93,8 +93,9 @@ Consider enabling configuration cache to speed up this build: https://docs.gradl
 #14 exporting manifest sha256:38d18ff75383d719a077c95a97f3a3d9e67b5074fdce0a0ec5d223075857b549 done
 #14 exporting config sha256:02559b94e69330441e01badfd9549ea1e710f2b77d6b088fce0ae9d6ab7a3ca9 done
 #14 naming to localhost:5001/synkra-backend:0.1.0 done
-#14 unpacking to localhost:5001/synkra-backend:0.1.0 done
-#14 DONE 0.0s
+#14 unpacking to localhost:5001/synkra-backend:0.1.0
+#14 unpacking to localhost:5001/synkra-backend:0.1.0 0.2s done
+#14 DONE 0.2s
 + docker build --provenance=false --sbom=false -t localhost:5001/synkra-core-ejemplo:2.1.0 core
 #0 building with "default" instance using docker driver
 
@@ -114,28 +115,28 @@ Consider enabling configuration cache to speed up this build: https://docs.gradl
 #4 DONE 0.0s
 
 #5 [internal] load build context
-#5 transferring context: 24.15MB 0.0s done
-#5 DONE 0.1s
+#5 transferring context: 24.15MB 0.1s done
+#5 DONE 0.2s
 
-#6 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
+#6 [capas 2/4] WORKDIR /app
 #6 CACHED
 
-#7 [capas 2/4] WORKDIR /app
+#7 [capas 3/4] COPY build/libs/core-*.jar /jars/
 #7 CACHED
 
-#8 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
+#8 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un core-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/core-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
 #8 CACHED
 
-#9 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
+#9 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
 #9 CACHED
 
-#10 [capas 3/4] COPY build/libs/core-*.jar /jars/
+#10 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
 #10 CACHED
 
-#11 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un core-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/core-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
+#11 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
 #11 CACHED
 
-#12 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
+#12 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
 #12 CACHED
 
 #13 [stage-1 7/7] RUN addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins /config
@@ -176,10 +177,10 @@ Consider enabling configuration cache to speed up this build: https://docs.gradl
 #7 [revision 2/4] RUN apk add --no-cache shellcheck
 #7 CACHED
 
-#8 [revision 3/4] COPY descargar.sh /descargar.sh
+#8 [revision 4/4] RUN shellcheck -s sh /descargar.sh
 #8 CACHED
 
-#9 [revision 4/4] RUN shellcheck -s sh /descargar.sh
+#9 [revision 3/4] COPY descargar.sh /descargar.sh
 #9 CACHED
 
 #10 [stage-1 3/3] COPY --from=revision --chmod=0555 /descargar.sh /usr/local/bin/descargar.sh
@@ -199,41 +200,41 @@ Consider enabling configuration cache to speed up this build: https://docs.gradl
 #1 transferring dockerfile: 1.49kB done
 #1 DONE 0.0s
 
-#2 [internal] load metadata for mcr.microsoft.com/dotnet/aspnet:10.0.15@sha256:aac50ceef10391e78a899e3d2ccd00bbafa2dcb56ccf4586cbccf00edb84fc21
+#2 [internal] load metadata for mcr.microsoft.com/dotnet/sdk:10.0.404@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
 #2 DONE 0.0s
 
-#3 [internal] load metadata for mcr.microsoft.com/dotnet/sdk:10.0.404@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
+#3 [internal] load metadata for mcr.microsoft.com/dotnet/aspnet:10.0.15@sha256:aac50ceef10391e78a899e3d2ccd00bbafa2dcb56ccf4586cbccf00edb84fc21
 #3 DONE 0.0s
 
 #4 [internal] load .dockerignore
 #4 transferring context: 66B done
 #4 DONE 0.0s
 
-#5 [build 1/5] FROM mcr.microsoft.com/dotnet/sdk:10.0.404@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
-#5 resolve mcr.microsoft.com/dotnet/sdk:10.0.404@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d 0.0s done
+#5 [stage-1 1/3] FROM mcr.microsoft.com/dotnet/aspnet:10.0.15@sha256:aac50ceef10391e78a899e3d2ccd00bbafa2dcb56ccf4586cbccf00edb84fc21
+#5 resolve mcr.microsoft.com/dotnet/aspnet:10.0.15@sha256:aac50ceef10391e78a899e3d2ccd00bbafa2dcb56ccf4586cbccf00edb84fc21 0.0s done
 #5 DONE 0.0s
 
-#6 [stage-1 1/3] FROM mcr.microsoft.com/dotnet/aspnet:10.0.15@sha256:aac50ceef10391e78a899e3d2ccd00bbafa2dcb56ccf4586cbccf00edb84fc21
-#6 resolve mcr.microsoft.com/dotnet/aspnet:10.0.15@sha256:aac50ceef10391e78a899e3d2ccd00bbafa2dcb56ccf4586cbccf00edb84fc21 0.0s done
+#6 [build 1/5] FROM mcr.microsoft.com/dotnet/sdk:10.0.404@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
+#6 resolve mcr.microsoft.com/dotnet/sdk:10.0.404@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d 0.0s done
 #6 DONE 0.0s
 
 #7 [internal] load build context
-#7 transferring context: 874B done
+#7 transferring context: 1.31kB done
 #7 DONE 0.0s
 
-#8 [build 5/5] RUN dotnet publish -c Release -o /app --no-restore
+#8 [stage-1 2/3] WORKDIR /app
 #8 CACHED
 
-#9 [build 3/5] COPY . .
+#9 [build 4/5] RUN dotnet restore
 #9 CACHED
 
-#10 [build 4/5] RUN dotnet restore
+#10 [build 2/5] WORKDIR /src
 #10 CACHED
 
-#11 [stage-1 2/3] WORKDIR /app
+#11 [build 5/5] RUN dotnet publish -c Release -o /app --no-restore
 #11 CACHED
 
-#12 [build 2/5] WORKDIR /src
+#12 [build 3/5] COPY . .
 #12 CACHED
 
 #13 [stage-1 3/3] COPY --from=build /app .
@@ -241,10 +242,10 @@ Consider enabling configuration cache to speed up this build: https://docs.gradl
 
 #14 exporting to image
 #14 exporting layers done
-#14 exporting manifest sha256:9c8fcdfc0f9a72aebb52fb73ebd668f4cd0185551a4cf20a9be9b85af6690aba done
-#14 exporting config sha256:e66984c999bb9854423395e3d1b8f3d342ece37094913a82a3fa892ae8181338 done
+#14 exporting manifest sha256:d1d80b7a3418e937e9974d80402c1870e5d7185ae9295cc2952c69423e4e1313 done
+#14 exporting config sha256:bfe9899eb7364e5a7e8358d878e4740fa4b0702f06222d55a308ed7119754b0f done
 #14 naming to localhost:5001/synkra-front:0.1.0 done
-#14 unpacking to localhost:5001/synkra-front:0.1.0 done
+#14 unpacking to localhost:5001/synkra-front:0.1.0 0.0s done
 #14 DONE 0.0s
 OK imagenes construidas con prefijo localhost:5001
 imagenes=0

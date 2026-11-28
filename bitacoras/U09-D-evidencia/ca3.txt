@@ -1,5 +1,5 @@
-fecha: 2026-11-28T02:02:28-05:00
-sha: 2cd582c 0 cambios de codigo sin confirmar
+fecha: 2026-11-28T03:02:00-05:00
+sha: 72949f7 0 cambios de codigo sin confirmar
 uname -m: x86_64
 docker arch: amd64
 JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
@@ -43,10 +43,10 @@ etapa=0
 0
 Microsoft.AspNetCore.App 10.0.15 [/usr/share/dotnet/shared/Microsoft.AspNetCore.App]
 Microsoft.NETCore.App 10.0.15 [/usr/share/dotnet/shared/Microsoft.NETCore.App]
-total 204
--rwxr-xr-x 1 0 0 78192 Nov 28 06:57 Synkra.Front
--rw-r--r-- 1 0 0   408 Nov 28 06:58 Synkra.Front.deps.json
--rw-r--r-- 1 0 0 43520 Nov 28 06:57 Synkra.Front.dll
--rw-r--r-- 1 0 0 35752 Nov 28 06:57 Synkra.Front.pdb
+total 324
+-rwxr-xr-x 1 0 0  78192 Nov 28 08:01 Synkra.Front
+-rw-r--r-- 1 0 0    408 Nov 28 08:01 Synkra.Front.deps.json
+-rw-r--r-- 1 0 0 125952 Nov 28 08:01 Synkra.Front.dll
+-rw-r--r-- 1 0 0  75408 Nov 28 08:01 Synkra.Front.pdb
 touch: cannot touch '/app/x': Permission denied
 escribe=1

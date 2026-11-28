@@ -1,10 +1,10 @@
-fecha: 2026-11-28T02:02:39-05:00
-sha: 2cd582c 0 cambios de codigo sin confirmar
+fecha: 2026-11-28T03:02:14-05:00
+sha: 72949f7 0 cambios de codigo sin confirmar
 uname -m: x86_64
 docker arch: amd64
 JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
 $ bash bitacoras/U09-D-evidencia/ca6.sh
-id-antes=sha256:9c8fcdfc0f9a72aebb52fb73ebd668f4cd0185551a4cf20a9be9b85af6690aba
+id-antes=sha256:d1d80b7a3418e937e9974d80402c1870e5d7185ae9295cc2952c69423e4e1313
 === user-0 :: sed -i 's/^USER .*/USER 0/' front/Dockerfile
 imagenes=0
 FALLA mutacion.local:1/synkra-front:0.1.0 User: esperado 10001:10001 / visto 0
@@ -73,5 +73,5 @@ FALLA versiones: SYNKRA_KUBERNETES_IMAGEN_INIT None, IMAGEN_INIT_POR_DEFECTO dic
 versiones=1
 === orden del render (Deployments)
 ['synkra-backend', 'synkra-front']
-id-despues=sha256:9c8fcdfc0f9a72aebb52fb73ebd668f4cd0185551a4cf20a9be9b85af6690aba
+id-despues=sha256:d1d80b7a3418e937e9974d80402c1870e5d7185ae9295cc2952c69423e4e1313
 imagen-buena-intacta
