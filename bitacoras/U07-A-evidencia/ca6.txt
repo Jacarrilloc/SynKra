@@ -1,0 +1,50 @@
+2026-11-27T19:32:40-05:00
+$ git rev-parse --short HEAD
+000f0ed
+$ git diff --stat 97f9f80...HEAD
+ .../plans/U07-despliegue-code-generation-plan.md   |   2 +-
+ .../io/synkra/despliegue/CodigosDespliegue.java    |  10 ++
+ .../io/synkra/despliegue/MotivosDespliegue.java    |  12 ++
+ .../java/io/synkra/despliegue/PaisPermitido.java   |  66 ++++++++++
+ .../src/main/java/io/synkra/despliegue/Plan.java   |  42 ++++++
+ .../java/io/synkra/despliegue/PlanRepositorio.java |  13 ++
+ .../java/io/synkra/despliegue/package-info.java    |   2 +
+ backend/src/main/resources/application.properties  |   3 +
+ .../main/resources/db/migration/V4__despliegue.sql |  22 ++++
+ .../io/synkra/despliegue/PaisPermitidoTest.java    | 104 +++++++++++++++
+ .../io/synkra/despliegue/PlanRepositorioTest.java  | 146 +++++++++++++++++++++
+ bitacoras/U07-A-evidencia/ca1-ca2-ca3.txt          |  32 +++++
+ bitacoras/U07-A-evidencia/ca1.txt                  |  19 +++
+ bitacoras/U07-A-evidencia/ca4.txt                  |  67 ++++++++++
+ bitacoras/U07-A-evidencia/ca5.txt                  |  41 ++++++
+ bitacoras/U07-A-evidencia/rojo-ca1.txt             |  63 +++++++++
+ bitacoras/U07-A-evidencia/rojo-ca2.txt             |  23 ++++
+ bitacoras/U07-A-evidencia/verde-ca1-test.txt       |  31 +++++
+ bitacoras/U07-A-evidencia/verde-ca2-test.txt       |   7 +
+ bitacoras/U07-A.md                                 |  40 ++++++
+ 20 files changed, 744 insertions(+), 1 deletion(-)
+$ git diff 97f9f80...HEAD -- application.properties plan
+diff --git a/aidlc-docs/construction/plans/U07-despliegue-code-generation-plan.md b/aidlc-docs/construction/plans/U07-despliegue-code-generation-plan.md
+index bd88219..feff4c5 100644
+--- a/aidlc-docs/construction/plans/U07-despliegue-code-generation-plan.md
++++ b/aidlc-docs/construction/plans/U07-despliegue-code-generation-plan.md
+@@ -1,6 +1,6 @@
+ # Plan de tareas: U07 Despliegue y reversión
+ 
+-> **Parte 1 de Code Generation.** No se ejecuta en el módulo 5; la Parte 2 requiere aprobación y aviso previo a Julian.
++> **Parte 1 de Code Generation.** No se ejecuta en el módulo 5; la Parte 2 requiere aprobación y aviso previo al responsable del proyecto.
+ 
+ Raíz del proyecto. Añade el paquete `despliegue` a `backend/` y la migración `V4__despliegue.sql`.
+ Las tareas van en capas (plan → confirmación → vigilancia → reversión), cada una con su prueba.
+diff --git a/backend/src/main/resources/application.properties b/backend/src/main/resources/application.properties
+index 7ecfdc2..da10a96 100644
+--- a/backend/src/main/resources/application.properties
++++ b/backend/src/main/resources/application.properties
+@@ -28,3 +28,6 @@ synkra.registro-permitido=${SYNKRA_REGISTRO_PERMITIDO:}
+ # U05-T03: imagen del init container de los pods de país (registro con punto, puerto o localhost, y tag o digest;
+ # nunca :latest). Sin valor, el defecto vive solo en ConstructorObjetosPais.IMAGEN_INIT_POR_DEFECTO.
+ # Se sobrescribe con SYNKRA_KUBERNETES_IMAGEN_INIT. Un valor inválido hace fallar el arranque.
++
++# R-D1 y R-R7: países permitidos (dos letras en minúscula, separados por comas); SYNKRA_PAISES lo sobrescribe; inválido = no arranca.
++synkra.paises=${SYNKRA_PAISES:co,pe}
+ultimo commit de codigo: 6fde709 (los posteriores solo tocan bitacoras/)
