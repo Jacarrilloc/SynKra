@@ -14,7 +14,11 @@ import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
 import io.synkra.kubernetes.api.PlanPais;
 import io.synkra.kubernetes.api.PlanPais.PluginPlan;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Comparator;
+import java.util.HexFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -72,6 +76,12 @@ final class ConstructorObjetosPais {
     static final String SUFIJO_JAR = ".jar";
     /** Separador entre el sha256 y el nombre del jar en cada línea de {@link #CLAVE_ARTEFACTOS}. */
     static final String SEPARADOR_ARTEFACTO = " ";
+    /**
+     * Anotación de la plantilla del pod con el sha256 (hex, minúsculas) de los bytes UTF-8 de {@link #CLAVE_PLUGINS}, un {@code "\n"} y
+     * {@link #CLAVE_ARTEFACTOS}: si cambian solo los plugins, la plantilla cambia y el Deployment recrea el pod (C-138). El core lee los
+     * plugins y el init descarga los jar solo al arrancar.
+     */
+    static final String ANOTACION_CONFIG_SHA256 = "synkra.io/config-sha256";
 
     /** Nombre del jar de un plugin: la clave que une una entrada de {@link #CLAVE_PLUGINS} con su línea de {@link #CLAVE_ARTEFACTOS}. */
     static String nombreJar(String nombre, String version) {
@@ -96,7 +106,18 @@ final class ConstructorObjetosPais {
         List<PluginPlan> plugins = plan.plugins().stream()
                 .sorted(Comparator.comparing(PluginPlan::nombre).thenComparing(PluginPlan::version))
                 .toList();
-        return new ObjetosPaisFabric8(deployment(plan, namespace, imagenInit), configMap(plugins, namespace), service(namespace));
+        ConfigMap config = configMap(plugins, namespace);
+        return new ObjetosPaisFabric8(deployment(plan, namespace, imagenInit, shaConfig(config)), config, service(namespace));
+    }
+
+    /** sha256 hexadecimal de {@code plugins-activos.yaml + "\n" + artefactos.txt}, los textos que van al ConfigMap. */
+    private static String shaConfig(ConfigMap config) {
+        String texto = config.getData().get(CLAVE_PLUGINS) + "\n" + config.getData().get(CLAVE_ARTEFACTOS);
+        try {
+            return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(texto.getBytes(StandardCharsets.UTF_8)));
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("SHA-256 no está disponible en esta JVM", e);
+        }
     }
 
     private static Map<String, String> etiquetaGestor() {
@@ -168,7 +189,7 @@ final class ConstructorObjetosPais {
                 .build();
     }
 
-    private static Deployment deployment(PlanPais plan, String namespace, String imagenInit) {
+    private static Deployment deployment(PlanPais plan, String namespace, String imagenInit, String shaConfig) {
         return new DeploymentBuilder()
                 .withNewMetadata().withName(NOMBRE_CORE).withNamespace(namespace).withLabels(etiquetaGestor()).endMetadata()
                 .withNewSpec()
@@ -177,6 +198,7 @@ final class ConstructorObjetosPais {
                 .withNewTemplate()
                 .withNewMetadata()
                 .addToLabels(ETIQUETA_NOMBRE, NOMBRE_CORE).addToLabels(ETIQUETA_GESTOR, GESTOR)
+                .addToAnnotations(ANOTACION_CONFIG_SHA256, shaConfig)
                 .endMetadata()
                 .withNewSpec()
                 .withAutomountServiceAccountToken(false)
