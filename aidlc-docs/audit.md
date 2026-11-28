@@ -918,3 +918,37 @@ Se despacha el codificador de la ronda 2.
 **Context**: Loop del módulo 6, ola 33, fuera de las etapas de AI-DLC.
 
 ---
+
+## Vuelta a la regla de fusión de David; PRs #77 a #83 fusionados; U02-T07 VERDE
+**Timestamp**: 2026-11-27T21:51:06Z
+**User Input**: "Volvamos a la reggla y ademas si en algunmomento necesito que pausemos, podemos hacerlo??"
+**AI Response**: Se vuelve a la regla de 2026-11-27T16:14:07Z: si hay varios PRs, los fusiona el orquestador en orden. Se fusionan #77 a #83 (los apilados, después de cambiar su base a `main`). La red se cortó a mitad y se terminó al volver. U02-T07 sale VERDE en la ronda 2 (`revisiones/U02-T07/ronda-2.md`) y queda en el PR #84. U05-T07 ronda 2: el codificador terminó (`72b0abf`) y se despacha el revisor. Sobre la pausa: sí, en cualquier momento, ver `loop/CONTINUAR.md`.
+**Context**: Loop del módulo 6, ola 33, fuera de las etapas de AI-DLC.
+
+---
+
+## Pausa
+**Timestamp**: 2026-11-27T22:08:11Z
+**User Input**: "OKay dejemos hasta aca, tengo que salir y no puedo seguir deja lo que estes hacindo para que mi compañero lo pueda retormar desde el continuar"
+**AI Response**: Se detiene el revisor de la ronda 2 de U05-T07 sin informe y queda anotado en `loop/CONTINUAR.md` que hay que repetirlo. No queda ningún agente en vuelo. Queda abierto el PR #84 (U02-T07, VERDE). El estado completo está en `loop/CONTINUAR.md`, en la rama `orq/U05-U02-tareas`.
+**Context**: Loop del módulo 6, ola 33, fuera de las etapas de AI-DLC.
+
+---
+
+## 2026-11-28T00:19:53Z: Julian aprueba el plan para acelerar el loop (sesión local)
+
+**Input del usuario (00:16:53Z):** "hay alguna forma de acelerar el proceso?, tenemos 7 horas para terminar todo el proyecto"
+
+**Propuesta del orquestador:** (1) recortar según R9: se cortan U11 y U10 (Should) y la demo se hace con `curl` si U09 no llega; (2) tres tareas en paralelo; (3) agrupar dos o tres tareas pequeñas del plan en un solo despacho; (4) tope de dos rondas cuando solo quedan AMARILLOS (sin bajar el estándar de ROJO y NARANJA); (5) revisor sonnet solo en tareas de documentación. U08 necesita `kind`, que no hay en esta máquina: sus tareas se dejan escritas para el equipo.
+
+**Input del usuario (00:19:53Z):** "hazlo, acaba lo que haces y hagamoslo de esa forma"
+
+## 2026-11-28T00:25:37Z: Julian pide que el orquestador fusione los PRs
+
+**Input del usuario:** "fusionalas tu"
+
+**Acción del orquestador (00:27Z):** fusión en orden con merge commit, cambiando antes la base de cada PR apilado a `main`. Pila de U05: #85, #87, #90, #92. Pila de U02: #84, #86, #88, #89, #91, #93, #94. Los 11 quedaron fusionados (`mergeable_state: clean` en todos).
+
+## 2026-11-28T00:45Z: cierre de U05 y U02
+
+**Acción del orquestador:** con `main` en `97f9f80`, `./gradlew test --rerun check` pasó (`salida=0`; 710 pruebas, 0 saltos, 0 fallos, 0 errores). Se marcan los planes de U05 (T01 a T10) y U02 (T01 a T13) y se actualiza la línea de Code Generation Parte 2 en `aidlc-state.md`. U10 y U11 quedan cortadas por R9, según el plan aprobado por Julian a las 00:19:53Z.
