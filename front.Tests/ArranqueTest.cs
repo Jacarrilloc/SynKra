@@ -106,7 +106,10 @@ public sealed class ArranqueTest : IDisposable
         var proceso = Arranca(18742, "ftp://h/");
 
         var termino = proceso.WaitForExit(60_000);
-        proceso.WaitForExit();
+        if (termino)
+        {
+            proceso.WaitForExit(); // vacía las salidas redirigidas
+        }
 
         Assert.True(termino, $"El proceso no terminó en 60 s. Salida:\n{Salida()}");
         Assert.NotEqual(0, proceso.ExitCode);
