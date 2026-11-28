@@ -37,11 +37,12 @@ class PlanServicio {
     private final JdbcAggregateTemplate plantilla;
     private final ObjectMapper json;
     private final TransactionTemplate transaccion;
-    private final Clock reloj = Clock.systemUTC();
+    private final Clock reloj;
 
     PlanServicio(PaisPermitido paises, VerificacionVivo verificacion, CatalogoApi catalogo,
             AdaptadorKubernetes kubernetes, JdbcAggregateTemplate plantilla, ObjectMapper json,
-            PlatformTransactionManager gestor) {
+            PlatformTransactionManager gestor, Clock reloj) {
+        this.reloj = reloj;
         this.paises = paises;
         this.verificacion = verificacion;
         this.catalogo = catalogo;

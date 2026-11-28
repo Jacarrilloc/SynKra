@@ -21,6 +21,9 @@ final class MotivosDespliegue {
     static final String COMBINACION_MENSAJE = "La combinación no es compatible";
     static final String KUBERNETES_MENSAJE = "No se puede leer lo que corre en el país";
     static final String PAIS_INCONSISTENTE_MENSAJE = "Lo que corre en el país no es consistente";
+    static final String PLAN_VENCIDO_MENSAJE = "El plan venció sin confirmarse";
+    static final String PLAN_NO_PENDIENTE_MENSAJE = "El plan ya no está pendiente";
+    static final String CONFIRMACION_NO_DISPONIBLE_MENSAJE = "La confirmación todavía no está disponible";
 
     private MotivosDespliegue() {
     }
