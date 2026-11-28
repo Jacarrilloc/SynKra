@@ -1,6 +1,6 @@
-# fecha: 2026-11-28T04:58:30Z  sha: aa1cf23  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca9.sh (salida escrita a un temporal fuera del arbol para que status de 0)
+# fecha: 2026-11-28T05:07:54Z  sha: 6eb0066  script: ca9.sh (salida escrita fuera del arbol)
 $ git rev-parse --short HEAD; git status --porcelain | wc -l
-aa1cf23
+6eb0066
 0
 $ git diff --stat 8306ee7...HEAD
  backend/.dockerignore                              |   6 +-
@@ -13,8 +13,8 @@ $ git diff --stat 8306ee7...HEAD
  bitacoras/U08-B-evidencia/ca3.txt                  |  29 +++
  bitacoras/U08-B-evidencia/ca4-shellcheck.sh        |   4 +
  bitacoras/U08-B-evidencia/ca4-shellcheck.txt       |  63 ++++++
- bitacoras/U08-B-evidencia/ca4.sh                   |   8 +
- bitacoras/U08-B-evidencia/ca4.txt                  | 236 +++++++++++++++++++++
+ bitacoras/U08-B-evidencia/ca4.sh                   |   9 +
+ bitacoras/U08-B-evidencia/ca4.txt                  | 238 +++++++++++++++++++++
  bitacoras/U08-B-evidencia/ca5.sh                   |   8 +
  bitacoras/U08-B-evidencia/ca5.txt                  |  42 ++++
  .../U08-B-evidencia/ca6-rojo-tmpfs-noexec.txt      |  15 ++
@@ -25,10 +25,15 @@ $ git diff --stat 8306ee7...HEAD
  bitacoras/U08-B-evidencia/ca8.sh                   |  61 ++++++
  bitacoras/U08-B-evidencia/ca8.txt                  | 191 +++++++++++++++++
  bitacoras/U08-B-evidencia/ca9.sh                   |   6 +
+ bitacoras/U08-B-evidencia/ca9.txt                  |  51 +++++
  bitacoras/U08-B-evidencia/correr.sh                |   8 +
  bitacoras/U08-B-evidencia/rojo.sh                  |  17 ++
  bitacoras/U08-B-evidencia/rojo.txt                 |  38 ++++
- bitacoras/U08-B.md                                 |  76 +++++++
+ bitacoras/U08-B-evidencia/ronda2-rojo.sh           |  18 ++
+ bitacoras/U08-B-evidencia/ronda2-rojo.txt          |  30 +++
+ bitacoras/U08-B-evidencia/ronda2-verde.sh          |  18 ++
+ bitacoras/U08-B-evidencia/ronda2-verde.txt         |  41 ++++
+ bitacoras/U08-B.md                                 |  93 ++++++++
  core/.dockerignore                                 |   4 +-
  deploy/base/backend/deployment.yaml                |  91 ++++++++
  deploy/base/backend/kustomization.yaml             |   6 +
@@ -38,11 +43,13 @@ $ git diff --stat 8306ee7...HEAD
  deploy/overlays/kind/ingress.yaml                  |  33 +++
  deploy/overlays/kind/kustomization.yaml            |  11 +
  init-descarga/Dockerfile                           |  18 +-
- scripts/certificado-tls.sh                         |  25 +++
- scripts/imagenes.sh                                |  36 ++++
+ revisiones/U08-B/ronda-1-respuesta.md              |   8 +
+ revisiones/U08-B/ronda-1.md                        |  74 +++++++
+ scripts/certificado-tls.sh                         |  30 +++
+ scripts/imagenes.sh                                |  37 ++++
  scripts/verificar-backend.py                       | 156 ++++++++++++++
- scripts/verificar-imagenes.sh                      |  69 ++++++
- 39 files changed, 1399 insertions(+), 14 deletions(-)
+ scripts/verificar-imagenes.sh                      |  72 +++++++
+ 46 files changed, 1668 insertions(+), 14 deletions(-)
 $ git diff --name-only 8306ee7...HEAD | grep -v -E '^(deploy/base/backend/(kustomization|pvc|deployment|service)\.yaml|deploy/overlays/kind/(kustomization|backend-kind|ingress)\.yaml|backend/Dockerfile|backend/\.dockerignore|core/\.dockerignore|init-descarga/Dockerfile|scripts/imagenes\.sh|scripts/verificar-imagenes\.sh|scripts/verificar-backend\.py|scripts/certificado-tls\.sh|bitacoras/U08-B\.md|bitacoras/U08-B-evidencia/.*|revisiones/U08-B/.*)$'; echo "fuera=$?"
 fuera=1
 $ git diff --name-only 8306ee7...HEAD -- Makefile .gitignore deploy/kind deploy/base/kustomization.yaml deploy/base/namespaces.yaml deploy/base/rbac.yaml | wc -l
