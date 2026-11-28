@@ -1,27 +1,29 @@
-fecha: 2026-11-28T00:03:48-05:00
+fecha: 2026-11-28T00:12:55-05:00
 + git rev-parse --short HEAD
-0ff8944
+4239398
 + git status --porcelain
 + wc -l
-2
+1
 + git diff --stat 8306ee7...HEAD
  bitacoras/U09-A-evidencia/ca1.sh                   |  15 +
  bitacoras/U09-A-evidencia/ca1.txt                  |  47 ++
- bitacoras/U09-A-evidencia/ca2.sh                   |  12 +
- bitacoras/U09-A-evidencia/ca2.txt                  | 110 +++++
+ bitacoras/U09-A-evidencia/ca2.sh                   |  13 +
+ bitacoras/U09-A-evidencia/ca2.txt                  | 115 +++++
  bitacoras/U09-A-evidencia/ca3.sh                   |  10 +
- bitacoras/U09-A-evidencia/ca3.txt                  |  35 ++
+ bitacoras/U09-A-evidencia/ca3.txt                  |  38 ++
  bitacoras/U09-A-evidencia/ca4.sh                   |   8 +
  bitacoras/U09-A-evidencia/ca4.txt                  |  23 +
  bitacoras/U09-A-evidencia/ca5.sh                   |   8 +
- bitacoras/U09-A-evidencia/ca5.txt                  |  45 ++
- bitacoras/U09-A-evidencia/ca6.sh                   |  30 ++
- bitacoras/U09-A-evidencia/ca6.txt                  | 127 ++++++
+ bitacoras/U09-A-evidencia/ca5.txt                  |  51 +++
+ bitacoras/U09-A-evidencia/ca6.sh                   |  38 ++
+ bitacoras/U09-A-evidencia/ca6.txt                  | 204 +++++++++
+ bitacoras/U09-A-evidencia/ca7.sh                   |   9 +
+ bitacoras/U09-A-evidencia/ca7.txt                  |  63 +++
  bitacoras/U09-A-evidencia/rojo.txt                 | 493 +++++++++++++++++++++
  bitacoras/U09-A-evidencia/trx.py                   |   7 +
- bitacoras/U09-A.md                                 |  56 +++
+ bitacoras/U09-A.md                                 |  64 +++
  front.Tests/.gitignore                             |   3 +
- front.Tests/ApiSynkraTest.cs                       | 254 +++++++++++
+ front.Tests/ApiSynkraTest.cs                       | 285 ++++++++++++
  front.Tests/Fixtures/despliegue-fallido.json       |  19 +
  front.Tests/Fixtures/despliegue-listo.json         |  19 +
  front.Tests/Fixtures/error-422-pais.json           |   7 +
@@ -29,12 +31,13 @@ fecha: 2026-11-28T00:03:48-05:00
  front.Tests/Fixtures/historial-pe.json             |  36 ++
  front.Tests/Fixtures/paises-campo-desconocido.json |  25 ++
  front.Tests/Fixtures/paises-dos.json               |  24 +
+ front.Tests/Fixtures/paises-no-concuerda.json      |  24 +
  front.Tests/Fixtures/paises-sin-despliegue.json    |  12 +
- front.Tests/ManejadorHttpSimulado.cs               |  50 +++
+ front.Tests/ManejadorHttpSimulado.cs               |  61 +++
  front.Tests/Synkra.Front.Tests.csproj              |  28 ++
- front.Tests/VistaGeneralTest.cs                    | 122 +++++
+ front.Tests/VistaGeneralTest.cs                    | 161 +++++++
  front/.gitignore                                   |   2 +
- front/Api/ApiSynkra.cs                             |  99 +++++
+ front/Api/ApiSynkra.cs                             |  97 ++++
  front/Api/CodigosFront.cs                          |   8 +
  front/Api/ConfiguracionApi.cs                      |  20 +
  front/Api/ErrorApiSynkraException.cs               |  17 +
@@ -49,14 +52,16 @@ fecha: 2026-11-28T00:03:48-05:00
  front/Synkra.Front.csproj                          |  11 +
  front/appsettings.json                             |  12 +
  front/wwwroot/app.css                              |   9 +
+ revisiones/U09-A/ronda-1-respuesta.md              |   7 +
+ revisiones/U09-A/ronda-1.md                        |  77 ++++
  scripts/dotnet-docker.sh                           |  11 +
- 45 files changed, 2056 insertions(+)
+ 50 files changed, 2423 insertions(+)
 + git diff --name-only 8306ee7...HEAD
 + grep -v -E '^(front/|front\.Tests/|scripts/dotnet-docker\.sh$|bitacoras/U09-A\.md$|bitacoras/U09-A-evidencia/|revisiones/U09-A/)'
 + echo fuera=1
 fuera=1
-+ wc -l
 + git diff --name-only 8306ee7...HEAD -- backend deploy Makefile verificador core plugin-api plugins init-descarga build.gradle.kts settings.gradle.kts .gitignore .gitattributes
++ wc -l
 0
 + git diff --name-status --diff-filter=DM 8306ee7...HEAD
 + wc -l
