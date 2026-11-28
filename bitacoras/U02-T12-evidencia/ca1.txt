@@ -30,7 +30,7 @@ You can use '--warning-mode all' to show the individual deprecation warnings and
 
 For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD SUCCESSFUL in 564ms
+BUILD SUCCESSFUL in 560ms
 14 actionable tasks: 14 up-to-date
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
 $ docker build -t synkra-core:2.1.0 core/
@@ -55,25 +55,25 @@ $ docker build -t synkra-core:2.1.0 core/
 #5 transferring context: 104B done
 #5 DONE 0.0s
 
-#6 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
+#6 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
 #6 CACHED
 
-#7 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
+#7 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un core-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/core-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
 #7 CACHED
 
-#8 [capas 3/4] COPY build/libs/core-*.jar /jars/
+#8 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
 #8 CACHED
 
-#9 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
+#9 [capas 2/4] WORKDIR /app
 #9 CACHED
 
-#10 [capas 2/4] WORKDIR /app
+#10 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
 #10 CACHED
 
-#11 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un core-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/core-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
+#11 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
 #11 CACHED
 
-#12 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
+#12 [capas 3/4] COPY build/libs/core-*.jar /jars/
 #12 CACHED
 
 #13 [stage-1 7/7] RUN addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins /config
@@ -83,8 +83,8 @@ $ docker build -t synkra-core:2.1.0 core/
 #14 exporting layers done
 #14 exporting manifest sha256:1332c3009fc6d8aa070aed08b06edd110af6a5b1a0a9928cc1b09357aded9ef7 done
 #14 exporting config sha256:ab1a1cec78778fc39b2041797ac661ea0c1867a71de8c34071196785963cc03c done
-#14 exporting attestation manifest sha256:e0123af0e20777ecab0aaa292ffd81c7c58b27f28bc0a17e7d6f2446c7af53da done
-#14 exporting manifest list sha256:c96932d85ab6b4c1aca3b793f780cbac2a7e7d7f1e81a9dcdd95b1bfbfd7731b done
+#14 exporting attestation manifest sha256:691d2b86645bbd1c137d70bf3481e98acd3aa6c9f2c7a9813a2d1b6f82187209 done
+#14 exporting manifest list sha256:535ed2c473473592c24c23087a64a9bfc7f3df3ec98ac1bbb3b5736eb24d983c done
 #14 naming to docker.io/library/synkra-core:2.1.0 done
 #14 unpacking to docker.io/library/synkra-core:2.1.0 done
 #14 DONE 0.0s

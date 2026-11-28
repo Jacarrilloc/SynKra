@@ -1,0 +1,2 @@
+F-05: Corregido en cdea5b5: el nombre se registra en CONTENEDORES antes de cada docker run (caso 1 y 2); par falla-pasa con puerto ocupado en `f05-rojo.txt` (queda smoke-c1-... Created) y `f05-verde.txt` (0 contenedores smoke, FALLA caso1 docker run fallo).
+F-06: Corregido en cdea5b5: preparar encadena sus pasos con && y no depende de set -e; prueba en `f06.txt`. Barrido adicional: trap antes de mktemp y manejo de INT/TERM/HUP (`senal.txt`).

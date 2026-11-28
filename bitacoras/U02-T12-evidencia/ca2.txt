@@ -1,7 +1,7 @@
 $ D=$(mktemp -d)
 $ sed 's/preparar "$caso" "2.0.0"/preparar "$caso" "1.3.0"/' core/smoke.sh > $D/smoke-mutada.sh; chmod +x $D/smoke-mutada.sh
 $ diff core/smoke.sh $D/smoke-mutada.sh
-80c80
+85c85
 <   preparar "$caso" "2.0.0" || { falla "$caso" "no se pudo preparar /plugins y /config"; return; }
 ---
 >   preparar "$caso" "1.3.0" || { falla "$caso" "no se pudo preparar /plugins y /config"; return; }
@@ -9,5 +9,5 @@ $ SMOKE_RAIZ=$PWD $D/smoke-mutada.sh; echo "salida=$?"
 ok caso1-kyc-pe-1.3.0
 FALLA caso2-kyc-pe-2.0.0: el core no termino en 60s
 salida=1
-$ docker ps -a --format {{.Names}} | grep -c smoke
+$ docker ps -a --format '{{.Names}}' | grep -c smoke
 0
