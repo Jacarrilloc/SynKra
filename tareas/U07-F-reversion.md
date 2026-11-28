@@ -197,10 +197,10 @@
   ./gradlew :backend:test --rerun :backend:check
   for f in backend/build/test-results/test/TEST-*.xml; do grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' "$f"; done
   grep -rnE "io\.synkra\.registro\." backend/src/main/java/io/synkra/despliegue | grep -vE "io\.synkra\.registro\.api\."; echo "registro-interno=$?"
-  grep -rn "reg_" backend/src/main/java/io/synkra/despliegue; echo "tablas-reg=$?"
+  grep -rnE '"[^"]*\breg_[a-z]+' backend/src/main/java/io/synkra/despliegue; echo "tablas-reg=$?"
   grep -rlE "kubernetes\.(aplicar|construir)\(" backend/src/main/java/io/synkra/despliegue
   grep -n "kubernetes\|AdaptadorKubernetes\|RegistroApi" backend/src/main/java/io/synkra/despliegue/RutasReversion.java; echo "rutas=$?"
-  grep -rn "REQUIRES_NEW" backend/src/main/java; echo "requiresNew=$?"
+  grep -rnE 'Propagation\.REQUIRES_NEW|PROPAGATION_REQUIRES_NEW|setPropagationBehavior' backend/src/main/java; echo "requiresNew=$?"
   grep -rln "@Scheduled\|@EnableScheduling" backend/src/main/java
   grep -n "TipoDespliegue\." backend/src/main/java/io/synkra/despliegue/ConfirmacionServicio.java
   ```

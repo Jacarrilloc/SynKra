@@ -992,3 +992,35 @@ Se despacha el codificador de la ronda 2.
 ## 2026-11-28T02:02Z: tanda de fusión #100 y #101
 
 **Acción del orquestador:** bajo la autorización de David de las 01:25:21Z ("lo que sea más practico"), fusión con merge commit y en orden: #100 U07-C (`208d5f9`) y #101 U06-C (`ade68f6`). Los dos estaban `MERGEABLE`/`CLEAN`. Con `main` en `ade68f6`, `./gradlew test --rerun check` pasó (`salida=0`; 837 pruebas, 0 saltos, 0 fallos, 0 errores). `ade68f6` es la unión de U07-C y U06-C que pide U07-D.
+
+## 2026-11-28T02:06Z: fusión de #102 (rama del orquestador)
+
+**Acción del orquestador:** bajo la autorización de David de las 01:25:21Z, fusión de #102 (`orq/U05-U02-tareas` → `main`, solo tareas, candidatas, auditoría y CONTINUAR) en `eb33d68`. No toca código: el diff contra `ade68f6` fuera de `tareas/`, `loop/`, `CANDIDATAS.md` y `audit.md` está vacío, así que no se repite `./gradlew check`. U06-D sale de `eb33d68` para que `CANDIDATAS.md` esté en su árbol.
+
+## 2026-11-28T02:14Z: fusión de #103 y cierre de U06
+
+**Acción del orquestador:** bajo la autorización de David de las 01:25:21Z, fusión de #103 (U06-D, resumen; solo documentación) en `bd0826f`. El diff contra `eb33d68` solo toca `aidlc-docs/construction/U06-registro/code/`, `bitacoras/U06-D*` y `revisiones/U06-D/`, así que no se repite `./gradlew check` (el revisor lo corrió en la punta: 566 pruebas en verde). U06 queda terminada: se marcan U06-T01 a T08 en el plan y se actualiza la línea de Code Generation Parte 2 en `aidlc-state.md`.
+
+## 2026-11-28T02:16Z: revisión de pendientes pedida por David
+
+**Input del usuario (02:15:48Z):** "Por si acaso revisa si hay cosas pendinetes y/o sin terminar"
+
+**Acción del orquestador:** el plan de U03 tenía U03-T01 a T07 sin marcar aunque están fusionadas (la última en el PR #26); se marcan. U03-T08 (OpenAPI, Should) queda sin marcar con la nota de que no se hizo, como dice su resumen.
+
+## 2026-11-28T02:43Z: fusión de #104 (U07-D)
+
+**Acción del orquestador:** bajo la autorización de David de las 01:25:21Z, fusión de #104 (U07-D, confirmar) en `39a242c`, `MERGEABLE`/`CLEAN`. Con `main` en `39a242c`, `./gradlew test --rerun check` pasó (`salida=0`; 852 pruebas, 0 saltos, 0 fallos, 0 errores).
+
+## 2026-11-28T03:07:48Z: David pide correr más tareas en paralelo
+
+**Input del usuario:** "Que tal la opcin de ejecutar 3 en parlelo, por ejmplo que mas ls que estas corrienod ejecutar U07-F y U07-G"
+
+**Acción del orquestador:** U07-F sale de la punta de U07-E en ronda 1 (`2d9d21f`), de forma especulativa, mientras corre el revisor de U07-E; si U07-E cambia en una ronda 2, U07-F se rebasa. U07-G no se arranca todavía: su resumen y sus fronteras necesitan el código de U07-F.
+
+## 2026-11-28T03:35Z: fusión de #105 (U07-E)
+
+**Acción del orquestador:** bajo la autorización de David de las 01:25:21Z, fusión de #105 (U07-E, vigilancia y reinicio) en `20ca4e1`, `MERGEABLE`/`CLEAN`. Con `main` en `20ca4e1`, `./gradlew test --rerun check` pasó (`salida=0`; 882 pruebas, 0 saltos, 0 fallos, 0 errores).
+
+## 2026-11-28T03:48Z: fusión de #106 (U07-F) y #107 (rama del orquestador)
+
+**Acción del orquestador:** bajo la autorización de David de las 01:25:21Z, fusión de #106 (U07-F, reversión, VERDE en la ronda 3) y de #107 (rama del orquestador: cierre de U06, plan de U03, tareas U07-E a U07-G, candidatas C-121 a C-127), para que U07-G salga de un `main` con todo eso. Resultado de `./gradlew test --rerun check` en la sección siguiente.

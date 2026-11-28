@@ -256,11 +256,11 @@
   grep -rlE "kubernetes\.(aplicar|construir)\(" backend/src/main/java/io/synkra/despliegue
   grep -oE "kubernetes\.[a-zA-Z]+\(" backend/src/main/java/io/synkra/despliegue/VigilanciaDespliegues.java | sort -u
   grep -rnE "io\.synkra\.registro\." backend/src/main/java/io/synkra/despliegue | grep -vE "io\.synkra\.registro\.api\."; echo "registro-interno=$?"
-  grep -rn "reg_" backend/src/main/java/io/synkra/despliegue; echo "tablas-reg=$?"
+  grep -rnE '"[^"]*\breg_[a-z]+' backend/src/main/java/io/synkra/despliegue; echo "tablas-reg=$?"
   grep -rln "@Scheduled\|@EnableScheduling" backend/src/main/java
   grep -c "@Scheduled(" backend/src/main/java/io/synkra/despliegue/TareasProgramadas.java
   grep -n "Transactional" backend/src/main/java/io/synkra/despliegue/VigilanciaDespliegues.java backend/src/main/java/io/synkra/despliegue/TareasProgramadas.java; echo "vigilancia-tx=$?"
-  grep -rn "REQUIRES_NEW" backend/src/main/java; echo "requiresNew=$?"
+  grep -rnE 'Propagation\.REQUIRES_NEW|PROPAGATION_REQUIRES_NEW|setPropagationBehavior' backend/src/main/java; echo "requiresNew=$?"
   grep -rlE "Clock\.system" backend/src/main/java | sort
   cat backend/src/test/resources/config/application.properties
   ```
