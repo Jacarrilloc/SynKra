@@ -1,0 +1,28 @@
+2026-11-27T21:08:06-05:00
+base ade68f6 + pruebas (sin ConfirmacionServicio/Usuario/cambio de RutasConfirmacion)
+$ ./gradlew :backend:test --rerun --tests *ConfirmarTest --tests *CarpetaEquivocadaPlanTest --tests *ConfirmarSinClusterTest --tests *PlanPendienteTest
+CarpetaEquivocadaPlanTest > confirmarUnPlanManipuladoConUnPluginDeOtraCarpetaDa422() FAILED
+ConfirmarSinClusterTest > sinClusterDa503YNoTocaNada() FAILED
+ConfirmarTest > clSoloBloqueaUnAplicandoYSinCabeceraElUsuarioEsAnonimo() FAILED
+ConfirmarTest > boSiAplicarFallaQuedaFallidoSinReintentos() FAILED
+ConfirmarTest > pyUnUsuarioInvalidoAlCrearNoDejaFilaNiPeticiones() FAILED
+ConfirmarTest > uyElResumenDesactualizadoDa422() FAILED
+ConfirmarTest > coUnSegundoPlanConUnoAplicandoDa409DespliegueEnCurso() FAILED
+ConfirmarTest > ecDosConfirmacionesAlaVezSoloUnaGana() FAILED
+ConfirmarTest > pyUnUsuarioInvalidoAlConfirmarDejaElPlanPendiente() FAILED
+ConfirmarTest > arElCatalogoCambioEntreMediasVuelveAVerificar() FAILED
+ConfirmarTest > peConfirmaYSeRegistraAplicando() FAILED
+> Task :backend:test FAILED
+23 tests completed, 11 failed
+BUILD FAILED in 10s
+backend/build/test-results/test/TEST-io.synkra.despliegue.CarpetaEquivocadaPlanTest.xml:tests="3" skipped="0" failures="1" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.ConfirmarSinClusterTest.xml:tests="1" skipped="0" failures="1" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.ConfirmarTest.xml:tests="10" skipped="0" failures="9" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.PlanPendienteTest.xml:tests="9" skipped="0" failures="0" errors="0"
+      1 message="java.lang.AssertionError: &#10;Expecting actual:&#10;  [501 NOT_IMPLEMENTED, 501 NOT_IMPLEMENTED]&#10;to contain exactly in any order:&#10;  [202 ACCEPTED, 409 
+      3 message="org.opentest4j.AssertionFailedError: &#10;expected: 202 ACCEPTED&#10; but was: 501 NOT_IMPLEMENTED
+      1 message="org.opentest4j.AssertionFailedError: &#10;expected: 422 UNPROCESSABLE_ENTITY&#10; but was: 201 CREATED
+      3 message="org.opentest4j.AssertionFailedError: &#10;expected: 422 UNPROCESSABLE_ENTITY&#10; but was: 501 NOT_IMPLEMENTED
+      1 message="org.opentest4j.AssertionFailedError: &#10;expected: 502 BAD_GATEWAY&#10; but was: 501 NOT_IMPLEMENTED
+      1 message="org.opentest4j.AssertionFailedError: &#10;expected: 422 UNPROCESSABLE_ENTITY&#10; but was: 501 NOT_IMPLEMENTED
+      1 message="org.opentest4j.AssertionFailedError: &#10;expected: 503 SERVICE_UNAVAILABLE&#10; but was: 501 NOT_IMPLEMENTED

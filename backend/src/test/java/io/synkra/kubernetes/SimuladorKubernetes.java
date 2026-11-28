@@ -84,6 +84,14 @@ public final class SimuladorKubernetes implements AutoCloseable {
                 .andReturn(500, "{\"kind\":\"Status\",\"code\":500}").always();
     }
 
+    /** El {@code PATCH} del Deployment {@code synkra-core} de ese país (el de aplicar) responde 500 siempre. */
+    public void fallaAplicar(String pais) {
+        servidor.expect().patch()
+                .withPath("/apis/apps/v1/namespaces/synkra-" + pais + "/deployments/" + ConstructorObjetosPais.NOMBRE_CORE
+                        + "?fieldManager=" + ConstructorObjetosPais.GESTOR + "&force=true")
+                .andReturn(500, "{\"kind\":\"Status\",\"code\":500}").always();
+    }
+
     /** {@code "MÉTODO ruta"} de lo recibido desde la llamada anterior (la siembra no cuenta). */
     public List<String> nuevasPeticiones() {
         var r = new ArrayList<String>();

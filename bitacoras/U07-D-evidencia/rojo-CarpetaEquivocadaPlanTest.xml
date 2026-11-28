@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.synkra.despliegue.CarpetaEquivocadaPlanTest" tests="3" skipped="0" failures="1" errors="0" timestamp="2026-11-28T02:08:07.991Z" hostname="casdav-Legion-Pro-5-16ADR10" time="4.127">
+  <properties/>
+  <testcase name="confirmarUnPlanManipuladoConUnPluginDeOtraCarpetaDa422()" classname="io.synkra.despliegue.CarpetaEquivocadaPlanTest" time="0.909">
+    <failure message="org.opentest4j.AssertionFailedError: &#10;expected: 422 UNPROCESSABLE_ENTITY&#10; but was: 501 NOT_IMPLEMENTED" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+expected: 422 UNPROCESSABLE_ENTITY
+ but was: 501 NOT_IMPLEMENTED
+	at io.synkra.despliegue.HttpPlanes.esperaError(HttpPlanes.java:88)
+	at io.synkra.despliegue.CarpetaEquivocadaPlanTest.confirmarUnPlanManipuladoConUnPluginDeOtraCarpetaDa422(CarpetaEquivocadaPlanTest.java:138)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="crearAlReves()" classname="io.synkra.despliegue.CarpetaEquivocadaPlanTest" time="0.034"/>
+  <testcase name="crearConUnPluginDeOtraCarpetaDa422SinFilaNiPeticiones()" classname="io.synkra.despliegue.CarpetaEquivocadaPlanTest" time="0.022"/>
+  <system-out><![CDATA[21:08:08.087 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [io.synkra.despliegue.CarpetaEquivocadaPlanTest]: CarpetaEquivocadaPlanTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+21:08:08.181 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration io.synkra.SynkraApp for test class io.synkra.despliegue.CarpetaEquivocadaPlanTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-11-27T21:08:09.067-05:00  INFO 432916 --- [    Test worker] i.s.d.CarpetaEquivocadaPlanTest          : Starting CarpetaEquivocadaPlanTest using Java 21.0.13.1 with PID 432916 (started by casdav in /home/casdav/Projects/Master/wt-m6r-U07-D/backend)
+2026-11-27T21:08:09.068-05:00  INFO 432916 --- [    Test worker] i.s.d.CarpetaEquivocadaPlanTest          : No active profile set, falling back to 1 default profile: "default"
+2026-11-27T21:08:09.592-05:00  INFO 432916 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2026-11-27T21:08:09.635-05:00  INFO 432916 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 38 ms. Found 8 JDBC repository interfaces.
+2026-11-27T21:08:09.987-05:00  INFO 432916 --- [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 0 (http)
+2026-11-27T21:08:09.999-05:00  INFO 432916 --- [    Test worker] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-11-27T21:08:09.999-05:00  INFO 432916 --- [    Test worker] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-11-27T21:08:10.045-05:00  INFO 432916 --- [    Test worker] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-11-27T21:08:10.046-05:00  INFO 432916 --- [    Test worker] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 967 ms
+2026-11-27T21:08:10.290-05:00  INFO 432916 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Starting...
+2026-11-27T21:08:10.438-05:00  INFO 432916 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : synkra-sqlite - Added connection org.sqlite.jdbc4.JDBC4Connection@67167f8f
+2026-11-27T21:08:10.439-05:00  INFO 432916 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Start completed.
+2026-11-27T21:08:10.510-05:00  INFO 432916 --- [    Test worker] org.flywaydb.core.FlywayExecutor         : Database: jdbc:sqlite:/home/casdav/Projects/Master/wt-m6r-U07-D/backend/build/sqlite-pruebas/CarpetaEquivocadaPlanTest/synkra.db (SQLite 3.49)
+2026-11-27T21:08:10.529-05:00  INFO 432916 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "main"."flyway_schema_history" does not exist yet
+2026-11-27T21:08:10.531-05:00  INFO 432916 --- [    Test worker] o.f.core.internal.command.DbValidate     : Successfully validated 4 migrations (execution time 00:00.008s)
+2026-11-27T21:08:10.533-05:00  INFO 432916 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "main"."flyway_schema_history" ...
+2026-11-27T21:08:10.552-05:00  INFO 432916 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Current version of schema "main": << Empty Schema >>
+2026-11-27T21:08:10.556-05:00  INFO 432916 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "main" to version "1 - base"
+2026-11-27T21:08:10.566-05:00  INFO 432916 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "main" to version "2 - catalogo"
+2026-11-27T21:08:10.572-05:00  INFO 432916 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "main" to version "3 - registro"
+2026-11-27T21:08:10.578-05:00  INFO 432916 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "main" to version "4 - despliegue"
+2026-11-27T21:08:10.584-05:00  INFO 432916 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Successfully applied 4 migrations to schema "main", now at version v4 (execution time 00:00.002s)
+2026-11-27T21:08:11.020-05:00  INFO 432916 --- [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-11-27T21:08:11.092-05:00  INFO 432916 --- [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 45879 (http) with context path '/'
+2026-11-27T21:08:11.101-05:00  INFO 432916 --- [    Test worker] i.s.d.CarpetaEquivocadaPlanTest          : Started CarpetaEquivocadaPlanTest in 2.212 seconds (process running for 4.022)
+2026-11-27T21:08:11.926-05:00  INFO 432916 --- [o-auto-1-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-11-27T21:08:11.926-05:00  INFO 432916 --- [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-11-27T21:08:11.927-05:00  INFO 432916 --- [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+2026-11-27T21:08:12.122-05:00  INFO 432916 --- [    Test worker] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[45585] done accepting connections
+]]></system-out>
+  <system-err><![CDATA[Nov 27, 2026 9:08:08 PM io.fabric8.mockwebserver.MockWebServer info
+INFO: MockWebServer[45585] starting to accept connections on localhost
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (/home/casdav/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.17.8/f09415827a71be7ed621c7bd02550678f28bc81c/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+]]></system-err>
+</testsuite>
