@@ -1,0 +1,25 @@
+$ git rev-parse --short HEAD; git diff --stat 8182b9d...HEAD (antes de este commit)
+001df01
+ .../java/io/synkra/despliegue/CalculoCambios.java  |  42 +++
+ .../main/java/io/synkra/despliegue/CambioCore.java |   4 +
+ .../main/java/io/synkra/despliegue/Cambios.java    |   7 +
+ .../io/synkra/despliegue/CodigosDespliegue.java    |   5 +
+ .../io/synkra/despliegue/MotivosDespliegue.java    |  15 +
+ .../java/io/synkra/despliegue/PlanPreparado.java   |   4 +
+ .../java/io/synkra/despliegue/PlanServicio.java    | 115 +++++++
+ .../java/io/synkra/despliegue/PluginPedido.java    |   4 +
+ .../java/io/synkra/despliegue/PluginResumen.java   |   4 +
+ .../main/java/io/synkra/despliegue/Resumen.java    |   6 +
+ .../java/io/synkra/despliegue/RutasPlanes.java     |  46 +++
+ .../io/synkra/despliegue/RutasVerificacion.java    |  27 ++
+ .../java/io/synkra/despliegue/VeredictoDto.java    |  40 +++
+ .../io/synkra/despliegue/VerificacionVivo.java     | 127 ++++++++
+ .../io/synkra/despliegue/CambiosPropiedades.java   | 158 ++++++++++
+ .../java/io/synkra/despliegue/CrearPlanTest.java   | 344 +++++++++++++++++++++
+ .../io/synkra/despliegue/VerificacionVivoTest.java | 302 ++++++++++++++++++
+ .../io/synkra/kubernetes/SimuladorKubernetes.java  | 122 ++++++++
+ bitacoras/U07-B.md                                 | 315 +++++++++++++++++++
+ revisiones/U07-B/ronda-1.md                        |  90 ++++++
+ 45 files changed, 2662 insertions(+)
+$ git diff --name-status 8182b9d...HEAD -- backend/src/test/java/io/synkra/kubernetes
+A	backend/src/test/java/io/synkra/kubernetes/SimuladorKubernetes.java
