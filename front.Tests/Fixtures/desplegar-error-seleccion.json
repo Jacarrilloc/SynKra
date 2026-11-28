@@ -1,0 +1,7 @@
+{
+  "codigo": "SELECCION_INVALIDA",
+  "mensaje": "La selección no es válida",
+  "detalles": [
+    { "campo": "core", "motivo": "El core debe cumplir el patrón de nombres (minúsculas, dígitos y guiones)" }
+  ]
+}

@@ -1,0 +1,22 @@
+[
+  {
+    "pais": "co",
+    "lectura": "vacio",
+    "imagen": null,
+    "plugins": [],
+    "concuerda": true,
+    "ultimoDespliegueId": null,
+    "core": null,
+    "versionCore": null
+  },
+  {
+    "pais": "pe",
+    "lectura": "vacio",
+    "imagen": null,
+    "plugins": [],
+    "concuerda": true,
+    "ultimoDespliegueId": null,
+    "core": null,
+    "versionCore": null
+  }
+]

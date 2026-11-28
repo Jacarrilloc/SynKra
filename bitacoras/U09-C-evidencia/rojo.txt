@@ -1,0 +1,119 @@
+fecha=2026-11-28T07:01:33Z sha=1bd21da uname=x86_64
+RepoDigests=mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
+== git show --stat 1bd21da
+1bd21da U09-C rojo: 48 pruebas, fixtures, handler ampliado y escrituras sin implementar
+
+ front.Tests/ApiSynkraEscriturasTest.cs             | 305 ++++++++++++++++
+ front.Tests/ArranqueTest.cs                        | 111 ++++++
+ front.Tests/DesplegarTest.cs                       | 390 +++++++++++++++++++++
+ front.Tests/Fixtures/desplegar-confirmacion.json   |   1 +
+ front.Tests/Fixtures/desplegar-cores.json          |   9 +
+ .../Fixtures/desplegar-error-combinacion.json      |   7 +
+ .../Fixtures/desplegar-error-seleccion.json        |   7 +
+ front.Tests/Fixtures/desplegar-error-usuario.json  |   7 +
+ front.Tests/Fixtures/desplegar-error-vencido.json  |   1 +
+ front.Tests/Fixtures/desplegar-paises.json         |  22 ++
+ front.Tests/Fixtures/desplegar-plan-pe.json        |  26 ++
+ front.Tests/Fixtures/desplegar-plugins-pe.json     |   4 +
+ front.Tests/Fixtures/desplegar-plugins.json        |   5 +
+ .../Fixtures/desplegar-veredicto-aprobado.json     |   1 +
+ .../Fixtures/desplegar-veredicto-rechazado.json    |  24 ++
+ .../Fixtures/desplegar-veredicto-vacio.json        |   1 +
+ front.Tests/Fixtures/reversion-confirmacion.json   |   1 +
+ front.Tests/Fixtures/reversion-error-en-curso.json |   1 +
+ front.Tests/Fixtures/reversion-error-origen.json   |   1 +
+ front.Tests/Fixtures/reversion-origen-3.json       |  19 +
+ front.Tests/Fixtures/reversion-plan.json           |  26 ++
+ front.Tests/Fixtures/subida-error-conflicto.json   |   1 +
+ front.Tests/Fixtures/subida-error-descriptor.json  |   7 +
+ front.Tests/Fixtures/subida-plugin.json            |   9 +
+ front.Tests/ManejadorHttpSimulado.cs               | 134 ++++++-
+ front.Tests/ReversionDetalleTest.cs                | 153 ++++++++
+ front.Tests/SubidaCatalogoTest.cs                  | 129 +++++++
+ front/Api/ApiSynkra.Catalogo.cs                    |  14 +
+ front/Api/ApiSynkra.Escrituras.cs                  |  19 +
+ front/Api/ApiSynkra.cs                             |   4 +-
+ front/Api/ModelosCatalogo.cs                       |  14 +
+ front/Api/ModelosDespliegue.cs                     |  58 +++
+ front/Components/Pages/Desplegar.razor             |   5 +
+ front/Components/Pages/Reversion.razor             |   9 +
+ front/Components/Pages/SubirPlugin.razor           |   9 +
+ 35 files changed, 1522 insertions(+), 12 deletions(-)
+
+== $ scripts/dotnet-docker.sh test front.Tests --filter ApiSynkraEscriturasTest --logger "trx;LogFileName=escrituras.trx" --results-directory front.Tests/TestResults
+Failed!  - Failed:    16, Passed:     0, Skipped:     0, Total:    16, Duration: 49 ms - Synkra.Front.Tests.dll (net10.0)
+salida=1
+== $ python3 -I bitacoras/U09-A-evidencia/trx.py front.Tests/TestResults/escrituras.trx
+total=16 executed=16 passed=0 failed=16 notExecuted=0
+FALLA ConfirmarPideLaRutaDelPlanSinCuerpo
+FALLA ConfirmarVencidoDaElErrorDeLaApi
+FALLA CrearPlanEnviaElPaisYElUsuarioYLeeElPlan
+FALLA CrearPlanRechazadoDaLosDetallesDeLaApi
+FALLA EscrituraSinConexionDaApiNoDisponible
+FALLA RevertirPideLaRutaDelOrigenSinCuerpo
+FALLA SinUsuarioNoMandaLaCabecera
+FALLA SubidaConDescriptorInvalidoDaElMotivo
+FALLA SubirPluginEscapaElCore
+FALLA SubirPluginMandaArchivoYEtiquetas
+FALLA SubirPluginSinEtiquetasNoMandaLaParte
+FALLA UsuarioEnBlancoNoMandaLaCabecera
+FALLA UsuarioSeMandaTalCual
+FALLA VerificarConSeleccionInvalidaDaLosDetalles
+FALLA VerificarEnviaLaSeleccionYLeeElVeredicto
+FALLA VerificarRechazadaTraeMotivosYAlternativas
+
+== $ scripts/dotnet-docker.sh test front.Tests --filter DesplegarTest --logger "trx;LogFileName=desplegar.trx" --results-directory front.Tests/TestResults
+Failed!  - Failed:    17, Passed:     0, Skipped:     0, Total:    17, Duration: 17 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+== $ python3 -I bitacoras/U09-A-evidencia/trx.py front.Tests/TestResults/desplegar.trx
+total=17 executed=17 passed=0 failed=17 notExecuted=0
+FALLA CambiarLaSeleccionDescartaElPlan
+FALLA CargaPaisesYCoresDeLaApi
+FALLA ConVeredictoAprobadoPrepararSeHabilitaYConfirmarNo
+FALLA ConVeredictoRechazadoLosBotonesEstanDeshabilitados
+FALLA ConfirmarLlamaALaConfirmacionDelPlanYEnlazaAlDetalle
+FALLA ElPaisNoEntraEnLaVerificacion
+FALLA ElegirCoreYVersionVerificaSinPlugins
+FALLA ErrorAlConfirmarSeMuestraYDescartaElPlan
+FALLA ErrorAlPrepararSeMuestraYNoHayPlan
+FALLA FiltroPorEtiquetaPideLaConsultaALaApi
+FALLA MarcarUnPluginVuelveAVerificarConLaSeleccion
+FALLA NoFiltraNiComparaVersiones
+FALLA PrepararCreaElPlanYMuestraResumenYCambios
+FALLA RespuestaViejaNoPisaLaNueva
+FALLA SinClicNoHayConfirmacion
+FALLA SinPaisPrepararSigueDeshabilitado
+FALLA VerificacionConErrorDeshabilitaLosBotones
+
+== $ scripts/dotnet-docker.sh test front.Tests --filter CatalogoTest --logger "trx;LogFileName=catalogo.trx" --results-directory front.Tests/TestResults
+Failed!  - Failed:     6, Passed:     0, Skipped:     0, Total:     6, Duration: 327 ms - Synkra.Front.Tests.dll (net10.0)
+salida=1
+== $ python3 -I bitacoras/U09-A-evidencia/trx.py front.Tests/TestResults/catalogo.trx
+total=6 executed=6 passed=0 failed=6 notExecuted=0
+FALLA ConflictoMuestraElCodigoDeLaApi
+FALLA DescriptorInvalidoMuestraElMotivo
+FALLA EtiquetasSeMandanTalCual
+FALLA SinArchivoElBotonEstaDeshabilitado
+FALLA SinEtiquetasNoSeMandaLaParte
+FALLA SubirMandaElJarYMuestraElPlugin
+
+== $ scripts/dotnet-docker.sh test front.Tests --filter DetalleTest --logger "trx;LogFileName=detalle.trx" --results-directory front.Tests/TestResults
+Failed!  - Failed:     7, Passed:     0, Skipped:     0, Total:     7, Duration: 7 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+== $ python3 -I bitacoras/U09-A-evidencia/trx.py front.Tests/TestResults/detalle.trx
+total=7 executed=7 passed=0 failed=7 notExecuted=0
+FALLA AbrirLaPaginaSoloLee
+FALLA CancelarNoLlamaANada
+FALLA ConfirmarLaVueltaConErrorLoMuestra
+FALLA ConfirmarLaVueltaEstaDeshabilitadoSinPlan
+FALLA LaVueltaSoloSeConfirmaDespuesDeConfirmar
+FALLA OrigenNoListoMuestraElErrorDeLaApi
+FALLA PrepararLaVueltaCreaElPlanDeReversion
+
+== $ scripts/dotnet-docker.sh test front.Tests --filter ArranqueTest --logger "trx;LogFileName=arranque.trx" --results-directory front.Tests/TestResults
+Passed!  - Failed:     0, Passed:     2, Skipped:     0, Total:     2, Duration: 652 ms - Synkra.Front.Tests.dll (net10.0)
+salida=0
+== $ python3 -I bitacoras/U09-A-evidencia/trx.py front.Tests/TestResults/arranque.trx
+total=2 executed=2 passed=2 failed=0 notExecuted=0
+ConUrlMalaNoArranca
+ConUrlValidaArrancaYSirveLaVistaGeneral
