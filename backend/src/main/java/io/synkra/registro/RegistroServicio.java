@@ -166,6 +166,12 @@ class RegistroServicio implements RegistroApi {
         return Optional.of(con(base, pluginsDe(List.of(base.id())).getOrDefault(base.id(), List.of()), null));
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<DespliegueRegistrado> aplicando() {
+        throw new UnsupportedOperationException("U07-E: pendiente");
+    }
+
     private static DespliegueRegistrado con(DespliegueRegistrado f, List<PluginDesplegado> plugins,
             ContextoFallo contexto) {
         return new DespliegueRegistrado(f.id(), f.pais(), f.tipo(), f.origenId(), f.core(), f.versionCore(),

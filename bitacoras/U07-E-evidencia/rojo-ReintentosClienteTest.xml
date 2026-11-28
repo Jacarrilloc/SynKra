@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.synkra.kubernetes.ReintentosClienteTest" tests="3" skipped="0" failures="3" errors="0" timestamp="2026-11-28T02:49:06.067Z" hostname="casdav-Legion-Pro-5-16ADR10" time="39.466">
+  <properties/>
+  <testcase name="unPatchQueDa500EsUnaSolaPeticion()" classname="io.synkra.kubernetes.ReintentosClienteTest" time="19.849">
+    <failure message="org.opentest4j.AssertionFailedError: &#10;expected: 1&#10; but was: 11" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+expected: 1
+ but was: 11
+	at io.synkra.kubernetes.ReintentosClienteTest.unPatchQueDa500EsUnaSolaPeticion(ReintentosClienteTest.java:118)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="unGetQueDa500EsUnaSolaPeticion()" classname="io.synkra.kubernetes.ReintentosClienteTest" time="19.385">
+    <failure message="org.opentest4j.AssertionFailedError: &#10;expected: 1&#10; but was: 11" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+expected: 1
+ but was: 11
+	at io.synkra.kubernetes.ReintentosClienteTest.unGetQueDa500EsUnaSolaPeticion(ReintentosClienteTest.java:107)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="elClienteNoTieneReintentosImplicitos()" classname="io.synkra.kubernetes.ReintentosClienteTest" time="0.23">
+    <failure message="org.opentest4j.AssertionFailedError: &#10;expected: 0&#10; but was: 10" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+expected: 0
+ but was: 10
+	at io.synkra.kubernetes.ReintentosClienteTest.lambda$elClienteNoTieneReintentosImplicitos$2(ReintentosClienteTest.java:100)
+	at io.synkra.kubernetes.ReintentosClienteTest.lambda$conAdaptador$1(ReintentosClienteTest.java:94)
+	at org.springframework.boot.test.context.runner.AbstractApplicationContextRunner.accept(AbstractApplicationContextRunner.java:469)
+	at org.springframework.boot.test.context.runner.AbstractApplicationContextRunner.consumeAssertableContext(AbstractApplicationContextRunner.java:385)
+	at org.springframework.boot.test.context.runner.AbstractApplicationContextRunner.lambda$run$0(AbstractApplicationContextRunner.java:363)
+	at org.springframework.boot.test.util.TestPropertyValues.lambda$applyToSystemProperties$1(TestPropertyValues.java:174)
+	at org.springframework.boot.test.util.TestPropertyValues.applyToSystemProperties(TestPropertyValues.java:188)
+	at org.springframework.boot.test.util.TestPropertyValues.applyToSystemProperties(TestPropertyValues.java:173)
+	at org.springframework.boot.test.context.runner.AbstractApplicationContextRunner.lambda$run$1(AbstractApplicationContextRunner.java:363)
+	at org.springframework.boot.test.context.runner.AbstractApplicationContextRunner.withContextClassLoader(AbstractApplicationContextRunner.java:391)
+	at org.springframework.boot.test.context.runner.AbstractApplicationContextRunner.run(AbstractApplicationContextRunner.java:362)
+	at io.synkra.kubernetes.ReintentosClienteTest.conAdaptador(ReintentosClienteTest.java:94)
+	at io.synkra.kubernetes.ReintentosClienteTest.elClienteNoTieneReintentosImplicitos(ReintentosClienteTest.java:99)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <system-out><![CDATA[2026-11-27T21:49:06.334-05:00  INFO 619646 --- [    Test worker] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[37281] starting to accept connections on localhost
+2026-11-27T21:49:06.706-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[37281] received request: PATCH /api/v1/namespaces/synkra-pe/configmaps/synkra-core-config?fieldManager=synkra&force=true HTTP/1.1 and responded: HTTP/1.1 500 Server Error
+2026-11-27T21:49:06.823-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[37281] received request: PATCH /api/v1/namespaces/synkra-pe/configmaps/synkra-core-config?fieldManager=synkra&force=true HTTP/1.1 and responded: HTTP/1.1 500 Server Error
+2026-11-27T21:49:07.032-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[37281] received request: PATCH /api/v1/namespaces/synkra-pe/configmaps/synkra-core-config?fieldManager=synkra&force=true HTTP/1.1 and responded: HTTP/1.1 500 Server Error
+2026-11-27T21:49:07.440-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[37281] received request: PATCH /api/v1/namespaces/synkra-pe/configmaps/synkra-core-config?fieldManager=synkra&force=true HTTP/1.1 and responded: HTTP/1.1 500 Server Error
+2026-11-27T21:49:08.250-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[37281] received request: PATCH /api/v1/namespaces/synkra-pe/configmaps/synkra-core-config?fieldManager=synkra&force=true HTTP/1.1 and responded: HTTP/1.1 500 Server Error
+2026-11-27T21:49:09.859-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[37281] received request: PATCH /api/v1/namespaces/synkra-pe/configmaps/synkra-core-config?fieldManager=synkra&force=true HTTP/1.1 and responded: HTTP/1.1 500 Server Error
+2026-11-27T21:49:13.067-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[37281] received request: PATCH /api/v1/namespaces/synkra-pe/configmaps/synkra-core-config?fieldManager=synkra&force=true HTTP/1.1 and responded: HTTP/1.1 500 Server Error
+2026-11-27T21:49:16.276-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[37281] received request: PATCH /api/v1/namespaces/synkra-pe/configmaps/synkra-core-config?fieldManager=synkra&force=true HTTP/1.1 and responded: HTTP/1.1 500 Server Error
+2026-11-27T21:49:19.485-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[37281] received request: PATCH /api/v1/namespaces/synkra-pe/configmaps/synkra-core-config?fieldManager=synkra&force=true HTTP/1.1 and responded: HTTP/1.1 500 Server Error
+2026-11-27T21:49:22.693-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[37281] received request: PATCH /api/v1/namespaces/synkra-pe/configmaps/synkra-core-config?fieldManager=synkra&force=true HTTP/1.1 and responded: HTTP/1.1 500 Server Error
+2026-11-27T21:49:25.902-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[37281] received request: PATCH /api/v1/namespaces/synkra-pe/configmaps/synkra-core-config?fieldManager=synkra&force=true HTTP/1.1 and responded: HTTP/1.1 500 Server Error
+2026-11-27T21:49:25.907-05:00  INFO 619646 --- [    Test worker] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[37281] done accepting connections
+2026-11-27T21:49:26.086-05:00  INFO 619646 --- [    Test worker] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[43089] starting to accept connections on localhost
+2026-11-27T21:49:26.113-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[43089] received request: GET /apis/apps/v1/namespaces/synkra-pe/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 500 Server Error
+2026-11-27T21:49:26.221-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[43089] received request: GET /apis/apps/v1/namespaces/synkra-pe/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 500 Server Error
+2026-11-27T21:49:26.429-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[43089] received request: GET /apis/apps/v1/namespaces/synkra-pe/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 500 Server Error
+2026-11-27T21:49:26.837-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[43089] received request: GET /apis/apps/v1/namespaces/synkra-pe/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 500 Server Error
+2026-11-27T21:49:27.644-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[43089] received request: GET /apis/apps/v1/namespaces/synkra-pe/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 500 Server Error
+2026-11-27T21:49:29.252-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[43089] received request: GET /apis/apps/v1/namespaces/synkra-pe/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 500 Server Error
+2026-11-27T21:49:32.460-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[43089] received request: GET /apis/apps/v1/namespaces/synkra-pe/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 500 Server Error
+2026-11-27T21:49:35.668-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[43089] received request: GET /apis/apps/v1/namespaces/synkra-pe/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 500 Server Error
+2026-11-27T21:49:38.875-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[43089] received request: GET /apis/apps/v1/namespaces/synkra-pe/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 500 Server Error
+2026-11-27T21:49:42.083-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[43089] received request: GET /apis/apps/v1/namespaces/synkra-pe/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 500 Server Error
+2026-11-27T21:49:45.291-05:00  INFO 619646 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[43089] received request: GET /apis/apps/v1/namespaces/synkra-pe/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 500 Server Error
+2026-11-27T21:49:45.294-05:00  INFO 619646 --- [    Test worker] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[43089] done accepting connections
+2026-11-27T21:49:45.511-05:00  INFO 619646 --- [    Test worker] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[44991] starting to accept connections on localhost
+2026-11-27T21:49:45.528-05:00  INFO 619646 --- [    Test worker] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[44991] done accepting connections
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
