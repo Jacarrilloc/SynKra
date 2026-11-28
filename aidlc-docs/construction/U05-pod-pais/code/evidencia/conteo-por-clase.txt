@@ -1,0 +1,12 @@
+fecha: 2026-11-27T19:08:27-05:00  sha: 82bf33d
+$ for f in backend/build/test-results/test/TEST-*kubernetes*.xml; do echo "$(basename $f .xml | sed 's/TEST-io.synkra.//') $(grep -o -m1 'tests=\"[0-9]*\" skipped=\"[0-9]*\" failures=\"[0-9]*\" errors=\"[0-9]*\"' $f)"; done
+kubernetes.AplicarTest tests="10" skipped="0" failures="0" errors="0"
+kubernetes.ClienteKubernetesTest tests="10" skipped="0" failures="0" errors="0"
+kubernetes.ConfiguracionKubernetesTest tests="2" skipped="0" failures="0" errors="0"
+kubernetes.ConstruirObjetosPaisTest tests="32" skipped="0" failures="0" errors="0"
+kubernetes.EstadoYContextoTest tests="20" skipped="0" failures="0" errors="0"
+kubernetes.GuardiaNamespaceTest tests="22" skipped="0" failures="0" errors="0"
+kubernetes.ImagenInitCaracterizacionTest tests="2" skipped="0" failures="0" errors="0"
+kubernetes.ImagenInitConfiguradaTest tests="3" skipped="0" failures="0" errors="0"
+kubernetes.LeerPaisTest tests="24" skipped="0" failures="0" errors="0"
+kubernetes.YamlObjetosPaisTest tests="2" skipped="0" failures="0" errors="0"
