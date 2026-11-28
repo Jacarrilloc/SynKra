@@ -1026,3 +1026,7 @@ Se despacha el codificador de la ronda 2.
 **Acción del orquestador:** bajo la autorización de David de las 01:25:21Z, fusión de #106 (U07-F, reversión, VERDE en la ronda 3) y de #107 (rama del orquestador: cierre de U06, plan de U03, tareas U07-E a U07-G, candidatas C-121 a C-127), para que U07-G salga de un `main` con todo eso. Resultado de `./gradlew test --rerun check` en la sección siguiente.
 
 **Resultado (#106 y #107):** `main` en `2f47340`; `./gradlew test --rerun check` pasó (`salida=0`; 891 pruebas, 0 saltos, 0 fallos, 0 errores). U07-G sale de `2f47340`.
+
+## 2026-11-28T04:23Z: fusión de #108 y cierre de U07
+
+**Acción del orquestador:** bajo la autorización de David de las 01:25:21Z, fusión de #108 (U07-G, fronteras y resumen) en `8306ee7`, `MERGEABLE`/`CLEAN`. Con `main` en `8306ee7`, `./gradlew test --rerun check` pasó (`salida=0`; 894 pruebas, 0 saltos, 0 fallos, 0 errores). U07 queda terminada: se marcan U07-T01 a T13 en el plan y se actualiza la línea de Code Generation Parte 2 en `aidlc-state.md`. Siguiente: U08 en `kind-synkra`, según lo aprobado por David a las 01:29:47Z.
