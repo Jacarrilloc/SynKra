@@ -3,6 +3,7 @@ package io.synkra.registro;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.synkra.registro.api.ContextoFallo;
 import io.synkra.registro.api.EstadoDespliegue;
 import io.synkra.registro.api.NuevoDespliegue;
@@ -13,22 +14,22 @@ import io.synkra.registro.api.TransicionNoPermitidaException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Clock;
 import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.support.TransactionTemplate;
 
 /** R-R1 a R-R3. El archivo SQLite queda en build/sqlite-pruebas para leerlo de vuelta (ids fijos 1 a 10). */
-@TestMethodOrder(MethodOrderer.MethodName.class) // id8 usa el despliegue 1 como origen
 @SpringBootTest
 class TransicionesRegistroTest {
 
@@ -50,6 +51,8 @@ class TransicionesRegistroTest {
     @Autowired RegistroApi api;
     @Autowired JdbcTemplate jdbc;
     @Autowired TransactionTemplate transacciones;
+    @Autowired JdbcAggregateTemplate plantilla;
+    @Autowired ObjectMapper json;
 
     private static NuevoDespliegue nuevo(long id, TipoDespliegue tipo, Long origen, List<PluginDesplegado> plugins) {
         return new NuevoDespliegue(id, "pe", tipo, origen, "synkra-core", "1.0.0", "reg/c@sha256:" + "a".repeat(64),
@@ -73,9 +76,16 @@ class TransicionesRegistroTest {
         return jdbc.queryForObject("select count(*) from " + tabla + " where " + col + " = ?", Integer.class, id);
     }
 
+    /** id1 es el origen de id8: quien corra primero lo registra, sin depender del orden de las pruebas. */
+    private void asegurarRegistrado1() {
+        if (filas("reg_despliegue", 1) == 0) {
+            api.registrar(valido(1));
+        }
+    }
+
     @Test
     void id1AplicandoAListo() {
-        api.registrar(valido(1));
+        asegurarRegistrado1();
         api.actualizarResultado(1, EstadoDespliegue.LISTO, null);
         assertThat(estado(1)).isEqualTo("listo");
         assertThat(filas("reg_contexto", 1)).isZero();
@@ -144,6 +154,7 @@ class TransicionesRegistroTest {
 
     @Test
     void id8UnaReversionGuardaSuOrigen() {
+        asegurarRegistrado1();
         api.registrar(nuevo(8, TipoDespliegue.REVERSION, 1L, List.of(kyc())));
         assertThat(jdbc.queryForMap("select tipo, origen_id, estado from reg_despliegue where id = 8"))
                 .containsEntry("tipo", "reversion").containsEntry("origen_id", 1)
@@ -154,7 +165,8 @@ class TransicionesRegistroTest {
     void id9DosPluginsConElMismoNombreRechazanElAltaEntera() {
         var repetido = List.of(kyc(), new PluginDesplegado("kyc-pe", "2.0.0", "c".repeat(64), Map.of()));
         assertThatThrownBy(() -> api.registrar(nuevo(9, TipoDespliegue.DESPLIEGUE, null, repetido)))
-                .isInstanceOf(RuntimeException.class);
+                .hasRootCauseInstanceOf(org.sqlite.SQLiteException.class)
+                .rootCause().hasMessageContaining("SQLITE_CONSTRAINT_PRIMARYKEY");
         assertThat(filas("reg_despliegue", 9)).isZero();
         assertThat(filas("reg_plugin", 9)).isZero();
     }
@@ -162,9 +174,11 @@ class TransicionesRegistroTest {
     @Test
     void id10RegistrarDosVecesRechazaLaSegundaYLaFilaNoCambia() {
         api.registrar(valido(10));
-        var otro = new NuevoDespliegue(10, "co", TipoDespliegue.DESPLIEGUE, null, "otro", "2.0.0", "x@sha256:" + "a".repeat(64),
-                "x", "y", Instant.parse("2027-01-01T00:00:00Z"), "{}", List.of());
-        assertThatThrownBy(() -> api.registrar(otro)).isInstanceOf(RuntimeException.class);
+        // valida en todo salvo el id repetido: solo puede caer por la clave primaria
+        var otro = new NuevoDespliegue(10, "pe", TipoDespliegue.DESPLIEGUE, null, "otro", "2.0.0", "x@sha256:" + "a".repeat(64),
+                "x", "y", Instant.parse("2027-01-01T00:00:00Z"), "{}", List.of(kyc()));
+        assertThatThrownBy(() -> api.registrar(otro)).hasRootCauseInstanceOf(org.sqlite.SQLiteException.class)
+                .rootCause().hasMessageContaining("SQLITE_CONSTRAINT_PRIMARYKEY");
         assertThat(jdbc.queryForMap("select pais, core, estado from reg_despliegue where id = 10"))
                 .containsEntry("pais", "pe").containsEntry("core", "synkra-core").containsEntry("estado", "aplicando");
         assertThat(filas("reg_plugin", 10)).isEqualTo(1);
@@ -182,41 +196,41 @@ class TransicionesRegistroTest {
     @Test
     void registrarDejaElDespliegueEnAplicandoSinTerminadoEnYConSuPlugin() {
         revertida(() -> {
-        api.registrar(valido(11));
-        assertThat(estado(11)).isEqualTo("aplicando");
-        assertThat(jdbc.queryForObject("select terminado_en is null from reg_despliegue where id = 11", Boolean.class))
-                .isTrue();
-        assertThat(jdbc.queryForObject("select etiquetas from reg_plugin where despliegue_id = 11", String.class))
-                .isEqualTo("{\"pais\":\"pe\"}");
-        assertThat(jdbc.queryForObject("select confirmado_en from reg_despliegue where id = 11", Long.class))
-                .isEqualTo(Instant.parse("2026-11-27T10:15:30.123Z").toEpochMilli());
+            api.registrar(valido(11));
+            assertThat(estado(11)).isEqualTo("aplicando");
+            assertThat(jdbc.queryForObject("select terminado_en is null from reg_despliegue where id = 11", Boolean.class))
+                    .isTrue();
+            assertThat(jdbc.queryForObject("select etiquetas from reg_plugin where despliegue_id = 11", String.class))
+                    .isEqualTo("{\"pais\":\"pe\"}");
+            assertThat(jdbc.queryForObject("select confirmado_en from reg_despliegue where id = 11", Long.class))
+                    .isEqualTo(Instant.parse("2026-11-27T10:15:30.123Z").toEpochMilli());
         });
     }
 
     @Test
     void pedirAplicandoComoResultadoSeRechaza() {
         revertida(() -> {
-        api.registrar(valido(21));
-        assertThatThrownBy(() -> api.actualizarResultado(21, EstadoDespliegue.APLICANDO, null))
-                .isInstanceOf(TransicionNoPermitidaException.class);
-        assertThat(estado(21)).isEqualTo("aplicando");
+            api.registrar(valido(21));
+            assertThatThrownBy(() -> api.actualizarResultado(21, EstadoDespliegue.APLICANDO, null))
+                    .isInstanceOf(TransicionNoPermitidaException.class);
+            assertThat(estado(21)).isEqualTo("aplicando");
         });
     }
 
     @Test
     void unIdInexistenteSeRechazaConNoSuchElement() {
         revertida(() -> {
-        assertThatThrownBy(() -> api.actualizarResultado(999, EstadoDespliegue.LISTO, null))
-                .isInstanceOf(NoSuchElementException.class);
+            assertThatThrownBy(() -> api.actualizarResultado(999, EstadoDespliegue.LISTO, null))
+                    .isInstanceOf(NoSuchElementException.class);
         });
     }
 
     @Test
     void registrarSinPluginsEsValidoYPluginsNuloCuentaComoVacio() {
         revertida(() -> {
-        api.registrar(nuevo(22, TipoDespliegue.DESPLIEGUE, null, null));
-        assertThat(filas("reg_despliegue", 22)).isEqualTo(1);
-        assertThat(filas("reg_plugin", 22)).isZero();
+            api.registrar(nuevo(22, TipoDespliegue.DESPLIEGUE, null, null));
+            assertThat(filas("reg_despliegue", 22)).isEqualTo(1);
+            assertThat(filas("reg_plugin", 22)).isZero();
         });
     }
 
@@ -239,5 +253,36 @@ class TransicionesRegistroTest {
         }
         assertThat(filas("reg_despliegue", 30)).isZero();
         assertThat(filas("reg_plugin", 30)).isZero();
+    }
+
+    @Test
+    void terminadoEnUsaElRelojDelConstructorDePaquete() {
+        var fijo = Clock.fixed(Instant.parse("2030-01-02T03:04:05.678Z"), ZoneOffset.UTC);
+        var servicio = new RegistroServicio(plantilla, jdbc, json, fijo);
+        revertida(() -> {
+            servicio.registrar(valido(23));
+            servicio.actualizarResultado(23, EstadoDespliegue.LISTO, null);
+            assertThat(jdbc.queryForObject("select terminado_en from reg_despliegue where id = 23", Long.class))
+                    .isEqualTo(fijo.millis());
+        });
+    }
+
+    /** Si el insert de reg_contexto falla, el UPDATE del estado debe revertirse con el: una sola transaccion. */
+    @Test
+    void siFallaElContextoElEstadoNoQuedaEnFallido() {
+        api.registrar(valido(40));
+        try {
+            jdbc.update("insert into reg_contexto (despliegue_id, log_core, log_init, eventos) values (40, '', '', '')");
+            assertThatThrownBy(() -> api.actualizarResultado(40, EstadoDespliegue.FALLIDO, new ContextoFallo("a", "b", "c")))
+                    .hasRootCauseInstanceOf(org.sqlite.SQLiteException.class)
+                    .rootCause().hasMessageContaining("SQLITE_CONSTRAINT_PRIMARYKEY");
+            assertThat(estado(40)).isEqualTo("aplicando");
+            assertThat(jdbc.queryForObject("select terminado_en is null from reg_despliegue where id = 40",
+                    Boolean.class)).isTrue();
+        } finally {
+            jdbc.update("delete from reg_contexto where despliegue_id = 40");
+            jdbc.update("delete from reg_plugin where despliegue_id = 40");
+            jdbc.update("delete from reg_despliegue where id = 40");
+        }
     }
 }
