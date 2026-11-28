@@ -42,48 +42,59 @@ ok()    { echo "ok $1"; }
 falla() { echo "FALLA $1: $2"; FALLOS=$((FALLOS + 1)); }
 
 # Caso 1: kyc-pe 1.3.0 es compatible; readiness 200 y GET /plugins lo lista.
+# Todo comando externo que pueda fallar convierte su fallo en `falla` y el script sigue con el caso siguiente.
 caso1() {
-  local caso="caso1-kyc-pe-1.3.0" nombre="smoke-c1-$SUFIJO" t0 estado="" puerto cuerpo
-  preparar "$caso" "1.3.0"
+  local caso="caso1-kyc-pe-1.3.0" nombre="smoke-c1-$SUFIJO" t0 estado="" puerto="" cuerpo corriendo
+  preparar "$caso" "1.3.0" || { falla "$caso" "no se pudo preparar /plugins y /config"; return; }
   docker run -d --name "$nombre" -p 127.0.0.1::8080 \
-    -v "$TMP/$caso/plugins:/plugins:ro" -v "$TMP/$caso/config:/config:ro" "$IMAGEN" >/dev/null
+    -v "$TMP/$caso/plugins:/plugins:ro" -v "$TMP/$caso/config:/config:ro" "$IMAGEN" >/dev/null \
+    || { falla "$caso" "docker run fallo"; return; }
   CONTENEDORES+=("$nombre")
   t0=$SECONDS
   while [ $((SECONDS - t0)) -lt "$TOPE_ESPERA" ]; do
-    if [ "$(docker inspect -f '{{.State.Running}}' "$nombre")" != "true" ]; then
+    corriendo="$(docker inspect -f '{{.State.Running}}' "$nombre" 2>/dev/null || true)"
+    if [ "$corriendo" != "true" ]; then
       falla "$caso" "el contenedor termino antes de estar listo"; return
     fi
-    puerto="$(docker port "$nombre" 8080/tcp | head -n1 | sed 's/.*://')"
-    estado="$(curl -s -o /dev/null -w '%{http_code}' --max-time 2 "http://127.0.0.1:$puerto/actuator/health/readiness" || true)"
-    [ "$estado" = "200" ] && break
+    puerto="$(docker port "$nombre" 8080/tcp 2>/dev/null | sed -n '1s/.*://p' || true)"
+    if [ -n "$puerto" ]; then
+      estado="$(curl -s -o /dev/null -w '%{http_code}' --max-time 2 "http://127.0.0.1:$puerto/actuator/health/readiness" || true)"
+      [ "$estado" = "200" ] && break
+    fi
     sleep 1
   done
   [ "$estado" = "200" ] || { falla "$caso" "readiness no llego a 200 en ${TOPE_ESPERA}s (ultimo: ${estado:-sin respuesta})"; return; }
-  cuerpo="$(curl -s --max-time 5 "http://127.0.0.1:$puerto/plugins")"
-  if echo "$cuerpo" | grep -q '"kyc-pe"' && echo "$cuerpo" | grep -q '1\.3\.0'; then
+  cuerpo="$(curl -s --max-time 5 "http://127.0.0.1:$puerto/plugins")" \
+    || { falla "$caso" "curl a GET /plugins fallo"; return; }
+  # Par exacto en el mismo elemento: {"nombre":"kyc-pe","version":"1.3.0"} (espacios opcionales).
+  if grep -Eq '\{[^{}]*"nombre" *: *"kyc-pe" *,[^{}]*"version" *: *"1\.3\.0"[^{}]*\}' <<<"$cuerpo"; then
     ok "$caso"
   else
-    falla "$caso" "GET /plugins no lista kyc-pe 1.3.0: $cuerpo"
+    falla "$caso" "GET /plugins no lista el par kyc-pe 1.3.0: $cuerpo"
   fi
 }
 
 # Caso 2: kyc-pe 2.0.0 exige core 3.x; el core debe terminar con codigo != 0 y VERSION_INCOMPATIBLE.
 caso2() {
-  local caso="caso2-kyc-pe-2.0.0" nombre="smoke-c2-$SUFIJO" t0 codigo=""
-  preparar "$caso" "2.0.0"
+  local caso="caso2-kyc-pe-2.0.0" nombre="smoke-c2-$SUFIJO" t0 codigo="" corriendo logs
+  preparar "$caso" "2.0.0" || { falla "$caso" "no se pudo preparar /plugins y /config"; return; }
   docker run -d --name "$nombre" \
-    -v "$TMP/$caso/plugins:/plugins:ro" -v "$TMP/$caso/config:/config:ro" "$IMAGEN" >/dev/null
+    -v "$TMP/$caso/plugins:/plugins:ro" -v "$TMP/$caso/config:/config:ro" "$IMAGEN" >/dev/null \
+    || { falla "$caso" "docker run fallo"; return; }
   CONTENEDORES+=("$nombre")
   t0=$SECONDS
   while [ $((SECONDS - t0)) -lt "$TOPE_ESPERA" ]; do
-    if [ "$(docker inspect -f '{{.State.Running}}' "$nombre")" != "true" ]; then
-      codigo="$(docker wait "$nombre")"; break
+    corriendo="$(docker inspect -f '{{.State.Running}}' "$nombre" 2>/dev/null || true)"
+    if [ "$corriendo" != "true" ]; then
+      codigo="$(docker wait "$nombre" 2>/dev/null)" || { falla "$caso" "docker wait fallo"; return; }
+      break
     fi
     sleep 1
   done
   [ -n "$codigo" ] || { falla "$caso" "el core no termino en ${TOPE_ESPERA}s"; return; }
   [ "$codigo" != "0" ] || { falla "$caso" "termino con codigo 0"; return; }
-  if docker logs "$nombre" 2>&1 | grep -q 'VERSION_INCOMPATIBLE plugin=kyc-pe'; then
+  logs="$(docker logs "$nombre" 2>&1)" || { falla "$caso" "docker logs fallo"; return; }
+  if grep -q 'VERSION_INCOMPATIBLE plugin=kyc-pe' <<<"$logs"; then
     ok "$caso"
   else
     falla "$caso" "codigo $codigo pero el log no contiene 'VERSION_INCOMPATIBLE plugin=kyc-pe'"
