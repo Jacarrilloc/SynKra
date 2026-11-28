@@ -1,0 +1,60 @@
+fecha=2026-11-28T07:26:35Z uname -m=x86_64
+3a30e4b
+2
+ bitacoras/U09-C-evidencia/ca1.sh                   |  11 +
+ bitacoras/U09-C-evidencia/ca1.txt                  |  18 +
+ bitacoras/U09-C-evidencia/ca2.sh                   |  14 +
+ bitacoras/U09-C-evidencia/ca2.txt                  |  20 +
+ bitacoras/U09-C-evidencia/ca3.sh                   |  16 +
+ bitacoras/U09-C-evidencia/ca3.txt                  |  32 ++
+ bitacoras/U09-C-evidencia/ca4.sh                   |   8 +
+ bitacoras/U09-C-evidencia/ca4.txt                  |  28 ++
+ bitacoras/U09-C-evidencia/ca5.sh                   |  15 +
+ bitacoras/U09-C-evidencia/ca5.txt                  |  42 ++
+ bitacoras/U09-C-evidencia/ca6.sh                   |  21 +
+ bitacoras/U09-C-evidencia/ca6.txt                  |  28 ++
+ bitacoras/U09-C-evidencia/ca7.sh                   |  37 ++
+ bitacoras/U09-C-evidencia/ca7.txt                  | 229 +++++++++++
+ bitacoras/U09-C-evidencia/lib.sh                   |  10 +
+ bitacoras/U09-C-evidencia/rojo.sh                  |  17 +
+ bitacoras/U09-C-evidencia/rojo.txt                 | 119 ++++++
+ bitacoras/U09-C.md                                 |  46 +++
+ front.Tests/ApiSynkraEscriturasTest.cs             | 305 ++++++++++++++
+ front.Tests/ArranqueTest.cs                        | 118 ++++++
+ front.Tests/DesplegarTest.cs                       | 390 ++++++++++++++++++
+ front.Tests/Fixtures/desplegar-confirmacion.json   |   1 +
+ front.Tests/Fixtures/desplegar-cores.json          |   9 +
+ .../Fixtures/desplegar-error-combinacion.json      |   7 +
+ .../Fixtures/desplegar-error-seleccion.json        |   7 +
+ front.Tests/Fixtures/desplegar-error-usuario.json  |   7 +
+ front.Tests/Fixtures/desplegar-error-vencido.json  |   1 +
+ front.Tests/Fixtures/desplegar-paises.json         |  22 +
+ front.Tests/Fixtures/desplegar-plan-pe.json        |  26 ++
+ front.Tests/Fixtures/desplegar-plugins-pe.json     |   4 +
+ front.Tests/Fixtures/desplegar-plugins.json        |   5 +
+ .../Fixtures/desplegar-veredicto-aprobado.json     |   1 +
+ .../Fixtures/desplegar-veredicto-rechazado.json    |  24 ++
+ .../Fixtures/desplegar-veredicto-vacio.json        |   1 +
+ front.Tests/Fixtures/reversion-confirmacion.json   |   1 +
+ front.Tests/Fixtures/reversion-error-en-curso.json |   1 +
+ front.Tests/Fixtures/reversion-error-origen.json   |   1 +
+ front.Tests/Fixtures/reversion-origen-3.json       |  19 +
+ front.Tests/Fixtures/reversion-plan.json           |  26 ++
+ front.Tests/Fixtures/subida-error-conflicto.json   |   1 +
+ front.Tests/Fixtures/subida-error-descriptor.json  |   7 +
+ front.Tests/Fixtures/subida-plugin.json            |   9 +
+ front.Tests/ManejadorHttpSimulado.cs               | 134 +++++-
+ front.Tests/ReversionDetalleTest.cs                | 153 +++++++
+ front.Tests/SubidaCatalogoTest.cs                  | 129 ++++++
+ front/Api/ApiSynkra.Catalogo.cs                    |  14 +
+ front/Api/ApiSynkra.Escrituras.cs                  |  63 +++
+ front/Api/ApiSynkra.cs                             |   4 +-
+ front/Api/ModelosCatalogo.cs                       |  14 +
+ front/Api/ModelosDespliegue.cs                     |  58 +++
+ front/Components/Pages/Desplegar.razor             | 453 +++++++++++++++++++++
+ front/Components/Pages/Reversion.razor             | 206 ++++++++++
+ front/Components/Pages/SubirPlugin.razor           |  94 +++++
+ 53 files changed, 3014 insertions(+), 12 deletions(-)
+fuera=1
+0
+0
