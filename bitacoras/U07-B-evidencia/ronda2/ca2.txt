@@ -1,0 +1,11 @@
+2026-11-27T20:14:14-05:00
+sha c9d0814
+$ ./gradlew :backend:test --rerun --tests '*CrearPlanTest'
+BUILD SUCCESSFUL in 11s
+tests="9" skipped="0" failures="0" errors="0"
+$ python3 -I -c ... (el literal de CA-2)
+[('cl', 'despliegue', 'pendiente', 'synkra-cl', 0, 0, 1, 1, 1, 1800000), ('co', 'despliegue', 'pendiente', 'synkra-co', 1, 1, 1, 0, 1, 1800000), ('pe', 'despliegue', 'pendiente', 'synkra-pe', 1, 0, 0, 0, 0, 1800000)]
+(0,)
+[('kyc-viejo', 'kyc-pe', 'kyc-co', 1)]
+$ python3 -I -c ... orden de plugins en dep_plan para co (F-01; el plan pidió kyc-pe antes que kyc-co)
+[('[{"nombre":"kyc-co","version":"1.0.0"},{"nombre":"kyc-pe","version":"1.3.0"}]', 'kyc-co', 'kyc-pe')]
