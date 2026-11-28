@@ -1138,3 +1138,7 @@ Se despacha el codificador de la ronda 2.
 ## 2026-11-28T08:03Z: enmienda de U09-D (CA-1 y decisión 4)
 
 **Acción del orquestador:** el codificador de U09-D hizo la unión (merge de `main` `5e00878` en `72949f7`) y corrió CA-1: conteos 25/21/21 y 117 (por las pruebas que pidió el arbitraje de U09-C) y `resto=0` por la cabecera `<th>Core compatible</th>`. Se enmienda U09-D como U09-B y U09-C: el `grep` `resto` ignora el texto visible entre etiquetas, y los conteos pasan a 25/21/21 y 117. La decisión 4 se enmienda con la desviación ya aceptada (`COPY . .` antes del `restore`). Nuevo hash: `529ca4f3faaa8c5176f77029b96d0770baad67e5`.
+
+## 2026-11-28T09:10Z: fusión de #116 (U08-D) y #109 (Postman); tarea U08-E
+
+**Acción del orquestador:** U08-D salió VERDE en la ronda 2. Fusión de #116 en `37e89a0`; `./gradlew test --rerun check` pasó (`salida=0`; 897 pruebas, 0 saltos, 0 fallos). Fusión de #109 (colección de Postman, pedido de Julian) en `4881428`. Se escribe U08-E: resumen de U08 y `GUIA.md` (instalación y uso, prometida a David y Julian), con una corrida fresca en esta máquina. Hash: `e4db42567c8de575c596e5a5d609857e709d3979`. Revisor `sonnet`.
