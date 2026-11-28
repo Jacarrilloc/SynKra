@@ -15,6 +15,8 @@ final class CodigosDespliegue {
     static final String PLAN_DESACTUALIZADO = "PLAN_DESACTUALIZADO";
     static final String APLICACION_FALLIDA = "APLICACION_FALLIDA";
     static final String USUARIO_INVALIDO = "USUARIO_INVALIDO";
+    static final String ORIGEN_NO_LISTO = "ORIGEN_NO_LISTO";
+    static final String ORIGEN_DESACTUALIZADO = "ORIGEN_DESACTUALIZADO";
 
     private CodigosDespliegue() {
     }

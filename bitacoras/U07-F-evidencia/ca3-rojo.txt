@@ -1,0 +1,27 @@
+ROJO  2026-11-27T22:15:24-05:00  copia de e333c8b (solo ReversionTest, sin RutasReversion ni prepararReversion)
+
+ .../java/io/synkra/despliegue/ReversionTest.java   | 452 +++++++++++++++++++++
+ 1 file changed, 452 insertions(+)
+$ ./gradlew :backend:test --rerun --tests '*ReversionTest'
+ReversionTest > coElOrigenQueNoEstaListoNoSeRevierte() FAILED
+ReversionTest > pyRevertirAlQueCorreEsUnPlanSinCambiosQueTambienVence() FAILED
+ReversionTest > peRevertirAUnListoCreaUnPlanNuevoQueSeConfirmaYSeVigila() FAILED
+ReversionTest > unOrigenQueNoExisteODeIdInvalidoDa404Y400() FAILED
+ReversionTest > boUnUsuarioInvalidoSeRechazaAntesDeTodo() FAILED
+ReversionTest > arElCatalogoYaNoTieneLoQueCorrioDaOrigenDesactualizado() FAILED
+ReversionTest > mxUnPaisQueYaNoEstaPermitidoNoSeRevierte() FAILED
+ReversionTest > clUnPluginQueYaNoEsCompatibleODesaparecioDaElMismoRechazoDeLaCreacion() FAILED
+ReversionTest > ecConfirmarLaReversionConOtroAplicandoEnElPaisDaDespliegueEnCurso() FAILED
+> Task :backend:test FAILED
+9 tests completed, 9 failed
+BUILD FAILED in 8s
+tests="9" skipped="0" failures="9" errors="0"
+CAE: coElOrigenQueNoEstaListoNoSeRevierte | org.opentest4j.AssertionFailedError:  expected: 422 UNPROCESSABLE_ENTITY  but was: 404 NOT_FOUND
+CAE: pyRevertirAlQueCorreEsUnPlanSinCambiosQueTambienVence | org.opentest4j.AssertionFailedError:  expected: 201 CREATED  but was: 404 NOT_FOUND
+CAE: peRevertirAUnListoCreaUnPlanNuevoQueSeConfirmaYSeVigila | org.opentest4j.AssertionFailedError:  expected: 201 CREATED  but was: 404 NOT_FOUND
+CAE: unOrigenQueNoExisteODeIdInvalidoDa404Y400 | org.opentest4j.AssertionFailedError:  expected: 400 BAD_REQUEST  but was: 404 NOT_FOUND
+CAE: boUnUsuarioInvalidoSeRechazaAntesDeTodo | org.opentest4j.AssertionFailedError:  expected: 422 UNPROCESSABLE_ENTITY  but was: 404 NOT_FOUND
+CAE: arElCatalogoYaNoTieneLoQueCorrioDaOrigenDesactualizado | org.opentest4j.AssertionFailedError:  expected: 422 UNPROCESSABLE_ENTITY  but was: 404 NOT_FOUND
+CAE: mxUnPaisQueYaNoEstaPermitidoNoSeRevierte | org.opentest4j.AssertionFailedError:  expected: 422 UNPROCESSABLE_ENTITY  but was: 404 NOT_FOUND
+CAE: clUnPluginQueYaNoEsCompatibleODesaparecioDaElMismoRechazoDeLaCreacion | org.opentest4j.AssertionFailedError:  expected: 422 UNPROCESSABLE_ENTITY  but was: 404 NOT_FOUND
+CAE: ecConfirmarLaReversionConOtroAplicandoEnElPaisDaDespliegueEnCurso | org.opentest4j.AssertionFailedError:  expected: 1  but was: 2

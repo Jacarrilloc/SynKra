@@ -1,0 +1,244 @@
+CA-3 ronda 3: HEAD 8cd0286 (2026-11-27T22:37:49-05:00)
+### m1-origen-listo
+$ sed -i -e s/if (d.estado() != EstadoDespliegue.LISTO) {/if (false) {/ /tmp/tmp.UKp6f8CxUi/backend/src/main/java/io/synkra/despliegue/PlanServicio.java
+81c81
+<         if (d.estado() != EstadoDespliegue.LISTO) {
+---
+>         if (false) {
+ReversionTest > coElOrigenQueNoEstaListoNoSeRevierte() FAILED
+    java.lang.AssertionError at ReversionTest.java:328
+ReversionTest > ecConfirmarLaReversionConOtroAplicandoEnElPaisDaDespliegueEnCurso() FAILED
+    org.opentest4j.AssertionFailedError at ReversionTest.java:128
+> Task :backend:test FAILED
+BUILD FAILED in 9s
+--- XML:
+/tmp/tmp.UKp6f8CxUi/backend/build/test-results/test/TEST-io.synkra.despliegue.ReversionTest.xml
+tests="9" skipped="0" failures="2" errors="0"
+CAE: coElOrigenQueNoEstaListoNoSeRevierte | java.lang.AssertionError:  Expecting map:   {&quot;codigo&quot;=&quot;COMBINACION_RECHAZADA&quot;, &quot;detalles&quot;=[{&quot;campo&quot;=&quot;plugins.kyc-pe&quot;, &quot;motivo&quot;=&quot
+CAE: ecConfirmarLaReversionConOtroAplicandoEnElPaisDaDespliegueEnCurso | org.opentest4j.AssertionFailedError:  expected: 1  but was: 2
+### m2-RD1-pais
+$ sed -i -e s/^        paises.namespace(d.pais());$// /tmp/tmp.xxM5HtVbWT/backend/src/main/java/io/synkra/despliegue/PlanServicio.java
+85c85
+<         paises.namespace(d.pais());
+---
+> 
+ReversionTest > mxUnPaisQueYaNoEstaPermitidoNoSeRevierte() FAILED
+    java.lang.AssertionError at ReversionTest.java:389
+> Task :backend:test FAILED
+BUILD FAILED in 9s
+--- XML:
+/tmp/tmp.xxM5HtVbWT/backend/build/test-results/test/TEST-io.synkra.despliegue.ReversionTest.xml
+tests="9" skipped="0" failures="1" errors="0"
+CAE: mxUnPaisQueYaNoEstaPermitidoNoSeRevierte | java.lang.AssertionError:  Expecting map:   {&quot;codigo&quot;=&quot;COMBINACION_RECHAZADA&quot;, &quot;detalles&quot;=[{&quot;campo&quot;=&quot;plugins.kyc-pe&quot;, &quot;motivo&quot;=&quot
+### m3-RD3-verificar
+$ sed -i -e /PlanPreparado prepararReversion/,$ s/^        rechazaSiNoCompatible(verificado.veredicto());$// /tmp/tmp.gHzRVuZ6yq/backend/src/main/java/io/synkra/despliegue/PlanServicio.java
+89c89
+<         rechazaSiNoCompatible(verificado.veredicto());
+---
+> 
+ReversionTest > clUnPluginQueYaNoEsCompatibleODesaparecioDaElMismoRechazoDeLaCreacion() FAILED
+    org.opentest4j.AssertionFailedError at ReversionTest.java:350
+> Task :backend:test FAILED
+BUILD FAILED in 9s
+--- XML:
+/tmp/tmp.gHzRVuZ6yq/backend/build/test-results/test/TEST-io.synkra.despliegue.ReversionTest.xml
+tests="9" skipped="0" failures="1" errors="0"
+CAE: clUnPluginQueYaNoEsCompatibleODesaparecioDaElMismoRechazoDeLaCreacion | org.opentest4j.AssertionFailedError:  expected: 422 UNPROCESSABLE_ENTITY  but was: 201 CREATED
+### m4a-resumen-imagen
+$ sed -i -e s/if (!resumen.imagen().equals(d.imagen()) || /if (/ /tmp/tmp.VSFgsG7oX9/backend/src/main/java/io/synkra/despliegue/PlanServicio.java
+92c92
+<         if (!resumen.imagen().equals(d.imagen()) || !ternas(d.plugins()).equals(Set.copyOf(resumen.plugins()))) {
+---
+>         if (!ternas(d.plugins()).equals(Set.copyOf(resumen.plugins()))) {
+ReversionTest > arElCatalogoYaNoTieneLoQueCorrioDaOrigenDesactualizado() FAILED
+    org.opentest4j.AssertionFailedError at ReversionTest.java:374
+> Task :backend:test FAILED
+BUILD FAILED in 9s
+--- XML:
+/tmp/tmp.VSFgsG7oX9/backend/build/test-results/test/TEST-io.synkra.despliegue.ReversionTest.xml
+tests="9" skipped="0" failures="1" errors="0"
+CAE: arElCatalogoYaNoTieneLoQueCorrioDaOrigenDesactualizado | org.opentest4j.AssertionFailedError:  expected: 422 UNPROCESSABLE_ENTITY  but was: 201 CREATED
+### m4b-resumen-plugins
+$ sed -i -e s/ || !ternas(d.plugins()).equals(Set.copyOf(resumen.plugins()))// /tmp/tmp.uyhF7Eb3VM/backend/src/main/java/io/synkra/despliegue/PlanServicio.java
+92c92
+<         if (!resumen.imagen().equals(d.imagen()) || !ternas(d.plugins()).equals(Set.copyOf(resumen.plugins()))) {
+---
+>         if (!resumen.imagen().equals(d.imagen())) {
+ReversionTest > arElCatalogoYaNoTieneLoQueCorrioDaOrigenDesactualizado() FAILED
+    org.opentest4j.AssertionFailedError at ReversionTest.java:374
+> Task :backend:test FAILED
+BUILD FAILED in 9s
+--- XML:
+/tmp/tmp.uyhF7Eb3VM/backend/build/test-results/test/TEST-io.synkra.despliegue.ReversionTest.xml
+tests="9" skipped="0" failures="1" errors="0"
+CAE: arElCatalogoYaNoTieneLoQueCorrioDaOrigenDesactualizado | org.opentest4j.AssertionFailedError:  expected: 422 UNPROCESSABLE_ENTITY  but was: 201 CREATED
+### m5-tipo-y-origen-del-plan
+$ sed -i -e s/return guardar(d.pais(), Plan.REVERSION, origenId, /return guardar(d.pais(), Plan.DESPLIEGUE, null, / /tmp/tmp.ScKVO6bWND/backend/src/main/java/io/synkra/despliegue/PlanServicio.java
+96c96
+<         return guardar(d.pais(), Plan.REVERSION, origenId, d.core(), resumen, creadoPor);
+---
+>         return guardar(d.pais(), Plan.DESPLIEGUE, null, d.core(), resumen, creadoPor);
+ReversionTest > pyRevertirAlQueCorreEsUnPlanSinCambiosQueTambienVence() FAILED
+    java.lang.AssertionError at ReversionTest.java:290
+ReversionTest > peRevertirAUnListoCreaUnPlanNuevoQueSeConfirmaYSeVigila() FAILED
+    java.lang.AssertionError at ReversionTest.java:216
+> Task :backend:test FAILED
+BUILD FAILED in 8s
+--- XML:
+/tmp/tmp.ScKVO6bWND/backend/build/test-results/test/TEST-io.synkra.despliegue.ReversionTest.xml
+tests="9" skipped="0" failures="2" errors="0"
+CAE: pyRevertirAlQueCorreEsUnPlanSinCambiosQueTambienVence | java.lang.AssertionError:  Expecting map:   {&quot;cambios&quot;={&quot;anadidos&quot;=[], &quot;core&quot;={&quot;antes&quot;=&quot;localhost:5001/synkra-core@sha256:aaaaaaaaaaaaaaaaaaaaaaaaa
+CAE: peRevertirAUnListoCreaUnPlanNuevoQueSeConfirmaYSeVigila | java.lang.AssertionError:  Expecting map:   {&quot;cambios&quot;={&quot;anadidos&quot;=[{&quot;nombre&quot;=&quot;kyc-pe&quot;, &quot;sha256&quot;=&quot;448dac0d5644fa2dc3dbd9665b475b1af93b3fe
+### m5a-solo-tipo
+$ sed -i -e s/return guardar(d.pais(), Plan.REVERSION, origenId, /return guardar(d.pais(), Plan.DESPLIEGUE, origenId, / /tmp/tmp.ZGwN8ROUzP/backend/src/main/java/io/synkra/despliegue/PlanServicio.java
+96c96
+<         return guardar(d.pais(), Plan.REVERSION, origenId, d.core(), resumen, creadoPor);
+---
+>         return guardar(d.pais(), Plan.DESPLIEGUE, origenId, d.core(), resumen, creadoPor);
+ReversionTest > pyRevertirAlQueCorreEsUnPlanSinCambiosQueTambienVence() FAILED
+    org.opentest4j.AssertionFailedError at ReversionTest.java:287
+ReversionTest > peRevertirAUnListoCreaUnPlanNuevoQueSeConfirmaYSeVigila() FAILED
+    org.opentest4j.AssertionFailedError at ReversionTest.java:211
+ReversionTest > ecConfirmarLaReversionConOtroAplicandoEnElPaisDaDespliegueEnCurso() FAILED
+    org.opentest4j.AssertionFailedError at ReversionTest.java:406
+> Task :backend:test FAILED
+BUILD FAILED in 8s
+--- XML:
+/tmp/tmp.ZGwN8ROUzP/backend/build/test-results/test/TEST-io.synkra.despliegue.ReversionTest.xml
+tests="9" skipped="0" failures="3" errors="0"
+CAE: pyRevertirAlQueCorreEsUnPlanSinCambiosQueTambienVence | org.opentest4j.AssertionFailedError:  expected: 201 CREATED  but was: 500 INTERNAL_SERVER_ERROR
+CAE: peRevertirAUnListoCreaUnPlanNuevoQueSeConfirmaYSeVigila | org.opentest4j.AssertionFailedError:  expected: 201 CREATED  but was: 500 INTERNAL_SERVER_ERROR
+CAE: ecConfirmarLaReversionConOtroAplicandoEnElPaisDaDespliegueEnCurso | org.opentest4j.AssertionFailedError:  expected: 201 CREATED  but was: 500 INTERNAL_SERVER_ERROR
+### m5b-solo-origen
+$ sed -i -e s/return guardar(d.pais(), Plan.REVERSION, origenId, /return guardar(d.pais(), Plan.REVERSION, null, / /tmp/tmp.upZrfxMRRz/backend/src/main/java/io/synkra/despliegue/PlanServicio.java
+96c96
+<         return guardar(d.pais(), Plan.REVERSION, origenId, d.core(), resumen, creadoPor);
+---
+>         return guardar(d.pais(), Plan.REVERSION, null, d.core(), resumen, creadoPor);
+ReversionTest > pyRevertirAlQueCorreEsUnPlanSinCambiosQueTambienVence() FAILED
+    org.opentest4j.AssertionFailedError at ReversionTest.java:287
+ReversionTest > peRevertirAUnListoCreaUnPlanNuevoQueSeConfirmaYSeVigila() FAILED
+    org.opentest4j.AssertionFailedError at ReversionTest.java:211
+ReversionTest > ecConfirmarLaReversionConOtroAplicandoEnElPaisDaDespliegueEnCurso() FAILED
+    org.opentest4j.AssertionFailedError at ReversionTest.java:406
+> Task :backend:test FAILED
+BUILD FAILED in 8s
+--- XML:
+/tmp/tmp.upZrfxMRRz/backend/build/test-results/test/TEST-io.synkra.despliegue.ReversionTest.xml
+tests="9" skipped="0" failures="3" errors="0"
+CAE: pyRevertirAlQueCorreEsUnPlanSinCambiosQueTambienVence | org.opentest4j.AssertionFailedError:  expected: 201 CREATED  but was: 500 INTERNAL_SERVER_ERROR
+CAE: peRevertirAUnListoCreaUnPlanNuevoQueSeConfirmaYSeVigila | org.opentest4j.AssertionFailedError:  expected: 201 CREATED  but was: 500 INTERNAL_SERVER_ERROR
+CAE: ecConfirmarLaReversionConOtroAplicandoEnElPaisDaDespliegueEnCurso | org.opentest4j.AssertionFailedError:  expected: 201 CREATED  but was: 500 INTERNAL_SERVER_ERROR
+### m6-confirmar-tipo-y-origen
+$ sed -i -e s/TipoDespliegue.valueOf(plan.tipo().toUpperCase(Locale.ROOT)), plan.origenId(),/TipoDespliegue.DESPLIEGUE, null,/ /tmp/tmp.gk5ISuJXqY/backend/src/main/java/io/synkra/despliegue/ReservaConfirmacion.java
+64c64
+<                 TipoDespliegue.valueOf(plan.tipo().toUpperCase(Locale.ROOT)), plan.origenId(), plan.core(),
+---
+>                 TipoDespliegue.DESPLIEGUE, null, plan.core(),
+ReversionTest > peRevertirAUnListoCreaUnPlanNuevoQueSeConfirmaYSeVigila() FAILED
+    org.opentest4j.AssertionFailedError at ReversionTest.java:247
+ReversionTest > ecConfirmarLaReversionConOtroAplicandoEnElPaisDaDespliegueEnCurso() FAILED
+    org.opentest4j.AssertionFailedError at ReversionTest.java:128
+> Task :backend:test FAILED
+BUILD FAILED in 8s
+--- XML:
+/tmp/tmp.gk5ISuJXqY/backend/build/test-results/test/TEST-io.synkra.despliegue.ReversionTest.xml
+tests="9" skipped="0" failures="2" errors="0"
+CAE: peRevertirAUnListoCreaUnPlanNuevoQueSeConfirmaYSeVigila | org.opentest4j.AssertionFailedError:  expected: REVERSION  but was: DESPLIEGUE
+CAE: ecConfirmarLaReversionConOtroAplicandoEnElPaisDaDespliegueEnCurso | org.opentest4j.AssertionFailedError:  expected: 1  but was: 2
+### m7-usuario-en-el-servicio
+$ sed -i -e /PlanPreparado prepararReversion/,$ s/return guardar(d.pais(), Plan.REVERSION, origenId, d.core(), resumen, creadoPor);/return guardar(d.pais(), Plan.REVERSION, origenId, d.core(), resumen, Usuario.ANONIMO);/ /tmp/tmp.m4QLGjUzwE/backend/src/main/java/io/synkra/despliegue/PlanServicio.java
+96c96
+<         return guardar(d.pais(), Plan.REVERSION, origenId, d.core(), resumen, creadoPor);
+---
+>         return guardar(d.pais(), Plan.REVERSION, origenId, d.core(), resumen, Usuario.ANONIMO);
+ReversionTest > peRevertirAUnListoCreaUnPlanNuevoQueSeConfirmaYSeVigila() FAILED
+    java.lang.AssertionError at ReversionTest.java:218
+> Task :backend:test FAILED
+BUILD FAILED in 9s
+--- XML:
+/tmp/tmp.m4QLGjUzwE/backend/build/test-results/test/TEST-io.synkra.despliegue.ReversionTest.xml
+tests="9" skipped="0" failures="1" errors="0"
+CAE: peRevertirAUnListoCreaUnPlanNuevoQueSeConfirmaYSeVigila | java.lang.AssertionError:  Expecting map:   {&quot;cambios&quot;={&quot;anadidos&quot;=[{&quot;nombre&quot;=&quot;kyc-pe&quot;, &quot;sha256&quot;=&quot;a67ec7fd376328b776521cae85926fbe6214817
+### m7b-usuario-en-la-ruta
+$ sed -i -e s/var creadoPor = Usuario.de(usuario);/var creadoPor = usuario;/ /tmp/tmp.jwaZmQYCLP/backend/src/main/java/io/synkra/despliegue/RutasReversion.java
+28c28
+<         var creadoPor = Usuario.de(usuario);
+---
+>         var creadoPor = usuario;
+ReversionTest > boUnUsuarioInvalidoSeRechazaAntesDeTodo() FAILED
+    org.opentest4j.AssertionFailedError at ReversionTest.java:432
+> Task :backend:test FAILED
+BUILD FAILED in 9s
+--- XML:
+/tmp/tmp.jwaZmQYCLP/backend/build/test-results/test/TEST-io.synkra.despliegue.ReversionTest.xml
+tests="9" skipped="0" failures="1" errors="0"
+CAE: boUnUsuarioInvalidoSeRechazaAntesDeTodo | org.opentest4j.AssertionFailedError:  expected: 422 UNPROCESSABLE_ENTITY  but was: 201 CREATED
+### m8-sin-cluster-leer-antes
+$ sed -i -e s/^        var d = origen.get();$/        var d = origen.get();\n        leer(d.pais());/ /tmp/tmp.qs3bf0Dlgk/backend/src/main/java/io/synkra/despliegue/PlanServicio.java
+80a81
+>         leer(d.pais());
+ReversionTest > coElOrigenQueNoEstaListoNoSeRevierte() FAILED
+    java.lang.AssertionError at ReversionTest.java:187
+ReversionTest > arElCatalogoYaNoTieneLoQueCorrioDaOrigenDesactualizado() FAILED
+    java.lang.AssertionError at ReversionTest.java:187
+ReversionTest > mxUnPaisQueYaNoEstaPermitidoNoSeRevierte() FAILED
+    java.lang.AssertionError at ReversionTest.java:187
+ReversionTest > clUnPluginQueYaNoEsCompatibleODesaparecioDaElMismoRechazoDeLaCreacion() FAILED
+    java.lang.AssertionError at ReversionTest.java:187
+ReversionTest > ecConfirmarLaReversionConOtroAplicandoEnElPaisDaDespliegueEnCurso() FAILED
+    org.opentest4j.AssertionFailedError at ReversionTest.java:128
+> Task :backend:test FAILED
+BUILD FAILED in 8s
+--- XML:
+/tmp/tmp.qs3bf0Dlgk/backend/build/test-results/test/TEST-io.synkra.despliegue.ReversionTest.xml
+tests="9" skipped="0" failures="5" errors="0"
+CAE: coElOrigenQueNoEstaListoNoSeRevierte | java.lang.AssertionError:  Expecting empty but was: [&quot;GET /apis/apps/v1/namespaces/synkra-co/deployments/synkra-core&quot;,     &quot;GET /api/v1/namespaces/synkra-co/configmaps/synkra-co
+CAE: arElCatalogoYaNoTieneLoQueCorrioDaOrigenDesactualizado | java.lang.AssertionError:  Expecting empty but was: [&quot;GET /apis/apps/v1/namespaces/synkra-ar/deployments/synkra-core&quot;,     &quot;GET /api/v1/namespaces/synkra-ar/configmaps/synkra-co
+CAE: mxUnPaisQueYaNoEstaPermitidoNoSeRevierte | java.lang.AssertionError:  Expecting empty but was: [&quot;GET /apis/apps/v1/namespaces/synkra-mx/deployments/synkra-core&quot;,     &quot;GET /api/v1/namespaces/synkra-mx/configmaps/synkra-co
+CAE: clUnPluginQueYaNoEsCompatibleODesaparecioDaElMismoRechazoDeLaCreacion | java.lang.AssertionError:  Expecting empty but was: [&quot;GET /apis/apps/v1/namespaces/synkra-cl/deployments/synkra-core&quot;,     &quot;GET /api/v1/namespaces/synkra-cl/configmaps/synkra-co
+CAE: ecConfirmarLaReversionConOtroAplicandoEnElPaisDaDespliegueEnCurso | org.opentest4j.AssertionFailedError:  expected: 1  but was: 2
+### p1-RD1-y-RD3-antes-de-LISTO
+$ sed -i -e s/^        var d = origen.get();$/        var d = origen.get();\n        paises.namespace(d.pais());\n        rechazaSiNoCompatible(verificacion.verificar(d.core(), d.versionCore(), d.plugins().stream().map(p -> new PluginPedido(p.nombre(), p.version())).toList()).veredicto());/ /tmp/tmp.owhQpTilmf/backend/src/main/java/io/synkra/despliegue/PlanServicio.java
+80a81,82
+>         paises.namespace(d.pais());
+>         rechazaSiNoCompatible(verificacion.verificar(d.core(), d.versionCore(), d.plugins().stream().map(p -> new PluginPedido(p.nombre(), p.version())).toList()).veredicto());
+ReversionTest > coElOrigenQueNoEstaListoNoSeRevierte() FAILED
+    java.lang.AssertionError at ReversionTest.java:328
+ReversionTest > ecConfirmarLaReversionConOtroAplicandoEnElPaisDaDespliegueEnCurso() FAILED
+    org.opentest4j.AssertionFailedError at ReversionTest.java:128
+> Task :backend:test FAILED
+BUILD FAILED in 8s
+--- XML:
+/tmp/tmp.owhQpTilmf/backend/build/test-results/test/TEST-io.synkra.despliegue.ReversionTest.xml
+tests="9" skipped="0" failures="2" errors="0"
+CAE: coElOrigenQueNoEstaListoNoSeRevierte | java.lang.AssertionError:  Expecting map:   {&quot;codigo&quot;=&quot;COMBINACION_RECHAZADA&quot;, &quot;detalles&quot;=[{&quot;campo&quot;=&quot;plugins.kyc-pe&quot;, &quot;motivo&quot;=&quot
+CAE: ecConfirmarLaReversionConOtroAplicandoEnElPaisDaDespliegueEnCurso | org.opentest4j.AssertionFailedError:  expected: 1  but was: 2
+### p3-leer-al-rechazar-por-RD3
+$ sed -i -e /PlanPreparado prepararReversion/,$ s/^        rechazaSiNoCompatible(verificado.veredicto());$/        try { rechazaSiNoCompatible(verificado.veredicto()); } catch (ExcepcionApi e) { leer(d.pais()); throw e; }/ /tmp/tmp.fgtQZme9Fz/backend/src/main/java/io/synkra/despliegue/PlanServicio.java
+89c89
+<         rechazaSiNoCompatible(verificado.veredicto());
+---
+>         try { rechazaSiNoCompatible(verificado.veredicto()); } catch (ExcepcionApi e) { leer(d.pais()); throw e; }
+ReversionTest > clUnPluginQueYaNoEsCompatibleODesaparecioDaElMismoRechazoDeLaCreacion() FAILED
+    java.lang.AssertionError at ReversionTest.java:187
+> Task :backend:test FAILED
+BUILD FAILED in 8s
+--- XML:
+/tmp/tmp.fgtQZme9Fz/backend/build/test-results/test/TEST-io.synkra.despliegue.ReversionTest.xml
+tests="9" skipped="0" failures="1" errors="0"
+CAE: clUnPluginQueYaNoEsCompatibleODesaparecioDaElMismoRechazoDeLaCreacion | java.lang.AssertionError:  Expecting empty but was: [&quot;GET /apis/apps/v1/namespaces/synkra-cl/deployments/synkra-core&quot;,     &quot;GET /api/v1/namespaces/synkra-cl/configmaps/synkra-co
+### p4-RD1-despues-de-RD3
+$ sed -i -e /PlanPreparado prepararReversion/,$ { /^        paises.namespace(d.pais());$/d; s/^        rechazaSiNoCompatible(verificado.veredicto());$/&\n        paises.namespace(d.pais());/; } /tmp/tmp.z30eHRCyFw/backend/src/main/java/io/synkra/despliegue/PlanServicio.java
+85d84
+<         paises.namespace(d.pais());
+89a89
+>         paises.namespace(d.pais());
+ReversionTest > mxUnPaisQueYaNoEstaPermitidoNoSeRevierte() FAILED
+    java.lang.AssertionError at ReversionTest.java:389
+> Task :backend:test FAILED
+BUILD FAILED in 8s
+--- XML:
+/tmp/tmp.z30eHRCyFw/backend/build/test-results/test/TEST-io.synkra.despliegue.ReversionTest.xml
+tests="9" skipped="0" failures="1" errors="0"
+CAE: mxUnPaisQueYaNoEstaPermitidoNoSeRevierte | java.lang.AssertionError:  Expecting map:   {&quot;codigo&quot;=&quot;COMBINACION_RECHAZADA&quot;, &quot;detalles&quot;=[{&quot;campo&quot;=&quot;plugins.kyc-pe&quot;, &quot;motivo&quot;=&quot

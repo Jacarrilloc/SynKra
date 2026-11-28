@@ -1,0 +1,15 @@
+CA-2 r2  2026-11-27T22:28:37-05:00  sha d832791
+BUILD SUCCESSFUL in 823ms
+201
+201
+201
+422 USUARIO_INVALIDO El usuario no es válido ['X-Synkra-Usuario']
+503 KUBERNETES_NO_DISPONIBLE No se puede leer lo que corre en el país []
+422 ORIGEN_NO_LISTO Solo se puede revertir a un despliegue listo []
+422 ORIGEN_NO_LISTO Solo se puede revertir a un despliegue listo []
+422 ORIGEN_DESACTUALIZADO El catálogo ya no tiene lo que se desplegó en el origen []
+422 COMBINACION_RECHAZADA La combinación no es compatible ['plugins.kyc-pe']
+422 PAIS_NO_PERMITIDO El país no está permitido ['pais']
+404 NO_ENCONTRADO Recurso no encontrado []
+(0,)
+[(61, 'pe', 'listo'), (62, 'pe', 'fallido'), (63, 'pe', 'aplicando'), (64, 'pe', 'listo'), (65, 'pe', 'listo'), (66, 'mx', 'listo')]
