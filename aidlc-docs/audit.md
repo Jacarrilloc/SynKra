@@ -1072,3 +1072,11 @@ Se despacha el codificador de la ronda 2.
 **Input del usuario (05:24:55Z):** salida de `sudo sysctl fs.inotify.max_user_instances=512 fs.inotify.max_user_watches=524288`.
 
 **Acción del orquestador:** imágenes descargadas; revisores de U09-A (ronda 3) y U08-A (ronda 1) despachados.
+
+## 2026-11-28T05:31:12Z: enmienda del CA-1 de U09-A (máquina de David)
+
+**Pregunta del orquestador:** U09-A salió NO-VERDE en la ronda 3 solo por el CA-1, que esperaba `arm64` y «sin SDK local» (hechos de la máquina de Julian). Recomendación: enmendar el CA-1 y correr una ronda 4 corta solo de ese criterio.
+
+**Input del usuario:** "No solo va correr en mi maquina así que simplifiquemos is en mi maquina corre y deberia de funcionar sin probelmas entonces mejor que mejor"
+
+**Acción del orquestador:** el CA-1 espera ahora `amd64` (máquina de David) y deja de comprobar «sin SDK local»; que `scripts/dotnet-docker.sh --version` dé `10.0.404` (y no el 10.0.115 del sistema) muestra que se usó el contenedor. Nuevo hash de la tarea: `0d01d83a7c08a791f308010c8fb6c4cd692e418e`. Ronda 4 del revisor limitada al CA-1, por decisión de David.

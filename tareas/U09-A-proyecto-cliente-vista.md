@@ -170,13 +170,12 @@ Todos se corren desde la raíz del repositorio. En las líneas `Passed!` / `Fail
   grep -c '<TreatWarningsAsErrors>true</TreatWarningsAsErrors>' front/Synkra.Front.csproj front.Tests/Synkra.Front.Tests.csproj
   grep -c "^IMAGEN='mcr.microsoft.com/dotnet/sdk:10.0.404'$" scripts/dotnet-docker.sh; test -x scripts/dotnet-docker.sh && echo ejecutable
   git ls-files front front.Tests | grep -iE '(^|/)(bin|obj|TestResults)/|wwwroot/lib/|Counter|Weather'; echo "sobrantes=$?"
-  command -v dotnet; echo "dotnet-local=$?"
   ```
   Esperado:
-  - el `RepoDigests` (se anota) y `arm64`; `10.0.404`.
+  - el `RepoDigests` (se anota) y `amd64` (los criterios se corren en la máquina de David, x86_64; enmienda del 2026-11-28 05:32 UTC); `10.0.404` (es la versión del contenedor: el SDK del sistema de esa máquina es otro, 10.0.115, y no se usa).
   - `Build succeeded.`, `0 Warning(s)` y `0 Error(s)`.
   - `1` y `1` (los dos `net10.0`); `0` (el front no tiene paquetes); exactamente cuatro líneas: `PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.12.0"`, `PackageReference Include="bunit" Version="2.15.2"`, `PackageReference Include="xunit" Version="2.9.3"`, `PackageReference Include="xunit.runner.visualstudio" Version="3.1.5"`; `1` y `1`.
-  - `1` y `ejecutable`; `sobrantes=1`; `dotnet-local=1` (sigue sin SDK en la máquina: nada se corrió fuera del contenedor).
+  - `1` y `ejecutable`; `sobrantes=1`.
 
 - [ ] **CA-2**: U09-T01. `ApiSynkra` contra el servidor HTTP simulado
   ```bash
