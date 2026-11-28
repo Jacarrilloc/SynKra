@@ -1024,3 +1024,5 @@ Se despacha el codificador de la ronda 2.
 ## 2026-11-28T03:48Z: fusión de #106 (U07-F) y #107 (rama del orquestador)
 
 **Acción del orquestador:** bajo la autorización de David de las 01:25:21Z, fusión de #106 (U07-F, reversión, VERDE en la ronda 3) y de #107 (rama del orquestador: cierre de U06, plan de U03, tareas U07-E a U07-G, candidatas C-121 a C-127), para que U07-G salga de un `main` con todo eso. Resultado de `./gradlew test --rerun check` en la sección siguiente.
+
+**Resultado (#106 y #107):** `main` en `2f47340`; `./gradlew test --rerun check` pasó (`salida=0`; 891 pruebas, 0 saltos, 0 fallos, 0 errores). U07-G sale de `2f47340`.
