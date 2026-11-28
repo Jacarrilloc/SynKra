@@ -3,6 +3,7 @@ package io.synkra.kubernetes;
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.ContainerStatus;
 import io.fabric8.kubernetes.api.model.Event;
+import io.fabric8.kubernetes.api.model.ObjectReference;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.client.KubernetesClient;
@@ -58,12 +59,32 @@ final class LectorPais {
                 ? d.getStatus().getReadyReplicas() : 0;
         List<Pod> pods = envuelve("los pods de " + ConstructorObjetosPais.NOMBRE_CORE, ns, () -> pods(ns));
         int reinicios = pods.stream().flatMap(LectorPais::estados).mapToInt(LectorPais::reinicios).sum();
-        if (listas == deseadas && deseadas > 0) {
+        // C-82: una razón de fallo en cualquier pod gana a las réplicas listas (un pod viejo listo no tapa al nuevo).
+        String razon = pods.stream().map(LectorPais::razonDeFallo).filter(Objects::nonNull).findFirst().orElse(null);
+        if (razon != null) {
+            return new EstadoPais(deseadas, listas, reinicios, FaseDespliegue.FALLIDO, razon);
+        }
+        if (listas == deseadas && deseadas > 0 && rolloutTerminado(d, deseadas)) {
             return new EstadoPais(deseadas, listas, reinicios, FaseDespliegue.LISTO, null);
         }
-        String razon = pods.stream().map(LectorPais::razonDeFallo).filter(Objects::nonNull).findFirst().orElse(null);
-        return new EstadoPais(deseadas, listas, reinicios,
-                razon != null ? FaseDespliegue.FALLIDO : FaseDespliegue.EN_CURSO, razon);
+        return new EstadoPais(deseadas, listas, reinicios, FaseDespliegue.EN_CURSO, null);
+    }
+
+    /**
+     * C-82: sin pods viejos sobrando, todas las réplicas actualizadas y la generación ya observada. Un campo nulo
+     * cuenta como cumplido: un clúster real siempre los da.
+     */
+    private static boolean rolloutTerminado(Deployment d, int deseadas) {
+        var status = d.getStatus();
+        if (status == null) {
+            return true;
+        }
+        boolean replicas = status.getReplicas() == null || status.getReplicas() == deseadas;
+        boolean actualizadas = status.getUpdatedReplicas() == null || status.getUpdatedReplicas() == deseadas;
+        Long generacion = d.getMetadata() != null ? d.getMetadata().getGeneration() : null;
+        boolean observada = status.getObservedGeneration() == null || generacion == null
+                || status.getObservedGeneration() >= generacion;
+        return replicas && actualizadas && observada;
     }
 
     /** Solo {@code get} del Deployment y del ConfigMap; vacío si no existe ninguno de los dos. */
@@ -142,11 +163,22 @@ final class LectorPais {
         Set<String> nombres = pods.stream().map(p -> p.getMetadata().getName()).collect(Collectors.toSet());
         List<Event> eventos = new ArrayList<>(cliente.v1().events().inNamespace(ns).list().getItems());
         return eventos.stream()
-                .filter(e -> e.getInvolvedObject() != null && nombres.contains(e.getInvolvedObject().getName()))
+                .filter(e -> e.getInvolvedObject() != null && (nombres.contains(e.getInvolvedObject().getName())
+                        || esDelDeploymentODeSusReplicaSet(e.getInvolvedObject())))
                 // Los eventos sin marca de tiempo válida van al final.
                 .sorted(Comparator.comparing(LectorPais::hora, Comparator.nullsLast(Comparator.naturalOrder())))
                 .map(e -> e.getType() + " " + e.getReason() + ": " + e.getMessage())
                 .collect(Collectors.joining("\n"));
+    }
+
+    /** C-83: el Deployment {@code synkra-core} y sus ReplicaSet ({@code synkra-core-<hash>}): ahí cae un {@code FailedCreate}. */
+    private static boolean esDelDeploymentODeSusReplicaSet(ObjectReference objeto) {
+        String nombre = objeto.getName();
+        if (nombre == null) {
+            return false;
+        }
+        return ("Deployment".equals(objeto.getKind()) && nombre.equals(ConstructorObjetosPais.NOMBRE_CORE))
+                || ("ReplicaSet".equals(objeto.getKind()) && nombre.startsWith(ConstructorObjetosPais.NOMBRE_CORE + "-"));
     }
 
     /** Instante del evento (se compara como {@link Instant}, no como texto); {@code null} si no tiene marca válida. */

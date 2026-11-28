@@ -8,6 +8,8 @@ import io.fabric8.kubernetes.client.server.mock.KubernetesMockServer;
 import io.fabric8.mockwebserver.Context;
 import io.fabric8.mockwebserver.MockWebServer;
 import io.fabric8.mockwebserver.ServerRequest;
+import io.fabric8.mockwebserver.dsl.HttpMethod;
+import io.fabric8.mockwebserver.internal.SimpleRequest;
 import io.fabric8.mockwebserver.ServerResponse;
 import io.fabric8.mockwebserver.http.Headers;
 import io.fabric8.mockwebserver.http.RecordedRequest;
@@ -47,6 +49,7 @@ public final class SimuladorKubernetes implements AutoCloseable {
     private final String propiedadCasa;
     private final String propiedadKubeconfig;
     private int leidas;
+    private final Map<ServerRequest, Queue<ServerResponse>> respuestas;
 
     public SimuladorKubernetes() {
         try {
@@ -59,6 +62,7 @@ public final class SimuladorKubernetes implements AutoCloseable {
         System.setProperty("user.home", casa.toString());
         System.setProperty("kubeconfig", casa.resolve("kubeconfig-falso").toString());
         var respuestas = new HashMap<ServerRequest, Queue<ServerResponse>>();
+        this.respuestas = respuestas;
         servidor = new KubernetesMockServer(new Context(), new MockWebServer(), respuestas,
                 new KubernetesMixedDispatcher(respuestas), false);
         servidor.init();
@@ -92,6 +96,9 @@ public final class SimuladorKubernetes implements AutoCloseable {
 
     /** El {@code GET} del Deployment de ese país responde 500. */
     public void fallaLecturas(String pais) {
+        // Una expectativa registrada antes (aceptaAplicar) se queda con el turno: se quita la de ese GET para que esta mande.
+        respuestas.remove(new SimpleRequest(HttpMethod.GET,
+                "/apis/apps/v1/namespaces/synkra-" + pais + "/deployments/" + ConstructorObjetosPais.NOMBRE_CORE));
         servidor.expect().get()
                 .withPath("/apis/apps/v1/namespaces/synkra-" + pais + "/deployments/" + ConstructorObjetosPais.NOMBRE_CORE)
                 .andReturn(500, "{\"kind\":\"Status\",\"code\":500}").always();
@@ -209,6 +216,17 @@ public final class SimuladorKubernetes implements AutoCloseable {
                         .withReady(true).withRestartCount(0)
                         .withState(new ContainerStateBuilder().withNewRunning().endRunning().build()).build()).build();
         crea(pais, nombre, estado);
+        sinLogs(pais, nombre);
+    }
+
+    /** Un pod listo no tiene nada que contar: la API responde 400 a sus logs (el simulado, sin esto, contesta otra cosa). */
+    private void sinLogs(String pais, String nombre) {
+        var ruta = "/api/v1/namespaces/synkra-" + pais + "/pods/" + nombre + "/log?pretty=false&container=";
+        for (var contenedor : List.of(ConstructorObjetosPais.CONTENEDOR_INIT,
+                ConstructorObjetosPais.CONTENEDOR_CORE + "&tailLines=200",
+                ConstructorObjetosPais.CONTENEDOR_CORE + "&previous=true&tailLines=200")) {
+            servidor.expect().get().withPath(ruta + contenedor).andReturn(400, "sin log").always();
+        }
     }
 
     private void siembraPodFallo(String pais, String nombre, String razon) {
@@ -239,6 +257,12 @@ public final class SimuladorKubernetes implements AutoCloseable {
         if (!init) {
             servidor.expect().get().withPath(ruta + ConstructorObjetosPais.CONTENEDOR_CORE + "&tailLines=200")
                     .andReturn(200, LOG_CORE).always();
+        } else {
+            // El core nunca arrancó: su log (y el del intento anterior) no existen.
+            servidor.expect().get().withPath(ruta + ConstructorObjetosPais.CONTENEDOR_CORE + "&tailLines=200")
+                    .andReturn(400, "container is waiting to start").always();
+            servidor.expect().get().withPath(ruta + ConstructorObjetosPais.CONTENEDOR_CORE + "&previous=true&tailLines=200")
+                    .andReturn(400, "previous terminated container not found").always();
         }
     }
 

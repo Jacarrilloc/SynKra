@@ -29,7 +29,7 @@ class EstadoRolloutTest {
 
     @Test
     void unPodViejoListoNoTapaAlNuevoQueFalla() {
-        k.deployment(1, 2L, 1, 1, 1, 2L);
+        k.deployment(1, 1, 1, 1, 1L);
         k.podListo("synkra-core-viejo");
         k.podFalla("synkra-core-nuevo", 3);
         var e = k.adaptador.estado(LecturasDePrueba.NS);
@@ -40,7 +40,7 @@ class EstadoRolloutTest {
 
     @Test
     void unPodNuevoPendienteConElViejoListoEsEnCurso() {
-        k.deployment(1, 2L, 2, 1, 1, 2L);
+        k.deployment(1, 2, 1, 1, 1L);
         k.podListo("synkra-core-viejo");
         k.podPendiente("synkra-core-nuevo");
         var e = k.adaptador.estado(LecturasDePrueba.NS);
@@ -50,28 +50,29 @@ class EstadoRolloutTest {
 
     @Test
     void conPodsViejosSobrandoEsEnCurso() {
-        k.deployment(1, 2L, 2, 1, 1, 2L);
+        k.deployment(1, 2, 1, 1, 1L);
         k.podListo("synkra-core-viejo");
         assertThat(k.adaptador.estado(LecturasDePrueba.NS).fase()).isEqualTo(FaseDespliegue.EN_CURSO);
     }
 
     @Test
     void sinTodasLasReplicasActualizadasEsEnCurso() {
-        k.deployment(1, 2L, 1, 1, 0, 2L);
+        k.deployment(1, 1, 1, 0, 1L);
         k.podListo("synkra-core-viejo");
         assertThat(k.adaptador.estado(LecturasDePrueba.NS).fase()).isEqualTo(FaseDespliegue.EN_CURSO);
     }
 
     @Test
     void unaGeneracionSinObservarEsEnCurso() {
-        k.deployment(1, 2L, 1, 1, 1, 1L);
+        k.deployment(1, 1, 1, 1, 0L);
+        assertThat(k.generacion()).isEqualTo(1L);
         k.podListo("synkra-core-viejo");
         assertThat(k.adaptador.estado(LecturasDePrueba.NS).fase()).isEqualTo(FaseDespliegue.EN_CURSO);
     }
 
     @Test
     void conTodosLosCamposCoherentesEsListo() {
-        k.deployment(1, 2L, 1, 1, 1, 2L);
+        k.deployment(1, 1, 1, 1, 1L);
         k.podListo("synkra-core-nuevo");
         var e = k.adaptador.estado(LecturasDePrueba.NS);
         assertThat(e.fase()).isEqualTo(FaseDespliegue.LISTO);

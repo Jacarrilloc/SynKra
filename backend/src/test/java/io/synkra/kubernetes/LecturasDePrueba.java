@@ -50,15 +50,21 @@ final class LecturasDePrueba implements AutoCloseable {
         adaptador = new AdaptadorFabric8(cliente);
     }
 
-    /** Campos nulos = ausentes del {@code status} (cuentan como cumplidos). */
-    void deployment(int deseadas, Long generacion, Integer replicas, Integer listas, Integer actualizadas,
-            Long observada) {
+    /**
+     * Campos nulos = ausentes del {@code status} (cuentan como cumplidos). El simulado fija {@code metadata.generation}
+     * en 1 al crear: {@link #generacion()} lo lee, para que las pruebas no lo supongan.
+     */
+    void deployment(int deseadas, Integer replicas, Integer listas, Integer actualizadas, Long observada) {
         var d = new DeploymentBuilder()
-                .withNewMetadata().withName(CORE).withNamespace(NS).withGeneration(generacion).endMetadata()
+                .withNewMetadata().withName(CORE).withNamespace(NS).endMetadata()
                 .withNewSpec().withReplicas(deseadas).endSpec()
                 .withNewStatus().withReplicas(replicas).withReadyReplicas(listas).withUpdatedReplicas(actualizadas)
                 .withObservedGeneration(observada).endStatus().build();
         cliente.apps().deployments().inNamespace(NS).resource(d).create();
+    }
+
+    long generacion() {
+        return cliente.apps().deployments().inNamespace(NS).withName(CORE).get().getMetadata().getGeneration();
     }
 
     void podListo(String nombre) {

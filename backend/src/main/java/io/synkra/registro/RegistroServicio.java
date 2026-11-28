@@ -169,7 +169,17 @@ class RegistroServicio implements RegistroApi {
     @Override
     @Transactional(readOnly = true)
     public List<DespliegueRegistrado> aplicando() {
-        throw new UnsupportedOperationException("U07-E: pendiente");
+        var filas = jdbc.query("select " + COLUMNAS + " from reg_despliegue where estado = 'aplicando' "
+                + "order by confirmado_en asc, id asc", RegistroServicio::fila);
+        if (filas.isEmpty()) {
+            return List.of();
+        }
+        var plugins = pluginsDe(filas.stream().map(DespliegueRegistrado::id).toList());
+        var salida = new ArrayList<DespliegueRegistrado>(filas.size());
+        for (var f : filas) {
+            salida.add(con(f, plugins.getOrDefault(f.id(), List.of()), null));
+        }
+        return List.copyOf(salida);
     }
 
     private static DespliegueRegistrado con(DespliegueRegistrado f, List<PluginDesplegado> plugins,
