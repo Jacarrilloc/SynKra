@@ -38,13 +38,17 @@ public sealed class ArranqueTest : IDisposable
         var dll = Path.Combine(raiz, "front", "bin", "Debug", "net10.0", "Synkra.Front.dll");
         Assert.True(File.Exists(dll), $"Falta la aplicación compilada: {dll}");
 
-        var info = new ProcessStartInfo("dotnet")
+        // Con una URL mala la aplicación termina con una excepción no controlada y el sistema volcaría un core de
+        // cientos de MB en front/: «ulimit -c 0» lo evita, y «exec» deja a dotnet como el proceso que se mata.
+        var info = new ProcessStartInfo("/bin/sh")
         {
             WorkingDirectory = Path.Combine(raiz, "front"),
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,
         };
+        info.ArgumentList.Add("-c");
+        info.ArgumentList.Add("ulimit -c 0; exec dotnet \"$0\"");
         info.ArgumentList.Add(dll);
         info.Environment["ASPNETCORE_URLS"] = $"http://127.0.0.1:{puerto}";
         info.Environment["ASPNETCORE_ENVIRONMENT"] = "Production";

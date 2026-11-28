@@ -1,9 +1,94 @@
 @page "/catalogo/{Core}/subir"
+@inject ApiSynkra Api
 
 <PageTitle>Subir un plugin · SynKra</PageTitle>
 
 <h1>Subir un plugin a @Core</h1>
 
+<div>
+    <label>Archivo JAR
+        <InputFile accept=".jar" OnChange="ElegirArchivo" />
+    </label>
+    <label>Etiquetas (JSON de texto a texto, opcional)
+        <textarea data-campo="etiquetas" value="@_etiquetas" @onchange="CambiaEtiquetas"></textarea>
+    </label>
+    <button type="button" data-accion="subir" disabled="@(_archivo is null || _subiendo)" @onclick="SubirAsync">Subir</button>
+</div>
+
+@if (_error is not null)
+{
+    <div data-estado="error">
+        <p data-campo="error">@_error.Codigo: @_error.Message</p>
+        @if (_error.Detalles.Count > 0)
+        {
+            <ul>
+                @foreach (var d in _error.Detalles)
+                {
+                    <li>@d.Campo: @d.Motivo</li>
+                }
+            </ul>
+        }
+    </div>
+}
+
+@if (_subido is not null)
+{
+    <section id="subido">
+        <h2>Plugin subido</h2>
+        <p>Core: <span data-campo="core">@_subido.Core</span></p>
+        <p>Nombre: <span data-campo="nombre">@_subido.Nombre</span></p>
+        <p>Versión: <span data-campo="version">@_subido.Version</span></p>
+        <p>Core requerido: <span data-campo="core-requerido">@_subido.CoreCompatible</span></p>
+        <ul data-campo="etiquetas">
+            @foreach (var e in _subido.Etiquetas.OrderBy(x => x.Key, StringComparer.Ordinal))
+            {
+                <li>@e.Key=@e.Value</li>
+            }
+        </ul>
+        <p>sha256: <span data-campo="sha256">@_subido.Sha256</span></p>
+        <p>Tamaño (bytes): <span data-campo="tamano">@_subido.Tamano</span></p>
+        <p><a href="catalogo">Volver al catálogo</a></p>
+    </section>
+}
+
 @code {
+    // Tope técnico de transporte: por encima del de la API (20 MB) para que el 413 lo dé la API y no el navegador.
+    private const long TopeTransporte = 25 * 1024 * 1024;
+
     [Parameter] public string Core { get; set; } = "";
+
+    private IBrowserFile? _archivo;
+    private string _etiquetas = "";
+    private bool _subiendo;
+    private PluginRegistrado? _subido;
+    private ErrorApiSynkraException? _error;
+
+    private void ElegirArchivo(InputFileChangeEventArgs e) => _archivo = e.File;
+
+    private void CambiaEtiquetas(ChangeEventArgs e) => _etiquetas = e.Value?.ToString() ?? "";
+
+    private async Task SubirAsync()
+    {
+        if (_archivo is null)
+        {
+            return;
+        }
+
+        _subiendo = true;
+        _error = null;
+        _subido = null;
+        try
+        {
+            await using var flujo = _archivo.OpenReadStream(TopeTransporte);
+            _subido = await Api.SubirPluginAsync(Core, flujo, _archivo.Name, _etiquetas);
+        }
+        catch (ErrorApiSynkraException e)
+        {
+            _error = e;
+        }
+        finally
+        {
+            _subiendo = false;
+        }
+    }
 }

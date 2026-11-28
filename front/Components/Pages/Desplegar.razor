@@ -1,5 +1,453 @@
 @page "/desplegar"
+@using System.Globalization
+@implements IDisposable
+@inject ApiSynkra Api
 
 <PageTitle>Desplegar · SynKra</PageTitle>
 
 <h1>Desplegar</h1>
+
+@if (_errorCarga is not null)
+{
+    <div id="error-carga" data-estado="error">
+        <p data-campo="error">@_errorCarga.Codigo: @_errorCarga.Message</p>
+        @if (_errorCarga.Detalles.Count > 0)
+        {
+            <ul>
+                @foreach (var d in _errorCarga.Detalles)
+                {
+                    <li>@d.Campo: @d.Motivo</li>
+                }
+            </ul>
+        }
+    </div>
+}
+else if (_paises is null || _cores is null)
+{
+    <p data-estado="cargando">Cargando…</p>
+}
+else
+{
+    <div>
+        <label>País
+            <select data-campo="pais" value="@_pais" @onchange="CambiaPais">
+                <option value="">—</option>
+                @foreach (var p in _paises)
+                {
+                    <option value="@p.Pais" selected="@(p.Pais == _pais)">@p.Pais</option>
+                }
+            </select>
+        </label>
+        <label>Core
+            <select data-campo="core" value="@_core" @onchange="CambiaCore">
+                <option value="">—</option>
+                @foreach (var c in _cores)
+                {
+                    <option value="@c.Nombre" selected="@(c.Nombre == _core)">@c.Nombre</option>
+                }
+            </select>
+        </label>
+        <label>Versión del core
+            <select data-campo="versionCore" value="@_versionCore" @onchange="CambiaVersion">
+                <option value="">—</option>
+                @foreach (var v in VersionesDelCore())
+                {
+                    <option value="@v.Version" selected="@(v.Version == _versionCore)">@v.Version</option>
+                }
+            </select>
+        </label>
+        <label>Usuario (opcional)
+            <input data-campo="usuario" value="@_usuario" @onchange="CambiaUsuario" />
+        </label>
+    </div>
+
+    @if (_core != "")
+    {
+        <h2>Plugins</h2>
+        <div>
+            <input data-campo="filtro" placeholder="clave=valor" value="@_filtro" @onchange="CambiaFiltro" />
+            <button type="button" data-accion="filtrar" @onclick="FiltrarAsync">Filtrar</button>
+        </div>
+        @if (_errorPlugins is not null)
+        {
+            <div id="error-plugins" data-estado="error">
+                <p data-campo="error">@_errorPlugins.Codigo: @_errorPlugins.Message</p>
+                @if (_errorPlugins.Detalles.Count > 0)
+                {
+                    <ul>
+                        @foreach (var d in _errorPlugins.Detalles)
+                        {
+                            <li>@d.Campo: @d.Motivo</li>
+                        }
+                    </ul>
+                }
+            </div>
+        }
+        <ul id="plugins">
+            @foreach (var p in _plugins)
+            {
+                <li data-plugin="@p.Nombre" data-version="@p.Version">
+                    <label>
+                        <input type="checkbox" data-plugin="@p.Nombre" data-version="@p.Version"
+                               checked="@Marcado(p)" @onchange="e => MarcaPlugin(p, e)" />
+                        @p.Nombre @p.Version
+                    </label>
+                    <span data-campo="core-requerido">core @p.CoreCompatible</span>
+                    <span data-campo="etiquetas">@string.Join(", ", p.Etiquetas.OrderBy(x => x.Key, StringComparer.Ordinal).Select(x => $"{x.Key}={x.Value}"))</span>
+                </li>
+            }
+        </ul>
+    }
+
+    <section id="veredicto" data-global="@_veredicto?.Global">
+        @if (_errorVerificacion is not null)
+        {
+            <div data-estado="error">
+                <p data-campo="error">@_errorVerificacion.Codigo: @_errorVerificacion.Message</p>
+                @if (_errorVerificacion.Detalles.Count > 0)
+                {
+                    <ul>
+                        @foreach (var d in _errorVerificacion.Detalles)
+                        {
+                            <li>@d.Campo: @d.Motivo</li>
+                        }
+                    </ul>
+                }
+            </div>
+        }
+        else if (_veredicto is not null)
+        {
+            <h2>Verificación</h2>
+            <table>
+                <thead>
+                    <tr><th>Plugin</th><th>Versión</th><th>Aceptado</th><th>Motivos</th><th>Alternativas</th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var pl in _veredicto.Plugins)
+                    {
+                        <tr data-plugin="@pl.Nombre" data-version="@pl.Version">
+                            <td>@pl.Nombre</td>
+                            <td>@pl.Version</td>
+                            <td data-campo="aceptado">@(pl.Compatible ? "Sí" : "No")</td>
+                            <td>
+                                <ul>
+                                    @foreach (var m in pl.Motivos)
+                                    {
+                                        <li data-campo="motivo">@m.Codigo: @m.Mensaje</li>
+                                    }
+                                </ul>
+                            </td>
+                            <td>
+                                <ul>
+                                    @foreach (var a in pl.Alternativas)
+                                    {
+                                        <li data-campo="alternativa">@a.Tipo @a.Nombre @a.Version</li>
+                                    }
+                                </ul>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @if (_veredicto.MotivosGlobales.Count > 0)
+            {
+                <ul>
+                    @foreach (var m in _veredicto.MotivosGlobales)
+                    {
+                        <li data-campo="motivo">@m.Codigo: @m.Mensaje</li>
+                    }
+                </ul>
+            }
+        }
+    </section>
+
+    <div>
+        <button type="button" data-accion="preparar" disabled="@(!PuedePreparar)" @onclick="PrepararAsync">Preparar plan</button>
+        <button type="button" data-accion="confirmar" disabled="@(!PuedeConfirmar)" @onclick="ConfirmarAsync">Confirmar</button>
+    </div>
+
+    @if (_errorAccion is not null)
+    {
+        <div id="error-accion" data-estado="error">
+            <p data-campo="error">@_errorAccion.Codigo: @_errorAccion.Message</p>
+            @if (_errorAccion.Detalles.Count > 0)
+            {
+                <ul>
+                    @foreach (var d in _errorAccion.Detalles)
+                    {
+                        <li>@d.Campo: @d.Motivo</li>
+                    }
+                </ul>
+            }
+        </div>
+    }
+
+    @if (_plan is not null)
+    {
+        <section id="plan" data-id="@_plan.Id">
+            <h2>Plan #@_plan.Id</h2>
+            <p>Namespace: <span data-campo="namespace">@_plan.Resumen.Namespace</span></p>
+            <p>Imagen: <span data-campo="imagen">@_plan.Resumen.Imagen</span></p>
+            <h3>Plugins</h3>
+            <ul data-campo="plugins">
+                @foreach (var p in _plan.Resumen.Plugins)
+                {
+                    <li>@p.Nombre @p.Version (sha256 @p.Sha256)</li>
+                }
+            </ul>
+            <h3>Cambios</h3>
+            <p data-campo="cambio-core">Core: @(_plan.Cambios.Core.Antes ?? "—") → @_plan.Cambios.Core.Despues</p>
+            <ul data-campo="anadidos">
+                @foreach (var p in _plan.Cambios.Anadidos)
+                {
+                    <li>@p.Nombre @p.Version (sha256 @p.Sha256)</li>
+                }
+            </ul>
+            <ul data-campo="quitados">
+                @foreach (var p in _plan.Cambios.Quitados)
+                {
+                    <li>@p.Nombre @p.Version (sha256 @p.Sha256)</li>
+                }
+            </ul>
+            <ul data-campo="iguales">
+                @foreach (var p in _plan.Cambios.Iguales)
+                {
+                    <li>@p.Nombre @p.Version (sha256 @p.Sha256)</li>
+                }
+            </ul>
+            @if (_plan.Cambios.SinCambios)
+            {
+                <p data-campo="sin-cambios">Sin cambios</p>
+            }
+            <p>Creado por: <span data-campo="creadoPor">@_plan.CreadoPor</span></p>
+            <p>Vence: <span data-campo="venceEn">@_plan.VenceEn.UtcDateTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture) UTC</span></p>
+        </section>
+    }
+
+    @if (_confirmado is not null)
+    {
+        <p data-estado="confirmado"><a href="despliegues/@_confirmado.Id">Ver el despliegue #@_confirmado.Id</a></p>
+    }
+}
+
+@code {
+    private IReadOnlyList<VistaPais>? _paises;
+    private IReadOnlyList<CoreRegistrado>? _cores;
+    private IReadOnlyList<PluginRegistrado> _plugins = [];
+    private readonly HashSet<(string Nombre, string Version)> _marcados = [];
+
+    private string _pais = "";
+    private string _core = "";
+    private string _versionCore = "";
+    private string _usuario = "";
+    private string _filtro = "";
+
+    private Veredicto? _veredicto;
+    private PlanDespliegue? _plan;
+    private Confirmacion? _confirmado;
+    private ErrorApiSynkraException? _errorCarga;
+    private ErrorApiSynkraException? _errorPlugins;
+    private ErrorApiSynkraException? _errorVerificacion;
+    private ErrorApiSynkraException? _errorAccion;
+
+    private int _secuencia;
+    private bool _preparando;
+    private bool _confirmando;
+    private bool _desechado;
+
+    private bool PuedePreparar
+        => _pais != "" && _veredicto is { Global: "APROBADA" } && !_preparando && !_confirmando && _confirmado is null;
+
+    private bool PuedeConfirmar => _plan is not null && !_preparando && !_confirmando && _confirmado is null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _paises = await Api.VistaGeneralAsync();
+            _cores = await Api.CoresAsync();
+        }
+        catch (ErrorApiSynkraException e)
+        {
+            _errorCarga = e;
+        }
+    }
+
+    public void Dispose() => _desechado = true;
+
+    private IReadOnlyList<VersionRegistrada> VersionesDelCore()
+        => _cores?.FirstOrDefault(c => c.Nombre == _core)?.Versiones ?? [];
+
+    private bool Marcado(PluginRegistrado p) => _marcados.Contains((p.Nombre, p.Version));
+
+    private List<PluginPedido> Pedidos()
+        => _plugins.Where(Marcado).Select(p => new PluginPedido(p.Nombre, p.Version)).ToList();
+
+    private string Clave() => $"{_pais}|{_core}|{_versionCore}|{string.Join(",", Pedidos().Select(p => $"{p.Nombre}@{p.Version}"))}";
+
+    private void CambiaPais(ChangeEventArgs e)
+    {
+        _pais = e.Value?.ToString() ?? "";
+        _plan = null;
+        _confirmado = null;
+        _errorAccion = null;
+    }
+
+    private async Task CambiaCore(ChangeEventArgs e)
+    {
+        _core = e.Value?.ToString() ?? "";
+        _versionCore = "";
+        _filtro = "";
+        CambioSeleccion();
+        await CargaPluginsAsync();
+    }
+
+    private void CambiaVersion(ChangeEventArgs e)
+    {
+        _versionCore = e.Value?.ToString() ?? "";
+        CambioSeleccion();
+    }
+
+    private void CambiaUsuario(ChangeEventArgs e) => _usuario = e.Value?.ToString() ?? "";
+
+    private void CambiaFiltro(ChangeEventArgs e) => _filtro = e.Value?.ToString() ?? "";
+
+    private void MarcaPlugin(PluginRegistrado p, ChangeEventArgs e)
+    {
+        if (e.Value is true)
+        {
+            _marcados.Add((p.Nombre, p.Version));
+        }
+        else
+        {
+            _marcados.Remove((p.Nombre, p.Version));
+        }
+
+        CambioSeleccion();
+    }
+
+    private async Task FiltrarAsync()
+    {
+        var antes = _marcados.Count;
+        await CargaPluginsAsync();
+        if (_marcados.Count != antes)
+        {
+            CambioSeleccion();
+        }
+    }
+
+    private async Task CargaPluginsAsync()
+    {
+        _errorPlugins = null;
+        try
+        {
+            if (_core == "")
+            {
+                _plugins = [];
+            }
+            else if (string.IsNullOrWhiteSpace(_filtro))
+            {
+                _plugins = await Api.PluginsAsync(_core);
+            }
+            else
+            {
+                var i = _filtro.IndexOf('=');
+                _plugins = i < 0
+                    ? await Api.PluginsConEtiquetaAsync(_core, _filtro, "")
+                    : await Api.PluginsConEtiquetaAsync(_core, _filtro[..i], _filtro[(i + 1)..]);
+            }
+        }
+        catch (ErrorApiSynkraException e)
+        {
+            _plugins = [];
+            _errorPlugins = e;
+        }
+
+        _marcados.RemoveWhere(m => !_plugins.Any(p => p.Nombre == m.Nombre && p.Version == m.Version));
+    }
+
+    // Cualquier cambio de core, versión o plugins: descarta el plan y el veredicto y pide la verificación de la selección nueva.
+    private void CambioSeleccion()
+    {
+        _plan = null;
+        _confirmado = null;
+        _errorAccion = null;
+        _veredicto = null;
+        _errorVerificacion = null;
+        var numero = ++_secuencia;
+        if (_core != "" && _versionCore != "")
+        {
+            _ = VerificarAsync(numero, new SeleccionVerificacion(_core, _versionCore, Pedidos()));
+        }
+    }
+
+    private async Task VerificarAsync(int numero, SeleccionVerificacion seleccion)
+    {
+        Veredicto? veredicto = null;
+        ErrorApiSynkraException? error = null;
+        try
+        {
+            veredicto = await Api.VerificarAsync(seleccion);
+        }
+        catch (ErrorApiSynkraException e)
+        {
+            error = e;
+        }
+
+        if (numero != _secuencia || _desechado)
+        {
+            return;
+        }
+
+        _veredicto = veredicto;
+        _errorVerificacion = error;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task PrepararAsync()
+    {
+        var clave = Clave();
+        _preparando = true;
+        _errorAccion = null;
+        try
+        {
+            var plan = await Api.CrearPlanAsync(new SolicitudPlan(_pais, _core, _versionCore, Pedidos()), _usuario);
+            if (clave == Clave())
+            {
+                _plan = plan;
+            }
+        }
+        catch (ErrorApiSynkraException e)
+        {
+            _errorAccion = e;
+        }
+        finally
+        {
+            _preparando = false;
+        }
+    }
+
+    private async Task ConfirmarAsync()
+    {
+        if (_plan is null)
+        {
+            return;
+        }
+
+        _confirmando = true;
+        _errorAccion = null;
+        try
+        {
+            _confirmado = await Api.ConfirmarAsync(_plan.Id, _usuario);
+        }
+        catch (ErrorApiSynkraException e)
+        {
+            _errorAccion = e;
+            _plan = null;
+        }
+        finally
+        {
+            _confirmando = false;
+        }
+    }
+}

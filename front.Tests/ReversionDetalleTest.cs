@@ -115,8 +115,8 @@ public class ReversionDetalleTest : BunitContext
     {
         var cut = Pinta();
 
+        // Es un enlace sin manejador de clic: navegar no llama a la API.
         var cancelar = cut.Find("a[data-accion='cancelar']");
-        cancelar.Click();
 
         Assert.Equal("despliegues/3", cancelar.GetAttribute("href"));
         Assert.Equal([(HttpMethod.Get, "/api/despliegues/3")], _m.Peticiones.ToArray());
