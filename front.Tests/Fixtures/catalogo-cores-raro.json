@@ -1,0 +1,11 @@
+[
+  {
+    "nombre": "a/b",
+    "versiones": [
+      {
+        "version": "1.0.0",
+        "imagen": "localhost:5001/raro@sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      }
+    ]
+  }
+]

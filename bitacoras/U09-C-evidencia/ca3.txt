@@ -1,0 +1,32 @@
+fecha=2026-11-28T07:40:31Z
+sha-codigo=f49d08d (HEAD=f49d08d)
+uname -m=x86_64
+RepoDigests=mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
+
+$ scripts/dotnet-docker.sh test front.Tests --filter ApiSynkraEscriturasTest --logger "trx;LogFileName=escrituras.trx" --results-directory front.Tests/TestResults
+Passed!  - Failed:     0, Passed:    16, Skipped:     0, Total:    16, Duration: 103 ms - Synkra.Front.Tests.dll (net10.0)
+salida=0
+
+$ python3 -I bitacoras/U09-A-evidencia/trx.py front.Tests/TestResults/escrituras.trx
+total=16 executed=16 passed=16 failed=0 notExecuted=0
+ConfirmarPideLaRutaDelPlanSinCuerpo
+ConfirmarVencidoDaElErrorDeLaApi
+CrearPlanEnviaElPaisYElUsuarioYLeeElPlan
+CrearPlanRechazadoDaLosDetallesDeLaApi
+EscrituraSinConexionDaApiNoDisponible
+RevertirPideLaRutaDelOrigenSinCuerpo
+SinUsuarioNoMandaLaCabecera
+SubidaConDescriptorInvalidoDaElMotivo
+SubirPluginEscapaElCore
+SubirPluginMandaArchivoYEtiquetas
+SubirPluginSinEtiquetasNoMandaLaParte
+UsuarioEnBlancoNoMandaLaCabecera
+UsuarioSeMandaTalCual
+VerificarConSeleccionInvalidaDaLosDetalles
+VerificarEnviaLaSeleccionYLeeElVeredicto
+VerificarRechazadaTraeMotivosYAlternativas
+
+front.Tests/Fixtures/desplegar-plan-pe.json ['anadidos', 'antes', 'cambios', 'core', 'creadoEn', 'creadoPor', 'despues', 'estado', 'id', 'igual', 'iguales', 'imagen', 'namespace', 'nombre', 'origenId', 'pais', 'plugins', 'quitados', 'resumen', 'sha256', 'sinCambios', 'tipo', 'venceEn', 'version', 'versionCore']
+front.Tests/Fixtures/desplegar-veredicto-rechazado.json ['alternativas', 'campo', 'codigo', 'compatible', 'core', 'global', 'mensaje', 'motivos', 'motivosGlobales', 'nombre', 'plugin', 'plugins', 'tipo', 'version']
+front.Tests/Fixtures/desplegar-confirmacion.json ['confirmadoEn', 'confirmadoPor', 'creadoPor', 'estado', 'id', 'pais']
+front.Tests/Fixtures/subida-plugin.json ['cliente', 'core', 'coreCompatible', 'etiquetas', 'nombre', 'pais', 'sha256', 'tamano', 'version']

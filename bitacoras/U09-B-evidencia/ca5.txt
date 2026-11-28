@@ -1,0 +1,41 @@
+fecha: 2026-11-28T02:00:43-05:00
+sha: 8d7a11e (ultimo commit de codigo: 8d7a11e)
+arch: x86_64
+imagen: mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
+
++ rm -rf front.Tests/TestResults
++ scripts/dotnet-docker.sh test front.Tests --logger 'trx;LogFileName=todo.trx' --results-directory front.Tests/TestResults
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Synkra.Front -> /src/front/bin/Debug/net10.0/Synkra.Front.dll
+  Synkra.Front.Tests -> /src/front.Tests/bin/Debug/net10.0/Synkra.Front.Tests.dll
+Test run for /src/front.Tests/bin/Debug/net10.0/Synkra.Front.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /src/front.Tests/TestResults/todo.trx
+
+Passed!  - Failed:     0, Passed:    64, Skipped:     0, Total:    64, Duration: 392 ms - Synkra.Front.Tests.dll (net10.0)
++ echo salida=0
+salida=0
++ python3 -I bitacoras/U09-A-evidencia/trx.py front.Tests/TestResults/todo.trx
++ head -1
+total=64 executed=64 passed=64 failed=0 notExecuted=0
++ grep -rnE '\[(Fact|Theory)\([^)]*Skip|\[Theory' front.Tests '--include=*.cs'
++ echo saltos=1
+saltos=1
++ grep -rniE 'semver|compatib' front/ '--include=*.cs' '--include=*.razor'
+front/Components/Pages/Catalogo.razor:84:                            <th>Core compatible</th>
+front/Components/Pages/Catalogo.razor:96:                                <td data-campo="coreCompatible">@p.CoreCompatible</td>
+front/Api/ModelosCatalogo.cs:11:    string CoreCompatible,
++ echo grep-plan=0
+grep-plan=0
++ grep -rniE 'semver|compatib' front/ --exclude-dir=bin --exclude-dir=obj
++ grep -vE '(\bstring |\.)CoreCompatible\b'
+front/Components/Pages/Catalogo.razor:84:                            <th>Core compatible</th>
++ echo resto=0
+resto=0
++ grep -rnE 'System\.Version|Version\.(Try)?Parse|NuGet\.Versioning|Semver' front/ '--include=*.cs' '--include=*.razor' '--include=*.csproj'
++ echo versiones=1
+versiones=1
++ grep -rnE 'Http(Method\.)?(Post|Put|Delete|Patch)|PostAsync|PutAsync|DeleteAsync|PatchAsync|X-Synkra-Usuario|MultipartFormDataContent' front/ '--include=*.cs' '--include=*.razor'
++ echo escrituras=1
+escrituras=1

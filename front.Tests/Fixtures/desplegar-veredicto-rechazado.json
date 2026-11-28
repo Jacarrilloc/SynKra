@@ -1,0 +1,24 @@
+{
+  "global": "RECHAZADA",
+  "plugins": [
+    {
+      "nombre": "kyc-pe",
+      "version": "2.0.0",
+      "core": "synkra-core",
+      "compatible": false,
+      "motivos": [
+        {
+          "codigo": "VERSION_INCOMPATIBLE",
+          "plugin": "kyc-pe",
+          "mensaje": "El plugin 'kyc-pe' 2.0.0 requiere el core 'synkra-core' en 3.x y se pidió 2.1.0",
+          "campo": "coreCompatible"
+        }
+      ],
+      "alternativas": [
+        { "tipo": "PLUGIN", "nombre": "kyc-pe", "version": "1.3.0" },
+        { "tipo": "CORE", "nombre": "synkra-core", "version": "3.0.0" }
+      ]
+    }
+  ],
+  "motivosGlobales": []
+}

@@ -1,0 +1,322 @@
+fecha=2026-11-28T07:40:52Z
+sha-codigo=f49d08d (HEAD=f49d08d)
+uname -m=x86_64
+RepoDigests=mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
+
+=================== MUTACION ruta-verificar  (front/Api/ApiSynkra.Escrituras.cs)
+sed -i 's#"api/verificaciones"#"api/verificacion"#' front/Api/ApiSynkra.Escrituras.cs
+    12c12
+    <         => EnviarAsync<Veredicto>("api/verificaciones", JsonContent.Create(seleccion, options: Opciones), null, ct);
+    ---
+    >         => EnviarAsync<Veredicto>("api/verificacion", JsonContent.Create(seleccion, options: Opciones), null, ct);
+Failed!  - Failed:    22, Passed:    60, Skipped:     0, Total:    82, Duration: 17 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA EscrituraSinConexionDaApiNoDisponible
+FALLA VerificarConSeleccionInvalidaDaLosDetalles
+FALLA VerificarEnviaLaSeleccionYLeeElVeredicto
+FALLA VerificarRechazadaTraeMotivosYAlternativas
+FALLA CambiarElPaisDescartaElPlan
+FALLA CambiarLaSeleccionDescartaElPlan
+FALLA ConVeredictoAprobadoPrepararSeHabilitaYConfirmarNo
+FALLA ConVeredictoRechazadoLosBotonesEstanDeshabilitados
+FALLA ConfirmarLlamaALaConfirmacionDelPlanYEnlazaAlDetalle
+FALLA ElPaisNoEntraEnLaVerificacion
+FALLA ElegirCoreYVersionVerificaSinPlugins
+FALLA ErrorAlConfirmarSeMuestraYDescartaElPlan
+FALLA ErrorAlPrepararSeMuestraYNoHayPlan
+FALLA MarcarUnPluginVuelveAVerificarConLaSeleccion
+FALLA NoFiltraNiComparaVersiones
+FALLA PrepararCreaElPlanYMuestraResumenYCambios
+FALLA RespuestaViejaNoPisaLaNueva
+FALLA SinClicNoHayConfirmacion
+FALLA SinPaisPrepararSigueDeshabilitado
+FALLA UnFiltroQueOcultaUnPluginMarcadoLoDesmarcaYVuelveAVerificar
+FALLA UnPlanQueLlegaTrasCambiarLaSeleccionNoSeMuestra
+FALLA VerificacionConErrorDeshabilitaLosBotones
+-> OK: cae VerificarEnviaLaSeleccionYLeeElVeredicto
+
+=================== MUTACION usuario-siempre  (front/Api/ApiSynkra.Escrituras.cs)
+sed -i 's#if (!string.IsNullOrWhiteSpace(usuario))#if (usuario is not null)#' front/Api/ApiSynkra.Escrituras.cs
+    43c43
+    <         if (!string.IsNullOrWhiteSpace(usuario))
+    ---
+    >         if (usuario is not null)
+Failed!  - Failed:     1, Passed:    81, Skipped:     0, Total:    82, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA UsuarioEnBlancoNoMandaLaCabecera
+-> OK: cae UsuarioEnBlancoNoMandaLaCabecera
+
+=================== MUTACION usuario-recorta  (front/Api/ApiSynkra.Escrituras.cs)
+sed -i 's#TryAddWithoutValidation(CabeceraUsuario, usuario)#TryAddWithoutValidation(CabeceraUsuario, usuario.Trim())#' front/Api/ApiSynkra.Escrituras.cs
+    45c45
+    <             peticion.Headers.TryAddWithoutValidation(CabeceraUsuario, usuario);
+    ---
+    >             peticion.Headers.TryAddWithoutValidation(CabeceraUsuario, usuario.Trim());
+Failed!  - Failed:     1, Passed:    81, Skipped:     0, Total:    82, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA UsuarioSeMandaTalCual
+-> OK: cae UsuarioSeMandaTalCual
+
+=================== MUTACION confirmar-cuerpo  (front/Api/ApiSynkra.Escrituras.cs)
+sed -i 's#/confirmacion", null, usuario#/confirmacion", JsonContent.Create(planId, options: Opciones), usuario#' front/Api/ApiSynkra.Escrituras.cs
+    18c18
+    <         => EnviarAsync<Confirmacion>($"api/despliegues/{planId}/confirmacion", null, usuario, ct);
+    ---
+    >         => EnviarAsync<Confirmacion>($"api/despliegues/{planId}/confirmacion", JsonContent.Create(planId, options: Opciones), usuario, ct);
+Failed!  - Failed:     1, Passed:    81, Skipped:     0, Total:    82, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA ConfirmarPideLaRutaDelPlanSinCuerpo
+-> OK: cae ConfirmarPideLaRutaDelPlanSinCuerpo
+
+=================== MUTACION etiquetas-parte  (front/Api/ApiSynkra.Escrituras.cs)
+sed -i 's#if (!string.IsNullOrWhiteSpace(etiquetas))#if (true)#;s#new StringContent(etiquetas, #new StringContent(etiquetas ?? "", #' front/Api/ApiSynkra.Escrituras.cs
+    29c29
+    <         if (!string.IsNullOrWhiteSpace(etiquetas))
+    ---
+    >         if (true)
+    31c31
+    <             var parte = new StringContent(etiquetas, Encoding.UTF8);
+    ---
+    >             var parte = new StringContent(etiquetas ?? "", Encoding.UTF8);
+Failed!  - Failed:     3, Passed:    79, Skipped:     0, Total:    82, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA SubirPluginSinEtiquetasNoMandaLaParte
+FALLA SinEtiquetasNoSeMandaLaParte
+FALLA SubirMandaElJarYMuestraElPlugin
+-> OK: cae SubirPluginSinEtiquetasNoMandaLaParte|SinEtiquetasNoSeMandaLaParte
+
+=================== MUTACION escape-core  (front/Api/ApiSynkra.Escrituras.cs)
+sed -i 's#{Uri.EscapeDataString(core)}/plugins"#{core}/plugins"#' front/Api/ApiSynkra.Escrituras.cs
+    36c36
+    <         return EnviarAsync<PluginRegistrado>($"api/cores/{Uri.EscapeDataString(core)}/plugins", contenido, null, ct);
+    ---
+    >         return EnviarAsync<PluginRegistrado>($"api/cores/{core}/plugins", contenido, null, ct);
+Failed!  - Failed:     1, Passed:    81, Skipped:     0, Total:    82, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA SubirPluginEscapaElCore
+-> OK: cae SubirPluginEscapaElCore
+
+=================== MUTACION preparar-global  (front/Components/Pages/Desplegar.razor)
+sed -i 's#_veredicto is { Global: "APROBADA" }#_veredicto is not null#' front/Components/Pages/Desplegar.razor
+    259c259
+    <         => _pais != "" && _veredicto is { Global: "APROBADA" } && !_preparando && !_confirmando && _confirmado is null;
+    ---
+    >         => _pais != "" && _veredicto is not null && !_preparando && !_confirmando && _confirmado is null;
+Failed!  - Failed:     1, Passed:    81, Skipped:     0, Total:    82, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA ConVeredictoRechazadoLosBotonesEstanDeshabilitados
+-> OK: cae ConVeredictoRechazadoLosBotonesEstanDeshabilitados
+
+=================== MUTACION confirmar-plan  (front/Components/Pages/Desplegar.razor)
+sed -i 's#PuedeConfirmar => _plan is not null \&\& #PuedeConfirmar => true || #' front/Components/Pages/Desplegar.razor
+    261c261
+    <     private bool PuedeConfirmar => _plan is not null && !_preparando && !_confirmando && _confirmado is null;
+    ---
+    >     private bool PuedeConfirmar => true || !_preparando && !_confirmando && _confirmado is null;
+Failed!  - Failed:     9, Passed:    73, Skipped:     0, Total:    82, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA CambiarElPaisDescartaElPlan
+FALLA CambiarLaSeleccionDescartaElPlan
+FALLA ConVeredictoAprobadoPrepararSeHabilitaYConfirmarNo
+FALLA ConVeredictoRechazadoLosBotonesEstanDeshabilitados
+FALLA ConfirmarLlamaALaConfirmacionDelPlanYEnlazaAlDetalle
+FALLA ErrorAlConfirmarSeMuestraYDescartaElPlan
+FALLA ErrorAlPrepararSeMuestraYNoHayPlan
+FALLA UnPlanQueLlegaTrasCambiarLaSeleccionNoSeMuestra
+FALLA VerificacionConErrorDeshabilitaLosBotones
+-> OK: cae ConVeredictoAprobadoPrepararSeHabilitaYConfirmarNo
+
+=================== MUTACION descarta-plan  (front/Components/Pages/Desplegar.razor)
+sed -i '/private void CambioSeleccion/,/^    }/ s#_plan = null;#_ = _plan;#' front/Components/Pages/Desplegar.razor
+    372c372
+    <         _plan = null;
+    ---
+    >         _ = _plan;
+Failed!  - Failed:     1, Passed:    81, Skipped:     0, Total:    82, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA CambiarLaSeleccionDescartaElPlan
+-> OK: cae CambiarLaSeleccionDescartaElPlan
+
+=================== MUTACION pais-verifica  (front/Components/Pages/Desplegar.razor)
+sed -i 's#_pais = e.Value?.ToString() ?? "";#_pais = e.Value?.ToString() ?? ""; CambioSeleccion();#' front/Components/Pages/Desplegar.razor
+    290c290
+    <         _pais = e.Value?.ToString() ?? "";
+    ---
+    >         _pais = e.Value?.ToString() ?? ""; CambioSeleccion();
+Failed!  - Failed:     1, Passed:    81, Skipped:     0, Total:    82, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA ElPaisNoEntraEnLaVerificacion
+-> OK: cae ElPaisNoEntraEnLaVerificacion
+
+=================== MUTACION filtra  (front/Components/Pages/Desplegar.razor)
+sed -i 's#@foreach (var p in _plugins)#@foreach (var p in _plugins.Where(x => _versionCore == "" || x.CoreCompatible.StartsWith(_versionCore[..1])))#' front/Components/Pages/Desplegar.razor
+    87c87
+    <             @foreach (var p in _plugins)
+    ---
+    >             @foreach (var p in _plugins.Where(x => _versionCore == "" || x.CoreCompatible.StartsWith(_versionCore[..1])))
+Failed!  - Failed:     2, Passed:    80, Skipped:     0, Total:    82, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA ConVeredictoRechazadoLosBotonesEstanDeshabilitados
+FALLA NoFiltraNiComparaVersiones
+-> OK: cae NoFiltraNiComparaVersiones
+
+=================== MUTACION vieja-pisa  (front/Components/Pages/Desplegar.razor)
+sed -i 's#if (numero != _secuencia || _desechado)#if (_desechado)#' front/Components/Pages/Desplegar.razor
+    397c397
+    <         if (numero != _secuencia || _desechado)
+    ---
+    >         if (_desechado)
+Failed!  - Failed:     1, Passed:    81, Skipped:     0, Total:    82, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA RespuestaViejaNoPisaLaNueva
+-> OK: cae RespuestaViejaNoPisaLaNueva
+
+=================== MUTACION revertir-al-abrir  (front/Components/Pages/Reversion.razor)
+sed -i 's#_origen = await Api.DespliegueAsync(Id);#_origen = await Api.DespliegueAsync(Id); _plan = await Api.RevertirAsync(Id, "");#' front/Components/Pages/Reversion.razor
+    147c147
+    <             _origen = await Api.DespliegueAsync(Id);
+    ---
+    >             _origen = await Api.DespliegueAsync(Id); _plan = await Api.RevertirAsync(Id, "");
+Failed!  - Failed:     5, Passed:    77, Skipped:     0, Total:    82, Duration: 4 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA AbrirLaPaginaSoloLee
+FALLA CancelarNoLlamaANada
+FALLA ConfirmarLaVueltaEstaDeshabilitadoSinPlan
+FALLA OrigenNoListoMuestraElErrorDeLaApi
+FALLA PrepararLaVueltaCreaElPlanDeReversion
+-> OK: cae AbrirLaPaginaSoloLee
+
+=================== MUTACION confirma-solo  (front/Components/Pages/Reversion.razor)
+sed -i 's#_plan = await Api.RevertirAsync(Id, _usuario);#_plan = await Api.RevertirAsync(Id, _usuario); _confirmado = await Api.ConfirmarAsync(_plan.Id, _usuario);#' front/Components/Pages/Reversion.razor
+    171c171
+    <             _plan = await Api.RevertirAsync(Id, _usuario);
+    ---
+    >             _plan = await Api.RevertirAsync(Id, _usuario); _confirmado = await Api.ConfirmarAsync(_plan.Id, _usuario);
+Failed!  - Failed:     3, Passed:    79, Skipped:     0, Total:    82, Duration: 2 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA ConfirmarLaVueltaConErrorLoMuestra
+FALLA LaVueltaSoloSeConfirmaDespuesDeConfirmar
+FALLA PrepararLaVueltaCreaElPlanDeReversion
+-> OK: cae LaVueltaSoloSeConfirmaDespuesDeConfirmar
+
+=================== MUTACION motivo-oculto  (front/Components/Pages/SubirPlugin.razor)
+sed -i 's#@if (_error.Detalles.Count > 0)#@if (_error.Detalles.Count > 100)#' front/Components/Pages/SubirPlugin.razor
+    22c22
+    <         @if (_error.Detalles.Count > 0)
+    ---
+    >         @if (_error.Detalles.Count > 100)
+Failed!  - Failed:     1, Passed:    81, Skipped:     0, Total:    82, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA DescriptorInvalidoMuestraElMotivo
+-> OK: cae DescriptorInvalidoMuestraElMotivo
+
+=================== MUTACION arranque  (front/Program.cs)
+sed -i 's#c.BaseAddress = urlApi#c.BaseAddress = new Uri("http://127.0.0.1:18741/")#' front/Program.cs
+    10c10
+    < builder.Services.AddHttpClient<ApiSynkra>(c => c.BaseAddress = urlApi);
+    ---
+    > builder.Services.AddHttpClient<ApiSynkra>(c => c.BaseAddress = new Uri("http://127.0.0.1:18741/"));
+Failed!  - Failed:     1, Passed:    81, Skipped:     0, Total:    82, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA ConUrlValidaArrancaYSirveLaVistaGeneral
+-> OK: cae ConUrlValidaArrancaYSirveLaVistaGeneral
+
+=================== MUTACION arranque-sin-validar  (front/Program.cs)
+sed -i 's#var urlApi = ConfiguracionApi.UrlBase(builder.Configuration);#var urlApi = new Uri("http://127.0.0.1:9/");#' front/Program.cs
+    7c7
+    < var urlApi = ConfiguracionApi.UrlBase(builder.Configuration);
+    ---
+    > var urlApi = new Uri("http://127.0.0.1:9/");
+Failed!  - Failed:     1, Passed:    81, Skipped:     0, Total:    82, Duration: 1 m - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA ConUrlMalaNoArranca
+-> OK: cae ConUrlMalaNoArranca
+
+=================== MUTACION x-confirmar-sin-usuario-desplegar  (front/Components/Pages/Desplegar.razor)
+sed -i 's#Api.ConfirmarAsync(_plan.Id, _usuario)#Api.ConfirmarAsync(_plan.Id, null)#' front/Components/Pages/Desplegar.razor
+    441c441
+    <             _confirmado = await Api.ConfirmarAsync(_plan.Id, _usuario);
+    ---
+    >             _confirmado = await Api.ConfirmarAsync(_plan.Id, null);
+Failed!  - Failed:     1, Passed:    81, Skipped:     0, Total:    82, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA ConfirmarLlamaALaConfirmacionDelPlanYEnlazaAlDetalle
+-> OK: cae ConfirmarLlamaALaConfirmacionDelPlanYEnlazaAlDetalle
+
+=================== MUTACION x-confirmar-sin-usuario-reversion  (front/Components/Pages/Reversion.razor)
+sed -i 's#Api.ConfirmarAsync(_plan.Id, _usuario)#Api.ConfirmarAsync(_plan.Id, null)#' front/Components/Pages/Reversion.razor
+    195c195
+    <             _confirmado = await Api.ConfirmarAsync(_plan.Id, _usuario);
+    ---
+    >             _confirmado = await Api.ConfirmarAsync(_plan.Id, null);
+Failed!  - Failed:     1, Passed:    81, Skipped:     0, Total:    82, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA LaVueltaSoloSeConfirmaDespuesDeConfirmar
+-> OK: cae LaVueltaSoloSeConfirmaDespuesDeConfirmar
+
+=================== MUTACION x-pais-no-descarta  (front/Components/Pages/Desplegar.razor)
+sed -i '/private void CambiaPais/,/^    }/ s#_plan = null;#_ = _plan;#' front/Components/Pages/Desplegar.razor
+    291c291
+    <         _plan = null;
+    ---
+    >         _ = _plan;
+Failed!  - Failed:     1, Passed:    81, Skipped:     0, Total:    82, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA CambiarElPaisDescartaElPlan
+-> OK: cae CambiarElPaisDescartaElPlan
+
+=================== MUTACION x-filtro-no-desmarca  (front/Components/Pages/Desplegar.razor)
+sed -i 's#^\( *\)_marcados.RemoveWhere.*#\1_ = _marcados;#' front/Components/Pages/Desplegar.razor
+    366c366
+    <         _marcados.RemoveWhere(m => !_plugins.Any(p => p.Nombre == m.Nombre && p.Version == m.Version));
+    ---
+    >         _ = _marcados;
+Failed!  - Failed:     1, Passed:    81, Skipped:     0, Total:    82, Duration: 2 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA UnFiltroQueOcultaUnPluginMarcadoLoDesmarcaYVuelveAVerificar
+-> OK: cae UnFiltroQueOcultaUnPluginMarcadoLoDesmarcaYVuelveAVerificar
+
+=================== MUTACION x-filtro-sin-igual  (front/Components/Pages/Desplegar.razor)
+sed -i 's#? await Api.PluginsConEtiquetaAsync(_core, _filtro, "")#? await Api.PluginsAsync(_core)#' front/Components/Pages/Desplegar.razor
+    356c356
+    <                     ? await Api.PluginsConEtiquetaAsync(_core, _filtro, "")
+    ---
+    >                     ? await Api.PluginsAsync(_core)
+Failed!  - Failed:     1, Passed:    81, Skipped:     0, Total:    82, Duration: 2 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA UnFiltroSinIgualMandaLaClaveConValorVacio
+-> OK: cae UnFiltroSinIgualMandaLaClaveConValorVacio
+
+=================== MUTACION x-cancelar-onclick  (front/Components/Pages/Reversion.razor)
+sed -i 's#<a data-accion="cancelar" href="despliegues/@Id">#<a data-accion="cancelar" href="despliegues/@Id" @onclick="PrepararAsync">#' front/Components/Pages/Reversion.razor
+    62c62
+    < <p><a data-accion="cancelar" href="despliegues/@Id">Cancelar</a></p>
+    ---
+    > <p><a data-accion="cancelar" href="despliegues/@Id" @onclick="PrepararAsync">Cancelar</a></p>
+Failed!  - Failed:     1, Passed:    81, Skipped:     0, Total:    82, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA CancelarNoLlamaANada
+-> OK: cae CancelarNoLlamaANada
+
+=================== MUTACION x-preparar-sin-clave  (front/Components/Pages/Desplegar.razor)
+sed -i 's#if (clave == Clave())#if (true)#' front/Components/Pages/Desplegar.razor
+    415c415
+    <             if (clave == Clave())
+    ---
+    >             if (true)
+Failed!  - Failed:     1, Passed:    81, Skipped:     0, Total:    82, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA UnPlanQueLlegaTrasCambiarLaSeleccionNoSeMuestra
+-> OK: cae UnPlanQueLlegaTrasCambiarLaSeleccionNoSeMuestra
+
+=================== MUTACION x-ioexception-sin-captura  (front/Components/Pages/SubirPlugin.razor)
+sed -i 's#catch (IOException e)#catch (InvalidCastException e)#' front/Components/Pages/SubirPlugin.razor
+    98c98
+    <         catch (IOException e)
+    ---
+    >         catch (InvalidCastException e)
+Failed!  - Failed:     1, Passed:    81, Skipped:     0, Total:    82, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+FALLA ArchivoPorEncimaDelTopeMuestraUnErrorYNoLlamaALaApi
+-> OK: cae ArchivoPorEncimaDelTopeMuestraUnErrorYNoLlamaALaApi
+

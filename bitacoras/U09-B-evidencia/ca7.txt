@@ -1,0 +1,61 @@
+fecha: 2026-11-28T02:03:48-05:00
+++ git merge-base HEAD main
++ B=367e09fd5243122b0e7506a6840365945e066f25
++ git rev-parse --short HEAD
+327d27b
++ git status --porcelain
++ wc -l
+2
++ git diff --stat 367e09fd5243122b0e7506a6840365945e066f25...HEAD
+ bitacoras/U09-B-evidencia/ca1.sh                   |   7 +
+ bitacoras/U09-B-evidencia/ca1.txt                  |  23 ++
+ bitacoras/U09-B-evidencia/ca2.sh                   |   6 +
+ bitacoras/U09-B-evidencia/ca2.txt                  |  22 ++
+ bitacoras/U09-B-evidencia/ca3.sh                   |   6 +
+ bitacoras/U09-B-evidencia/ca3.txt                  |  39 ++++
+ bitacoras/U09-B-evidencia/ca4.sh                   |   5 +
+ bitacoras/U09-B-evidencia/ca4.txt                  |  46 ++++
+ bitacoras/U09-B-evidencia/ca5.sh                   |  11 +
+ bitacoras/U09-B-evidencia/ca5.txt                  |  41 ++++
+ bitacoras/U09-B-evidencia/ca6.sh                   |  37 +++
+ bitacoras/U09-B-evidencia/ca6.txt                  | 114 ++++++++++
+ bitacoras/U09-B-evidencia/rojo.sh                  |  18 ++
+ bitacoras/U09-B-evidencia/rojo.txt                 | 105 +++++++++
+ bitacoras/U09-B.md                                 |  31 +++
+ front.Tests/ApiSynkraCatalogoTest.cs               | 113 +++++++++
+ front.Tests/CatalogoTest.cs                        | 196 ++++++++++++++++
+ front.Tests/DetalleTest.cs                         | 253 +++++++++++++++++++++
+ front.Tests/Fixtures/catalogo-cores-raro.json      |  11 +
+ front.Tests/Fixtures/catalogo-cores.json           |  24 ++
+ .../catalogo-plugins-campo-desconocido.json        |  37 +++
+ .../catalogo-plugins-etiquetas-desordenadas.json   |  15 ++
+ .../Fixtures/catalogo-plugins-otro-core.json       |   1 +
+ .../Fixtures/catalogo-plugins-synkra-core.json     |  36 +++
+ front.Tests/Fixtures/detalle-despliegue-4.json     |  43 ++++
+ front.Tests/Fixtures/detalle-despliegue-7.json     |  39 ++++
+ front.Tests/Fixtures/detalle-despliegue-8.json     |  39 ++++
+ front.Tests/Fixtures/detalle-historial-co.json     |  98 ++++++++
+ front.Tests/MenuTest.cs                            |  18 ++
+ front.Tests/VistaGeneralTest.cs                    |  34 +++
+ front/Api/ApiSynkra.Catalogo.cs                    |  14 ++
+ front/Api/ApiSynkra.cs                             |   4 +-
+ front/Api/ModelosCatalogo.cs                       |  14 ++
+ front/Components/Layout/NavMenu.razor              |   2 +
+ front/Components/Pages/Catalogo.razor              | 147 ++++++++++++
+ front/Components/Pages/Detalle.razor               | 251 ++++++++++++++++++++
+ front/Components/Pages/VistaGeneral.razor          |  13 +-
+ 37 files changed, 1909 insertions(+), 4 deletions(-)
++ git diff --name-only 367e09fd5243122b0e7506a6840365945e066f25...HEAD
++ grep -v -E '^(front/Api/(ApiSynkra|ApiSynkra\.Catalogo|ModelosCatalogo)\.cs|front/Components/Pages/(Catalogo|Detalle|VistaGeneral)\.razor|front/Components/Layout/NavMenu\.razor|front\.Tests/(ApiSynkraCatalogoTest|CatalogoTest|DetalleTest|MenuTest|VistaGeneralTest)\.cs|front\.Tests/Fixtures/(catalogo|detalle)-[a-z0-9-]+\.json|bitacoras/U09-B\.md|bitacoras/U09-B-evidencia/.*|revisiones/U09-B/.*)$'
++ echo fuera=1
+fuera=1
++ git diff --name-only 367e09fd5243122b0e7506a6840365945e066f25...HEAD -- front.Tests/ManejadorHttpSimulado.cs front/Program.cs front/Components/_Imports.razor front/Components/App.razor front/Components/Routes.razor front/wwwroot front/appsettings.json '*.csproj' backend deploy Makefile scripts
++ wc -l
+0
++ git diff --numstat 367e09fd5243122b0e7506a6840365945e066f25...HEAD -- front.Tests/VistaGeneralTest.cs front.Tests/Fixtures
++ awk '$2 != 0'
++ wc -l
+0
++ git diff --name-status --diff-filter=D 367e09fd5243122b0e7506a6840365945e066f25...HEAD
++ wc -l
+0

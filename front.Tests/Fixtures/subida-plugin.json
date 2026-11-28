@@ -1,0 +1,9 @@
+{
+  "core": "synkra-core",
+  "nombre": "kyc-co",
+  "version": "1.0.0",
+  "coreCompatible": "2.x",
+  "etiquetas": { "cliente": "demo", "pais": "co" },
+  "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "tamano": 2048
+}

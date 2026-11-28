@@ -1,0 +1,105 @@
+fecha=2026-11-28T06:55:32Z sha=021de37 arch=x86_64
+imagen=mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
+021de37 U09-B: rojo, 35 pruebas, fixtures, archivos comunes congelados y pantallas vacias
+
+ front.Tests/ApiSynkraCatalogoTest.cs               | 113 +++++++++
+ front.Tests/CatalogoTest.cs                        | 190 ++++++++++++++++
+ front.Tests/DetalleTest.cs                         | 253 +++++++++++++++++++++
+ front.Tests/Fixtures/catalogo-cores-raro.json      |  11 +
+ front.Tests/Fixtures/catalogo-cores.json           |  24 ++
+ .../catalogo-plugins-campo-desconocido.json        |  37 +++
+ .../catalogo-plugins-etiquetas-desordenadas.json   |  15 ++
+ .../Fixtures/catalogo-plugins-otro-core.json       |   1 +
+ .../Fixtures/catalogo-plugins-synkra-core.json     |  36 +++
+ front.Tests/Fixtures/detalle-despliegue-4.json     |  43 ++++
+ front.Tests/Fixtures/detalle-despliegue-7.json     |  39 ++++
+ front.Tests/Fixtures/detalle-despliegue-8.json     |  39 ++++
+ front.Tests/Fixtures/detalle-historial-co.json     |  98 ++++++++
+ front.Tests/MenuTest.cs                            |  18 ++
+ front.Tests/VistaGeneralTest.cs                    |  34 +++
+ front/Api/ApiSynkra.Catalogo.cs                    |  14 ++
+ front/Api/ApiSynkra.cs                             |   4 +-
+ front/Api/ModelosCatalogo.cs                       |  14 ++
+ front/Components/Pages/Catalogo.razor              |   5 +
+ front/Components/Pages/Detalle.razor               |  12 +
+ 20 files changed, 998 insertions(+), 2 deletions(-)
+$ scripts/dotnet-docker.sh test front.Tests --filter CatalogoTest ...
+  Failed Synkra.Front.Tests.CatalogoTest.MuestraLosPluginsDeCadaCoreConSusEtiquetas [1 s]
+  Failed Synkra.Front.Tests.CatalogoTest.ErrorAlLeerCoresMuestraCodigoYMensaje [1 s]
+  Failed Synkra.Front.Tests.CatalogoTest.NoFiltraNiComparaVersiones [1 s]
+  Failed Synkra.Front.Tests.CatalogoTest.EnlaceDeSubidaPorCore [1 s]
+  Failed Synkra.Front.Tests.CatalogoTest.ErrorEnLosPluginsDeUnCoreNoEscondeLosDemas [1 s]
+  Failed Synkra.Front.Tests.CatalogoTest.CoreSinPluginsMuestraAviso [1 s]
+  Failed Synkra.Front.Tests.CatalogoTest.MuestraCadaCoreConSusVersionesEImagenes [1 s]
+  Failed Synkra.Front.Tests.CatalogoTest.SoloLlamaALecturasDelCatalogo [1 s]
+  Failed Synkra.Front.Tests.CatalogoTest.EtiquetasSeOrdenanPorClave [1 s]
+  Failed Synkra.Front.Tests.CatalogoTest.SinCoresMuestraAviso [1 s]
+Failed!  - Failed:    10, Passed:     8, Skipped:     0, Total:    18, Duration: 10 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+total=18 executed=18 passed=8 failed=10 notExecuted=0
+CampoDesconocidoEnPluginDaRespuestaInvalida
+CoreInexistenteDaElErrorDeLaApi
+CoresConListaVaciaDevuelveListaVacia
+CoresLeeNombreVersionesEImagen
+PluginsConEtiquetaEscapaClaveYValor
+PluginsConEtiquetaPideLaConsulta
+PluginsEscapaElCore
+PluginsLeeTodosLosCamposConEtiquetas
+FALLA CoreSinPluginsMuestraAviso
+FALLA EnlaceDeSubidaPorCore
+FALLA ErrorAlLeerCoresMuestraCodigoYMensaje
+FALLA ErrorEnLosPluginsDeUnCoreNoEscondeLosDemas
+FALLA EtiquetasSeOrdenanPorClave
+FALLA MuestraCadaCoreConSusVersionesEImagenes
+FALLA MuestraLosPluginsDeCadaCoreConSusEtiquetas
+FALLA NoFiltraNiComparaVersiones
+FALLA SinCoresMuestraAviso
+FALLA SoloLlamaALecturasDelCatalogo
+$ scripts/dotnet-docker.sh test front.Tests --filter "...DetalleTest|...VistaGeneralTest|...MenuTest" ...
+  Failed Synkra.Front.Tests.MenuTest.MenuEnlazaLasTresPantallas [293 ms]
+  Failed Synkra.Front.Tests.VistaGeneralTest.PaisEnlazaASuHistorial [309 ms]
+  Failed Synkra.Front.Tests.VistaGeneralTest.UltimoDespliegueEnlazaAlDetalle [1 ms]
+  Failed Synkra.Front.Tests.DetalleTest.HistorialDeUnPaisSinDespliegueAbierto [1 s]
+  Failed Synkra.Front.Tests.DetalleTest.ErrorDelHistorialDejaVerElDespliegue [1 s]
+  Failed Synkra.Front.Tests.DetalleTest.ActualizarVuelveALeer [1 s]
+  Failed Synkra.Front.Tests.DetalleTest.DespliegueInexistenteMuestraElErrorYNoPideHistorial [1 s]
+  Failed Synkra.Front.Tests.DetalleTest.SoloHaceLecturas [1 s]
+  Failed Synkra.Front.Tests.DetalleTest.FallidoSinContextoNoMuestraLaSeccion [1 s]
+  Failed Synkra.Front.Tests.DetalleTest.VeredictoSeMuestraTalCual [1 s]
+  Failed Synkra.Front.Tests.DetalleTest.HistorialEscapaElPais [1 s]
+  Failed Synkra.Front.Tests.DetalleTest.DespliegueSinContextoNoMuestraLaSeccion [1 s]
+  Failed Synkra.Front.Tests.DetalleTest.DespliegueFallidoMuestraElContexto [1 s]
+  Failed Synkra.Front.Tests.DetalleTest.CadaRenglonEnlazaAlDetalleYAVolver [1 s]
+  Failed Synkra.Front.Tests.DetalleTest.DespliegueMuestraSusCamposYSusPlugins [1 s]
+  Failed Synkra.Front.Tests.DetalleTest.FechasSeMuestranEnUtcYNulaComoGuion [1 s]
+  Failed Synkra.Front.Tests.DetalleTest.MuestraElHistorialDelPaisDelDespliegue [1 s]
+Failed!  - Failed:    17, Passed:    10, Skipped:     0, Total:    27, Duration: 14 s - Synkra.Front.Tests.dll (net10.0)
+salida=1
+total=27 executed=27 passed=10 failed=17 notExecuted=0
+FALLA ActualizarVuelveALeer
+FALLA CadaRenglonEnlazaAlDetalleYAVolver
+FALLA DespliegueFallidoMuestraElContexto
+FALLA DespliegueInexistenteMuestraElErrorYNoPideHistorial
+FALLA DespliegueMuestraSusCamposYSusPlugins
+FALLA DespliegueSinContextoNoMuestraLaSeccion
+FALLA ErrorDelHistorialDejaVerElDespliegue
+FALLA FallidoSinContextoNoMuestraLaSeccion
+FALLA FechasSeMuestranEnUtcYNulaComoGuion
+FALLA HistorialDeUnPaisSinDespliegueAbierto
+FALLA HistorialEscapaElPais
+FALLA MuestraElHistorialDelPaisDelDespliegue
+FALLA SoloHaceLecturas
+FALLA VeredictoSeMuestraTalCual
+FALLA MenuEnlazaLasTresPantallas
+ApiNoDisponibleMuestraElCodigoDelFront
+ErrorConDetallesMuestraCampoYMotivo
+ErrorDeLaApiMuestraCodigoYMensaje
+MuestraUnRenglonPorPaisConLosDatosDeLaApi
+FALLA PaisEnlazaASuHistorial
+PaisInconsistenteMuestraInconsistente
+PaisQueNoConcuerdaMuestraNo
+PaisSinDespliegueMuestraGuiones
+PaisSinLecturaMuestraNoDisponibleYNoSeSabe
+SinPaisesMuestraAviso
+SoloLlamaAGetApiPaises
+FALLA UltimoDespliegueEnlazaAlDetalle
