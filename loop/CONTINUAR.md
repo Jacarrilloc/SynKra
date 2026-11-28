@@ -47,7 +47,7 @@ Contratos que fijaron U06-A y U07-A (los asumen las tareas siguientes; están en
 
 ### PRs
 
-#95 a #104 **fusionados** por autorización de David (la última tanda, #100 U07-C y #101 U06-C, a las 02:02 UTC). `main` en `39a242c` (852 pruebas en verde). **U06 TERMINADA** (#97, #99, #101, #103). El #6 es antiguo y no se toca.
+#95 a #105 **fusionados** por autorización de David (la última tanda, #100 U07-C y #101 U06-C, a las 02:02 UTC). `main` en `20ca4e1` (882 pruebas en verde). **U06 TERMINADA** (#97, #99, #101, #103). El #6 es antiguo y no se toca.
 
 ### En vuelo (sesión de David, 2026-11-28 00:55 UTC; si la sesión se cortó, se perdieron)
 
