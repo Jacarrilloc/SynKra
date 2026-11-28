@@ -1,0 +1,9 @@
+fecha: 2026-11-28T05:35:20-05:00
+sha: ec6108e
+$ bash bitacoras/U08-C-evidencia/ca5-variante.sh (variante del backend, de U08-C)
+variante=0
+registro-cambio
+desplegar=0
+corre-la-variante
+restaurado=0
+corre-lo-subido

@@ -1,0 +1,21 @@
+fecha: 2026-11-28T05:30:06-05:00
+sha: ec6108e 0 cambios de codigo sin confirmar
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U09-D-evidencia/ca5.sh
+OK base: 13 objetos
+base=0
+OK backend: 4 objetos (más 11 de la base y del front)
+backend=0
+OK versiones: backend 0.1.0, init 1.0.0, front 0.1.0
+versiones=0
+OK front: 3 objetos
+front=0
+OK front: 2 objetos
+front-base=0
+OK backend: 3 objetos
+solo-backend=0
+[('Deployment', 'synkra', 'synkra-backend'), ('Deployment', 'synkra', 'synkra-front'), ('Ingress', 'synkra', 'synkra-backend'), ('Ingress', 'synkra', 'synkra-front'), ('Namespace', '-', 'synkra'), ('Namespace', '-', 'synkra-co'), ('Namespace', '-', 'synkra-pe'), ('PersistentVolumeClaim', 'synkra', 'synkra-datos'), ('Role', 'synkra-co', 'synkra-deployer'), ('Role', 'synkra-pe', 'synkra-deployer'), ('RoleBinding', 'synkra-co', 'synkra-deployer'), ('RoleBinding', 'synkra-pe', 'synkra-deployer'), ('Service', 'synkra', 'synkra-backend'), ('Service', 'synkra', 'synkra-front'), ('ServiceAccount', 'synkra', 'deployer')]
+[('synkra.local', '/', 'synkra-front'), ('synkra.local', '/actuator/health', 'synkra-backend'), ('synkra.local', '/api', 'synkra-backend')]
+literales=1

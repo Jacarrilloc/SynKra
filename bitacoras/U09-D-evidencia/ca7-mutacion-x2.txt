@@ -1,0 +1,19 @@
+fecha: 2026-11-28T05:34:40-05:00
+sha: ec6108e
+$ bash repite.sh ca7-mutacion 2
+--- ca7-mutacion corrida 1
+42:for D in synkra-backend; do
+variante=0
+registro-cambio
+desplegar=0
+corre-lo-viejo
+restaurado=0
+corre-lo-subido
+--- ca7-mutacion corrida 2
+42:for D in synkra-backend; do
+variante=0
+registro-cambio
+desplegar=0
+corre-lo-viejo
+restaurado=0
+corre-lo-subido

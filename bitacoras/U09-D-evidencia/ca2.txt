@@ -1,0 +1,255 @@
+fecha: 2026-11-28T05:29:54-05:00
+sha: ec6108e 0 cambios de codigo sin confirmar
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U09-D-evidencia/ca2.sh
+["mcr.microsoft.com/dotnet/aspnet@sha256:aac50ceef10391e78a899e3d2ccd00bbafa2dcb56ccf4586cbccf00edb84fc21"]
+["mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d"]
+10001:10001
+plan=0
+Untagged: localhost:5001/synkra-front:latest
+Deleted: sha256:3bbc8efdc2c26675d633f6e4861687e2675865962207bb46ba65a9f1819a4140
+OK versiones: backend 0.1.0, init 1.0.0, front 0.1.0
++ ./gradlew :backend:bootJar :core:bootJar
+> Task :verificador:compileJava UP-TO-DATE
+> Task :backend:compileJava UP-TO-DATE
+> Task :backend:processResources UP-TO-DATE
+> Task :backend:classes UP-TO-DATE
+> Task :backend:resolveMainClassName UP-TO-DATE
+> Task :verificador:processResources NO-SOURCE
+> Task :verificador:classes UP-TO-DATE
+> Task :verificador:jar UP-TO-DATE
+> Task :backend:bootJar UP-TO-DATE
+> Task :plugin-api:compileJava UP-TO-DATE
+> Task :core:compileJava UP-TO-DATE
+> Task :core:processResources UP-TO-DATE
+> Task :core:classes UP-TO-DATE
+> Task :core:resolveMainClassName UP-TO-DATE
+> Task :plugin-api:processResources NO-SOURCE
+> Task :plugin-api:classes UP-TO-DATE
+> Task :plugin-api:jar UP-TO-DATE
+> Task :core:bootJar UP-TO-DATE
+
+[Incubating] Problems report is available at: file:///home/casdav/Projects/Master/wt-m6r-U09-D/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 812ms
+12 actionable tasks: 12 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
++ docker build --provenance=false --sbom=false -t localhost:5001/synkra-backend:0.1.0 backend
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.23kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 164B done
+#3 DONE 0.0s
+
+#4 [capas 1/4] FROM docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
+#4 resolve docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 107B done
+#5 DONE 0.0s
+
+#6 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
+#6 CACHED
+
+#7 [capas 3/4] COPY build/libs/backend-*.jar /jars/
+#7 CACHED
+
+#8 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
+#8 CACHED
+
+#9 [capas 2/4] WORKDIR /app
+#9 CACHED
+
+#10 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un backend-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/backend-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
+#10 CACHED
+
+#11 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
+#11 CACHED
+
+#12 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
+#12 CACHED
+
+#13 [stage-1 7/7] RUN addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H synkra  && mkdir /data && chown 10001:10001 /data
+#13 CACHED
+
+#14 exporting to image
+#14 exporting layers done
+#14 exporting manifest sha256:48b554d0a4fa144ecf93cb5403209c06cacd26985f629824920b0facbc5e1baa done
+#14 exporting config sha256:377764b100d5b139bfc43667afd3e12cab88449829b5947563a542687e2bf42e done
+#14 naming to localhost:5001/synkra-backend:0.1.0 done
+#14 unpacking to localhost:5001/synkra-backend:0.1.0 done
+#14 DONE 0.0s
++ docker build --provenance=false --sbom=false -t localhost:5001/synkra-core-ejemplo:2.1.0 core
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.47kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 161B done
+#3 DONE 0.0s
+
+#4 [capas 1/4] FROM docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
+#4 resolve docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 104B done
+#5 DONE 0.0s
+
+#6 [capas 3/4] COPY build/libs/core-*.jar /jars/
+#6 CACHED
+
+#7 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
+#7 CACHED
+
+#8 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
+#8 CACHED
+
+#9 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
+#9 CACHED
+
+#10 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
+#10 CACHED
+
+#11 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un core-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/core-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
+#11 CACHED
+
+#12 [capas 2/4] WORKDIR /app
+#12 CACHED
+
+#13 [stage-1 7/7] RUN addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins /config
+#13 CACHED
+
+#14 exporting to image
+#14 exporting layers done
+#14 exporting manifest sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76 done
+#14 exporting config sha256:c724580ee774dabfaa133af07bc92fd771cc4e920dedb3c620eb14570107eecd done
+#14 naming to localhost:5001/synkra-core-ejemplo:2.1.0 done
+#14 unpacking to localhost:5001/synkra-core-ejemplo:2.1.0 done
+#14 DONE 0.0s
++ docker build --provenance=false --sbom=false -t localhost:5001/synkra-init-descarga:1.0.0 init-descarga
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.13kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 57B done
+#3 DONE 0.0s
+
+#4 [revision 1/4] FROM docker.io/library/alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc
+#4 resolve docker.io/library/alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 34B done
+#5 DONE 0.0s
+
+#6 [revision 2/4] RUN apk add --no-cache shellcheck
+#6 CACHED
+
+#7 [revision 3/4] COPY descargar.sh /descargar.sh
+#7 CACHED
+
+#8 [revision 4/4] RUN shellcheck -s sh /descargar.sh
+#8 CACHED
+
+#9 [stage-1 2/3] RUN apk add --no-cache curl  && addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins && chmod 0755 /config  && apk del --no-cache apk-tools
+#9 CACHED
+
+#10 [stage-1 3/3] COPY --from=revision --chmod=0555 /descargar.sh /usr/local/bin/descargar.sh
+#10 CACHED
+
+#11 exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:d3019aacdfb153d8db5c2ffe3bdab553601f2aa7dfda8ffbcf2ed298e6f12d75 done
+#11 exporting config sha256:bdf6313eb595ed994470d34f137de88605dc5d0a1bcd63e61eb0929aa6027abe done
+#11 naming to localhost:5001/synkra-init-descarga:1.0.0 done
+#11 unpacking to localhost:5001/synkra-init-descarga:1.0.0 done
+#11 DONE 0.0s
++ docker build --provenance=false --sbom=false -t localhost:5001/synkra-front:0.1.0 front
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.49kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for mcr.microsoft.com/dotnet/sdk:10.0.404@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
+#2 DONE 0.0s
+
+#3 [internal] load metadata for mcr.microsoft.com/dotnet/aspnet:10.0.15@sha256:aac50ceef10391e78a899e3d2ccd00bbafa2dcb56ccf4586cbccf00edb84fc21
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 66B done
+#4 DONE 0.0s
+
+#5 [stage-1 1/3] FROM mcr.microsoft.com/dotnet/aspnet:10.0.15@sha256:aac50ceef10391e78a899e3d2ccd00bbafa2dcb56ccf4586cbccf00edb84fc21
+#5 resolve mcr.microsoft.com/dotnet/aspnet:10.0.15@sha256:aac50ceef10391e78a899e3d2ccd00bbafa2dcb56ccf4586cbccf00edb84fc21 0.0s done
+#5 DONE 0.0s
+
+#6 [build 1/5] FROM mcr.microsoft.com/dotnet/sdk:10.0.404@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
+#6 resolve mcr.microsoft.com/dotnet/sdk:10.0.404@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d 0.0s done
+#6 DONE 0.0s
+
+#7 [internal] load build context
+#7 transferring context: 1.31kB done
+#7 DONE 0.0s
+
+#8 [build 2/5] WORKDIR /src
+#8 CACHED
+
+#9 [stage-1 2/3] WORKDIR /app
+#9 CACHED
+
+#10 [build 3/5] COPY . .
+#10 CACHED
+
+#11 [build 4/5] RUN dotnet restore
+#11 CACHED
+
+#12 [build 5/5] RUN dotnet publish -c Release -o /app --no-restore
+#12 CACHED
+
+#13 [stage-1 3/3] COPY --from=build /app .
+#13 CACHED
+
+#14 exporting to image
+#14 exporting layers done
+#14 exporting manifest sha256:d1d80b7a3418e937e9974d80402c1870e5d7185ae9295cc2952c69423e4e1313 done
+#14 exporting config sha256:bfe9899eb7364e5a7e8358d878e4740fa4b0702f06222d55a308ed7119754b0f done
+#14 naming to localhost:5001/synkra-front:0.1.0 done
+#14 unpacking to localhost:5001/synkra-front:0.1.0 done
+#14 DONE 0.0s
+OK imagenes construidas con prefijo localhost:5001
+imagenes=0
+localhost:5001/synkra-front:0.1.0 user=10001:10001 arch=amd64
+amd64
+4:FROM mcr.microsoft.com/dotnet/sdk:10.0.404@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d AS build
+15:FROM mcr.microsoft.com/dotnet/aspnet:10.0.15@sha256:aac50ceef10391e78a899e3d2ccd00bbafa2dcb56ccf4586cbccf00edb84fc21
+2

@@ -1,0 +1,253 @@
+fecha: 2026-11-28T05:34:20-05:00
+sha: ec6108e 0 cambios de codigo sin confirmar
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U09-D-evidencia/ca7-variante.sh
+variante=0
+registro-cambio
+contexto permitido: kind-synkra (https://127.0.0.1:42049)
+scripts/desplegar.sh
+namespace/synkra unchanged (server dry run)
+namespace/synkra-co unchanged (server dry run)
+namespace/synkra-pe unchanged (server dry run)
+serviceaccount/deployer unchanged (server dry run)
+role.rbac.authorization.k8s.io/synkra-deployer unchanged (server dry run)
+role.rbac.authorization.k8s.io/synkra-deployer unchanged (server dry run)
+rolebinding.rbac.authorization.k8s.io/synkra-deployer unchanged (server dry run)
+rolebinding.rbac.authorization.k8s.io/synkra-deployer unchanged (server dry run)
+service/synkra-backend unchanged (server dry run)
+service/synkra-front unchanged (server dry run)
+persistentvolumeclaim/synkra-datos unchanged (server dry run)
+deployment.apps/synkra-backend unchanged (server dry run)
+deployment.apps/synkra-front unchanged (server dry run)
+ingress.networking.k8s.io/synkra-backend unchanged (server dry run)
+ingress.networking.k8s.io/synkra-front unchanged (server dry run)
+namespace/synkra unchanged
+namespace/synkra-co unchanged
+namespace/synkra-pe unchanged
+serviceaccount/deployer unchanged
+role.rbac.authorization.k8s.io/synkra-deployer unchanged
+role.rbac.authorization.k8s.io/synkra-deployer unchanged
+rolebinding.rbac.authorization.k8s.io/synkra-deployer unchanged
+rolebinding.rbac.authorization.k8s.io/synkra-deployer unchanged
+service/synkra-backend unchanged
+service/synkra-front unchanged
+persistentvolumeclaim/synkra-datos unchanged
+deployment.apps/synkra-backend unchanged
+deployment.apps/synkra-front unchanged
+ingress.networking.k8s.io/synkra-backend unchanged
+ingress.networking.k8s.io/synkra-front unchanged
+deployment "synkra-backend" successfully rolled out
+OK desplegar: localhost:5001/synkra-backend:0.1.0 sha256:48b554d0a4fa144ecf93cb5403209c06cacd26985f629824920b0facbc5e1baa
+deployment "synkra-front" successfully rolled out
+desplegar: synkra-front corre sha256:d1d80b7a3418e937e9974d80402c1870e5d7185ae9295cc2952c69423e4e1313 y el registro tiene sha256:67d24c5c5003421303fddbcfa06ff6af8beaa8328dbfac36227403ca77b7e26f; rollout restart
+deployment.apps/synkra-front restarted
+Waiting for deployment "synkra-front" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "synkra-front" rollout to finish: 1 old replicas are pending termination...
+deployment "synkra-front" successfully rolled out
+OK desplegar: localhost:5001/synkra-front:0.1.0 sha256:67d24c5c5003421303fddbcfa06ff6af8beaa8328dbfac36227403ca77b7e26f
+desplegar=0
+corre-la-variante
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.23kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 164B done
+#3 DONE 0.0s
+
+#4 [capas 1/4] FROM docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
+#4 resolve docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 107B done
+#5 DONE 0.0s
+
+#6 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
+#6 CACHED
+
+#7 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un backend-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/backend-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
+#7 CACHED
+
+#8 [capas 3/4] COPY build/libs/backend-*.jar /jars/
+#8 CACHED
+
+#9 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
+#9 CACHED
+
+#10 [capas 2/4] WORKDIR /app
+#10 CACHED
+
+#11 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
+#11 CACHED
+
+#12 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
+#12 CACHED
+
+#13 [stage-1 7/7] RUN addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H synkra  && mkdir /data && chown 10001:10001 /data
+#13 CACHED
+
+#14 exporting to image
+#14 exporting layers done
+#14 exporting manifest sha256:48b554d0a4fa144ecf93cb5403209c06cacd26985f629824920b0facbc5e1baa done
+#14 exporting config sha256:377764b100d5b139bfc43667afd3e12cab88449829b5947563a542687e2bf42e done
+#14 naming to localhost:5001/synkra-backend:0.1.0 done
+#14 unpacking to localhost:5001/synkra-backend:0.1.0 done
+#14 DONE 0.0s
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.47kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 161B done
+#3 DONE 0.0s
+
+#4 [capas 1/4] FROM docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
+#4 resolve docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 104B done
+#5 DONE 0.0s
+
+#6 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
+#6 CACHED
+
+#7 [capas 2/4] WORKDIR /app
+#7 CACHED
+
+#8 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
+#8 CACHED
+
+#9 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
+#9 CACHED
+
+#10 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un core-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/core-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
+#10 CACHED
+
+#11 [capas 3/4] COPY build/libs/core-*.jar /jars/
+#11 CACHED
+
+#12 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
+#12 CACHED
+
+#13 [stage-1 7/7] RUN addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins /config
+#13 CACHED
+
+#14 exporting to image
+#14 exporting layers done
+#14 exporting manifest sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76 done
+#14 exporting config sha256:c724580ee774dabfaa133af07bc92fd771cc4e920dedb3c620eb14570107eecd done
+#14 naming to localhost:5001/synkra-core-ejemplo:2.1.0 done
+#14 unpacking to localhost:5001/synkra-core-ejemplo:2.1.0 done
+#14 DONE 0.0s
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.13kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 57B done
+#3 DONE 0.0s
+
+#4 [revision 1/4] FROM docker.io/library/alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc
+#4 resolve docker.io/library/alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 34B done
+#5 DONE 0.0s
+
+#6 [revision 2/4] RUN apk add --no-cache shellcheck
+#6 CACHED
+
+#7 [revision 3/4] COPY descargar.sh /descargar.sh
+#7 CACHED
+
+#8 [stage-1 2/3] RUN apk add --no-cache curl  && addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins && chmod 0755 /config  && apk del --no-cache apk-tools
+#8 CACHED
+
+#9 [revision 4/4] RUN shellcheck -s sh /descargar.sh
+#9 CACHED
+
+#10 [stage-1 3/3] COPY --from=revision --chmod=0555 /descargar.sh /usr/local/bin/descargar.sh
+#10 CACHED
+
+#11 exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:d3019aacdfb153d8db5c2ffe3bdab553601f2aa7dfda8ffbcf2ed298e6f12d75 done
+#11 exporting config sha256:bdf6313eb595ed994470d34f137de88605dc5d0a1bcd63e61eb0929aa6027abe done
+#11 naming to localhost:5001/synkra-init-descarga:1.0.0 done
+#11 unpacking to localhost:5001/synkra-init-descarga:1.0.0 done
+#11 DONE 0.0s
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.49kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for mcr.microsoft.com/dotnet/sdk:10.0.404@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
+#2 DONE 0.0s
+
+#3 [internal] load metadata for mcr.microsoft.com/dotnet/aspnet:10.0.15@sha256:aac50ceef10391e78a899e3d2ccd00bbafa2dcb56ccf4586cbccf00edb84fc21
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 66B done
+#4 DONE 0.0s
+
+#5 [build 1/5] FROM mcr.microsoft.com/dotnet/sdk:10.0.404@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
+#5 resolve mcr.microsoft.com/dotnet/sdk:10.0.404@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d 0.0s done
+#5 DONE 0.0s
+
+#6 [stage-1 1/3] FROM mcr.microsoft.com/dotnet/aspnet:10.0.15@sha256:aac50ceef10391e78a899e3d2ccd00bbafa2dcb56ccf4586cbccf00edb84fc21
+#6 resolve mcr.microsoft.com/dotnet/aspnet:10.0.15@sha256:aac50ceef10391e78a899e3d2ccd00bbafa2dcb56ccf4586cbccf00edb84fc21 0.0s done
+#6 DONE 0.0s
+
+#7 [internal] load build context
+#7 transferring context: 1.31kB done
+#7 DONE 0.0s
+
+#8 [build 4/5] RUN dotnet restore
+#8 CACHED
+
+#9 [build 3/5] COPY . .
+#9 CACHED
+
+#10 [stage-1 2/3] WORKDIR /app
+#10 CACHED
+
+#11 [build 2/5] WORKDIR /src
+#11 CACHED
+
+#12 [build 5/5] RUN dotnet publish -c Release -o /app --no-restore
+#12 CACHED
+
+#13 [stage-1 3/3] COPY --from=build /app .
+#13 CACHED
+
+#14 exporting to image
+#14 exporting layers done
+#14 exporting manifest sha256:d1d80b7a3418e937e9974d80402c1870e5d7185ae9295cc2952c69423e4e1313 done
+#14 exporting config sha256:bfe9899eb7364e5a7e8358d878e4740fa4b0702f06222d55a308ed7119754b0f done
+#14 naming to localhost:5001/synkra-front:0.1.0 done
+#14 unpacking to localhost:5001/synkra-front:0.1.0 done
+#14 DONE 0.0s
+restaurado=0
+corre-lo-subido
