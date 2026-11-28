@@ -256,6 +256,18 @@ class TransicionesRegistroTest {
     }
 
     @Test
+    void cualquierPaisDeDosLetrasMinusculasEsValido() {
+        revertida(() -> {
+            api.registrar(new NuevoDespliegue(24, "co", TipoDespliegue.DESPLIEGUE, null, "c", "1", "i", "a", "a",
+                    Instant.parse("2026-11-27T10:15:30.123Z"), "{}", List.of()));
+            api.registrar(new NuevoDespliegue(25, "mx", TipoDespliegue.DESPLIEGUE, null, "c", "1", "i", "a", "a",
+                    Instant.parse("2026-11-27T10:15:30.123Z"), "{}", List.of()));
+            assertThat(jdbc.queryForList("select pais from reg_despliegue where id in (24, 25) order by id",
+                    String.class)).containsExactly("co", "mx");
+        });
+    }
+
+    @Test
     void terminadoEnUsaElRelojDelConstructorDePaquete() {
         var fijo = Clock.fixed(Instant.parse("2030-01-02T03:04:05.678Z"), ZoneOffset.UTC);
         var servicio = new RegistroServicio(plantilla, jdbc, json, fijo);
