@@ -1,0 +1,8 @@
+fecha: 2026-11-27T22:52:09-05:00
+sha: 2f47340 (copia con git archive; el worktree no se tocó)
+JAVA_HOME=/home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+comando: bitacoras/U07-G-evidencia/ca2.sh registro 2f47340
+
+== mutacion=registro commit=2f47340
+BUILD SUCCESSFUL in 7s
+salida-gradle-ver-xml:
