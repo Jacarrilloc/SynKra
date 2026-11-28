@@ -1,0 +1,115 @@
+2026-11-27T20:36:36-05:00
+=== frontera Q6 (sha 7246352)
+$ sed -i -e s/vence_en\ \<=\ \?/vence_en\ \<\ \?/ "$D/backend/src/main/java/io/synkra/despliegue/VencimientoPlanes.java"
+15c15
+<     private static final String SQL = "UPDATE dep_plan SET estado = '" + Plan.VENCIDO + "' WHERE estado = '" + Plan.PENDIENTE + "' AND vence_en <= ?";
+---
+>     private static final String SQL = "UPDATE dep_plan SET estado = '" + Plan.VENCIDO + "' WHERE estado = '" + Plan.PENDIENTE + "' AND vence_en < ?";
+gradle: BUILD FAILED in 8s
+pruebas caidas:
+  PlanPendienteTest name="laFronteraEsVenceEnExacto()"
+  VencimientoPlanesTest name="elBarridoVenceDesdeVenceEnExactoYSoloLosPendientes()"
+  VencimientoPlanesTest name="vencerSiTocaDiceSiCambioUnaFila()"
+=== persistir (@Transactional en la guarda) (sha 7246352)
+$ sed -i -e s/\^\ \ \ \ Plan\ exigirConfirmable/\ \ \ \ @org.springframework.transaction.annotation.Transactional\\n\ \ \ \ Plan\ exigirConfirmable/ "$D/backend/src/main/java/io/synkra/despliegue/GuardaConfirmacion.java"
+24a25
+>     @org.springframework.transaction.annotation.Transactional
+gradle: BUILD FAILED in 8s
+pruebas caidas:
+  PlanPendienteTest name="laFronteraEsVenceEnExacto()"
+  PlanPendienteTest name="confirmarUnPlanVencidoDa410YLoDejaVencidoSinTocarOtros()"
+=== solo pendiente (sha 7246352)
+$ sed -i -e s/WHERE\ estado\ =\ \'\"\ +\ Plan.PENDIENTE\ +\ \"\'\ AND\ vence_en/WHERE\ vence_en/ "$D/backend/src/main/java/io/synkra/despliegue/VencimientoPlanes.java"
+15c15
+<     private static final String SQL = "UPDATE dep_plan SET estado = '" + Plan.VENCIDO + "' WHERE estado = '" + Plan.PENDIENTE + "' AND vence_en <= ?";
+---
+>     private static final String SQL = "UPDATE dep_plan SET estado = '" + Plan.VENCIDO + "' WHERE vence_en <= ?";
+gradle: BUILD FAILED in 8s
+pruebas caidas:
+  PlanPendienteTest name="unPlanConfirmadoDa409YNoCambia()"
+  VencimientoPlanesTest name="elBarridoVenceDesdeVenceEnExactoYSoloLosPendientes()"
+  VencimientoPlanesTest name="vencerSiTocaDiceSiCambioUnaFila()"
+=== por id (sha 7246352)
+$ sed -i -e s/jdbc.update\(SQL\ +\ \"\ AND\ id\ =\ \?\"\,\ reloj.instant\(\).toEpochMilli\(\)\,\ id\)\ ==\ 1/jdbc.update\(SQL\,\ reloj.instant\(\).toEpochMilli\(\)\)\ \>=\ 1/ "$D/backend/src/main/java/io/synkra/despliegue/VencimientoPlanes.java"
+34c34
+<         return jdbc.update(SQL + " AND id = ?", reloj.instant().toEpochMilli(), id) == 1;
+---
+>         return jdbc.update(SQL, reloj.instant().toEpochMilli()) >= 1;
+gradle: BUILD FAILED in 8s
+pruebas caidas:
+  PlanPendienteTest name="confirmarUnPlanVencidoDa410YLoDejaVencidoSinTocarOtros()"
+  VencimientoPlanesTest name="vencerSiTocaDiceSiCambioUnaFila()"
+=== 409 (sha 7246352)
+$ sed -i -e /case\ Plan.CONFIRMADO/\,+1d "$D/backend/src/main/java/io/synkra/despliegue/GuardaConfirmacion.java"
+34,35d33
+<             case Plan.CONFIRMADO -> throw new ExcepcionApi(HttpStatus.CONFLICT, new ErrorApi(
+<                     CodigosDespliegue.PLAN_NO_PENDIENTE, MotivosDespliegue.PLAN_NO_PENDIENTE_MENSAJE, List.of()));
+gradle: BUILD FAILED in 8s
+pruebas caidas:
+  PlanPendienteTest name="unPlanConfirmadoDa409YNoCambia()"
+=== reloj (sha 7246352)
+$ sed -i -e s/this.reloj\ =\ reloj\;/this.reloj\ =\ Clock.systemUTC\(\)\;/ "$D/backend/src/main/java/io/synkra/despliegue/PlanServicio.java"
+45c45
+<         this.reloj = reloj;
+---
+>         this.reloj = Clock.systemUTC();
+gradle: BUILD FAILED in 8s
+pruebas caidas:
+  PlanPendienteTest name="crearEnPaisVacioNoEscribeEnElCluster()"
+  PlanPendienteTest name="laFronteraEsVenceEnExacto()"
+  PlanPendienteTest name="elBarridoVenceSoloLosPlanesCuyoVenceEnLlego()"
+  PlanPendienteTest name="unPlanConfirmadoDa409YNoCambia()"
+  PlanPendienteTest name="crearEnPaisSinCambiosNoEscribeEnElCluster()"
+  PlanPendienteTest name="crearEnPaisConOtroPluginNoEscribeEnElCluster()"
+  PlanPendienteTest name="confirmarUnPlanVencidoDa410YLoDejaVencidoSinTocarOtros()"
+  PlanPendienteTest name="confirmarUnPlanVigenteDa501SinTocarElClusterNiLaFila()"
+=== R-D13 crear (sha 7246352)
+$ sed -i -e s/\^\\\(\ \ \ \ \ \ \ \ var\ guardado\ =\ .\*\\\)\$/\\1\\n\ \ \ \ \ \ \ \ kubernetes.aplicar\(kubernetes.construir\(new\ io.synkra.kubernetes.api.PlanPais\(pais\,\ imagen\,\ List.of\(\)\)\)\)\;/ "$D/backend/src/main/java/io/synkra/despliegue/PlanServicio.java"
+76a77
+>         kubernetes.aplicar(kubernetes.construir(new io.synkra.kubernetes.api.PlanPais(pais, imagen, List.of())));
+gradle: BUILD FAILED in 9s
+pruebas caidas:
+  PlanPendienteTest name="crearEnPaisVacioNoEscribeEnElCluster()"
+  PlanPendienteTest name="laFronteraEsVenceEnExacto()"
+  PlanPendienteTest name="elBarridoVenceSoloLosPlanesCuyoVenceEnLlego()"
+  PlanPendienteTest name="unPlanConfirmadoDa409YNoCambia()"
+  PlanPendienteTest name="crearEnPaisSinCambiosNoEscribeEnElCluster()"
+  PlanPendienteTest name="crearEnPaisConOtroPluginNoEscribeEnElCluster()"
+  PlanPendienteTest name="confirmarUnPlanVencidoDa410YLoDejaVencidoSinTocarOtros()"
+  PlanPendienteTest name="confirmarUnPlanVigenteDa501SinTocarElClusterNiLaFila()"
+=== R-D13 confirmar (sha 7246352)
+$ sed -i -e s/\ \ \ \ private\ final\ GuardaConfirmacion\ guarda\;/\&\\n\ \ \ \ private\ final\ io.synkra.kubernetes.api.AdaptadorKubernetes\ k\;/ -e s/RutasConfirmacion\(GuardaConfirmacion\ guarda\)\ \{/RutasConfirmacion\(GuardaConfirmacion\ guarda\,\ io.synkra.kubernetes.api.AdaptadorKubernetes\ k\)\ \{\\n\ \ \ \ \ \ \ \ this.k\ =\ k\;/ -e s/\ \ \ \ \ \ \ \ guarda.exigirConfirmable\(id\)\;/\ \ \ \ \ \ \ \ var\ plan\ =\ guarda.exigirConfirmable\(id\)\;\\n\ \ \ \ \ \ \ \ k.leerPais\(plan.pais\(\)\)\;/ "$D/backend/src/main/java/io/synkra/despliegue/RutasConfirmacion.java"
+18a19
+>     private final io.synkra.kubernetes.api.AdaptadorKubernetes k;
+20c21,22
+<     RutasConfirmacion(GuardaConfirmacion guarda) {
+---
+>     RutasConfirmacion(GuardaConfirmacion guarda, io.synkra.kubernetes.api.AdaptadorKubernetes k) {
+>         this.k = k;
+26c28,29
+<         guarda.exigirConfirmable(id);
+---
+>         var plan = guarda.exigirConfirmable(id);
+>         k.leerPais(plan.pais());
+gradle: BUILD FAILED in 8s
+pruebas caidas:
+  PlanPendienteTest name="laFronteraEsVenceEnExacto()"
+  PlanPendienteTest name="confirmarUnPlanVigenteDa501SinTocarElClusterNiLaFila()"
+=== F-02 boolean de vencerSiToca (sha 7246352)
+$ sed -i -e s/toEpochMilli\(\)\,\ id\)\ ==\ 1\;/toEpochMilli\(\)\,\ id\)\ \>=\ 0\;/ "$D/backend/src/main/java/io/synkra/despliegue/VencimientoPlanes.java"
+34c34
+<         return jdbc.update(SQL + " AND id = ?", reloj.instant().toEpochMilli(), id) == 1;
+---
+>         return jdbc.update(SQL + " AND id = ?", reloj.instant().toEpochMilli(), id) >= 0;
+gradle: BUILD FAILED in 8s
+pruebas caidas:
+  VencimientoPlanesTest name="vencerSiTocaDiceSiCambioUnaFila()"
+=== F-02 frontera del barrido (sha 7246352)
+$ sed -i -e s/return\ jdbc.update\(SQL\,\ reloj.instant\(\).toEpochMilli\(\)\)\;/return\ jdbc.update\(SQL\,\ reloj.instant\(\).toEpochMilli\(\)\ -\ 1\)\;/ "$D/backend/src/main/java/io/synkra/despliegue/VencimientoPlanes.java"
+28c28
+<         return jdbc.update(SQL, reloj.instant().toEpochMilli());
+---
+>         return jdbc.update(SQL, reloj.instant().toEpochMilli() - 1);
+gradle: BUILD FAILED in 8s
+pruebas caidas:
+  VencimientoPlanesTest name="elBarridoVenceDesdeVenceEnExactoYSoloLosPendientes()"
