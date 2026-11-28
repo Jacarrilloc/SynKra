@@ -4,10 +4,10 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0.404@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d AS build
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1
 WORKDIR /src
-# Primero solo el .csproj: la restauracion queda en cache mientras no cambien los paquetes.
-COPY Synkra.Front.csproj .
-RUN dotnet restore
+# Se copia todo y se restaura despues: el SDK web solo anade el paquete Microsoft.AspNetCore.App.Internal.Assets (con
+# blazor.web.js) si ve los .razor y wwwroot. Restaurar con el .csproj solo lo dejaba fuera y /_framework/blazor.web.js daba 404.
 COPY . .
+RUN dotnet restore
 RUN dotnet publish -c Release -o /app --no-restore
 
 # Etapa final: runtime de ASP.NET 10.0.15, sin SDK.
