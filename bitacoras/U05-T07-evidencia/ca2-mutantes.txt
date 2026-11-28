@@ -1,0 +1,96 @@
+### mutante sinsha
+ok hash-correcto
+FALLA hash-alterado: cod=0 plugins=plugin-a-1.0.jar
+ok catalogo-caido
+ok http-500
+ok http-404-sin-reintento
+ok nombre-malo(../evil.jar)
+ok nombre-malo(/abs.jar)
+ok nombre-malo(a/b.jar)
+ok nombre-malo(..)
+ok hash-mal-formado
+ok linea-mala-tras-buena
+FALLA segundo-alterado: cod=0 plugins=a-1.jar
+b-1.jar
+ok dos-correctos
+ok lista-vacia
+ok sin-url
+ok sin-lista
+2 caso(s) con FALLA
+salida=1
+### mutante sinvalidar
+ok hash-correcto
+ok hash-alterado
+ok catalogo-caido
+ok http-500
+ok http-404-sin-reintento
+FALLA nombre-malo(../evil.jar): cod=5 peticiones=5
+FALLA nombre-malo(/abs.jar): cod=0 peticiones=1
+FALLA nombre-malo(a/b.jar): cod=5 peticiones=5
+FALLA nombre-malo(..): cod=0 peticiones=1
+FALLA hash-mal-formado: cod=4
+FALLA linea-mala-tras-buena: cod=5 peticiones=6
+ok segundo-alterado
+ok dos-correctos
+ok lista-vacia
+ok sin-url
+ok sin-lista
+6 caso(s) con FALLA
+salida=1
+### mutante sinlimpiar
+ok hash-correcto
+ok hash-alterado
+ok catalogo-caido
+ok http-500
+ok http-404-sin-reintento
+ok nombre-malo(../evil.jar)
+ok nombre-malo(/abs.jar)
+ok nombre-malo(a/b.jar)
+ok nombre-malo(..)
+ok hash-mal-formado
+ok linea-mala-tras-buena
+FALLA segundo-alterado: cod=6 plugins=a-1.jar
+ok dos-correctos
+ok lista-vacia
+ok sin-url
+ok sin-lista
+1 caso(s) con FALLA
+salida=1
+### mutante cuatro
+ok hash-correcto
+ok hash-alterado
+FALLA catalogo-caido: cod=5 intentos=0
+FALLA http-500: cod=5 intentos=0 peticiones=4
+ok http-404-sin-reintento
+ok nombre-malo(../evil.jar)
+ok nombre-malo(/abs.jar)
+ok nombre-malo(a/b.jar)
+ok nombre-malo(..)
+ok hash-mal-formado
+ok linea-mala-tras-buena
+ok segundo-alterado
+ok dos-correctos
+ok lista-vacia
+ok sin-url
+ok sin-lista
+2 caso(s) con FALLA
+salida=1
+### mutante reintenta404
+ok hash-correcto
+ok hash-alterado
+ok catalogo-caido
+ok http-500
+FALLA http-404-sin-reintento: cod=5 peticiones=5
+ok nombre-malo(../evil.jar)
+ok nombre-malo(/abs.jar)
+ok nombre-malo(a/b.jar)
+ok nombre-malo(..)
+ok hash-mal-formado
+ok linea-mala-tras-buena
+ok segundo-alterado
+ok dos-correctos
+ok lista-vacia
+ok sin-url
+ok sin-lista
+1 caso(s) con FALLA
+salida=1
