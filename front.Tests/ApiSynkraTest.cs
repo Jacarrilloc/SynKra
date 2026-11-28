@@ -90,11 +90,17 @@ public class ApiSynkraTest
     [Fact]
     public async Task HistorialEscapaElPais()
     {
-        var m = new ManejadorHttpSimulado().Responde(HttpMethod.Get, "/api/paises/p%20e/despliegues", HttpStatusCode.OK, "[]");
+        var m = new ManejadorHttpSimulado()
+            .Responde(HttpMethod.Get, "/api/paises/p%20e/despliegues", HttpStatusCode.OK, "[]")
+            .Responde(HttpMethod.Get, "/api/paises/a%2Fb%3Fc/despliegues", HttpStatusCode.OK, "[]");
 
         await Cliente(m).HistorialAsync("p e");
+        // «/» y «?» son los que un Uri relativo no escapa solo: sin escape cambiarían la ruta y la query.
+        await Cliente(m).HistorialAsync("a/b?c");
 
-        Assert.Equal([(HttpMethod.Get, "/api/paises/p%20e/despliegues")], m.Peticiones);
+        Assert.Equal(
+            [(HttpMethod.Get, "/api/paises/p%20e/despliegues"), (HttpMethod.Get, "/api/paises/a%2Fb%3Fc/despliegues")],
+            m.Peticiones);
     }
 
     [Fact]
