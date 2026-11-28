@@ -3,7 +3,7 @@ using Synkra.Front.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// La URL se calcula antes de Build(): una URL mala impide arrancar.
+// Synkra:ApiUrl (variable Synkra__ApiUrl) se calcula antes de Build(): una URL mala impide arrancar.
 var urlApi = ConfiguracionApi.UrlBase(builder.Configuration);
 
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
