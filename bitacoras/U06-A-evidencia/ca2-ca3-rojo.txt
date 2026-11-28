@@ -1,0 +1,23 @@
+2026-11-27T19:35:12-05:00
+eb6b2b6
+$ ./gradlew :backend:test --rerun --tests *TransicionesRegistroTest --tests *ContextoFalloTest  (sin RegistroServicio ni TruncadoContexto)
+> Task :backend:compileTestJava FAILED
+/home/julian/Escritorio/Proyectos/wt-m6r-U06-A/backend/src/test/java/io/synkra/registro/ContextoFalloTest.java:59: error: cannot find symbol
+  symbol:   variable TruncadoContexto
+/home/julian/Escritorio/Proyectos/wt-m6r-U06-A/backend/src/test/java/io/synkra/registro/ContextoFalloTest.java:62: error: cannot find symbol
+  symbol:   variable TruncadoContexto
+/home/julian/Escritorio/Proyectos/wt-m6r-U06-A/backend/src/test/java/io/synkra/registro/ContextoFalloTest.java:67: error: cannot find symbol
+  symbol:   variable TruncadoContexto
+/home/julian/Escritorio/Proyectos/wt-m6r-U06-A/backend/src/test/java/io/synkra/registro/ContextoFalloTest.java:68: error: cannot find symbol
+  symbol:   variable TruncadoContexto
+/home/julian/Escritorio/Proyectos/wt-m6r-U06-A/backend/src/test/java/io/synkra/registro/ContextoFalloTest.java:69: error: cannot find symbol
+  symbol:   variable TruncadoContexto
+/home/julian/Escritorio/Proyectos/wt-m6r-U06-A/backend/src/test/java/io/synkra/registro/ContextoFalloTest.java:76: error: cannot find symbol
+  symbol:   variable TruncadoContexto
+/home/julian/Escritorio/Proyectos/wt-m6r-U06-A/backend/src/test/java/io/synkra/registro/ContextoFalloTest.java:85: error: cannot find symbol
+  symbol:   variable TruncadoContexto
+/home/julian/Escritorio/Proyectos/wt-m6r-U06-A/backend/src/test/java/io/synkra/registro/ContextoFalloTest.java:94: error: cannot find symbol
+  symbol:   variable TruncadoContexto
+/home/julian/Escritorio/Proyectos/wt-m6r-U06-A/backend/src/test/java/io/synkra/registro/ContextoFalloTest.java:96: error: cannot find symbol
+  symbol:   variable TruncadoContexto
+/home/julian/Escritorio/Proyectos/wt-m6r-U06-A/backend/src/test/java/io/synkra/registro/ContextoFalloTest.java:97: error: cannot find symbol
