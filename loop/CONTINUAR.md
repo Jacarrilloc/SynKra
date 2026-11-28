@@ -17,7 +17,7 @@ U01, U02, U03, U04 y U05 están **terminadas y fusionadas en `main`** (`97f9f80`
 - **Fusión**: Julian pidió (00:25 UTC) que el orquestador fusionara. Se fusionaron en orden, con merge commit y cambiando antes la base a `main`: U05 (#85, #87, #90, #92) y U02 (#84, #86, #88, #89, #91, #93, #94). Está en `aidlc-docs/audit.md`.
 - **Comprobación**: `./gradlew test --rerun check` sobre `main` `97f9f80` → `salida=0`, 710 pruebas, 0 saltos, 0 fallos.
 - **Cierre de U05 y U02**: planes marcados, `aidlc-state.md` y auditoría, en la rama `orq/U05-U02-tareas`. Va en el **PR #95** (rama del loop → `main`), **abierto**. El control de permisos de la sesión de Julian bloqueó la fusión porque no era uno de los PRs que él nombró: lo fusiona un humano.
-- `CANDIDATAS.md` llega hasta **C-126**. La siguiente libre es **C-127**.
+- `CANDIDATAS.md` llega hasta **C-127**. La siguiente libre es **C-128**.
 
 ## Plan para acelerar (aprobado por Julian el 2026-11-28 a las 00:19 UTC)
 
@@ -55,7 +55,6 @@ Contratos que fijaron U06-A y U07-A (los asumen las tareas siguientes; están en
 |---|---|---|---|---|
 | U06-A registro base | `m6r/U06-A` | `97f9f80` | **VERDE ronda 2**, fusionado (#97) | — |
 | U07-A planes y país | `m6r/U07-A` | `97f9f80` | **VERDE ronda 1**, fusionado (#96) | — |
-| U07-E vigilancia y reinicio | `../wt-m6r-U07-E`, `m6r/U07-E` | `39a242c` | Ronda 1 NO-VERDE. Codificador ronda 2 terminó (`1783515`, código en `03ffd16`, solo pruebas nuevas). **Revisor ronda 2 despachado** | Repetir el revisor ronda 2 (base `39a242c`) si no hay `revisiones/U07-E/ronda-2.md`. Al salir VERDE, rebasar U07-F |
 | U07-F y U07-G | (sin rama) | — | U07-G **escrita** (fronteras de `despliegue` con `allowedDependencies` en su `package-info.java`, y resumen de U07; revisor normal, no `sonnet`, porque toca código). Antes de U07-G, fusionar la rama del orquestador a `main` para que C-121 a C-123 estén en su árbol |
 | U07-F reversión | `../wt-m6r-U07-F`, `m6r/U07-F` | `1783515` (U07-E incorporada por merge en `50e419a`) | Ronda 1 NO-VERDE. Codificador ronda 2 terminó (`d9febfc`, código en `d832791`). **Revisor ronda 2 despachado** | Repetir el revisor ronda 2 (base `1783515`) si no hay `revisiones/U07-F/ronda-2.md` |
 | (fila anterior de U07-E y U07-F) | (sin rama) | — | **Escritas** (hashes `4252363` y `2f97d8d`, tras corregir los greps de C-122). U07-E: `TareasProgramadas` con `synkra.programacion.activa`, apagada en pruebas; toca `kubernetes` por C-76, C-82 y C-83. U07-F: 422 `ORIGEN_NO_LISTO` y `ORIGEN_DESACTUALIZADO` | En cadena tras U07-D |
