@@ -1,0 +1,15 @@
+fecha: 2026-11-28T01:30:55-05:00
+sha: d8390bd (arbol: 1 cambios sin confirmar)
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: sin definir
+$ bash bitacoras/U08-D-evidencia/ca5-estado.sh
+- nombre: "kyc-co"
+  version: "1.0.0"
+- nombre: "kyc-pe"
+  version: "1.3.0"
+
+[{"nombre":"kyc-co","version":"1.0.0"}]
+synkra-core-6b79bf8b66-p299p   1/1   Running   0     32s
+<-anotaciones
+{"concuerda":true,"ultimoDespliegueId":2,"plugins":[{"nombre":"kyc-co","version":"1.0.0","sha256":"90f9ef4d8fde6c3103f346df6270c1edb64170fb00f2c81c0ff4366925376d3c"},{"nombre":"kyc-pe","version":"1.3.0","sha256":"3bccc0bdbeabce892015da00b4fbda4487db214a324314950036ef316564974f"}]}
