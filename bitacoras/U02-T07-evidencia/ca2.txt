@@ -1,0 +1,46 @@
+$ ./gradlew :core:bootJar
+> Task :plugin-api:compileJava UP-TO-DATE
+> Task :verificador:compileJava UP-TO-DATE
+> Task :core:compileJava UP-TO-DATE
+> Task :core:processResources UP-TO-DATE
+> Task :core:classes UP-TO-DATE
+> Task :core:resolveMainClassName
+> Task :plugin-api:processResources NO-SOURCE
+> Task :plugin-api:classes UP-TO-DATE
+> Task :plugin-api:jar UP-TO-DATE
+> Task :verificador:processResources NO-SOURCE
+> Task :verificador:classes UP-TO-DATE
+> Task :verificador:jar UP-TO-DATE
+> Task :core:bootJar
+
+[Incubating] Problems report is available at: file:///home/user/wt-m6r-U02-T07/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 1s
+8 actionable tasks: 2 executed, 6 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
+core-2.1.0.jar
+# armado de $D (D=/tmp/tmp.uZRAn1TmxF)
+javac -cp plugin-api/build/libs/plugin-api-1.0.0.jar -d $D/out $D/src/PluginKycA.java
+jar cf $D/plugins/kyc-a-1.0.0.jar -C $D/out .
+cat $D/config/plugins-activos.yaml:
+- nombre: kyc-a
+  version: 1.0.0
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=42971 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+Picked up _JAVA_OPTIONS: -XX:+UnlockDiagnosticVMOptions -XX:DisableIntrinsic=_base64_encodeBlock,_base64_decodeBlock
+plugins en $D/plugins (kyc-b presente pero no activo):
+kyc-a-1.0.0.jar
+kyc-b-1.0.0.jar
+$ java -jar core/build/libs/core-*.jar --server.port=18082 ... > $D/log.txt &
+readiness: 200
+$ curl -s localhost:18082/plugins
+[{"nombre":"kyc-a","version":"1.0.0"}]
+$ curl -s -X POST localhost:18082/kyc/kyc-a (sin PuntoKyc)
+{"codigo":"PLUGIN_SIN_KYC","mensaje":"El plugin no ofrece validación KYC: kyc-a"} [404]
+proceso terminado
+25

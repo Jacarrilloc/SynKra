@@ -1,0 +1,107 @@
+$ ./gradlew :core:bootJar
+BUILD SUCCESSFUL in 970ms
+core-2.1.0.jar
+# armado de $D (D=/tmp/tmp.PrOufLb5fw)
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=42971 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+Picked up _JAVA_OPTIONS: -XX:+UnlockDiagnosticVMOptions -XX:DisableIntrinsic=_base64_encodeBlock,_base64_decodeBlock
+----- fuente PluginKycA.java
+public class PluginKycA implements io.synkra.plugin.api.SynkraPlugin, io.synkra.plugin.api.PuntoKyc {
+  public String nombre() { return "kyc-a"; }
+  public void iniciar(io.synkra.plugin.api.ContextoPlugin c) { }
+  public void detener() { }
+  public io.synkra.plugin.api.ResultadoKyc validar(io.synkra.plugin.api.SolicitudKyc s) { return new io.synkra.plugin.api.ResultadoKyc(s.documento().startsWith("OK"), "motivo-a"); }
+}
+----- synkra-plugin.yaml
+nombre: kyc-a
+version: 1.0.0
+core: synkra-core
+coreCompatible: 2.x
+----- META-INF/services/io.synkra.plugin.api.SynkraPlugin
+PluginKycA
+----- jar tf kyc-a-1.0.0.jar
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=42971 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+Picked up _JAVA_OPTIONS: -XX:+UnlockDiagnosticVMOptions -XX:DisableIntrinsic=_base64_encodeBlock,_base64_decodeBlock
+META-INF/
+META-INF/MANIFEST.MF
+META-INF/services/
+META-INF/services/io.synkra.plugin.api.SynkraPlugin
+PluginKycA.class
+synkra-plugin.yaml
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=42971 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+Picked up _JAVA_OPTIONS: -XX:+UnlockDiagnosticVMOptions -XX:DisableIntrinsic=_base64_encodeBlock,_base64_decodeBlock
+----- fuente PluginKycN.java
+public class PluginKycN implements io.synkra.plugin.api.SynkraPlugin, io.synkra.plugin.api.PuntoKyc {
+  public String nombre() { return "kyc-n"; }
+  public void iniciar(io.synkra.plugin.api.ContextoPlugin c) { }
+  public void detener() { }
+  public io.synkra.plugin.api.ResultadoKyc validar(io.synkra.plugin.api.SolicitudKyc s) { return null; }
+}
+----- synkra-plugin.yaml
+nombre: kyc-n
+version: 1.0.0
+core: synkra-core
+coreCompatible: 2.x
+----- META-INF/services/io.synkra.plugin.api.SynkraPlugin
+PluginKycN
+----- jar tf kyc-n-1.0.0.jar
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=42971 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+Picked up _JAVA_OPTIONS: -XX:+UnlockDiagnosticVMOptions -XX:DisableIntrinsic=_base64_encodeBlock,_base64_decodeBlock
+META-INF/
+META-INF/MANIFEST.MF
+META-INF/services/
+META-INF/services/io.synkra.plugin.api.SynkraPlugin
+PluginKycN.class
+synkra-plugin.yaml
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=42971 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+Picked up _JAVA_OPTIONS: -XX:+UnlockDiagnosticVMOptions -XX:DisableIntrinsic=_base64_encodeBlock,_base64_decodeBlock
+----- fuente PluginKycL.java
+public class PluginKycL implements io.synkra.plugin.api.SynkraPlugin, io.synkra.plugin.api.PuntoKyc {
+  public String nombre() { return "kyc-l"; }
+  public void iniciar(io.synkra.plugin.api.ContextoPlugin c) { }
+  public void detener() { }
+  public io.synkra.plugin.api.ResultadoKyc validar(io.synkra.plugin.api.SolicitudKyc s) { throw new NoClassDefFoundError("boom-enlace"); }
+}
+----- synkra-plugin.yaml
+nombre: kyc-l
+version: 1.0.0
+core: synkra-core
+coreCompatible: 2.x
+----- META-INF/services/io.synkra.plugin.api.SynkraPlugin
+PluginKycL
+----- jar tf kyc-l-1.0.0.jar
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=42971 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+Picked up _JAVA_OPTIONS: -XX:+UnlockDiagnosticVMOptions -XX:DisableIntrinsic=_base64_encodeBlock,_base64_decodeBlock
+META-INF/
+META-INF/MANIFEST.MF
+META-INF/services/
+META-INF/services/io.synkra.plugin.api.SynkraPlugin
+PluginKycL.class
+synkra-plugin.yaml
+----- plugins-activos.yaml
+- nombre: kyc-a
+  version: 1.0.0
+- nombre: kyc-n
+  version: 1.0.0
+- nombre: kyc-l
+  version: 1.0.0
+$ java -jar core/build/libs/core-2.1.0.jar --server.port=18083 --synkra.core.config=$D/config --synkra.core.plugins=$D/plugins
+readiness: 200
+$ curl /plugins
+[{"nombre":"kyc-a","version":"1.0.0"},{"nombre":"kyc-n","version":"1.0.0"},{"nombre":"kyc-l","version":"1.0.0"}]
+$ curl -X POST /kyc/kyc-a -d '{"documento":"OK-1","datos":{}}'
+{"aprobado":true,"motivo":"motivo-a"} [200]
+$ curl -X POST /kyc/kyc-a -d '{"documento":"NO","documento":"OK-dup","datos":{}}'
+{"codigo":"SOLICITUD_INVALIDA","mensaje":"El cuerpo debe ser una solicitud KYC con documento (texto) y datos (mapa de texto)"} [400]
+$ curl -X POST /kyc/kyc-a -d '{"documento":"OK","datos":{}} basura'
+{"codigo":"SOLICITUD_INVALIDA","mensaje":"El cuerpo debe ser una solicitud KYC con documento (texto) y datos (mapa de texto)"} [400]
+$ curl -X POST /kyc/kyc-a -d '{"documento":"OK","datos":{}}{"x":1}'
+{"codigo":"SOLICITUD_INVALIDA","mensaje":"El cuerpo debe ser una solicitud KYC con documento (texto) y datos (mapa de texto)"} [400]
+$ curl -X POST /kyc/kyc-a -d '{"documento":"OK","datos":{},"extra":1}'
+{"codigo":"SOLICITUD_INVALIDA","mensaje":"El cuerpo debe ser una solicitud KYC con documento (texto) y datos (mapa de texto)"} [400]
+$ curl -X POST /kyc/kyc-n -d '{"documento":"OK-1","datos":{}}'
+{"codigo":"PLUGIN_FALLO","mensaje":"El plugin falló al procesar la solicitud: kyc-n"} [500]
+$ curl -X POST /kyc/kyc-l -d '{"documento":"OK-1","datos":{}}'
+{"codigo":"PLUGIN_FALLO","mensaje":"El plugin falló al procesar la solicitud: kyc-l"} [500]
+$ curl -X POST /kyc/KYC-A -d '{"documento":"OK-1","datos":{}}'
+{"codigo":"PLUGIN_NO_ACTIVO","mensaje":"El plugin no está activo: KYC-A"} [404]
+proceso terminado

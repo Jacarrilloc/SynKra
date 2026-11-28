@@ -1,0 +1,4 @@
+64c64
+<             return error(HttpStatus.NOT_FOUND, ErrorCore.PLUGIN_NO_ACTIVO, ErrorCore.MENSAJE_NO_ACTIVO + nombre);
+---
+>             return error(HttpStatus.NOT_FOUND, ErrorCore.PLUGIN_NO_ACTIVO, ErrorCore.MENSAJE_NO_ACTIVO);

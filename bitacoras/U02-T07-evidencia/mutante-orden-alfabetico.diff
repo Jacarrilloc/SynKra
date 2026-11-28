@@ -1,0 +1,11 @@
+--- /home/user/wt-m6r-U02-T07/core/src/main/java/io/synkra/core/EndpointsCore.java	2026-11-27 21:26:08.338129372 +0000
++++ /tmp/claude-0/-home-user/311bec3f-8f32-5470-935c-db8e1e6d6a2d/scratchpad/m-orden-alfabetico/core/src/main/java/io/synkra/core/EndpointsCore.java	2026-11-27 21:27:46.157288950 +0000
+@@ -46,7 +46,7 @@
+ 
+     @GetMapping("/plugins")
+     public List<InfoPlugin> plugins() {
+-        return iniciador.iniciados().stream().map(p -> new InfoPlugin(p.nombre(), p.version())).toList();
++        return iniciador.iniciados().stream().sorted(java.util.Comparator.comparing(PluginActivo::nombre)).map(p -> new InfoPlugin(p.nombre(), p.version())).toList();
+     }
+ 
+     @PostMapping("/kyc/{plugin}")

@@ -1,0 +1,4 @@
+$ ./gradlew :core:test --rerun --tests '*EndpointsCoreTest'
+BUILD SUCCESSFUL in 8s
+$ grep -o tests=.* core/build/test-results/test/TEST-io.synkra.core.EndpointsCoreTest.xml
+tests="12" skipped="0" failures="0" errors="0"
