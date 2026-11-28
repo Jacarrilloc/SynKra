@@ -1,14 +1,14 @@
-# fecha: 2026-11-28T05:06:50Z  sha: fb00045  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca6.sh
-67c8bb877764b7839b31addb85433a4465335ac9c478a2e39a4d887eeaea4724
+# fecha: 2026-11-28T05:13:44Z  sha: 63c85b9  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca6.sh
+3c82a9690a0f9c255d433813641e3b689aaec48d892e3a7469196b7d8f304f85
 espera=0
-readiness tras 12 s
+readiness tras 15 s
 /actuator/health/liveness 200
 /actuator/health/readiness 200
 /actuator/health 200
 10001
 total 196
--rw-r--r-- 1 10001 10001   4096 Nov 28 00:06 synkra.db
--rw-r--r-- 1 10001 10001  32768 Nov 28 00:06 synkra.db-shm
--rw-r--r-- 1 10001 10001 160712 Nov 28 00:06 synkra.db-wal
+-rw-r--r-- 1 10001 10001   4096 Nov 28 00:13 synkra.db
+-rw-r--r-- 1 10001 10001  32768 Nov 28 00:13 synkra.db-shm
+-rw-r--r-- 1 10001 10001 160712 Nov 28 00:13 synkra.db-wal
 ('4',)
 0

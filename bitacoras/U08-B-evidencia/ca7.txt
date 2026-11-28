@@ -1,4 +1,4 @@
-# fecha: 2026-11-28T05:07:03Z  sha: fb00045  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca7.sh
+# fecha: 2026-11-28T05:13:59Z  sha: 63c85b9  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca7.sh
 $ bash -n scripts/imagenes.sh scripts/verificar-imagenes.sh scripts/certificado-tls.sh; echo "sintaxis=$?"
 sintaxis=0
 $ grep -n "set -euo pipefail" scripts/imagenes.sh scripts/verificar-imagenes.sh scripts/certificado-tls.sh

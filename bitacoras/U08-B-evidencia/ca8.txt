@@ -1,8 +1,8 @@
-# fecha: 2026-11-28T05:07:03Z  sha: fb00045  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca8.sh
+# fecha: 2026-11-28T05:13:59Z  sha: 63c85b9  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca8.sh
 == Id de las imagenes buenas ANTES
-sha256:592bdf96d9974db5fe58b2b8939813c4ad191d8e848fb6fb107033ac789d6228
-sha256:7f8bd90c5e8f9f1de40f7e58d85f97f7d9a21f3351e3a0f911075f1e627953bd
-sha256:2897fb4b67ee65820c2f19382608ae29566ceecee6443ce679bc96308879a156
+sha256:57a3f1ef19e1b75f5ae813d9fd3ae3522bfa70d656a6655b595ea43e087caaf1
+sha256:219d9c773df5fcd352f29b79ba9ea9c46bed15e27e8ac6e1596380d693c9ddf2
+sha256:5a93753945d186c70c17846ddad6b31857bd4effb1bef1b495447dda1d7fd593
 
 == mutacion recreate: sed -i 's/type: Recreate/type: RollingUpdate/' deploy/base/backend/deployment.yaml
 $ kubectl kustomize deploy/overlays/kind | python3 -I scripts/verificar-backend.py
@@ -41,6 +41,7 @@ salida=1
 
 == mutacion user-0: sed -i 's/^USER 10001:10001/USER 0/' backend/Dockerfile
 $ SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/imagenes.sh && SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/verificar-imagenes.sh
+OK versiones: backend 0.1.0, init 1.0.0
 + ./gradlew :backend:bootJar :core:bootJar
 > Task :verificador:compileJava
 > Task :backend:compileJava
@@ -60,7 +61,7 @@ $ SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/imagenes.sh && SYNKRA_R
 > Task :plugin-api:classes
 > Task :plugin-api:jar
 > Task :core:bootJar
-[Incubating] Problems report is available at: file:///tmp/tmp.VrGZwRfQ1g/build/reports/problems/problems-report.html
+[Incubating] Problems report is available at: file:///tmp/tmp.9qw34GyPq2/build/reports/problems/problems-report.html
 Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
 You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
 For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
@@ -69,6 +70,7 @@ BUILD SUCCESSFUL in 1s
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
 OK imagenes construidas con prefijo mutacion.local:1
 imagenes.sh salida=0
+OK versiones: backend 0.1.0, init 1.0.0
 FALLA mutacion.local:1/synkra-backend:0.1.0 User: esperado 10001:10001 / visto 0
 FALLA mutacion.local:1/synkra-backend:0.1.0 User-no-root: esperado distinto de vacio/root/0 / visto 0
 FALLA mutacion.local:1/synkra-backend:0.1.0 id-u: esperado 10001 / visto 0
@@ -77,6 +79,7 @@ verificar-imagenes.sh salida=1
 
 == mutacion sin-digest: sed -i 's/^\(FROM alpine:3.20\)@sha256:[0-9a-f]*/\1/' init-descarga/Dockerfile
 $ SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/imagenes.sh && SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/verificar-imagenes.sh
+OK versiones: backend 0.1.0, init 1.0.0
 + ./gradlew :backend:bootJar :core:bootJar
 > Task :verificador:compileJava
 > Task :backend:compileJava
@@ -96,7 +99,7 @@ $ SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/imagenes.sh && SYNKRA_R
 > Task :plugin-api:classes
 > Task :plugin-api:jar
 > Task :core:bootJar
-[Incubating] Problems report is available at: file:///tmp/tmp.U0jI0KPKtK/build/reports/problems/problems-report.html
+[Incubating] Problems report is available at: file:///tmp/tmp.9zJU9bIFxq/build/reports/problems/problems-report.html
 Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
 You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
 For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
@@ -105,6 +108,7 @@ BUILD SUCCESSFUL in 1s
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
 OK imagenes construidas con prefijo mutacion.local:1
 imagenes.sh salida=0
+OK versiones: backend 0.1.0, init 1.0.0
 FALLA init-descarga/Dockerfile FROM: esperado @sha256:<64 hex> / visto FROM alpine:3.20 AS revision
 FALLA init-descarga/Dockerfile FROM: esperado @sha256:<64 hex> / visto FROM alpine:3.20
 FALLAN 2 comprobaciones
@@ -112,6 +116,7 @@ verificar-imagenes.sh salida=1
 
 == mutacion uid-java: sed -i 's/UID_CONTENEDORES = 10001L/UID_CONTENEDORES = 10002L/' backend/src/main/java/io/synkra/kubernetes/ConstructorObjetosPais.java
 $ SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/imagenes.sh && SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/verificar-imagenes.sh
+OK versiones: backend 0.1.0, init 1.0.0
 + ./gradlew :backend:bootJar :core:bootJar
 > Task :verificador:compileJava
 > Task :backend:compileJava
@@ -131,7 +136,7 @@ $ SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/imagenes.sh && SYNKRA_R
 > Task :plugin-api:classes
 > Task :plugin-api:jar
 > Task :core:bootJar
-[Incubating] Problems report is available at: file:///tmp/tmp.ITyP2JdznT/build/reports/problems/problems-report.html
+[Incubating] Problems report is available at: file:///tmp/tmp.ex0NZpBRxp/build/reports/problems/problems-report.html
 Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
 You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
 For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
@@ -140,6 +145,7 @@ BUILD SUCCESSFUL in 1s
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
 OK imagenes construidas con prefijo mutacion.local:1
 imagenes.sh salida=0
+OK versiones: backend 0.1.0, init 1.0.0
 FALLA mutacion.local:1/synkra-backend:0.1.0 User: esperado 10002:10001 / visto 10001:10001
 FALLA mutacion.local:1/synkra-backend:0.1.0 id-u: esperado 10002 / visto 10001
 FALLA mutacion.local:1/synkra-core-ejemplo:2.1.0 User: esperado 10002:10001 / visto 10001:10001
@@ -151,25 +157,25 @@ verificar-imagenes.sh salida=1
 
 == mutacion shellcheck: sed -i '$a ls $1' init-descarga/descargar.sh
 $ SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/imagenes.sh && SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/verificar-imagenes.sh
-#8 0.168 
-#8 0.168 Did you mean: 
-#8 0.168 ls "$1"
-#8 0.168 
-#8 0.168 For more information:
-#8 0.168   https://www.shellcheck.net/wiki/SC2086 -- Double quote to prevent globbing ...
+#8 0.205 
+#8 0.205 Did you mean: 
+#8 0.205 ls "$1"
+#8 0.205 
+#8 0.205 For more information:
+#8 0.205   https://www.shellcheck.net/wiki/SC2086 -- Double quote to prevent globbing ...
 #8 ERROR: process "/bin/sh -c shellcheck -s sh /descargar.sh" did not complete successfully: exit code: 1
 ------
  > [revision 4/4] RUN shellcheck -s sh /descargar.sh:
-0.168 
-0.168 In /descargar.sh line 134:
-0.168 ls $1
-0.168    ^-- SC2086 (info): Double quote to prevent globbing and word splitting.
-0.168 
-0.168 Did you mean: 
-0.168 ls "$1"
-0.168 
-0.168 For more information:
-0.168   https://www.shellcheck.net/wiki/SC2086 -- Double quote to prevent globbing ...
+0.205 
+0.205 In /descargar.sh line 134:
+0.205 ls $1
+0.205    ^-- SC2086 (info): Double quote to prevent globbing and word splitting.
+0.205 
+0.205 Did you mean: 
+0.205 ls "$1"
+0.205 
+0.205 For more information:
+0.205   https://www.shellcheck.net/wiki/SC2086 -- Double quote to prevent globbing ...
 ------
 Dockerfile:9
 --------------------
@@ -183,9 +189,34 @@ ERROR: failed to build: failed to solve: process "/bin/sh -c shellcheck -s sh /d
 FALLA synkra-init-descarga: docker build -t mutacion.local:1/synkra-init-descarga:1.0.0 init-descarga salió con 1
 imagenes.sh salida=1
 
+== mutacion versiones (F-06): ronda3-deriva.sh
+7:version = "0.2.0"
+35:    static final String IMAGEN_INIT_POR_DEFECTO = "localhost:5001/synkra-init-descarga:1.1.0";
+$ SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/imagenes.sh   (copia)
+FALLA versiones: newTag del overlay '0.1.0', build.gradle.kts dice '0.2.0'
+FALLA versiones: SYNKRA_KUBERNETES_IMAGEN_INIT 'localhost:5001/synkra-init-descarga:1.0.0', IMAGEN_INIT_POR_DEFECTO dice 'localhost:5001/synkra-init-descarga:1.1.0'
+FALLA versiones: el overlay de kind no coincide con el origen de las versiones
+imagenes.sh salida=1
+0
+$ bash scripts/verificar-imagenes.sh   (copia, contra las imagenes buenas)
+FALLA versiones: newTag del overlay '0.1.0', build.gradle.kts dice '0.2.0'
+FALLA versiones: SYNKRA_KUBERNETES_IMAGEN_INIT 'localhost:5001/synkra-init-descarga:1.0.0', IMAGEN_INIT_POR_DEFECTO dice 'localhost:5001/synkra-init-descarga:1.1.0'
+FALLA versiones: el overlay de kind no coincide con el origen de las versiones
+FALLA localhost:5001/synkra-backend:0.2.0 existe: esperado imagen construida / visto no existe
+FALLA localhost:5001/synkra-init-descarga:1.1.0 existe: esperado imagen construida / visto no existe
+FALLA localhost:5001/synkra-backend:0.2.0 ExposedPorts: esperado 8080/tcp / visto 
+FALLA localhost:5001/synkra-init-descarga:1.1.0 Entrypoint: esperado ["/usr/local/bin/descargar.sh"] / visto 
+FALLA localhost:5001/synkra-init-descarga:1.1.0 sin-apk: esperado  / visto docker: Error response from daemon: No such image: localhost:5001/synkra-init-descarga:1.1.0
+verificar-imagenes.sh salida=1
+$ kubectl kustomize deploy/overlays/kind | python3 -I scripts/verificar-backend.py   (copia)
+FALLA imagen: esperado 'localhost:5001/synkra-backend:0.2.0' / visto 'localhost:5001/synkra-backend:0.1.0'
+FALLA variables: esperado {'SYNKRA_DATA': '/data', 'SYNKRA_PAISES': 'co,pe', 'MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED': 'true', 'JAVA_TOOL_OPTIONS': '-XX:MaxRAMPercentage=70', 'SYNKRA_REGISTRO_PERMITIDO': 'localhost:5001', 'SYNKRA_KUBERNETES_IMAGEN_INIT': 'localhost:5001/synkra-init-descarga:1.1.0'} / visto {'SYNKRA_REGISTRO_PERMITIDO': 'localhost:5001', 'SYNKRA_KUBERNETES_IMAGEN_INIT': 'localhost:5001/synkra-init-descarga:1.0.0', 'SYNKRA_DATA': '/data', 'SYNKRA_PAISES': 'co,pe', 'MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED': 'true', 'JAVA_TOOL_OPTIONS': '-XX:MaxRAMPercentage=70'}
+verificar-backend.py salida=1
+1
+
 == limpieza: docker rmi de las etiquetas mutacion.local:1
-3
+2
 == Id de las imagenes buenas DESPUES
-sha256:592bdf96d9974db5fe58b2b8939813c4ad191d8e848fb6fb107033ac789d6228
-sha256:7f8bd90c5e8f9f1de40f7e58d85f97f7d9a21f3351e3a0f911075f1e627953bd
-sha256:2897fb4b67ee65820c2f19382608ae29566ceecee6443ce679bc96308879a156
+sha256:57a3f1ef19e1b75f5ae813d9fd3ae3522bfa70d656a6655b595ea43e087caaf1
+sha256:219d9c773df5fcd352f29b79ba9ea9c46bed15e27e8ac6e1596380d693c9ddf2
+sha256:5a93753945d186c70c17846ddad6b31857bd4effb1bef1b495447dda1d7fd593

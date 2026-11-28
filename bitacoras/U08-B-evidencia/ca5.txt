@@ -1,4 +1,4 @@
-# fecha: 2026-11-28T05:06:48Z  sha: fb00045  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca5.sh
+# fecha: 2026-11-28T05:13:42Z  sha: 63c85b9  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca5.sh
 $ docker run --rm --entrypoint id "$I"
 uid=10001(synkra) gid=10001(synkra) groups=10001(synkra)
 $ docker run --rm --entrypoint sh "$I" -c 'command -v apk; echo "apk=$?"; command -v curl sha256sum'
