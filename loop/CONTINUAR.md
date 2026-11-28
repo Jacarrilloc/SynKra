@@ -17,7 +17,7 @@ U01, U02, U03, U04 y U05 están **terminadas y fusionadas en `main`** (`97f9f80`
 - **Fusión**: Julian pidió (00:25 UTC) que el orquestador fusionara. Se fusionaron en orden, con merge commit y cambiando antes la base a `main`: U05 (#85, #87, #90, #92) y U02 (#84, #86, #88, #89, #91, #93, #94). Está en `aidlc-docs/audit.md`.
 - **Comprobación**: `./gradlew test --rerun check` sobre `main` `97f9f80` → `salida=0`, 710 pruebas, 0 saltos, 0 fallos.
 - **Cierre de U05 y U02**: planes marcados, `aidlc-state.md` y auditoría, en la rama `orq/U05-U02-tareas`. Va en el **PR #95** (rama del loop → `main`), **abierto**. El control de permisos de la sesión de Julian bloqueó la fusión porque no era uno de los PRs que él nombró: lo fusiona un humano.
-- `CANDIDATAS.md` llega hasta **C-120**. La siguiente libre es **C-121**.
+- `CANDIDATAS.md` llega hasta **C-121**. La siguiente libre es **C-122**.
 
 ## Plan para acelerar (aprobado por Julian el 2026-11-28 a las 00:19 UTC)
 
@@ -55,7 +55,7 @@ Contratos que fijaron U06-A y U07-A (los asumen las tareas siguientes; están en
 |---|---|---|---|---|
 | U06-A registro base | `m6r/U06-A` | `97f9f80` | **VERDE ronda 2**, fusionado (#97) | — |
 | U07-A planes y país | `m6r/U07-A` | `97f9f80` | **VERDE ronda 1**, fusionado (#96) | — |
-| U07-D confirmar | `../wt-m6r-U07-D`, `m6r/U07-D` | `ade68f6` (main, ya es la unión de U07-C y U06-C) | **Codificador ronda 1 despachado** (tarea con hash `2d710b0`) | Sin commits, redespachar; con bitácora completa, revisor ronda 1 (base `ade68f6`) |
+| U07-D confirmar | `../wt-m6r-U07-D`, `m6r/U07-D` | `ade68f6` | Codificador ronda 1 terminó (`47fa192`, código en `6bd8db6`; `aceptaAplicar` en el simulador; matices en los greps de CA-0 y CA-6). **Revisor ronda 1 despachado** | Repetir el revisor ronda 1 (base `ade68f6`) si no hay `revisiones/U07-D/ronda-1.md` |
 | U07-E y U07-F | (sin rama) | — | **Escritas** (hashes `f4f0ecb` y `b33bc26`). U07-E: `TareasProgramadas` con `synkra.programacion.activa`, apagada en pruebas; toca `kubernetes` por C-76, C-82 y C-83. U07-F: 422 `ORIGEN_NO_LISTO` y `ORIGEN_DESACTUALIZADO` | En cadena tras U07-D |
 | U06-C y U07-C | (sin rama) | — | **Escritas** (hashes `004d66e` y `7dbe5d3`). U07-C crea el bean `Clock` en `plataforma/Reloj.java` (U06-C no puede crear otro); U06-C usa `@MockitoBean AdaptadorKubernetes`; confirmar da 501 hasta U07-D | Despachar U06-C cuando U06-B salga VERDE y U07-C cuando U07-B salga VERDE |
 
