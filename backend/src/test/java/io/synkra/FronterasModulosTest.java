@@ -183,7 +183,7 @@ class FronterasModulosTest {
     private static boolean ajenoALaApiDeRegistro(JavaClass t) {
         String paquete = t.getPackageName();
         boolean propio = paquete.equals("io.synkra.registro.api") || paquete.startsWith("io.synkra.registro.api.");
-        return (paquete.startsWith("io.synkra") && !propio) || paquete.startsWith("io.fabric8");
+        return (paquete.startsWith("io.synkra.") && !propio) || paquete.startsWith("io.fabric8");
     }
 
     private static void revisaAjenos(List<String> mencionados, String donde, Iterable<JavaClass> tipos) {
@@ -205,10 +205,16 @@ class FronterasModulosTest {
                 List<String> m = new ArrayList<>();
                 cls.getSuperclass().ifPresent(t -> revisaAjenos(m, cls.getName() + " (superclase)", t.getAllInvolvedRawTypes()));
                 cls.getInterfaces().forEach(t -> revisaAjenos(m, cls.getName() + " (interfaz)", t.getAllInvolvedRawTypes()));
+                cls.getTypeParameters().forEach(v -> v.getUpperBounds()
+                        .forEach(b -> revisaAjenos(m, cls.getName() + " (límite de tipo)", b.getAllInvolvedRawTypes())));
+                cls.getAnnotations().forEach(a -> revisaAjenos(m, cls.getName() + " (anotación)", List.of(a.getRawType())));
                 for (JavaCodeUnit u : cls.getCodeUnits()) {
                     if (!u.getModifiers().contains(JavaModifier.PUBLIC) && !u.getModifiers().contains(JavaModifier.PROTECTED)) {
                         continue;
                     }
+                    u.getTypeParameters().forEach(v -> v.getUpperBounds()
+                            .forEach(b -> revisaAjenos(m, u.getFullName() + " (límite de tipo)", b.getAllInvolvedRawTypes())));
+                    u.getAnnotations().forEach(a -> revisaAjenos(m, u.getFullName() + " (anotación)", List.of(a.getRawType())));
                     revisaAjenos(m, u.getFullName(), u.getReturnType().getAllInvolvedRawTypes());
                     for (var p : u.getParameterTypes()) {
                         revisaAjenos(m, u.getFullName(), p.getAllInvolvedRawTypes());
@@ -248,7 +254,12 @@ class FronterasModulosTest {
         if (!tipo.equals("org.springframework.web.bind.annotation.RequestMapping")) {
             return false;
         }
-        for (Object verbo : a.get("method").map(v -> v instanceof Object[] arr ? arr : new Object[] {v}).orElse(new Object[0])) {
+        // @RequestMapping sin method acepta todos los verbos (también los de escritura).
+        Object[] verbos = a.get("method").map(v -> v instanceof Object[] arr ? arr : new Object[] {v}).orElse(new Object[0]);
+        if (verbos.length == 0) {
+            return true;
+        }
+        for (Object verbo : verbos) {
             String nombre = verbo instanceof com.tngtech.archunit.core.domain.JavaEnumConstant e ? e.name() : String.valueOf(verbo);
             if (VERBOS_DE_ESCRITURA.contains(nombre)) {
                 return true;
@@ -262,6 +273,12 @@ class FronterasModulosTest {
         ArchCondition<JavaClass> condicion = new ArchCondition<>("no tener métodos con rutas de escritura") {
             @Override
             public void check(JavaClass cls, ConditionEvents eventos) {
+                for (var a : cls.getAnnotations()) {
+                    if (escribe(a)) {
+                        eventos.add(SimpleConditionEvent.violated(cls, cls.getName() + " lleva @" + a.getRawType().getSimpleName()
+                                + " a nivel de clase"));
+                    }
+                }
                 for (var metodo : cls.getMethods()) {
                     for (var a : metodo.getAnnotations()) {
                         if (escribe(a)) {
