@@ -1,15 +1,15 @@
-fecha: 2026-11-27T23:04:30-05:00  base: 2f47340 (punta VERDE de U07-F, aclaración del orquestador)  comando: bash bitacoras/U07-G-evidencia/ca8.sh
-a28dea1
-3
- .../code/evidencia/conteo-por-clase-despliegue.txt |  17 +
+fecha: 2026-11-27T23:16:06-05:00  base: 2f47340  comando: bash bitacoras/U07-G-evidencia/ca8.sh (ronda 2)
+3c09f5b
+1
+ .../code/evidencia/conteo-por-clase-despliegue.txt |  20 ++
  .../evidencia/conteo-por-clase-otros-paquetes.txt  |   8 +
  .../U07-despliegue/code/evidencia/conteo-xml.txt   |   7 +
  .../U07-despliegue/code/evidencia/datos.txt        |  72 ++++
- .../U07-despliegue/code/evidencia/gradle-check.txt | 128 ++++++++
+ .../U07-despliegue/code/evidencia/gradle-check.txt | 128 +++++++
  .../code/evidencia/gradle-despliegue.txt           |  77 +++++
- .../code/evidencia/gradle-otros-paquetes.txt       |  37 +++
+ .../code/evidencia/gradle-otros-paquetes.txt       |  37 ++
  .../code/evidencia/nombres-kubernetes.txt          |   6 +
- .../construction/U07-despliegue/code/summary.md    | 365 +++++++++++++++++++++
+ .../construction/U07-despliegue/code/summary.md    | 372 +++++++++++++++++++++
  .../java/io/synkra/despliegue/package-info.java    |   3 +
  .../test/java/io/synkra/FronterasModulosTest.java  |  40 +++
  bitacoras/U07-G-evidencia/ca1.sh                   |  13 +
@@ -24,14 +24,19 @@ a28dea1
  bitacoras/U07-G-evidencia/ca4.txt                  |  56 ++++
  bitacoras/U07-G-evidencia/ca5.sh                   |   5 +
  bitacoras/U07-G-evidencia/ca5.txt                  |  14 +
- bitacoras/U07-G-evidencia/ca6.sh                   |   6 +
+ bitacoras/U07-G-evidencia/ca6.sh                   |  11 +
  bitacoras/U07-G-evidencia/ca6.txt                  |   2 +
  bitacoras/U07-G-evidencia/ca7.sh                   |   7 +
  bitacoras/U07-G-evidencia/ca7.txt                  |  68 ++++
+ bitacoras/U07-G-evidencia/ca8.sh                   |   6 +
+ bitacoras/U07-G-evidencia/ca8.txt                  |  37 ++
+ bitacoras/U07-G-evidencia/citas.txt                |  31 ++
  bitacoras/U07-G-evidencia/corridas.sh              |  19 ++
  bitacoras/U07-G-evidencia/datos.sh                 |  10 +
- bitacoras/U07-G.md                                 |  40 +++
- 30 files changed, 1248 insertions(+)
+ bitacoras/U07-G.md                                 |  51 +++
+ revisiones/U07-G/ronda-1-respuesta.md              |   6 +
+ revisiones/U07-G/ronda-1.md                        |  97 ++++++
+ 35 files changed, 1451 insertions(+)
 fuera=1
 0
 0
