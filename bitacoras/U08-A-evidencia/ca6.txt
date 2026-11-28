@@ -1,0 +1,48 @@
+fecha: 2026-11-28T05:10:25Z
+sha: 290430c
+comando: bash bitacoras/U08-A-evidencia/ca6.sh
+---
+contexto permitido: kind-synkra (https://127.0.0.1:46859)
+kubectl --kubeconfig "/home/julian/Escritorio/Proyectos/wt-m6r-U08-A/.kube/kind-synkra.yaml" apply -k deploy/base
+namespace/synkra unchanged
+namespace/synkra-co unchanged
+namespace/synkra-pe unchanged
+serviceaccount/deployer unchanged
+role.rbac.authorization.k8s.io/synkra-deployer unchanged
+role.rbac.authorization.k8s.io/synkra-deployer unchanged
+rolebinding.rbac.authorization.k8s.io/synkra-deployer unchanged
+rolebinding.rbac.authorization.k8s.io/synkra-deployer unchanged
+salida=0
+synkra 
+synkra-co co
+synkra-pe pe
+[{"apiGroups": ["apps"], "resources": ["deployments"], "verbs": ["get", "list", "watch", "create", "update", "patch"]}, {"apiGroups": [""], "resources": ["configmaps", "services"], "verbs": ["get", "list", "watch", "create", "update", "patch"]}, {"apiGroups": [""], "resources": ["pods", "pods/log", "events"], "verbs": ["get", "list", "watch"]}, {"apiGroups": [""], "resourceNames": ["synkra-co"], "resources": ["namespaces"], "verbs": ["get"]}]
+[]
+create deployments.apps -n synkra-co: yes
+patch deployments.apps -n synkra-pe: yes
+update configmaps -n synkra-co: yes
+create services -n synkra-pe: yes
+get pods --subresource=log -n synkra-co: yes
+list events -n synkra-pe: yes
+watch pods -n synkra-co: yes
+get namespaces/synkra-co -n synkra-co: yes
+delete deployments.apps -n synkra-co: no
+create pods -n synkra-co: no
+get secrets -n synkra-co: no
+create deployments.apps -n synkra: no
+create deployments.apps -n default: no
+create deployments.apps -n kube-system: no
+create namespaces: no
+list namespaces: no
+get namespaces/default -n default: no
+get namespaces/synkra-pe -n synkra-co: no
+namespace/synkra-co
+propio=0
+Error from server (Forbidden): namespaces "default" is forbidden: User "system:serviceaccount:synkra:deployer" cannot get resource "namespaces" in API group "" in the namespace "default"
+ajeno=1
+No resources found in synkra-co namespace.
+lista-pais=0
+Error from server (Forbidden): deployments.apps is forbidden: User "system:serviceaccount:synkra:deployer" cannot list resource "deployments" in API group "apps" in the namespace "synkra"
+lista-synkra=1
+system:serviceaccount:synkra:deployer
+--- salida final=0

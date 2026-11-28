@@ -1,32 +1,9 @@
-fecha: 2026-11-28T05:09:28Z
-sha: c3fcff0
+fecha: 2026-11-28T05:10:11Z
+sha: 290430c
 comando: bash bitacoras/U08-A-evidencia/ca1.sh
 ---
-sin kubeconfig todavía: lo crea make cluster
-Creating cluster "synkra" ...
- • Ensuring node image (kindest/node) 🖼️  ...
- ✓ Ensuring node image (kindest/node) 🖼️
- • Preparing nodes 📦 📦   ...
- ✓ Preparing nodes 📦 📦 
- • Writing configuration 📜  ...
- ✓ Writing configuration 📜
- • Starting control-plane 🕹️  ...
- ✓ Starting control-plane 🕹️
- • Installing CNI 🔌  ...
- ✓ Installing CNI 🔌
- • Installing StorageClass 💾  ...
- ✓ Installing StorageClass 💾
- • Joining worker nodes 🚜  ...
- ✓ Joining worker nodes 🚜
- • Waiting ≤ 3m0s for control-plane = Ready ⏳  ...
- ✓ Waiting ≤ 3m0s for control-plane = Ready ⏳
- • Ready after 6s 💚
+contexto permitido: kind-synkra (https://127.0.0.1:46859)
 Set kubectl context to "kind-synkra"
-You can now use your cluster with:
-
-kubectl cluster-info --context kind-synkra --kubeconfig /home/julian/Escritorio/Proyectos/wt-m6r-U08-A/.kube/kind-synkra.yaml
-
-Not sure what to do next? 😅  Check out https://kind.sigs.k8s.io/docs/user/quick-start/
 contexto permitido: kind-synkra (https://127.0.0.1:46859)
 kubectl --kubeconfig "/home/julian/Escritorio/Proyectos/wt-m6r-U08-A/.kube/kind-synkra.yaml" wait --for=condition=Ready nodes --all --timeout=180s
 node/synkra-control-plane condition met
@@ -34,7 +11,7 @@ node/synkra-worker condition met
 salida=0
 kind-synkra
 600
-775
+700
 .gitignore:10:/.kube/	/home/julian/Escritorio/Proyectos/wt-m6r-U08-A/.kube/kind-synkra.yaml
 [('synkra-control-plane', 'True', 'true', 'arm64'), ('synkra-worker', 'True', '-', 'arm64')]
 80/tcp -> 127.0.0.1:80

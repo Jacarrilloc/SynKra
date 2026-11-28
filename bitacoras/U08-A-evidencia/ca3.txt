@@ -1,0 +1,24 @@
+fecha: 2026-11-28T05:10:16Z
+sha: 290430c
+comando: make registro >/dev/null 2>&1; bash bitacoras/U08-A-evidencia/ca3.sh
+---
+The push refers to repository [localhost:5001/synkra-prueba-registro]
+11a64b0fc2c8: Pushed
+14a4754c352f: Pushed
+07b7518a8a2c: Pushed
+bfa447a3f347: Pushed
+c9820381a213: Pushed
+1: digest: sha256:bc68ba48dae0e0423bb885c8d07d20c3210febbe996d38d54d32c574fda690ae size: 1918
+
+ Info -> Not all multiplatform-content is present and only the available single-platform image was pushed
+         [31msha256:1be55279f18a2fe1a74edf2664cac61c1bea305b7b4642dab412e7affdcb3e33[0m -> [32msha256:bc68ba48dae0e0423bb885c8d07d20c3210febbe996d38d54d32c574fda690ae[0m
+push=0
+{"name":"synkra-prueba-registro","tags":["1"]}
+Image is up to date for sha256:d26a873d9c1c357f6f3be92297c4a68bbd39ab9d5ab84f47e57536e6085fbfbb
+synkra-control-plane pull=0
+Image is up to date for sha256:d26a873d9c1c357f6f3be92297c4a68bbd39ab9d5ab84f47e57536e6085fbfbb
+synkra-worker pull=0
+Deleted: localhost:5001/synkra-prueba-registro:1
+Deleted: localhost:5001/synkra-prueba-registro:1
+Untagged: localhost:5001/synkra-prueba-registro:1
+--- salida final=0

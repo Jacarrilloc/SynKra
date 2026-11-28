@@ -1,0 +1,27 @@
+fecha: 2026-11-28T05:10:24Z
+sha: 290430c
+comando: bash bitacoras/U08-A-evidencia/ca4.sh
+---
+install otro salida=2
+1
+cluster otro salida=2
+1
+registro otro salida=2
+1
+aplicar-base otro salida=2
+1
+status otro salida=2
+1
+guardia otro salida=2
+1
+mismo-nombre salida=2
+1
+global salida=2
+1
+falta salida=2
+1
+falso-intacto
+nada-aplicado
+contexto permitido: kind-synkra (https://127.0.0.1:46859)
+real salida=0
+--- salida final=0
