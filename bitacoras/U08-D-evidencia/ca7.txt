@@ -1,0 +1,17 @@
+fecha: 2026-11-28T01:46:57-05:00
+sha: ec373b1 (arbol: 16 cambios sin confirmar)
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U08-D-evidencia/ca7.sh
+FALLA preparacion: falta plugins/kyc-co/build/libs/kyc-co-1.0.0.jar (corre ./gradlew :plugins:kyc-co:jar :plugins:kyc-pe:assemble)
+sin-jars=1
+FALLA guardia: scripts/guardia-contexto.sh salió con 1: falta el kubeconfig /tmp/tmp.zXTvTy1Tnc/no-existe.yaml: corre make cluster 
+sin-kubeconfig=1
+51:  command -v "$h" >/dev/null 2>&1 || falla preparacion "falta $h"
+== sin herramienta (PATH sin jq)
+FALLA preparacion: falta jq
+sin-jq=1
+== nada se toco
+historial antes=8 despues=8
+resourceVersion del Deployment antes=1773 despues=1773

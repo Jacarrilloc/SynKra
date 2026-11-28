@@ -1,0 +1,177 @@
+fecha: 2026-11-28T01:46:57-05:00
+sha: ec373b1 (arbol: 17 cambios sin confirmar)
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U08-D-evidencia/ca1.sh
+> Task :verificador:compileJava UP-TO-DATE
+> Task :backend:compileJava UP-TO-DATE
+> Task :backend:processResources UP-TO-DATE
+> Task :backend:classes UP-TO-DATE
+> Task :verificador:compileTestFixturesJava UP-TO-DATE
+> Task :backend:compileTestJava UP-TO-DATE
+> Task :backend:processTestResources UP-TO-DATE
+> Task :backend:testClasses UP-TO-DATE
+> Task :verificador:processResources NO-SOURCE
+> Task :verificador:classes UP-TO-DATE
+> Task :verificador:jar UP-TO-DATE
+> Task :verificador:processTestFixturesResources NO-SOURCE
+> Task :verificador:testFixturesClasses UP-TO-DATE
+> Task :verificador:testFixturesJar UP-TO-DATE
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+> Task :backend:test
+
+2026-11-28T01:47:52.998-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:52.998-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:52.999-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:52.999-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.000-05:00  INFO 1608707 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-28T01:47:53.001-05:00  INFO 1608707 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-28T01:47:53.001-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.002-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.004-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.004-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.005-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.005-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.006-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.007-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.007-05:00  INFO 1608707 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-28T01:47:53.008-05:00  INFO 1608707 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-28T01:47:53.009-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.010-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.012-05:00  INFO 1608707 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-28T01:47:53.013-05:00  INFO 1608707 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-28T01:47:53.013-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.014-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.016-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.017-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.017-05:00  INFO 1608707 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-28T01:47:53.018-05:00  INFO 1608707 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-28T01:47:53.019-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.093-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.095-05:00  INFO 1608707 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-28T01:47:53.096-05:00  INFO 1608707 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-28T01:47:53.097-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.100-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.102-05:00  INFO 1608707 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-28T01:47:53.103-05:00  INFO 1608707 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-28T01:47:53.104-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.108-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.110-05:00  INFO 1608707 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-28T01:47:53.111-05:00  INFO 1608707 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-28T01:47:53.112-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.116-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.118-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.118-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.118-05:00  INFO 1608707 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-28T01:47:53.119-05:00  INFO 1608707 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-28T01:47:53.120-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.123-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.125-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.128-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.129-05:00  INFO 1608707 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-28T01:47:53.129-05:00  INFO 1608707 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-28T01:47:53.130-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.134-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.136-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.139-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.140-05:00  INFO 1608707 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-28T01:47:53.141-05:00  INFO 1608707 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-28T01:47:53.142-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.145-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.147-05:00  INFO 1608707 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-28T01:47:53.148-05:00  INFO 1608707 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-28T01:47:53.148-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.151-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.153-05:00  INFO 1608707 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-28T01:47:53.153-05:00  INFO 1608707 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-28T01:47:53.154-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.157-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.158-05:00  INFO 1608707 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-28T01:47:53.159-05:00  INFO 1608707 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-28T01:47:53.160-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.164-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.165-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.166-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.166-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.167-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.167-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.168-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.168-05:00  INFO 1608707 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-28T01:47:53.169-05:00  INFO 1608707 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-28T01:47:53.170-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.172-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.173-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.176-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.176-05:00  INFO 1608707 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-28T01:47:53.177-05:00  INFO 1608707 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-28T01:47:53.178-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.180-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.182-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.183-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.184-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.186-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-28T01:47:53.186-05:00  INFO 1608707 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-28T01:47:53.187-05:00  INFO 1608707 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-28T01:47:53.188-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-28T01:47:53.190-05:00  INFO 1608707 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+
+> Task :backend:check
+
+[Incubating] Problems report is available at: file:///home/casdav/Projects/Master/wt-m6r-U08-D/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 55s
+9 actionable tasks: 1 executed, 8 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
+gradle=0
+35 0 0 0
+dosPlanesQueSoloDifierenEnUnPluginDanAnotacionesDistintas()
+[1] nombre=../x
+[2] nombre=a/b
+[3] nombre=a
+b
+[4] nombre=a b
+[5] nombre=a: b
+[6] nombre=
+elMismoPlanConLosPluginsEnOtroOrdenDaLaMismaAnotacion()
+[1] imagen=synkra-init-descarga
+[2] imagen=synkra-init-descarga:latest
+[3] imagen=localhost:5001/synkra-init-descarga
+[4] imagen=localhost:5001/synkra-init-descarga:latest
+[5] imagen=localhost:5001/x@sha256:abc
+[6] imagen=init:1.0.0
+[7] imagen= 
+[8] imagen=
+[9] imagen=synkra/init:1.0.0
+[10] imagen=library/synkra-init-descarga:1.0.0
+[11] imagen=localhost:5001/X:1
+planRechazaSha256InvalidoYPaisInvalido()
+laPlantillaDelPodLlevaElSha256DeLaConfiguracionDelConfigMap()
+[1] version=1 0
+[2] version=1/0
+[3] version=../1
+[4] version=1
+2
+[5] version=
+paisSinPluginsDejaArtefactosVacio()
+laGuardiaRechazaUnPaisInvalidoSinPeticiones()
+planAceptaSemverConPrereleaseYBuild()
+usaLaImagenDeInitConfigurada()
+aceptaImagenDeInitConTagODigest()
+construirNoHaceNingunaPeticion()
+coincideConElYamlEsperadoDeSynkraPe()
+planRechazaImagenSinDigest()
+laImagenDelCoreEsExactamenteLaDelPlan()
+backend/src/main/java/io/synkra/kubernetes/ConstructorObjetosPais.java:84:    static final String ANOTACION_CONFIG_SHA256 = "synkra.io/config-sha256";
+backend/src/test/resources/kubernetes/pais-pe-esperado.yaml:55:        synkra.io/config-sha256: cdcd487f62cd4f25c9ca95b63fbd1f715f8583c4be513d9c88e9d9c2e2e6239f
+backend/src/main/java/io/synkra/kubernetes/ConstructorObjetosPais.java
+backend/src/test/java/io/synkra/kubernetes/ConstruirObjetosPaisTest.java
+backend/src/test/resources/kubernetes/pais-pe-esperado.yaml
+== todo el backend: pruebas, fallos, errores, saltos
+626 0 0 0
