@@ -13,8 +13,11 @@ import io.synkra.kubernetes.api.NamespaceNoPermitidoException;
 import io.synkra.kubernetes.api.PlanPais;
 import io.synkra.kubernetes.api.PlanPais.PluginPlan;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.HexFormat;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -86,6 +89,44 @@ class ConstruirObjetosPaisTest {
     void coincideConElYamlEsperadoDeSynkraPe() throws Exception {
         var objetos = adaptador.construir(planPe());
         assertThat(comoArboles(objetos)).containsExactlyElementsOf(esperados());
+    }
+
+    // C-138 (U08-D, decisión 1): un cambio solo de plugins tiene que recrear el pod, así que la plantilla lleva el sha256 de la configuración.
+    private static final String ANOTACION_CONFIG = "synkra.io/config-sha256";
+
+    private static String anotacionDe(ObjetosPaisFabric8 o) {
+        var meta = o.deployment().getSpec().getTemplate().getMetadata();
+        return meta.getAnnotations() == null ? null : meta.getAnnotations().get(ANOTACION_CONFIG);
+    }
+
+    private static String sha256(String texto) throws Exception {
+        return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(texto.getBytes(StandardCharsets.UTF_8)));
+    }
+
+    @Test
+    void laPlantillaDelPodLlevaElSha256DeLaConfiguracionDelConfigMap() throws Exception {
+        var objetos = adaptador.construir(planPe());
+        var datos = objetos.configMap().getData();
+        var esperado = sha256(datos.get("plugins-activos.yaml") + "\n" + datos.get("artefactos.txt"));
+        assertThat(anotacionDe(objetos)).isEqualTo(esperado).matches("[0-9a-f]{64}");
+    }
+
+    @Test
+    void dosPlanesQueSoloDifierenEnUnPluginDanAnotacionesDistintas() {
+        var a = new PlanPais("pe", IMAGEN, List.of(new PluginPlan("facturacion", "1.2.0", "1".repeat(64))));
+        var b = new PlanPais("pe", IMAGEN, List.of(new PluginPlan("facturacion", "1.2.0", "1".repeat(64)),
+                new PluginPlan("impuestos", "2.0.1", "2".repeat(64))));
+        assertThat(anotacionDe(adaptador.construir(a))).isNotNull().isNotEqualTo(anotacionDe(adaptador.construir(b)));
+        assertThat(anotacionDe(adaptador.construir(b))).isNotNull();
+    }
+
+    @Test
+    void elMismoPlanConLosPluginsEnOtroOrdenDaLaMismaAnotacion() {
+        var f = new PluginPlan("facturacion", "1.2.0", "1".repeat(64));
+        var i = new PluginPlan("impuestos", "2.0.1", "2".repeat(64));
+        var directo = anotacionDe(adaptador.construir(new PlanPais("pe", IMAGEN, List.of(f, i))));
+        var alReves = anotacionDe(adaptador.construir(new PlanPais("pe", IMAGEN, List.of(i, f))));
+        assertThat(directo).isNotNull().isEqualTo(alReves);
     }
 
     @Test

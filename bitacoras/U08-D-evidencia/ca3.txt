@@ -1,0 +1,539 @@
+fecha: 2026-11-28T02:52:11-05:00
+sha: c436428 (arbol: 2 cambios sin confirmar)
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U08-D-evidencia/ca3.sh
+> Task :plugin-api:compileJava UP-TO-DATE
+> Task :plugins:kyc-co:compileJava UP-TO-DATE
+> Task :plugins:kyc-co:processResources UP-TO-DATE
+> Task :plugins:kyc-co:classes UP-TO-DATE
+> Task :plugins:kyc-co:jar UP-TO-DATE
+> Task :plugins:kyc-pe:compileJava UP-TO-DATE
+> Task :plugins:kyc-pe:processResources UP-TO-DATE
+> Task :plugins:kyc-pe:classes UP-TO-DATE
+> Task :plugins:kyc-pe:jar SKIPPED
+> Task :plugins:kyc-pe:descriptor130 UP-TO-DATE
+> Task :plugins:kyc-pe:jar130 UP-TO-DATE
+> Task :plugins:kyc-pe:descriptor200 UP-TO-DATE
+> Task :plugins:kyc-pe:jar200 UP-TO-DATE
+> Task :plugins:kyc-pe:assemble UP-TO-DATE
+
+[Incubating] Problems report is available at: file:///home/casdav/Projects/Master/wt-m6r-U08-D/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 657ms
+10 actionable tasks: 10 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
+jars=0
+kind delete cluster --name synkra --kubeconfig "/home/casdav/Projects/Master/wt-m6r-U08-D/.kube/kind-synkra.yaml"
+Deleting cluster "synkra" ...
+Deleted nodes: ["synkra-worker" "synkra-control-plane"]
+kind-registry
+borrar=0
+kubeconfig sin contextos todavía: lo rellena make cluster
+make cluster
+make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U08-D'
+kubeconfig sin contextos todavía: lo rellena make cluster
+Creating cluster "synkra" ...
+ • Ensuring node image (kindest/node) 🖼️  ...
+ ✓ Ensuring node image (kindest/node) 🖼️
+ • Preparing nodes 📦 📦   ...
+ ✓ Preparing nodes 📦 📦 
+ • Writing configuration 📜  ...
+ ✓ Writing configuration 📜
+ • Starting control-plane 🕹️  ...
+ ✓ Starting control-plane 🕹️
+ • Installing CNI 🔌  ...
+ ✓ Installing CNI 🔌
+ • Installing StorageClass 💾  ...
+ ✓ Installing StorageClass 💾
+ • Joining worker nodes 🚜  ...
+ ✓ Joining worker nodes 🚜
+ • Waiting ≤ 3m0s for control-plane = Ready ⏳  ...
+ ✓ Waiting ≤ 3m0s for control-plane = Ready ⏳
+ • Ready after 6s 💚
+Set kubectl context to "kind-synkra"
+You can now use your cluster with:
+
+kubectl cluster-info --context kind-synkra --kubeconfig /home/casdav/Projects/Master/wt-m6r-U08-D/.kube/kind-synkra.yaml
+
+Thanks for using kind! 😊
+contexto permitido: kind-synkra (https://127.0.0.1:46597)
+kubectl --kubeconfig "/home/casdav/Projects/Master/wt-m6r-U08-D/.kube/kind-synkra.yaml" wait --for=condition=Ready nodes --all --timeout=180s
+node/synkra-control-plane condition met
+node/synkra-worker condition met
+make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U08-D'
+make registro
+make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U08-D'
+contexto permitido: kind-synkra (https://127.0.0.1:46597)
+scripts/registro-local.sh
+registro listo en 127.0.0.1:5001
+make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U08-D'
+make aplicar-base
+make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U08-D'
+contexto permitido: kind-synkra (https://127.0.0.1:46597)
+kubectl --kubeconfig "/home/casdav/Projects/Master/wt-m6r-U08-D/.kube/kind-synkra.yaml" apply -f deploy/base/namespaces.yaml -f deploy/base/rbac.yaml
+namespace/synkra created
+namespace/synkra-co created
+namespace/synkra-pe created
+serviceaccount/deployer created
+role.rbac.authorization.k8s.io/synkra-deployer created
+rolebinding.rbac.authorization.k8s.io/synkra-deployer created
+role.rbac.authorization.k8s.io/synkra-deployer created
+rolebinding.rbac.authorization.k8s.io/synkra-deployer created
+make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U08-D'
+make ingress
+make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U08-D'
+contexto permitido: kind-synkra (https://127.0.0.1:46597)
+kubectl --kubeconfig "/home/casdav/Projects/Master/wt-m6r-U08-D/.kube/kind-synkra.yaml" apply -k deploy/ingress-nginx
+namespace/ingress-nginx created
+serviceaccount/ingress-nginx created
+serviceaccount/ingress-nginx-admission created
+role.rbac.authorization.k8s.io/ingress-nginx created
+role.rbac.authorization.k8s.io/ingress-nginx-admission created
+clusterrole.rbac.authorization.k8s.io/ingress-nginx created
+clusterrole.rbac.authorization.k8s.io/ingress-nginx-admission created
+rolebinding.rbac.authorization.k8s.io/ingress-nginx created
+rolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
+clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx created
+clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
+configmap/ingress-nginx-controller created
+service/ingress-nginx-controller created
+service/ingress-nginx-controller-admission created
+deployment.apps/ingress-nginx-controller created
+job.batch/ingress-nginx-admission-create created
+job.batch/ingress-nginx-admission-patch created
+ingressclass.networking.k8s.io/nginx created
+validatingwebhookconfiguration.admissionregistration.k8s.io/ingress-nginx-admission created
+kubectl --kubeconfig "/home/casdav/Projects/Master/wt-m6r-U08-D/.kube/kind-synkra.yaml" rollout status deployment/ingress-nginx-controller -n ingress-nginx --timeout=300s
+Waiting for deployment "ingress-nginx-controller" rollout to finish: 0 of 1 updated replicas are available...
+deployment "ingress-nginx-controller" successfully rolled out
+make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U08-D'
+make tls
+make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U08-D'
+contexto permitido: kind-synkra (https://127.0.0.1:46597)
+scripts/secreto-tls.sh
+tls: se reutiliza .tls/tls.crt
+secret/synkra-local-tls created
+OK tls: synkra/synkra-local-tls a7179aac3f0f8a2eb0a6bbf509a702ca1a594c33e8a1b8d0046cc2e71a692c03
+make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U08-D'
+make imagenes
+make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U08-D'
+scripts/imagenes.sh --subir
+OK versiones: backend 0.1.0, init 1.0.0
++ ./gradlew :backend:bootJar :core:bootJar
+> Task :verificador:compileJava UP-TO-DATE
+> Task :backend:compileJava UP-TO-DATE
+> Task :backend:processResources UP-TO-DATE
+> Task :backend:classes UP-TO-DATE
+> Task :backend:resolveMainClassName UP-TO-DATE
+> Task :verificador:processResources NO-SOURCE
+> Task :verificador:classes UP-TO-DATE
+> Task :verificador:jar UP-TO-DATE
+> Task :backend:bootJar UP-TO-DATE
+> Task :plugin-api:compileJava UP-TO-DATE
+> Task :core:compileJava UP-TO-DATE
+> Task :core:processResources UP-TO-DATE
+> Task :core:classes UP-TO-DATE
+> Task :core:resolveMainClassName UP-TO-DATE
+> Task :plugin-api:processResources NO-SOURCE
+> Task :plugin-api:classes UP-TO-DATE
+> Task :plugin-api:jar UP-TO-DATE
+> Task :core:bootJar UP-TO-DATE
+
+[Incubating] Problems report is available at: file:///home/casdav/Projects/Master/wt-m6r-U08-D/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 817ms
+12 actionable tasks: 12 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
++ docker build --provenance=false --sbom=false -t localhost:5001/synkra-backend:0.1.0 backend
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.23kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
+#2 DONE 0.6s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 164B done
+#3 DONE 0.0s
+
+#4 [capas 1/4] FROM docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
+#4 resolve docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 107B 0.0s done
+#5 DONE 0.0s
+
+#6 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un backend-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/backend-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
+#6 CACHED
+
+#7 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
+#7 CACHED
+
+#8 [capas 2/4] WORKDIR /app
+#8 CACHED
+
+#9 [capas 3/4] COPY build/libs/backend-*.jar /jars/
+#9 CACHED
+
+#10 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
+#10 CACHED
+
+#11 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
+#11 CACHED
+
+#12 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
+#12 CACHED
+
+#13 [stage-1 7/7] RUN addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H synkra  && mkdir /data && chown 10001:10001 /data
+#13 CACHED
+
+#14 exporting to image
+#14 exporting layers done
+#14 exporting manifest sha256:48b554d0a4fa144ecf93cb5403209c06cacd26985f629824920b0facbc5e1baa done
+#14 exporting config sha256:377764b100d5b139bfc43667afd3e12cab88449829b5947563a542687e2bf42e done
+#14 naming to localhost:5001/synkra-backend:0.1.0 done
+#14 unpacking to localhost:5001/synkra-backend:0.1.0 done
+#14 DONE 0.0s
++ docker build --provenance=false --sbom=false -t localhost:5001/synkra-core-ejemplo:2.1.0 core
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.47kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 161B done
+#3 DONE 0.0s
+
+#4 [capas 1/4] FROM docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70
+#4 resolve docker.io/library/eclipse-temurin:21-jre-alpine@sha256:5d7689f47d670aca766b9503a70bccc2d73b4eb9221ae8f714ae958313c4ce70 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 104B done
+#5 DONE 0.0s
+
+#6 [stage-1 5/7] COPY --from=capas /extraido/snapshot-dependencies/ ./
+#6 CACHED
+
+#7 [stage-1 3/7] COPY --from=capas /extraido/dependencies/ ./
+#7 CACHED
+
+#8 [capas 4/4] RUN test "$(ls /jars | wc -l)" -eq 1 || { echo "ERROR: hay mas de un core-*.jar en build/libs; borra los viejos" >&2; ls /jars >&2; exit 1; }  && mv /jars/core-*.jar app.jar  && java -Djarmode=tools -jar app.jar extract --layers --launcher --destination /extraido
+#8 CACHED
+
+#9 [stage-1 6/7] COPY --from=capas /extraido/application/ ./
+#9 CACHED
+
+#10 [capas 2/4] WORKDIR /app
+#10 CACHED
+
+#11 [capas 3/4] COPY build/libs/core-*.jar /jars/
+#11 CACHED
+
+#12 [stage-1 4/7] COPY --from=capas /extraido/spring-boot-loader/ ./
+#12 CACHED
+
+#13 [stage-1 7/7] RUN addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins /config
+#13 CACHED
+
+#14 exporting to image
+#14 exporting layers done
+#14 exporting manifest sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76 done
+#14 exporting config sha256:c724580ee774dabfaa133af07bc92fd771cc4e920dedb3c620eb14570107eecd done
+#14 naming to localhost:5001/synkra-core-ejemplo:2.1.0 done
+#14 unpacking to localhost:5001/synkra-core-ejemplo:2.1.0 done
+#14 DONE 0.0s
++ docker build --provenance=false --sbom=false -t localhost:5001/synkra-init-descarga:1.0.0 init-descarga
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.13kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc
+#2 DONE 0.6s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 57B done
+#3 DONE 0.0s
+
+#4 [revision 1/4] FROM docker.io/library/alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc
+#4 resolve docker.io/library/alpine:3.20@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 34B done
+#5 DONE 0.0s
+
+#6 [revision 2/4] RUN apk add --no-cache shellcheck
+#6 CACHED
+
+#7 [revision 3/4] COPY descargar.sh /descargar.sh
+#7 CACHED
+
+#8 [revision 4/4] RUN shellcheck -s sh /descargar.sh
+#8 CACHED
+
+#9 [stage-1 2/3] RUN apk add --no-cache curl  && addgroup -g 10001 -S synkra && adduser -S -u 10001 -G synkra -H -s /sbin/nologin synkra  && mkdir /plugins /config && chown 10001:10001 /plugins && chmod 0755 /config  && apk del --no-cache apk-tools
+#9 CACHED
+
+#10 [stage-1 3/3] COPY --from=revision --chmod=0555 /descargar.sh /usr/local/bin/descargar.sh
+#10 CACHED
+
+#11 exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:d3019aacdfb153d8db5c2ffe3bdab553601f2aa7dfda8ffbcf2ed298e6f12d75 done
+#11 exporting config sha256:bdf6313eb595ed994470d34f137de88605dc5d0a1bcd63e61eb0929aa6027abe done
+#11 naming to localhost:5001/synkra-init-descarga:1.0.0 done
+#11 unpacking to localhost:5001/synkra-init-descarga:1.0.0 done
+#11 DONE 0.0s
+OK imagenes construidas con prefijo localhost:5001
+OK versiones: backend 0.1.0, init 1.0.0
+ok backend/Dockerfile FROM
+ok backend/Dockerfile FROM
+ok core/Dockerfile FROM
+ok core/Dockerfile FROM
+ok init-descarga/Dockerfile FROM
+ok init-descarga/Dockerfile FROM
+ok localhost:5001/synkra-init-descarga:1.0.0 etiqueta
+ok localhost:5001/synkra-backend:0.1.0 User
+ok localhost:5001/synkra-backend:0.1.0 id-u
+ok localhost:5001/synkra-backend:0.1.0 arquitectura
+ok localhost:5001/synkra-core-ejemplo:2.1.0 User
+ok localhost:5001/synkra-core-ejemplo:2.1.0 id-u
+ok localhost:5001/synkra-core-ejemplo:2.1.0 arquitectura
+ok localhost:5001/synkra-init-descarga:1.0.0 User
+ok localhost:5001/synkra-init-descarga:1.0.0 id-u
+ok localhost:5001/synkra-init-descarga:1.0.0 arquitectura
+ok localhost:5001/synkra-backend:0.1.0 ExposedPorts
+ok localhost:5001/synkra-core-ejemplo:2.1.0 ExposedPorts
+ok localhost:5001/synkra-core-ejemplo:2.1.0 Volumes
+ok localhost:5001/synkra-init-descarga:1.0.0 Entrypoint
+ok localhost:5001/synkra-init-descarga:1.0.0 sin-apk
+OK imagenes
++ docker push localhost:5001/synkra-backend:0.1.0
+The push refers to repository [localhost:5001/synkra-backend]
+dd1ebef4bc6a: Pushed
+4f4fb700ef54: Pushed
+7c3a5aabfc1c: Pushed
+881fc932939e: Pushed
+cb99678e5a4c: Pushed
+2db787ed6893: Pushed
+95d78c2a8ddf: Pushed
+d1540b868518: Pushed
+eaeb7fc83754: Pushed
+89406ef15e50: Pushed
+f8e7364513c9: Pushed
+0.1.0: digest: sha256:48b554d0a4fa144ecf93cb5403209c06cacd26985f629824920b0facbc5e1baa size: 2381
++ docker push localhost:5001/synkra-core-ejemplo:2.1.0
+The push refers to repository [localhost:5001/synkra-core-ejemplo]
+cb99678e5a4c: Mounted from synkra-backend
+89406ef15e50: Mounted from synkra-backend
+881fc932939e: Mounted from synkra-backend
+2db787ed6893: Mounted from synkra-backend
+95d78c2a8ddf: Mounted from synkra-backend
+df17b0c6b739: Pushed
+4f4fb700ef54: Mounted from synkra-backend
+3a719728310e: Pushed
+7c3a5aabfc1c: Mounted from synkra-backend
+a450f847083e: Pushed
+ff0cb9c7af64: Pushed
+2.1.0: digest: sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76 size: 2380
++ docker push localhost:5001/synkra-init-descarga:1.0.0
+The push refers to repository [localhost:5001/synkra-init-descarga]
+586e1e534fba: Pushed
+da0a2cb9f313: Pushed
+25f1d6b1951a: Pushed
+1.0.0: digest: sha256:d3019aacdfb153d8db5c2ffe3bdab553601f2aa7dfda8ffbcf2ed298e6f12d75 size: 862
+subida localhost:5001/synkra-backend:0.1.0 sha256:48b554d0a4fa144ecf93cb5403209c06cacd26985f629824920b0facbc5e1baa
+subida localhost:5001/synkra-core-ejemplo:2.1.0 sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76
+subida localhost:5001/synkra-init-descarga:1.0.0 sha256:d3019aacdfb153d8db5c2ffe3bdab553601f2aa7dfda8ffbcf2ed298e6f12d75
+OK imagenes subidas
+make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U08-D'
+make desplegar
+make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U08-D'
+contexto permitido: kind-synkra (https://127.0.0.1:46597)
+scripts/desplegar.sh
+namespace/synkra unchanged (server dry run)
+namespace/synkra-co unchanged (server dry run)
+namespace/synkra-pe unchanged (server dry run)
+serviceaccount/deployer unchanged (server dry run)
+role.rbac.authorization.k8s.io/synkra-deployer unchanged (server dry run)
+role.rbac.authorization.k8s.io/synkra-deployer unchanged (server dry run)
+rolebinding.rbac.authorization.k8s.io/synkra-deployer unchanged (server dry run)
+rolebinding.rbac.authorization.k8s.io/synkra-deployer unchanged (server dry run)
+service/synkra-backend created (server dry run)
+persistentvolumeclaim/synkra-datos created (server dry run)
+deployment.apps/synkra-backend created (server dry run)
+ingress.networking.k8s.io/synkra-backend created (server dry run)
+namespace/synkra unchanged
+namespace/synkra-co unchanged
+namespace/synkra-pe unchanged
+serviceaccount/deployer unchanged
+role.rbac.authorization.k8s.io/synkra-deployer unchanged
+role.rbac.authorization.k8s.io/synkra-deployer unchanged
+rolebinding.rbac.authorization.k8s.io/synkra-deployer unchanged
+rolebinding.rbac.authorization.k8s.io/synkra-deployer unchanged
+service/synkra-backend created
+persistentvolumeclaim/synkra-datos created
+deployment.apps/synkra-backend created
+ingress.networking.k8s.io/synkra-backend created
+Waiting for deployment "synkra-backend" rollout to finish: 0 of 1 updated replicas are available...
+deployment "synkra-backend" successfully rolled out
+OK desplegar: localhost:5001/synkra-backend:0.1.0 sha256:48b554d0a4fa144ecf93cb5403209c06cacd26985f629824920b0facbc5e1baa
+make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U08-D'
+make verificar-limite
+make[1]: Entering directory '/home/casdav/Projects/Master/wt-m6r-U08-D'
+contexto permitido: kind-synkra (https://127.0.0.1:46597)
+scripts/verificar-limite.sh
+ok create deployments.apps -n synkra-co: yes
+ok create deployments.apps -n synkra-pe: yes
+ok create deployments.apps -n default: no
+ok create deployments.apps -n kube-system: no
+ok create deployments.apps -n synkra: no
+ok create namespaces: no
+OK limite: 6 respuestas esperadas
+make[1]: Leaving directory '/home/casdav/Projects/Master/wt-m6r-U08-D'
+install=0
+contexto permitido: kind-synkra (https://127.0.0.1:46597)
+scripts/verificar-limite.sh
+ok create deployments.apps -n synkra-co: yes
+ok create deployments.apps -n synkra-pe: yes
+ok create deployments.apps -n default: no
+ok create deployments.apps -n kube-system: no
+ok create deployments.apps -n synkra: no
+ok create namespaces: no
+OK limite: 6 respuestas esperadas
+limite=0
+ok preparacion GET /actuator/health 200 UP
+ok CU1 core synkra-core 2.1.0 registrado (201)
+4xx 409 CONFLICTO POST /api/cores
+ok CU1 core synkra-core 3.0.0 registrado (201)
+ok CU1 el 422 detalla nombre, version e imagen
+4xx 422 ENTIDAD_NO_PROCESABLE POST /api/cores
+ok CU1 kyc-co 1.0.0 subido (201) con el sha256 del jar local
+4xx 409 CONFLICTO POST /api/cores/synkra-core/plugins
+ok CU1 kyc-pe 1.3.0 subido (201) con el sha256 del jar local
+ok CU1 kyc-pe 2.0.0 subido (201) con el sha256 del jar local
+ok CU1 GET /api/cores/synkra-core lista 2.1.0 y 3.0.0
+ok CU1 ?pais=co trae kyc-co 1.0.0
+ok CU1 kyc-co 1.0.0 lleva pais co y cliente e2e
+ok CU1 ?pais=pe trae kyc-pe 1.3.0 y 2.0.0
+OK CU1
+tiempo CU1 2s
+ok CU2 plan creado: pendiente y creadoPor e2e
+ok CU2 cambios: añade, quita y conserva lo que corresponde frente a lo que corría
+cambios de CU2 (antes: vacío): {"core":{"antes":null,"despues":"localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76","igual":false},"anadidos":[{"nombre":"kyc-co","version":"1.0.0","sha256":"90f9ef4d8fde6c3103f346df6270c1edb64170fb00f2c81c0ff4366925376d3c"}],"quitados":[],"iguales":[],"sinCambios":false}
+4xx 422 PAIS_NO_PERMITIDO POST /api/despliegues
+4xx 422 USUARIO_INVALIDO POST /api/despliegues
+ok CU2 confirmación de 1: aplicando y confirmadoPor e2e
+4xx 409 PLAN_NO_PENDIENTE POST /api/despliegues/1/confirmacion
+ok CU2 el despliegue 1 llegó a listo en 19s
+ok CU2 rollout status de synkra-core terminó
+ok CU2 la imagen del contenedor core es la registrada
+ok CU2 el ConfigMap lista solo kyc-co 1.0.0
+ok CU2 lo que el core cargó es exactamente kyc-co 1.0.0
+ok CU2 managedFields de deployment/synkra-core: synkra Apply
+ok CU2 managedFields de configmap/synkra-core-config: synkra Apply
+ok CU2 managedFields de service/synkra-core: synkra Apply
+ok CU2 GET /api/despliegues/1: listo con su imagen y sus plugins
+ok CU2 GET /api/paises: co concuerda true con ultimoDespliegueId 1
+CU2 anotacion=c484c4b025f4a6605fbb92d23e28a7dd7f97f32679248bf97be07674bc3c294b pods=synkra-core-c6fc84b85-5nd84
+OK CU2
+tiempo CU2 22s
+ok CU3 plan creado: pendiente y creadoPor e2e
+ok CU3 cambios: añade, quita y conserva lo que corresponde frente a lo que corría
+ok CU3 cambios: solo se añade kyc-pe 1.3.0
+ok CU3 confirmación de 2: aplicando y confirmadoPor e2e
+ok CU3 el despliegue 2 llegó a listo en 16s
+ok CU3 rollout status de synkra-core terminó
+ok CU3 la anotación synkra.io/config-sha256 cambió (c484c4b025f4a6605fbb92d23e28a7dd7f97f32679248bf97be07674bc3c294b a 8e171718abb1fb0639c96f8bf0487210b34eb843831f50d76b4cf9e5a66739f4)
+ok CU3 hay un pod nuevo (synkra-core-c6fc84b85-5nd84 a synkra-core-846b8569bf-2jf89)
+ok CU3 la imagen del contenedor core no cambió
+ok CU3 el ConfigMap lista kyc-co 1.0.0 y kyc-pe 1.3.0
+ok CU3 lo que el core cargó es exactamente kyc-co 1.0.0,kyc-pe 1.3.0
+ok CU3 GET /api/paises: co concuerda true con ultimoDespliegueId 2
+OK CU3
+tiempo CU3 16s
+ok CU4 el 422 trae un detalle de plugins.kyc-pe
+motivo: El plugin 'kyc-pe' 2.0.0 requiere el core 'synkra-core' en 3.x y se pidió 2.1.0
+4xx 422 COMBINACION_RECHAZADA POST /api/despliegues
+CU4 imagenes antes=localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76 localhost:5001/synkra-init-descarga:1.0.0 despues=localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76 localhost:5001/synkra-init-descarga:1.0.0
+ok CU4 las imágenes del namespace no cambiaron
+ok CU4 el resourceVersion del Deployment sigue en 971
+ok CU4 el resourceVersion del ConfigMap sigue en 905
+ok CU4 el historial de co tiene el mismo largo
+ok CU4 lo que el core cargó sigue siendo lo de 2
+OK CU4
+tiempo CU4 1s
+ok CU5 plan de 3.0.0 con kyc-pe 2.0.0 aprobado: pendiente
+ok CU5 confirmación de 3: aplicando y confirmadoPor e2e
+4xx 409 DESPLIEGUE_EN_CURSO POST /api/despliegues/4/confirmacion
+ok CU5 el despliegue 3 llegó a fallido en 184s
+D4 tardó 184s en fallar
+ok CU5 D4 trae contexto con logCore que nombra kyc-pe
+ok CU5 pod del core caído: synkra-core-55597859bd-vbxvv
+ok CU5 el pod viejo synkra-core-846b8569bf-2jf89 sigue Ready
+ok CU5 lo que el core sirve por el Service sigue siendo lo de 2
+ok CU5 GET /api/paises: co concuerda false con ultimoDespliegueId 2
+4xx 422 ORIGEN_NO_LISTO POST /api/despliegues/3/reversion
+4xx 404 NO_ENCONTRADO POST /api/despliegues/0/reversion
+ok CU5 la reversión es un plan de tipo reversion con origen 2
+ok CU5 confirmación de 5: aplicando y confirmadoPor e2e
+ok CU5 el despliegue 5 llegó a listo en 6s
+ok CU5 rollout status de synkra-core terminó
+ok CU5 todos los pods del core están Ready
+ok CU5 ningún pod del core en CrashLoopBackOff
+ok CU5 las imágenes del namespace son las de CU4
+ok CU5 el ConfigMap es el de 2
+ok CU5 lo que el core cargó es lo de 2
+ok CU5 el historial termina en 5 reversion listo, 3 despliegue fallido, 2 despliegue listo
+ok CU5 GET /api/paises: co concuerda true con ultimoDespliegueId 5
+OK CU5
+tiempo CU5 191s
+OK e2e: CU1 a CU5, 10 respuestas 4xx con codigo, mensaje y detalles
+
+real	3m52,618s
+user	0m2,746s
+sys	0m2,197s
+e2e=0
+NAME                          READY   UP-TO-DATE   AVAILABLE   AGE     CONTAINERS   IMAGES                                                                                                             SELECTOR
+deployment.apps/synkra-core   1/1     1            1           3m47s   core         localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76   app.kubernetes.io/name=synkra-core
+
+NAME                           DATA   AGE
+configmap/kube-root-ca.crt     1      4m47s
+configmap/synkra-core-config   2      3m48s
+
+NAME                  TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE     SELECTOR
+service/synkra-core   ClusterIP   10.96.223.34   <none>        8080/TCP   3m48s   app.kubernetes.io/name=synkra-core
+
+NAME                               READY   STATUS    RESTARTS   AGE     IP           NODE            NOMINATED NODE   READINESS GATES
+pod/synkra-core-846b8569bf-2jf89   1/1     Running   0          3m28s   10.244.1.7   synkra-worker   <none>           <none>
+synkra Apply
+kube-controller-manager Update
+localhost:5001/synkra-init-descarga:1.0.0 localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76
+[{"nombre":"kyc-co","version":"1.0.0"},{"nombre":"kyc-pe","version":"1.3.0"}]
+[{"id":5,"tipo":"reversion","origenId":2,"estado":"listo","creadoPor":"e2e","confirmadoPor":"e2e"},{"id":3,"tipo":"despliegue","origenId":null,"estado":"fallido","creadoPor":"e2e","confirmadoPor":"e2e"},{"id":2,"tipo":"despliegue","origenId":null,"estado":"listo","creadoPor":"e2e","confirmadoPor":"e2e"},{"id":1,"tipo":"despliegue","origenId":null,"estado":"listo","creadoPor":"e2e","confirmadoPor":"e2e"}]
+{"concuerda":true,"ultimoDespliegueId":5,"plugins":[{"nombre":"kyc-co","version":"1.0.0","sha256":"90f9ef4d8fde6c3103f346df6270c1edb64170fb00f2c81c0ff4366925376d3c"},{"nombre":"kyc-pe","version":"1.3.0","sha256":"3bccc0bdbeabce892015da00b4fbda4487db214a324314950036ef316564974f"}]}
+1

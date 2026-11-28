@@ -1,0 +1,8 @@
+fecha: 2026-11-28T02:57:37-05:00
+sha: c436428 (arbol: 3 cambios sin confirmar)
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U08-D-evidencia/ca3-pe.sh
+configmap/kube-root-ca.crt
+sin kube-root-ca.crt: 0

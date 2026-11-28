@@ -1,0 +1,44 @@
+fecha: 2026-11-28T03:28:35-05:00
+sha: d1089e1 (arbol: 1 cambios sin confirmar)
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U08-D-evidencia/ca8.sh
+d1089e1
+1
+ .../synkra/kubernetes/ConstructorObjetosPais.java  |  26 +-
+ .../kubernetes/ConstruirObjetosPaisTest.java       |  41 ++
+ .../resources/kubernetes/pais-pe-esperado.yaml     |   2 +
+ bitacoras/U08-D-evidencia/ca1.sh                   |  16 +
+ bitacoras/U08-D-evidencia/ca1.txt                  | 177 ++++++
+ bitacoras/U08-D-evidencia/ca2.sh                   |  49 ++
+ bitacoras/U08-D-evidencia/ca2.txt                  |  38 ++
+ bitacoras/U08-D-evidencia/ca3-pe.sh                |   5 +
+ bitacoras/U08-D-evidencia/ca3-pe.txt               |   8 +
+ bitacoras/U08-D-evidencia/ca3.sh                   |  15 +
+ bitacoras/U08-D-evidencia/ca3.txt                  | 539 ++++++++++++++++++
+ bitacoras/U08-D-evidencia/ca4.sh                   |   3 +
+ bitacoras/U08-D-evidencia/ca4.txt                  |  99 ++++
+ bitacoras/U08-D-evidencia/ca5-estado.sh            |   8 +
+ bitacoras/U08-D-evidencia/ca5-estado.txt           |  15 +
+ bitacoras/U08-D-evidencia/ca5-mensajes.sh          |  12 +
+ bitacoras/U08-D-evidencia/ca5-mensajes.txt         |  10 +
+ bitacoras/U08-D-evidencia/ca5.sh                   |   6 +
+ bitacoras/U08-D-evidencia/ca5.txt                  | 110 ++++
+ bitacoras/U08-D-evidencia/ca6.sh                   |  22 +
+ bitacoras/U08-D-evidencia/ca6.txt                  |  77 +++
+ bitacoras/U08-D-evidencia/ca7.sh                   |  17 +
+ bitacoras/U08-D-evidencia/ca7.txt                  |  17 +
+ bitacoras/U08-D-evidencia/ca8.sh                   |   8 +
+ bitacoras/U08-D-evidencia/ca8.txt                  |  38 ++
+ bitacoras/U08-D-evidencia/ca9.sh                   |  22 +
+ bitacoras/U08-D-evidencia/ca9.txt                  |  30 +
+ bitacoras/U08-D-evidencia/corre.sh                 |  15 +
+ bitacoras/U08-D.md                                 |  90 +++
+ revisiones/U08-D/ronda-1-respuesta.md              |  10 +
+ revisiones/U08-D/ronda-1.md                        |  68 +++
+ scripts/e2e-api.sh                                 | 615 +++++++++++++++++++++
+ 32 files changed, 2206 insertions(+), 2 deletions(-)
+fuera=1
+0
+0
