@@ -1,7 +1,9 @@
 package io.synkra.despliegue;
 
 import java.net.URI;
+import io.synkra.registro.api.EstadoDespliegue;
 import java.time.Instant;
+import java.util.Locale;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 class RutasConfirmacion {
 
+    private static final String RUTA_DESPLIEGUES = "/api/despliegues";
+
     record ConfirmacionDto(long id, String pais, String estado, String creadoPor, String confirmadoPor,
             Instant confirmadoEn) {}
 
@@ -21,13 +25,14 @@ class RutasConfirmacion {
         this.confirmacion = confirmacion;
     }
 
-    @PostMapping("/api/despliegues/{id}/confirmacion")
+    @PostMapping(RUTA_DESPLIEGUES + "/{id}/confirmacion")
     ResponseEntity<ConfirmacionDto> confirmar(@PathVariable long id,
             @RequestHeader(name = Usuario.CABECERA, required = false) String usuario) {
         var c = confirmacion.confirmar(id, usuario);
         var plan = c.plan();
-        return ResponseEntity.accepted().location(URI.create("/api/despliegues/" + plan.id()))
-                .body(new ConfirmacionDto(plan.id(), plan.pais(), "aplicando", plan.creadoPor(), c.confirmadoPor(),
+        return ResponseEntity.accepted().location(URI.create(RUTA_DESPLIEGUES + "/" + plan.id()))
+                .body(new ConfirmacionDto(plan.id(), plan.pais(),
+                        EstadoDespliegue.APLICANDO.name().toLowerCase(Locale.ROOT), plan.creadoPor(), c.confirmadoPor(),
                         c.confirmadoEn()));
     }
 }

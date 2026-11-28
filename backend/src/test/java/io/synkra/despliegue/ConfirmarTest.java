@@ -53,6 +53,7 @@ import org.springframework.test.context.bean.override.convention.TestBean;
 class ConfirmarTest {
 
     static final Path DATOS = Path.of("build/sqlite-pruebas/ConfirmarTest");
+    static final Map<String, String> ETIQUETAS_EE = Map.of("pais", "cl", "cliente", "acme");
     static final Instant T1 = Instant.parse("2026-11-20T15:00:00.456Z");
 
     static final SimuladorKubernetes SIM = new SimuladorKubernetes();
@@ -107,6 +108,7 @@ class ConfirmarTest {
         for (var nombre : List.of("kyc-zz", "kyc-yy")) {
             catalogo.subirPlugin("synkra-core", new ByteArrayInputStream(jar(nombre)), Map.of());
         }
+        catalogo.subirPlugin("synkra-core", new ByteArrayInputStream(jar("kyc-ee")), ETIQUETAS_EE);
         cargada = true;
     }
 
@@ -130,9 +132,9 @@ class ConfirmarTest {
     }
 
     /** Crea un plan S2 en {@code pais} a la hora {@code base}, con el usuario dado (nulo: sin cabecera). */
-    private long crear(String pais, Instant base, String usuario, String plugin) {
+    private long crear(String pais, Instant base, String usuario, String... plugins) {
         RELOJ.fija(base);
-        var r = http().crear(pais, "synkra-core", "2.1.0", usuario, plugin);
+        var r = http().crear(pais, "synkra-core", "2.1.0", usuario, plugins);
         assertThat(r.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         return id(r);
     }
@@ -241,7 +243,7 @@ class ConfirmarTest {
         registro.registrar(new NuevoDespliegue(901, "cl", TipoDespliegue.DESPLIEGUE, null, "synkra-core", "2.1.0",
                 CatalogoDePrueba.IMAGEN_A, "ana", "ana", base.minusSeconds(30), "{}", List.of()));
         registro.actualizarResultado(901, EstadoDespliegue.FALLIDO, new ContextoFallo("", "", "x"));
-        var id = crear("cl", base, null, "kyc-pe:1.3.0");
+        var id = crear("cl", base, null, "kyc-pe:1.3.0", "kyc-ee:1.0.0");
         SIM.nuevasPeticiones();
 
         var r = http().confirmar(id, null);
@@ -252,6 +254,18 @@ class ConfirmarTest {
         assertThat(sinConsulta(SIM.nuevasPeticiones())).containsExactlyElementsOf(tresPatch("cl"));
         var g = http().obtener("/api/despliegues/" + id).getBody();
         assertThat(g).containsEntry("creadoPor", "anonimo").containsEntry("confirmadoPor", "anonimo");
+        // Lectura de vuelta de los plugins y sus etiquetas del catálogo: por la API y por la base.
+        assertThat(g.get("plugins")).isEqualTo(List.of(
+                Map.of("nombre", "kyc-ee", "version", "1.0.0", "sha256", sha("kyc-ee", "1.0.0"),
+                        "etiquetas", ETIQUETAS_EE),
+                Map.of("nombre", "kyc-pe", "version", "1.3.0", "sha256", sha("kyc-pe", "1.3.0"),
+                        "etiquetas", Map.of())));
+        var filas = jdbc.queryForList("select nombre, version, sha256, etiquetas from reg_plugin where despliegue_id = ?"
+                + " order by nombre", id);
+        assertThat(filas).hasSize(2);
+        assertThat(filas.get(0)).containsEntry("nombre", "kyc-ee").containsEntry("sha256", sha("kyc-ee", "1.0.0"));
+        assertThat(filas.get(0).get("etiquetas").toString()).contains("\"cliente\":\"acme\"").contains("\"pais\":\"cl\"");
+        assertThat(filas.get(1)).containsEntry("nombre", "kyc-pe").containsEntry("etiquetas", "{}");
     }
 
     @Test
@@ -267,6 +281,18 @@ class ConfirmarTest {
         esperaError(r, HttpStatus.UNPROCESSABLE_ENTITY, "COMBINACION_RECHAZADA", "La combinación no es compatible",
                 detalle("plugins.kyc-zz", mensaje));
         assertThat(SIM.nuevasPeticiones()).isEmpty();
+        assertThat(estadoPlan(id)).isEqualTo("pendiente");
+        assertThat(filasRegistro("ar")).isZero();
+
+        // La guarda vive en el WHERE: con el reloj en venceEn, reservar da 410 y no confirma ni registra.
+        var plan = planes.findById(id).orElseThrow();
+        RELOJ.fija(Instant.ofEpochMilli(plan.venceEn()));
+        assertThatThrownBy(() -> reserva.reservar(plan, "luis", "{}", List.of()))
+                .isInstanceOfSatisfying(ExcepcionApi.class, e -> {
+                    assertThat(e.estado()).isEqualTo(HttpStatus.GONE);
+                    assertThat(e.error().codigo()).isEqualTo("PLAN_VENCIDO");
+                    assertThat(e.error().mensaje()).isEqualTo("El plan venció sin confirmarse");
+                });
         assertThat(estadoPlan(id)).isEqualTo("pendiente");
         assertThat(filasRegistro("ar")).isZero();
     }
@@ -349,7 +375,7 @@ class ConfirmarTest {
         } finally {
             pool.shutdownNow();
         }
-        assertThat(SIM.nuevasPeticiones()).hasSize(3);
+        assertThat(sinConsulta(SIM.nuevasPeticiones())).containsExactlyElementsOf(tresPatch("ec"));
         assertThat(filasRegistro("ec")).isEqualTo(1);
     }
 

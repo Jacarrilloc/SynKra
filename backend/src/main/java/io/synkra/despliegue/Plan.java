@@ -7,7 +7,7 @@ import org.springframework.data.relational.core.mapping.Table;
 
 /**
  * Plan de despliegue o de reversión. {@code creadoEn} y {@code venceEn}: epoch en ms (C-05).
- * {@code origenId} apunta a un despliegue del registro (otro módulo) sin clave foránea.
+ * {@code origenId} apunta a {@code reg_despliegue} (otro módulo) sin clave foránea.
  */
 @Table("dep_plan")
 record Plan(

@@ -4,12 +4,17 @@ import static io.synkra.despliegue.HttpPlanes.esperaError;
 import static io.synkra.despliegue.HttpPlanes.id;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import io.synkra.catalogo.api.CatalogoApi;
 import io.synkra.kubernetes.api.AdaptadorKubernetes;
+import io.synkra.kubernetes.api.ObjetosPais;
+import io.synkra.registro.api.ContextoFallo;
+import io.synkra.registro.api.EstadoDespliegue;
 import io.synkra.registro.api.RegistroApi;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -51,11 +56,20 @@ class ConfirmarSinClusterTest {
     @Autowired TestRestTemplate rest;
     @Autowired JdbcTemplate jdbc;
 
+    private static boolean cargada;
+
+    private synchronized void cargar() throws IOException {
+        if (!cargada) {
+            CatalogoDePrueba.cargar(catalogo);
+            cargada = true;
+        }
+    }
+
     @Test
     void sinClusterDa503YNoTocaNada() throws Exception {
         when(adaptador.disponible()).thenReturn(false);
         when(adaptador.leerPais("pe")).thenReturn(Optional.empty());
-        CatalogoDePrueba.cargar(catalogo);
+        cargar();
         var http = new HttpPlanes(rest);
         var creado = http.crear("pe", "synkra-core", "2.1.0", "ana", "kyc-pe:1.3.0");
         assertThat(creado.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -69,5 +83,27 @@ class ConfirmarSinClusterTest {
         assertThat(registro.obtener(id)).isEmpty();
         verify(adaptador, never()).construir(any());
         verify(adaptador, never()).aplicar(any());
+    }
+
+    /** Paso 7: una excepción de {@code aplicar} que no es {@code AplicacionFallidaException} deja el registro fallido. */
+    @Test
+    void unaExcepcionInesperadaAlAplicarDejaElRegistroFallidoConElNombreDeLaClase() throws Exception {
+        when(adaptador.disponible()).thenReturn(true);
+        when(adaptador.leerPais("pe")).thenReturn(Optional.empty());
+        when(adaptador.construir(any())).thenReturn(mock(ObjetosPais.class));
+        doThrow(new IllegalStateException()).when(adaptador).aplicar(any());
+        cargar();
+        var http = new HttpPlanes(rest);
+        var id = id(http.crear("pe", "synkra-core", "2.1.0", "ana", "kyc-pe:1.3.0"));
+
+        var r = http.confirmar(id, "luis");
+
+        assertThat(r.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+        verify(adaptador).aplicar(any());
+        assertThat(jdbc.queryForObject("select estado from dep_plan where id = ?", String.class, id))
+                .isEqualTo("confirmado");
+        var d = registro.obtener(id).orElseThrow();
+        assertThat(d.estado()).isEqualTo(EstadoDespliegue.FALLIDO);
+        assertThat(d.contexto()).isEqualTo(new ContextoFallo("", "", "IllegalStateException"));
     }
 }
