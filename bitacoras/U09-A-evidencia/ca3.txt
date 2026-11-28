@@ -1,0 +1,38 @@
+fecha: 2026-11-28T00:11:03-05:00
+sha: c41f004
+imagen: mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d arm64
+
++ rm -rf front.Tests/TestResults
++ scripts/dotnet-docker.sh test front.Tests --filter VistaGeneralTest --logger 'trx;LogFileName=vista.trx' --results-directory front.Tests/TestResults
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Synkra.Front -> /src/front/bin/Debug/net10.0/Synkra.Front.dll
+  Synkra.Front.Tests -> /src/front.Tests/bin/Debug/net10.0/Synkra.Front.Tests.dll
+Test run for /src/front.Tests/bin/Debug/net10.0/Synkra.Front.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /src/front.Tests/TestResults/vista.trx
+
+Passed!  - Failed:     0, Passed:    10, Skipped:     0, Total:    10, Duration: 279 ms - Synkra.Front.Tests.dll (net10.0)
++ echo salida=0
+salida=0
++ python3 -I bitacoras/U09-A-evidencia/trx.py front.Tests/TestResults/vista.trx
+total=10 executed=10 passed=10 failed=0 notExecuted=0
+ApiNoDisponibleMuestraElCodigoDelFront
+ErrorConDetallesMuestraCampoYMotivo
+ErrorDeLaApiMuestraCodigoYMensaje
+MuestraUnRenglonPorPaisConLosDatosDeLaApi
+PaisInconsistenteMuestraInconsistente
+PaisQueNoConcuerdaMuestraNo
+PaisSinDespliegueMuestraGuiones
+PaisSinLecturaMuestraNoDisponibleYNoSeSabe
+SinPaisesMuestraAviso
+SoloLlamaAGetApiPaises
++ python3 -I -c 'import json,sys; print([(p["pais"], p["lectura"], p["concuerda"]) for p in json.load(open(sys.argv[1]))])' front.Tests/Fixtures/paises-dos.json
+[('co', 'leido', True), ('pe', 'no_disponible', None)]
++ grep -n '@page\|@inject\|VistaGeneralAsync\|HistorialAsync\|DespliegueAsync\|HttpClient' front/Components/Pages/VistaGeneral.razor
+1:@page "/"
+2:@inject ApiSynkra Api
+88:            _paises = await Api.VistaGeneralAsync();
++ grep -rn 'rendermode="InteractiveServer"' front/Components/App.razor
+9:    <HeadOutlet @rendermode="InteractiveServer" />
+13:    <Routes @rendermode="InteractiveServer" />

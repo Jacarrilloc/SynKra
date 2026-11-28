@@ -1,0 +1,7 @@
+{
+  "codigo": "PAIS_INVALIDO",
+  "mensaje": "El país no es válido",
+  "detalles": [
+    { "campo": "pais", "motivo": "El país debe ser un código de dos letras en minúscula (S4)" }
+  ]
+}

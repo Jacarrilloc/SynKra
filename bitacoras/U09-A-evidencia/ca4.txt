@@ -1,0 +1,23 @@
+fecha: 2026-11-28T00:11:05-05:00
+sha: c41f004
+imagen: mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d arm64
+
++ scripts/dotnet-docker.sh build front
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Synkra.Front -> /src/front/bin/Debug/net10.0/Synkra.Front.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.92
++ grep -rniE 'semver|compatib' front/ '--include=*.cs' '--include=*.razor'
++ echo grep-plan=1
+grep-plan=1
++ grep -rniE 'semver|compatib' front/ --exclude-dir=bin --exclude-dir=obj
++ echo grep-todo=1
+grep-todo=1
++ grep -rnE 'System\.Version|Version\.(Try)?Parse|NuGet\.Versioning|Semver' front/ '--include=*.cs' '--include=*.razor' '--include=*.csproj'
++ echo versiones=1
+versiones=1

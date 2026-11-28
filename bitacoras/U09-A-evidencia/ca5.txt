@@ -1,0 +1,51 @@
+fecha: 2026-11-28T00:11:06-05:00
+sha: c41f004
+imagen: mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d arm64
+
++ rm -rf front.Tests/TestResults
++ scripts/dotnet-docker.sh test front.Tests --logger 'trx;LogFileName=todo.trx' --results-directory front.Tests/TestResults
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Synkra.Front -> /src/front/bin/Debug/net10.0/Synkra.Front.dll
+  Synkra.Front.Tests -> /src/front.Tests/bin/Debug/net10.0/Synkra.Front.Tests.dll
+Test run for /src/front.Tests/bin/Debug/net10.0/Synkra.Front.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /src/front.Tests/TestResults/todo.trx
+
+Passed!  - Failed:     0, Passed:    29, Skipped:     0, Total:    29, Duration: 248 ms - Synkra.Front.Tests.dll (net10.0)
++ echo salida=0
+salida=0
++ python3 -I bitacoras/U09-A-evidencia/trx.py front.Tests/TestResults/todo.trx
+total=29 executed=29 passed=29 failed=0 notExecuted=0
+CampoDesconocidoEnLaRespuestaDaRespuestaInvalida
+CancelacionPedidaSePropagaSinEnvolver
+ConfiguracionConEsquemaAjenoNoArranca
+ConfiguracionConUrlRelativaNoArranca
+ConfiguracionConUrlValidaTerminaEnBarra
+ConfiguracionSinUrlNoArranca
+DespliegueFallidoTraeVeredictoYContexto
+DespliegueListoNoTraeContexto
+Error404DaCodigoYMensajeDeLaApi
+Error422DaLosDetallesConCampoYMotivo
+ErrorSinCuerpoDeLaApiDaRespuestaInvalida
+FalloDeConexionDaApiNoDisponible
+HistorialEscapaElPais
+HistorialPideLaRutaDelPaisYLeeTipoOrigenYFechas
+LaUrlBaseConPrefijoSeRespeta
+PideConAcceptJson
+TiempoAgotadoDaApiNoDisponible
+VistaGeneralConListaVaciaDevuelveListaVacia
+VistaGeneralLeeLosDosPaisesConTodosSusCampos
+ApiNoDisponibleMuestraElCodigoDelFront
+ErrorConDetallesMuestraCampoYMotivo
+ErrorDeLaApiMuestraCodigoYMensaje
+MuestraUnRenglonPorPaisConLosDatosDeLaApi
+PaisInconsistenteMuestraInconsistente
+PaisQueNoConcuerdaMuestraNo
+PaisSinDespliegueMuestraGuiones
+PaisSinLecturaMuestraNoDisponibleYNoSeSabe
+SinPaisesMuestraAviso
+SoloLlamaAGetApiPaises
++ grep -rnE '\[(Fact|Theory)\([^)]*Skip|\[Theory' front.Tests '--include=*.cs'
++ echo saltos=1
+saltos=1

@@ -1,0 +1,19 @@
+{
+  "id": 5,
+  "pais": "pe",
+  "tipo": "despliegue",
+  "origenId": null,
+  "core": "synkra-core",
+  "versionCore": "2.0.0",
+  "imagen": "localhost:5001/synkra-core@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "plugins": [
+    { "nombre": "kyc-pe", "version": "1.0.0", "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "etiquetas": { "core": "2.x", "pais": "pe", "version": "1.0.0" } }
+  ],
+  "creadoPor": "ana",
+  "confirmadoPor": "luis",
+  "confirmadoEn": "2026-11-27T10:00:00Z",
+  "estado": "fallido",
+  "terminadoEn": "2026-11-27T10:05:00Z",
+  "veredicto": { "valido": false, "motivos": [] },
+  "contexto": { "logCore": "línea 1\n", "logInit": "", "eventos": "BackOff" }
+}
