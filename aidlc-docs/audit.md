@@ -934,3 +934,11 @@ Se despacha el codificador de la ronda 2.
 **Context**: Loop del módulo 6, ola 33, fuera de las etapas de AI-DLC.
 
 ---
+
+## 2026-11-28T00:19:53Z: Julian aprueba el plan para acelerar el loop (sesión local)
+
+**Input del usuario (00:16:53Z):** "hay alguna forma de acelerar el proceso?, tenemos 7 horas para terminar todo el proyecto"
+
+**Propuesta del orquestador:** (1) recortar según R9: se cortan U11 y U10 (Should) y la demo se hace con `curl` si U09 no llega; (2) tres tareas en paralelo; (3) agrupar dos o tres tareas pequeñas del plan en un solo despacho; (4) tope de dos rondas cuando solo quedan AMARILLOS (sin bajar el estándar de ROJO y NARANJA); (5) revisor sonnet solo en tareas de documentación. U08 necesita `kind`, que no hay en esta máquina: sus tareas se dejan escritas para el equipo.
+
+**Input del usuario (00:19:53Z):** "hazlo, acaba lo que haces y hagamoslo de esa forma"

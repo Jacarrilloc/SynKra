@@ -95,6 +95,21 @@ Están en `tareas/` de `orq/U05-U02-tareas`. Antes de despachar, sacar el hash c
 | 36 | U05-T10 resumen de U05 ∥ U02-T10 plugin `kyc-pe` | U05-T09 y U02-T09 |
 | 37 a 39 | U02-T11 imagen del core, U02-T12 humo del core, U02-T13 resumen de U02 | una tras otra |
 
+## Plan para acelerar (aprobado por Julian el 2026-11-28 a las 00:19 UTC, ver `aidlc-docs/audit.md`)
+
+- Se cortan U11 y U10 (Should, R9). La demo se hace con `curl` si U09 no llega. U08 necesita `kind`: sus tareas se dejan escritas para el equipo.
+- Hasta 3 tareas en paralelo; tareas del plan agrupadas en un solo despacho; tope de dos rondas cuando solo quedan AMARILLOS; revisor `sonnet` solo en tareas de documentación (resúmenes).
+- Agrupación (archivos en `tareas/`, con el nombre `U06-A`, etc.):
+  - U06-A = T01+T02+T03 (migración `V3__registro.sql`, repositorios, transiciones, contexto truncado). Sale de `b91f7d1` (punta VERDE de U05-T10).
+  - U06-B = T04+T06 (historial, detalle, reinicio). Sale de U06-A.
+  - U06-C = T05+T07 (vista general con concordancia, fronteras). Sale de U06-B.
+  - U06-D = T08 (resumen).
+  - U07-A = T01+T02 (migración `V4__despliegue.sql`, repositorio de planes, país permitido). Sale de `b91f7d1`, en paralelo con U06-A.
+  - U07-B = T03+T04+T05 (verificación en vivo, crear plan, PBT de cambios). Sale de U07-A.
+  - U07-C = T06 (plan pendiente nunca aplica y vence). Sale de U07-B.
+  - U07-D = T07+T11 (confirmar, carpeta equivocada). Necesita `registro.api` de U06-A: sale de la unión de U07-C y U06-C.
+  - U07-E = T08+T09 (vigilancia y retomar). U07-F = T10 (reversión). U07-G = T12+T13 (fronteras y resumen).
+
 ## Lo que sigue (en orden)
 
 1. Revisar GitHub (`git fetch`, último commit de cada rama de las tablas). Si alguien fusionó PRs o empujó, ajustar las bases antes de seguir.
