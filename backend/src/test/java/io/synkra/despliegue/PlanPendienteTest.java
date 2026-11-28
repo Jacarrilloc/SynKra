@@ -251,6 +251,7 @@ class PlanPendienteTest {
         }
         var r = confirmar("abc");
         assertThat(r.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(r.getBody()).containsEntry("codigo", "SOLICITUD_INVALIDA");
+        assertThat(r.getBody()).containsEntry("codigo", "SOLICITUD_INVALIDA").containsEntry("mensaje", "La solicitud es inválida o su cuerpo no se puede leer")
+                .containsEntry("detalles", List.of());
     }
 }

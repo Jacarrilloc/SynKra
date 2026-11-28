@@ -33,7 +33,8 @@ class GuardaConfirmacion {
                     CodigosDespliegue.PLAN_VENCIDO, MotivosDespliegue.PLAN_VENCIDO_MENSAJE, List.of()));
             case Plan.CONFIRMADO -> throw new ExcepcionApi(HttpStatus.CONFLICT, new ErrorApi(
                     CodigosDespliegue.PLAN_NO_PENDIENTE, MotivosDespliegue.PLAN_NO_PENDIENTE_MENSAJE, List.of()));
-            default -> plan;
+            case Plan.PENDIENTE -> plan;
+            default -> throw new IllegalStateException("Estado de plan desconocido: " + plan.estado());
         };
     }
 
