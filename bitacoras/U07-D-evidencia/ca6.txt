@@ -1,0 +1,84 @@
+2026-11-27T21:30:23-05:00
+45b4248
+--- script (ca6.sh):
+./gradlew :backend:test --rerun :backend:check 2>&1 | grep -E "BUILD|tests completed|FAILED"
+for f in backend/build/test-results/test/TEST-*.xml; do grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' "$f"; done
+grep -rnE "io\.synkra\.registro\." backend/src/main/java/io/synkra/despliegue | grep -vE "io\.synkra\.registro\.api\."; echo "registro-interno=$?"
+grep -rn "reg_" backend/src/main/java/io/synkra/despliegue; echo "tablas-reg=$?"
+grep -rlE "kubernetes\.(aplicar|construir)\(" backend/src/main/java/io/synkra/despliegue
+grep -rcE "kubernetes\.(aplicar|construir)\(" backend/src/main/java/io/synkra/despliegue/ConfirmacionServicio.java
+grep -rnE "kubernetes\.(estado|contextoFallo|existeNamespace)\(" backend/src/main/java/io/synkra/despliegue; echo "vigilancia=$?"
+grep -rn "REQUIRES_NEW" backend/src/main/java; echo "requiresNew=$?"
+grep -rn "@Scheduled\|@EnableScheduling" backend/src/main/java; echo "programado=$?"
+grep -n "Transactional" backend/src/main/java/io/synkra/despliegue/ConfirmacionServicio.java; echo "confirmar-tx=$?"
+# Extra (el grep literal de arriba ve el comentario «nunca REQUIRES_NEW» de RegistroServicio, de U06): solo uso real, no comentarios
+grep -rnE "Propagation\.REQUIRES_NEW|propagation *= *[A-Za-z.]*REQUIRES_NEW" backend/src/main/java; echo "requiresNew-uso=$?"
+# Extra: el grep literal de tablas-reg casa con un comentario de Plan.java (reg_despliegue, de U07-A); solo literales de texto (SQL):
+grep -rnE '"[^"]*reg_' backend/src/main/java/io/synkra/despliegue; echo "tablas-reg-sql=$?"
+grep -rn "reg_" backend/src/main/java/io/synkra/despliegue
+--- salida:
+BUILD SUCCESSFUL in 39s
+backend/build/test-results/test/TEST-io.synkra.catalogo.ArtefactosPorHashTest.xml:tests="10" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.CatalogoRepositoriosTest.xml:tests="19" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.CatalogoVerificadorTest.xml:tests="14" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.CoreRegistradoTest.xml:tests="4" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.InterfazCatalogoTest.xml:tests="6" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.ListarPluginsTest.xml:tests="14" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.RecepcionArtefactoTest.xml:tests="67" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.RegistrarCoreTest.xml:tests="19" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.RegistroPermitidoCaracterizacionTest.xml:tests="2" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.RegistroPermitidoTest.xml:tests="7" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.RutasCoresTest.xml:tests="15" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.RutasPluginsTest.xml:tests="28" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.RutasSegurasPropiedades.xml:tests="4" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.catalogo.SubirPluginTest.xml:tests="52" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.CambiosPropiedades.xml:tests="4" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.CarpetaEquivocadaPlanTest.xml:tests="3" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.ConfirmarSinClusterTest.xml:tests="2" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.ConfirmarTest.xml:tests="10" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.CrearPlanTest.xml:tests="9" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.PaisPermitidoTest.xml:tests="6" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.PlanPendienteTest.xml:tests="9" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.PlanRepositorioTest.xml:tests="12" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.VencimientoPlanesTest.xml:tests="2" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.VerificacionVivoTest.xml:tests="15" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.FronterasModulosTest.xml:tests="12" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.AplicarTest.xml:tests="10" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.ClienteKubernetesTest.xml:tests="10" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.ConfiguracionKubernetesTest.xml:tests="2" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.ConstruirObjetosPaisTest.xml:tests="32" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.EstadoYContextoTest.xml:tests="20" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.GuardiaNamespaceTest.xml:tests="22" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.ImagenInitCaracterizacionTest.xml:tests="2" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.ImagenInitConfiguradaTest.xml:tests="3" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.LeerPaisTest.xml:tests="24" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.kubernetes.YamlObjetosPaisTest.xml:tests="2" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.plataforma.BaseDeDatosTest.xml:tests="4" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.plataforma.DialectoSqliteTest.xml:tests="6" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.plataforma.ErrorApiTest.xml:tests="13" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.plataforma.RelojTest.xml:tests="1" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.plataforma.RepositorioSqliteTest.xml:tests="4" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.plataforma.RutaDatosPorDefectoTest.xml:tests="1" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.plataforma.SaludTest.xml:tests="3" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.plataforma.ValidacionErroresTest.xml:tests="8" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.registro.ContextoFalloTest.xml:tests="9" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.registro.HistorialTest.xml:tests="8" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.registro.PaisesConfiguradosTest.xml:tests="5" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.registro.RegistroReinicioTest.xml:tests="1" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.registro.RegistroRepositoriosTest.xml:tests="13" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.registro.TransicionesRegistroTest.xml:tests="18" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.registro.VistaGeneralTest.xml:tests="12" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.SynkraAppTest.xml:tests="3" skipped="0" failures="0" errors="0"
+registro-interno=1
+backend/src/main/java/io/synkra/despliegue/Plan.java:10: * {@code origenId} apunta a {@code reg_despliegue} (otro módulo) sin clave foránea.
+tablas-reg=0
+backend/src/main/java/io/synkra/despliegue/ConfirmacionServicio.java
+2
+vigilancia=1
+backend/src/main/java/io/synkra/registro/RegistroServicio.java:60:    /** R-R1: se une a la transacción de quien llama (REQUIRED); nunca REQUIRES_NEW. */
+requiresNew=0
+programado=1
+confirmar-tx=1
+requiresNew-uso=1
+tablas-reg-sql=1
+backend/src/main/java/io/synkra/despliegue/Plan.java:10: * {@code origenId} apunta a {@code reg_despliegue} (otro módulo) sin clave foránea.

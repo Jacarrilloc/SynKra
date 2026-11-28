@@ -1,0 +1,229 @@
+2026-11-27T21:31:58-05:00
+45b4248
+--- script (ca5.sh):
+# Una copia de «git archive HEAD» por mutación; el worktree no se toca (sin git stash).
+RAIZ=$(pwd); echo "HEAD: $(git rev-parse --short HEAD); ultimo commit que toca codigo: $(git log -1 --format=%h -- backend)"
+S=backend/src/main/java/io/synkra/despliegue
+mut() { # nombre archivo sed-args...
+  local nombre=$1 archivo=$2; shift 2
+  local D; D=$(mktemp -d); git archive HEAD | tar -x -C "$D"; (cd "$D" && git init -q)
+  echo; echo "=== MUTACION: $nombre"
+  printf 'sed -i'; printf ' %q' "$@"; printf ' %q\n' "$S/$archivo"
+  sed -i "$@" "$D/$S/$archivo"
+  diff <(cd "$RAIZ" && git show HEAD:"$S/$archivo") "$D/$S/$archivo" | sed 's/^/  | /'
+  (cd "$D" && ./gradlew :backend:test --rerun --tests '*ConfirmarTest' --tests '*CarpetaEquivocadaPlanTest' --tests '*ConfirmarSinClusterTest' 2>&1 | grep -E "^BUILD|tests completed")
+  echo "XML con <failure:"; grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml | sed 's|.*/TEST-||'
+  echo "pruebas caidas:"; python3 -I - "$D"/backend/build/test-results/test/TEST-*.xml <<'EOF'
+import sys, xml.etree.ElementTree as ET
+for f in sys.argv[1:]:
+    for t in ET.parse(f).getroot().iter('testcase'):
+        if t.find('failure') is not None or t.find('error') is not None:
+            print("  ", t.get('classname').rsplit('.', 1)[1] + "." + t.get('name'))
+EOF
+  rm -rf "$D"
+}
+mut "R-D6 no vuelve a verificar" ConfirmacionServicio.java -e '/^        PlanServicio.rechazaSiNoCompatible(verificado.veredicto());$/d'
+mut "R-D6 antes de reservar (la verificacion va despues)" ConfirmacionServicio.java -e '/^        PlanServicio.rechazaSiNoCompatible(verificado.veredicto());$/d' -e 's/^\(        var confirmadoEn = reserva.reservar.*\)$/\1\n        PlanServicio.rechazaSiNoCompatible(verificado.veredicto());/'
+mut "resumen no se compara con el catalogo" ConfirmacionServicio.java -e 's/if (!resumenCatalogo.armar(plan.pais(), verificado.seleccion()).equals(resumen)) {/if (false) {/'
+mut "R-D7 sin comprobar aplicando" ReservaConfirmacion.java -e 's/anyMatch(d -> d.estado() == EstadoDespliegue.APLICANDO)/anyMatch(d -> false)/'
+mut "R-D7 solo aplicando (bloquea con cualquier historial)" ReservaConfirmacion.java -e 's/anyMatch(d -> d.estado() == EstadoDespliegue.APLICANDO)/anyMatch(d -> true)/'
+mut "transaccion: reservar sin @Transactional" ReservaConfirmacion.java -e '/^    @Transactional$/d'
+mut "UPDATE primero: sin estado = pendiente en el WHERE" ReservaConfirmacion.java -e "s/ AND estado = 'pendiente' AND vence_en/ AND vence_en/"
+mut "R-D8 confirmadoPor = creadoPor" ReservaConfirmacion.java -e 's/plan.creadoPor(), confirmadoPor, ahora, veredicto/plan.creadoPor(), plan.creadoPor(), ahora, veredicto/'
+mut "usuario: Usuario.de acepta cualquier texto" Usuario.java -e 's/if (!FORMA.matcher(cabecera).matches()) {/if (false) {/'
+mut "orden R-D9: aplicar antes de reservar" ConfirmacionServicio.java -e 's/^\(        var plugins = resumen.plugins().*\)$/        kubernetes.aplicar(objetos);\n\1/'
+mut "fallo registrado: no se llama a actualizarResultado" ConfirmacionServicio.java -e '/^            fallido(plan.id(), e.getMessage());$/d'
+mut "fuera de la tx: @Transactional en confirmar" ConfirmacionServicio.java -e 's/^    Confirmado confirmar(long id/    @org.springframework.transaction.annotation.Transactional\n    Confirmado confirmar(long id/'
+mut "sin cluster: sin comprobar disponible()" ConfirmacionServicio.java -e 's/if (!kubernetes.disponible()) {/if (false) {/'
+mut "P4 al crear: VerificacionVivo no busca en las demas carpetas" VerificacionVivo.java -e 's/for (var otro : catalogo.listarCores()) {/for (var otro : java.util.List.<io.synkra.catalogo.api.CoreRegistrado>of()) {/'
+--- salida:
+HEAD: 45b4248; ultimo commit que toca codigo: 45b4248
+
+=== MUTACION: R-D6 no vuelve a verificar
+sed -i -e /\^\ \ \ \ \ \ \ \ PlanServicio.rechazaSiNoCompatible\(verificado.veredicto\(\)\)\;\$/d backend/src/main/java/io/synkra/despliegue/ConfirmacionServicio.java
+  | 59d58
+  | <         PlanServicio.rechazaSiNoCompatible(verificado.veredicto());
+15 tests completed, 2 failed
+BUILD FAILED in 10s
+XML con <failure:
+io.synkra.despliegue.CarpetaEquivocadaPlanTest.xml
+io.synkra.despliegue.ConfirmarTest.xml
+pruebas caidas:
+   CarpetaEquivocadaPlanTest.confirmarUnPlanManipuladoConUnPluginDeOtraCarpetaDa422()
+   ConfirmarTest.arElCatalogoCambioEntreMediasVuelveAVerificar()
+
+=== MUTACION: R-D6 antes de reservar (la verificacion va despues)
+sed -i -e /\^\ \ \ \ \ \ \ \ PlanServicio.rechazaSiNoCompatible\(verificado.veredicto\(\)\)\;\$/d -e s/\^\\\(\ \ \ \ \ \ \ \ var\ confirmadoEn\ =\ reserva.reservar.\*\\\)\$/\\1\\n\ \ \ \ \ \ \ \ PlanServicio.rechazaSiNoCompatible\(verificado.veredicto\(\)\)\;/ backend/src/main/java/io/synkra/despliegue/ConfirmacionServicio.java
+  | 59d58
+  | <         PlanServicio.rechazaSiNoCompatible(verificado.veredicto());
+  | 76a76
+  | >         PlanServicio.rechazaSiNoCompatible(verificado.veredicto());
+15 tests completed, 2 failed
+BUILD FAILED in 10s
+XML con <failure:
+io.synkra.despliegue.CarpetaEquivocadaPlanTest.xml
+io.synkra.despliegue.ConfirmarTest.xml
+pruebas caidas:
+   CarpetaEquivocadaPlanTest.confirmarUnPlanManipuladoConUnPluginDeOtraCarpetaDa422()
+   ConfirmarTest.arElCatalogoCambioEntreMediasVuelveAVerificar()
+
+=== MUTACION: resumen no se compara con el catalogo
+sed -i -e s/if\ \(\!resumenCatalogo.armar\(plan.pais\(\)\,\ verificado.seleccion\(\)\).equals\(resumen\)\)\ \{/if\ \(false\)\ \{/ backend/src/main/java/io/synkra/despliegue/ConfirmacionServicio.java
+  | 62c62
+  | <         if (!resumenCatalogo.armar(plan.pais(), verificado.seleccion()).equals(resumen)) {
+  | ---
+  | >         if (false) {
+15 tests completed, 1 failed
+BUILD FAILED in 10s
+XML con <failure:
+io.synkra.despliegue.ConfirmarTest.xml
+pruebas caidas:
+   ConfirmarTest.uyElResumenDesactualizadoDa422()
+
+=== MUTACION: R-D7 sin comprobar aplicando
+sed -i -e s/anyMatch\(d\ -\>\ d.estado\(\)\ ==\ EstadoDespliegue.APLICANDO\)/anyMatch\(d\ -\>\ false\)/ backend/src/main/java/io/synkra/despliegue/ReservaConfirmacion.java
+  | 59c59
+  | <         if (registro.historial(plan.pais()).stream().anyMatch(d -> d.estado() == EstadoDespliegue.APLICANDO)) {
+  | ---
+  | >         if (registro.historial(plan.pais()).stream().anyMatch(d -> false)) {
+15 tests completed, 2 failed
+BUILD FAILED in 10s
+XML con <failure:
+io.synkra.despliegue.ConfirmarTest.xml
+pruebas caidas:
+   ConfirmarTest.coUnSegundoPlanConUnoAplicandoDa409DespliegueEnCurso()
+   ConfirmarTest.ecDosConfirmacionesAlaVezSoloUnaGana()
+
+=== MUTACION: R-D7 solo aplicando (bloquea con cualquier historial)
+sed -i -e s/anyMatch\(d\ -\>\ d.estado\(\)\ ==\ EstadoDespliegue.APLICANDO\)/anyMatch\(d\ -\>\ true\)/ backend/src/main/java/io/synkra/despliegue/ReservaConfirmacion.java
+  | 59c59
+  | <         if (registro.historial(plan.pais()).stream().anyMatch(d -> d.estado() == EstadoDespliegue.APLICANDO)) {
+  | ---
+  | >         if (registro.historial(plan.pais()).stream().anyMatch(d -> true)) {
+15 tests completed, 1 failed
+BUILD FAILED in 10s
+XML con <failure:
+io.synkra.despliegue.ConfirmarTest.xml
+pruebas caidas:
+   ConfirmarTest.clSoloBloqueaUnAplicandoYSinCabeceraElUsuarioEsAnonimo()
+
+=== MUTACION: transaccion: reservar sin @Transactional
+sed -i -e /\^\ \ \ \ @Transactional\$/d backend/src/main/java/io/synkra/despliegue/ReservaConfirmacion.java
+  | 47d46
+  | <     @Transactional
+15 tests completed, 2 failed
+BUILD FAILED in 10s
+XML con <failure:
+io.synkra.despliegue.ConfirmarTest.xml
+pruebas caidas:
+   ConfirmarTest.coUnSegundoPlanConUnoAplicandoDa409DespliegueEnCurso()
+   ConfirmarTest.ecDosConfirmacionesAlaVezSoloUnaGana()
+
+=== MUTACION: UPDATE primero: sin estado = pendiente en el WHERE
+sed -i -e s/\ AND\ estado\ =\ \'pendiente\'\ AND\ vence_en/\ AND\ vence_en/ backend/src/main/java/io/synkra/despliegue/ReservaConfirmacion.java
+  | 29c29
+  | <     private static final String CONFIRMAR = "UPDATE dep_plan SET estado = 'confirmado' WHERE id = ? AND estado = 'pendiente' AND vence_en > ?";
+  | ---
+  | >     private static final String CONFIRMAR = "UPDATE dep_plan SET estado = 'confirmado' WHERE id = ? AND vence_en > ?";
+15 tests completed, 1 failed
+BUILD FAILED in 10s
+XML con <failure:
+io.synkra.despliegue.ConfirmarTest.xml
+pruebas caidas:
+   ConfirmarTest.peConfirmaYSeRegistraAplicando()
+
+=== MUTACION: R-D8 confirmadoPor = creadoPor
+sed -i -e s/plan.creadoPor\(\)\,\ confirmadoPor\,\ ahora\,\ veredicto/plan.creadoPor\(\)\,\ plan.creadoPor\(\)\,\ ahora\,\ veredicto/ backend/src/main/java/io/synkra/despliegue/ReservaConfirmacion.java
+  | 65c65
+  | <                 plan.versionCore(), imagenDe(plan), plan.creadoPor(), confirmadoPor, ahora, veredicto, plugins));
+  | ---
+  | >                 plan.versionCore(), imagenDe(plan), plan.creadoPor(), plan.creadoPor(), ahora, veredicto, plugins));
+15 tests completed, 1 failed
+BUILD FAILED in 10s
+XML con <failure:
+io.synkra.despliegue.ConfirmarTest.xml
+pruebas caidas:
+   ConfirmarTest.peConfirmaYSeRegistraAplicando()
+
+=== MUTACION: usuario: Usuario.de acepta cualquier texto
+sed -i -e s/if\ \(\!FORMA.matcher\(cabecera\).matches\(\)\)\ \{/if\ \(false\)\ \{/ backend/src/main/java/io/synkra/despliegue/Usuario.java
+  | 29c29
+  | <         if (!FORMA.matcher(cabecera).matches()) {
+  | ---
+  | >         if (false) {
+15 tests completed, 2 failed
+BUILD FAILED in 10s
+XML con <failure:
+io.synkra.despliegue.ConfirmarTest.xml
+pruebas caidas:
+   ConfirmarTest.pyUnUsuarioInvalidoAlCrearNoDejaFilaNiPeticiones()
+   ConfirmarTest.pyUnUsuarioInvalidoAlConfirmarDejaElPlanPendiente()
+
+=== MUTACION: orden R-D9: aplicar antes de reservar
+sed -i -e s/\^\\\(\ \ \ \ \ \ \ \ var\ plugins\ =\ resumen.plugins\(\).\*\\\)\$/\ \ \ \ \ \ \ \ kubernetes.aplicar\(objetos\)\;\\n\\1/ backend/src/main/java/io/synkra/despliegue/ConfirmacionServicio.java
+  | 73a74
+  | >         kubernetes.aplicar(objetos);
+15 tests completed, 6 failed
+BUILD FAILED in 10s
+XML con <failure:
+io.synkra.despliegue.ConfirmarSinClusterTest.xml
+io.synkra.despliegue.ConfirmarTest.xml
+pruebas caidas:
+   ConfirmarSinClusterTest.unaExcepcionInesperadaAlAplicarDejaElRegistroFallidoConElNombreDeLaClase()
+   ConfirmarTest.clSoloBloqueaUnAplicandoYSinCabeceraElUsuarioEsAnonimo()
+   ConfirmarTest.boSiAplicarFallaQuedaFallidoSinReintentos()
+   ConfirmarTest.coUnSegundoPlanConUnoAplicandoDa409DespliegueEnCurso()
+   ConfirmarTest.ecDosConfirmacionesAlaVezSoloUnaGana()
+   ConfirmarTest.peConfirmaYSeRegistraAplicando()
+
+=== MUTACION: fallo registrado: no se llama a actualizarResultado
+sed -i -e /\^\ \ \ \ \ \ \ \ \ \ \ \ fallido\(plan.id\(\)\,\ e.getMessage\(\)\)\;\$/d backend/src/main/java/io/synkra/despliegue/ConfirmacionServicio.java
+  | 81d80
+  | <             fallido(plan.id(), e.getMessage());
+15 tests completed, 1 failed
+BUILD FAILED in 10s
+XML con <failure:
+io.synkra.despliegue.ConfirmarTest.xml
+pruebas caidas:
+   ConfirmarTest.boSiAplicarFallaQuedaFallidoSinReintentos()
+
+=== MUTACION: fuera de la tx: @Transactional en confirmar
+sed -i -e s/\^\ \ \ \ Confirmado\ confirmar\(long\ id/\ \ \ \ @org.springframework.transaction.annotation.Transactional\\n\ \ \ \ Confirmado\ confirmar\(long\ id/ backend/src/main/java/io/synkra/despliegue/ConfirmacionServicio.java
+  | 52a53
+  | >     @org.springframework.transaction.annotation.Transactional
+15 tests completed, 2 failed
+BUILD FAILED in 10s
+XML con <failure:
+io.synkra.despliegue.ConfirmarSinClusterTest.xml
+io.synkra.despliegue.ConfirmarTest.xml
+pruebas caidas:
+   ConfirmarSinClusterTest.unaExcepcionInesperadaAlAplicarDejaElRegistroFallidoConElNombreDeLaClase()
+   ConfirmarTest.boSiAplicarFallaQuedaFallidoSinReintentos()
+
+=== MUTACION: sin cluster: sin comprobar disponible()
+sed -i -e s/if\ \(\!kubernetes.disponible\(\)\)\ \{/if\ \(false\)\ \{/ backend/src/main/java/io/synkra/despliegue/ConfirmacionServicio.java
+  | 67c67
+  | <         if (!kubernetes.disponible()) {
+  | ---
+  | >         if (false) {
+15 tests completed, 1 failed
+BUILD FAILED in 10s
+XML con <failure:
+io.synkra.despliegue.ConfirmarSinClusterTest.xml
+pruebas caidas:
+   ConfirmarSinClusterTest.sinClusterDa503YNoTocaNada()
+
+=== MUTACION: P4 al crear: VerificacionVivo no busca en las demas carpetas
+sed -i -e s/for\ \(var\ otro\ :\ catalogo.listarCores\(\)\)\ \{/for\ \(var\ otro\ :\ java.util.List.\<io.synkra.catalogo.api.CoreRegistrado\>of\(\)\)\ \{/ backend/src/main/java/io/synkra/despliegue/VerificacionVivo.java
+  | 100c100
+  | <         for (var otro : catalogo.listarCores()) {
+  | ---
+  | >         for (var otro : java.util.List.<io.synkra.catalogo.api.CoreRegistrado>of()) {
+15 tests completed, 3 failed
+BUILD FAILED in 10s
+XML con <failure:
+io.synkra.despliegue.CarpetaEquivocadaPlanTest.xml
+pruebas caidas:
+   CarpetaEquivocadaPlanTest.confirmarUnPlanManipuladoConUnPluginDeOtraCarpetaDa422()
+   CarpetaEquivocadaPlanTest.crearAlReves()
+   CarpetaEquivocadaPlanTest.crearConUnPluginDeOtraCarpetaDa422SinFilaNiPeticiones()

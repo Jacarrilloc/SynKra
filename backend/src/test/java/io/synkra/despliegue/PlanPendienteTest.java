@@ -78,6 +78,7 @@ class PlanPendienteTest {
     @Autowired TestRestTemplate http;
     @Autowired JdbcTemplate jdbc;
     @Autowired VencimientoPlanes vencimiento;
+    @Autowired GuardaConfirmacion guarda;
 
     private static boolean cargada;
 
@@ -187,9 +188,10 @@ class PlanPendienteTest {
         cargar();
         var id = crearA("py", T0.plus(Duration.ofHours(2)));
 
-        esperaError(confirmar(String.valueOf(id)), HttpStatus.NOT_IMPLEMENTED, "CONFIRMACION_NO_DISPONIBLE",
-                "La confirmación todavía no está disponible");
+        SIM.nuevasPeticiones();
+        assertThat(guarda.exigirConfirmable(id).estado()).isEqualTo("pendiente");
 
+        assertThat(SIM.nuevasPeticiones()).isEmpty();
         assertThat(estado(id)).isEqualTo("pendiente");
     }
 
@@ -220,8 +222,9 @@ class PlanPendienteTest {
         var id = crearA("uy", base);
 
         RELOJ.fija(venceEn(base).minusMillis(1));
-        esperaError(confirmar(String.valueOf(id)), HttpStatus.NOT_IMPLEMENTED, "CONFIRMACION_NO_DISPONIBLE",
-                "La confirmación todavía no está disponible");
+        SIM.nuevasPeticiones();
+        assertThat(guarda.exigirConfirmable(id).estado()).isEqualTo("pendiente");
+        assertThat(SIM.nuevasPeticiones()).isEmpty();
         assertThat(estado(id)).isEqualTo("pendiente");
 
         RELOJ.fija(venceEn(base));

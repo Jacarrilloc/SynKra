@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,10 +24,9 @@ class RutasPlanes {
     record PlanDto(Long id, String pais, String tipo, String estado, String core, String versionCore, String creadoPor,
             Instant creadoEn, Instant venceEn, Resumen resumen, Cambios cambios) {
 
-        /** Esta tarea solo inserta planes pendientes (ningún cambio de estado): {@code estado} es {@link Plan#PENDIENTE}. */
         static PlanDto de(PlanPreparado p) {
             var plan = p.plan();
-            return new PlanDto(plan.id(), plan.pais(), plan.tipo(), Plan.PENDIENTE, plan.core(), plan.versionCore(),
+            return new PlanDto(plan.id(), plan.pais(), plan.tipo(), plan.estado(), plan.core(), plan.versionCore(),
                     plan.creadoPor(), Instant.ofEpochMilli(plan.creadoEn()), Instant.ofEpochMilli(plan.venceEn()),
                     p.resumen(), p.cambios());
         }
@@ -40,7 +40,9 @@ class RutasPlanes {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    PlanDto crear(@RequestBody SolicitudPlan s) {
-        return PlanDto.de(planes.prepararPlan(s.pais(), s.core(), s.versionCore(), s.plugins()));
+    PlanDto crear(@RequestBody SolicitudPlan s,
+            @RequestHeader(name = Usuario.CABECERA, required = false) String usuario) {
+        var creadoPor = Usuario.de(usuario);
+        return PlanDto.de(planes.prepararPlan(s.pais(), s.core(), s.versionCore(), s.plugins(), creadoPor));
     }
 }

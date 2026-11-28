@@ -1,0 +1,41 @@
+./gradlew :backend:test --rerun --tests '*ConfirmarSinClusterTest' 2>&1 | grep -E "BUILD|tests completed|FAILED"
+grep -ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-*ConfirmarSinClusterTest.xml
+./gradlew :backend:bootJar 2>&1 | grep -E "BUILD|FAILED"
+export SYNKRA_DATA=$(mktemp -d); J=$(mktemp -d); H=$(mktemp -d)
+arranca() { HOME="$H" KUBECONFIG="$H/kubeconfig-falso" SYNKRA_PAISES=pe $JAVA_HOME/bin/java -Duser.home="$H" -jar backend/build/libs/backend-*.jar --server.port=18093 > "$J/log-$1.txt" 2>&1 & PID=$!; timeout 90 bash -c 'until curl -sf localhost:18093/actuator/health >/dev/null; do sleep 1; done'; }
+python3 -I -c "import sys, zipfile
+with zipfile.ZipFile(sys.argv[1], 'w') as z: z.writestr('synkra-plugin.yaml', 'nombre: kyc-pe\nversion: 1.3.0\ncore: synkra-core\ncoreCompatible: 2.x\n')" "$J/a.jar"
+# 1. Primer arranque: catálogo por la API (dos cores y kyc-pe 1.3.0).
+arranca 0
+for c in synkra-core:2.1.0:a otro-core:1.0.0:c; do IFS=: read n v x <<< "$c"; curl -s -o /dev/null -w '%{http_code}\n' -H 'Content-Type: application/json' \
+  -d "{\"nombre\":\"$n\",\"version\":\"$v\",\"imagen\":\"localhost:5001/$n@sha256:$(printf "$x%.0s" $(seq 64))\"}" localhost:18093/api/cores; done
+curl -s -o /dev/null -w '%{http_code}\n' -F "archivo=@$J/a.jar" localhost:18093/api/cores/synkra-core/plugins
+kill $PID; wait $PID 2>/dev/null
+# 2. Planes sembrados con SQL (el JAR no puede crearlos sin clúster).
+python3 -I - "$SYNKRA_DATA/synkra.db" "$J/a.jar" <<'EOF'
+import hashlib, json, sqlite3, sys, time
+c = sqlite3.connect(sys.argv[1]); sha = hashlib.sha256(open(sys.argv[2], "rb").read()).hexdigest()
+ahora = int(time.time() * 1000); m = 60000
+def img(n, x): return "localhost:5001/%s@sha256:%s" % (n, x * 64)
+def resumen(core, v, imagen, s): return json.dumps({"namespace": "synkra-pe", "core": core, "versionCore": v, "imagen": imagen,
+    "plugins": [{"nombre": "kyc-pe", "version": "1.3.0", "sha256": s}]})
+filas = ((81, "synkra-core", "2.1.0", img("synkra-core", "a"), sha, "pendiente", ahora),
+         (82, "synkra-core", "2.1.0", img("synkra-core", "a"), sha, "pendiente", ahora - 31 * m),
+         (83, "synkra-core", "2.1.0", img("synkra-core", "a"), sha, "confirmado", ahora),
+         (84, "otro-core", "1.0.0", img("otro-core", "c"), sha, "pendiente", ahora),
+         (85, "synkra-core", "2.1.0", img("synkra-core", "a"), "7" * 64, "pendiente", ahora))
+for i, core, v, imagen, s, estado, en in filas:
+    c.execute("insert into dep_plan (id, pais, tipo, origen_id, core, version_core, plugins, resumen, cambios, estado, creado_por,"
+              " creado_en, vence_en) values (?, 'pe', 'despliegue', null, ?, ?, ?, ?, '{}', ?, 'ana', ?, ?)",
+              (i, core, v, '[{"nombre":"kyc-pe","version":"1.3.0"}]', resumen(core, v, imagen, s), estado, en, en + 30 * m))
+c.commit()
+EOF
+# 3. Segundo arranque: intentos de confirmación y el registro.
+arranca 1
+confirma() { curl -s -o "$J/r.json" -w '%{http_code} ' -X POST "${@:2}" localhost:18093/api/despliegues/$1/confirmacion
+  python3 -I -c "import json,sys; r=json.load(open(sys.argv[1])); print(r['codigo'], r['mensaje'], [d['campo'] for d in r['detalles']])" "$J/r.json"; }
+confirma 81 -H 'X-Synkra-Usuario: Luis Pérez'; for id in 81 82 83 84 85 999; do confirma $id -H 'X-Synkra-Usuario: luis'; done
+curl -s -w ' %{http_code}\n' localhost:18093/api/paises/pe/despliegues
+curl -s -o /dev/null -w '%{http_code}\n' localhost:18093/api/despliegues/81
+kill $PID; wait $PID 2>/dev/null
+python3 -I -c "import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); print(c.execute('select id, estado from dep_plan order by id').fetchall()); print(c.execute('select count(*) from reg_despliegue').fetchone())" "$SYNKRA_DATA/synkra.db"
