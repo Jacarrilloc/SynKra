@@ -53,8 +53,14 @@ for D in $DEPLOYMENTS; do
     [ "$rc" -eq 0 ] || { echo "FALLA desplegar: curl al registro salió con $rc" >&2; exit 1; }
     printf '%s\n' "$cab" | tr -d '\r' | awk -F': ' 'tolower($1)=="docker-content-digest"{print $2}'
   }
-  corre() {
-    k -n synkra get pods -l "app.kubernetes.io/name=$D" -o jsonpath="{.items[0].status.containerStatuses[?(@.name==\"$D\")].imageID}" | sed 's/.*@//'
+  corre() { # el pod vivo del Deployment (sin deletionTimestamp: durante un rolling update el viejo sigue ahi un momento)
+    k -n synkra get pods -l "app.kubernetes.io/name=$D" -o json | DEPLOY="$D" python3 -I -c "import os,sys,json
+d=os.environ['DEPLOY']
+for p in json.load(sys.stdin)['items']:
+    if p['metadata'].get('deletionTimestamp'): continue
+    for c in p['status'].get('containerStatuses') or []:
+        if c['name']==d: print(c['imageID'].split('@')[-1])
+" | head -1
   }
   EN_REGISTRO="$(registro)"
   EN_POD="$(corre)"
