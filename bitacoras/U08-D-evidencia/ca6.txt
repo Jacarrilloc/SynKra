@@ -1,5 +1,5 @@
-fecha: 2026-11-28T03:01:25-05:00
-sha: c436428 (arbol: 6 cambios sin confirmar)
+fecha: 2026-11-28T03:10:27-05:00
+sha: fdca99f (arbol: 2 cambios sin confirmar)
 uname -m: x86_64
 docker arch: amd64
 JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
@@ -11,20 +11,20 @@ $ bash bitacoras/U08-D-evidencia/ca6.sh
 > limpiar() { kubectl --kubeconfig "$KC" -n synkra-co annotate configmap synkra-core-config synkra.io/e2e-mutacion- >/dev/null 2>&1 || true; [ -z "$TMP" ] || rm -rf "$TMP"; }
 517a518
 > kubectl --kubeconfig "$KC" -n synkra-co annotate configmap synkra-core-config synkra.io/e2e-mutacion=1 --overwrite >/dev/null
-4xx 422 ENTIDAD_NO_PROCESABLE POST /api/cores
-4xx 409 CONFLICTO POST /api/cores/synkra-core/plugins
-OK CU1
-tiempo CU1 0s
-cambios de CU2 (antes: kyc-co 1.0.0): {"core":{"antes":"localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76","despues":"localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76","igual":true},"anadidos":[],"quitados":[],"iguales":[{"nombre":"kyc-co","version":"1.0.0","sha256":"90f9ef4d8fde6c3103f346df6270c1edb64170fb00f2c81c0ff4366925376d3c"}],"sinCambios":true}
-4xx 422 PAIS_NO_PERMITIDO POST /api/despliegues
-4xx 422 USUARIO_INVALIDO POST /api/despliegues
-FALLA CU2: POST /api/despliegues/13/confirmacion dio 409 DESPLIEGUE_EN_CURSO (esperado 202): {"codigo":"DESPLIEGUE_EN_CURSO","mensaje":"Ya hay un despliegue en curso en el país","detalles":[]}
+OK CU2
+tiempo CU2 19s
+OK CU3
+tiempo CU3 15s
+motivo: El plugin 'kyc-pe' 2.0.0 requiere el core 'synkra-core' en 3.x y se pidió 2.1.0
+4xx 422 COMBINACION_RECHAZADA POST /api/despliegues
+CU4 imagenes antes=localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76 localhost:5001/synkra-init-descarga:1.0.0 despues=localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76 localhost:5001/synkra-init-descarga:1.0.0
+FALLA CU4: el resourceVersion del ConfigMap cambió de 3277 a 3355
 salida=1
 <-anotaciones del ConfigMap
-4xx 422 PAIS_NO_PERMITIDO POST /api/despliegues
-4xx 422 USUARIO_INVALIDO POST /api/despliegues
-FALLA CU2: POST /api/despliegues/14/confirmacion dio 409 DESPLIEGUE_EN_CURSO (esperado 202): {"codigo":"DESPLIEGUE_EN_CURSO","mensaje":"Ya hay un despliegue en curso en el país","detalles":[]}
-restaurado=1
+OK CU5
+tiempo CU5 188s
+OK e2e: CU1 a CU5, 10 respuestas 4xx con codigo, mensaje y detalles
+restaurado=0
 ################ mutacion cuerpo-ajeno
 393a394,395
 > pedir GET /noexiste
@@ -35,43 +35,43 @@ restaurado=1
 FALLA formato: GET /noexiste 404
 salida=1
 <-anotaciones del ConfigMap
-4xx 422 PAIS_NO_PERMITIDO POST /api/despliegues
-4xx 422 USUARIO_INVALIDO POST /api/despliegues
-FALLA CU2: POST /api/despliegues/15/confirmacion dio 409 DESPLIEGUE_EN_CURSO (esperado 202): {"codigo":"DESPLIEGUE_EN_CURSO","mensaje":"Ya hay un despliegue en curso en el país","detalles":[]}
-restaurado=1
+OK CU5
+tiempo CU5 192s
+OK e2e: CU1 a CU5, 10 respuestas 4xx con codigo, mensaje y detalles
+restaurado=0
 ################ mutacion sin-vuelta
 588d587
 < confirmar "$D5"
-4xx 422 ENTIDAD_NO_PROCESABLE POST /api/cores
-4xx 409 CONFLICTO POST /api/cores/synkra-core/plugins
-OK CU1
-tiempo CU1 0s
-cambios de CU2 (antes: kyc-co 1.0.0): {"core":{"antes":"localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76","despues":"localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76","igual":true},"anadidos":[],"quitados":[],"iguales":[{"nombre":"kyc-co","version":"1.0.0","sha256":"90f9ef4d8fde6c3103f346df6270c1edb64170fb00f2c81c0ff4366925376d3c"}],"sinCambios":true}
-4xx 422 PAIS_NO_PERMITIDO POST /api/despliegues
-4xx 422 USUARIO_INVALIDO POST /api/despliegues
-FALLA CU2: POST /api/despliegues/16/confirmacion dio 409 DESPLIEGUE_EN_CURSO (esperado 202): {"codigo":"DESPLIEGUE_EN_CURSO","mensaje":"Ya hay un despliegue en curso en el país","detalles":[]}
+CU4 imagenes antes=localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76 localhost:5001/synkra-init-descarga:1.0.0 despues=localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76 localhost:5001/synkra-init-descarga:1.0.0
+OK CU4
+tiempo CU4 0s
+4xx 409 DESPLIEGUE_EN_CURSO POST /api/despliegues/46/confirmacion
+D4 tardó 185s en fallar
+4xx 422 ORIGEN_NO_LISTO POST /api/despliegues/45/reversion
+4xx 404 NO_ENCONTRADO POST /api/despliegues/0/reversion
+FALLA CU5: GET /api/despliegues/47 dio 404 NO_ENCONTRADO (esperado 200): {"codigo":"NO_ENCONTRADO","mensaje":"Recurso no encontrado","detalles":[]}
 salida=1
 <-anotaciones del ConfigMap
-4xx 422 PAIS_NO_PERMITIDO POST /api/despliegues
-4xx 422 USUARIO_INVALIDO POST /api/despliegues
-FALLA CU2: POST /api/despliegues/17/confirmacion dio 409 DESPLIEGUE_EN_CURSO (esperado 202): {"codigo":"DESPLIEGUE_EN_CURSO","mensaje":"Ya hay un despliegue en curso en el país","detalles":[]}
-restaurado=1
+OK CU5
+tiempo CU5 40s
+OK e2e: CU1 a CU5, 10 respuestas 4xx con codigo, mensaje y detalles
+restaurado=0
 ################ mutacion codigo-otro
 513c513
 < espero 422 COMBINACION_RECHAZADA
 ---
 > espero 422 OTRO_CODIGO
-4xx 422 ENTIDAD_NO_PROCESABLE POST /api/cores
-4xx 409 CONFLICTO POST /api/cores/synkra-core/plugins
-OK CU1
-tiempo CU1 1s
-cambios de CU2 (antes: kyc-co 1.0.0): {"core":{"antes":"localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76","despues":"localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76","igual":true},"anadidos":[],"quitados":[],"iguales":[{"nombre":"kyc-co","version":"1.0.0","sha256":"90f9ef4d8fde6c3103f346df6270c1edb64170fb00f2c81c0ff4366925376d3c"}],"sinCambios":true}
-4xx 422 PAIS_NO_PERMITIDO POST /api/despliegues
 4xx 422 USUARIO_INVALIDO POST /api/despliegues
-FALLA CU2: POST /api/despliegues/18/confirmacion dio 409 DESPLIEGUE_EN_CURSO (esperado 202): {"codigo":"DESPLIEGUE_EN_CURSO","mensaje":"Ya hay un despliegue en curso en el país","detalles":[]}
+4xx 409 PLAN_NO_PENDIENTE POST /api/despliegues/53/confirmacion
+CU2 anotacion=c484c4b025f4a6605fbb92d23e28a7dd7f97f32679248bf97be07674bc3c294b pods=synkra-core-c6fc84b85-fcq6z
+OK CU2
+tiempo CU2 19s
+OK CU3
+tiempo CU3 19s
+FALLA CU4: POST /api/despliegues dio 422 COMBINACION_RECHAZADA (esperado 422 OTRO_CODIGO): {"codigo":"COMBINACION_RECHAZADA","mensaje":"La combinación no es compatible","detalles":[{"campo":"plugins.kyc-pe","motivo":"El plugin 'kyc-pe' 2.0.0 requiere el core 'synkra-core' en 3.x y se pidió 2.1.0"}]}
 salida=1
 <-anotaciones del ConfigMap
-4xx 422 PAIS_NO_PERMITIDO POST /api/despliegues
-4xx 422 USUARIO_INVALIDO POST /api/despliegues
-FALLA CU2: POST /api/despliegues/19/confirmacion dio 409 DESPLIEGUE_EN_CURSO (esperado 202): {"codigo":"DESPLIEGUE_EN_CURSO","mensaje":"Ya hay un despliegue en curso en el país","detalles":[]}
-restaurado=1
+OK CU5
+tiempo CU5 192s
+OK e2e: CU1 a CU5, 10 respuestas 4xx con codigo, mensaje y detalles
+restaurado=0

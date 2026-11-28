@@ -1,5 +1,5 @@
-fecha: 2026-11-28T03:01:22-05:00
-sha: c436428 (arbol: 5 cambios sin confirmar)
+fecha: 2026-11-28T03:08:35-05:00
+sha: fdca99f (arbol: 1 cambios sin confirmar)
 uname -m: x86_64
 docker arch: amd64
 JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
@@ -19,10 +19,12 @@ salida=1
 >     echo "<html>no es json</html>" > "$CUERPO"
 4xx 422 PAIS_NO_PERMITIDO POST /api/despliegues
 4xx 422 USUARIO_INVALIDO POST /api/despliegues
-4xx 409 PLAN_NO_PENDIENTE POST /api/despliegues/11/confirmacion
+4xx 409 PLAN_NO_PENDIENTE POST /api/despliegues/25/confirmacion
 FALLA CU2: jq .estado salió con 5: jq: parse error: Invalid numeric literal at line 1, column 9 
 salida=1
+== la mutacion dejo un despliegue confirmado: se espera a que cierre (el e2e real exige que no haya uno aplicandose)
+aplicando=0
 ################ restaurado
-4xx 422 USUARIO_INVALIDO POST /api/despliegues
-FALLA CU2: POST /api/despliegues/12/confirmacion dio 409 DESPLIEGUE_EN_CURSO (esperado 202): {"codigo":"DESPLIEGUE_EN_CURSO","mensaje":"Ya hay un despliegue en curso en el país","detalles":[]}
-restaurado=1
+tiempo CU5 71s
+OK e2e: CU1 a CU5, 10 respuestas 4xx con codigo, mensaje y detalles
+restaurado=0
