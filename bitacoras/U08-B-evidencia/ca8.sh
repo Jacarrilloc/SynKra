@@ -42,14 +42,18 @@ imagen() { # nombre ruta sed-expr
   sed -i "$3" "$D/$2"
   (cd "$D" && git diff --no-index --quiet "$RAIZ/$2" "$2") && echo "MUTACION NO APLICADA"
   echo '$ SYNKRA_REGISTRO_IMAGENES='$R' bash scripts/imagenes.sh && SYNKRA_REGISTRO_IMAGENES='$R' bash scripts/verificar-imagenes.sh'
-  (cd "$D" && SYNKRA_REGISTRO_IMAGENES=$R bash scripts/imagenes.sh 2>&1 | grep -vE '^#[0-9]+ (\[|[0-9.]+ (fetch|\([0-9]+/[0-9]+\) (Installing|Purging))|DONE|CACHED|sha256|exporting|naming|unpacking|transferring|resolve)' | tail -25 \
-    && SYNKRA_REGISTRO_IMAGENES=$R bash scripts/verificar-imagenes.sh 2>&1 | grep -v '^ok ' ); echo "salida=${PIPESTATUS[0]} (de la cadena de imagenes)"
+  (cd "$D" && SYNKRA_REGISTRO_IMAGENES=$R bash scripts/imagenes.sh > "$D/imagenes.log" 2>&1); local rc=$?
+  grep -vE 'Installing|fetch https|^#[0-9]+ (DONE|CACHED|exporting|naming|unpacking|transferring|resolve|sha256)|^$' "$D/imagenes.log" | tail -30
+  echo "imagenes.sh salida=$rc"
+  if [ "$rc" -eq 0 ]; then
+    (cd "$D" && SYNKRA_REGISTRO_IMAGENES=$R bash scripts/verificar-imagenes.sh 2>&1 | grep -v '^ok '); echo "verificar-imagenes.sh salida=${PIPESTATUS[0]}"
+  fi
   rm -rf "$D"
 }
 imagen user-0 backend/Dockerfile 's/^USER 10001:10001/USER 0/'
 imagen sin-digest init-descarga/Dockerfile 's/^\(FROM alpine:3.20\)@sha256:[0-9a-f]*/\1/'
 imagen uid-java backend/src/main/java/io/synkra/kubernetes/ConstructorObjetosPais.java 's/UID_CONTENEDORES = 10001L/UID_CONTENEDORES = 10002L/'
-imagen shellcheck init-descarga/descargar.sh '$a D=/tmp; cd $D'
+imagen shellcheck init-descarga/descargar.sh '$a ls $1'
 
 echo; echo "== limpieza: docker rmi de las etiquetas mutacion.local:1"
 docker rmi $R/synkra-backend:0.1.0 $R/synkra-core-ejemplo:2.1.0 $R/synkra-init-descarga:1.0.0 2>&1 | grep -c Untagged

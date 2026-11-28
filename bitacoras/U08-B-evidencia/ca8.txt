@@ -1,0 +1,178 @@
+# fecha: 2026-11-28T04:55:34Z  sha: 7a67d21  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca8.sh
+== Id de las imagenes buenas ANTES
+sha256:e614317d28b2e213333423a4469ca7a60c9aa9a25f598ce53a53bee3060c1658
+sha256:7d57e7d359f907b2af8e6ecdeb642b6264be90940b46eb0865a4224387462c3e
+sha256:1aef4bcb46225d87d235c3e48b0a3680326344cbe9e6b5e21def43d15514a053
+
+== mutacion recreate: sed -i 's/type: Recreate/type: RollingUpdate/' deploy/base/backend/deployment.yaml
+$ kubectl kustomize deploy/overlays/kind | python3 -I scripts/verificar-backend.py
+FALLA recreate: esperado 'Recreate' / visto 'RollingUpdate'
+salida=1
+
+== mutacion sin-root: sed -i '/runAsNonRoot: true/d' deploy/base/backend/deployment.yaml
+$ kubectl kustomize deploy/overlays/kind | python3 -I scripts/verificar-backend.py
+FALLA sin-root.pod: esperado {'runAsNonRoot': True, 'runAsUser': 10001, 'runAsGroup': 10001, 'fsGroup': 10001, 'fsGroupChangePolicy': 'OnRootMismatch', 'seccompProfile': {'type': 'RuntimeDefault'}} / visto {'fsGroup': 10001, 'fsGroupChangePolicy': 'OnRootMismatch', 'runAsGroup': 10001, 'runAsUser': 10001, 'seccompProfile': {'type': 'RuntimeDefault'}}
+salida=1
+
+== mutacion cuenta: sed -i 's/serviceAccountName: deployer/serviceAccountName: default/' deploy/base/backend/deployment.yaml
+$ kubectl kustomize deploy/overlays/kind | python3 -I scripts/verificar-backend.py
+FALLA cuenta: esperado 'deployer' / visto 'default'
+salida=1
+
+== mutacion solo-lectura: sed -i 's/readOnlyRootFilesystem: true/readOnlyRootFilesystem: false/' deploy/base/backend/deployment.yaml
+$ kubectl kustomize deploy/overlays/kind | python3 -I scripts/verificar-backend.py
+FALLA sin-root.contenedor: esperado {'allowPrivilegeEscalation': False, 'readOnlyRootFilesystem': True, 'capabilities': {'drop': ['ALL']}} / visto {'allowPrivilegeEscalation': False, 'capabilities': {'drop': ['ALL']}, 'readOnlyRootFilesystem': False}
+salida=1
+
+== mutacion tls: sed -i '/^  tls:/,/secretName/d' deploy/overlays/kind/ingress.yaml
+$ kubectl kustomize deploy/overlays/kind | python3 -I scripts/verificar-backend.py
+FALLA tls: esperado [{'hosts': ['synkra.local'], 'secretName': 'synkra-local-tls'}] / visto None
+salida=1
+
+== mutacion registro-base: (1) base gana SYNKRA_REGISTRO_PERMITIDO tras JAVA_TOOL_OPTIONS; (2) el overlay la pierde
+sed -i '/value: -XX:MaxRAMPercentage=70/a\            - name: SYNKRA_REGISTRO_PERMITIDO\n              value: localhost:5001' deploy/base/backend/deployment.yaml
+sed -i '/name: SYNKRA_REGISTRO_PERMITIDO/,+1d' deploy/overlays/kind/backend-kind.yaml
+$ (overlay) kubectl kustomize deploy/overlays/kind | python3 -I scripts/verificar-backend.py
+OK backend: 4 objetos
+salida=0
+$ (base) kubectl kustomize deploy/base/backend | python3 -I scripts/verificar-backend.py --base
+FALLA variables: esperado {'SYNKRA_DATA': '/data', 'SYNKRA_PAISES': 'co,pe', 'MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED': 'true', 'JAVA_TOOL_OPTIONS': '-XX:MaxRAMPercentage=70'} / visto {'SYNKRA_DATA': '/data', 'SYNKRA_PAISES': 'co,pe', 'MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED': 'true', 'JAVA_TOOL_OPTIONS': '-XX:MaxRAMPercentage=70', 'SYNKRA_REGISTRO_PERMITIDO': 'localhost:5001'}
+salida=1
+
+== mutacion user-0: sed -i 's/^USER 10001:10001/USER 0/' backend/Dockerfile
+$ SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/imagenes.sh && SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/verificar-imagenes.sh
+
+
+
+
+
+
+
+
+
+
+
++ docker build -t mutacion.local:1/synkra-init-descarga:1.0.0 init-descarga
+#0 building with "default" instance using docker driver
+
+
+
+
+
+
+
+
+
+
+
+OK imagenes construidas con prefijo mutacion.local:1
+FALLA mutacion.local:1/synkra-backend:0.1.0 User: esperado 10001:10001 / visto 0
+FALLA mutacion.local:1/synkra-backend:0.1.0 User-no-root: esperado distinto de vacio/root/0 / visto 0
+FALLA mutacion.local:1/synkra-backend:0.1.0 id-u: esperado 10001 / visto 0
+FALLAN 3 comprobaciones
+salida=0 (de la cadena de imagenes)
+
+== mutacion sin-digest: sed -i 's/^\(FROM alpine:3.20\)@sha256:[0-9a-f]*/\1/' init-descarga/Dockerfile
+$ SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/imagenes.sh && SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/verificar-imagenes.sh
+
+
+
+
+
+
+
+
+
+
+
++ docker build -t mutacion.local:1/synkra-init-descarga:1.0.0 init-descarga
+#0 building with "default" instance using docker driver
+
+
+
+
+
+
+
+
+
+
+
+OK imagenes construidas con prefijo mutacion.local:1
+FALLA init-descarga/Dockerfile FROM: esperado @sha256:<64 hex> / visto FROM alpine:3.20 AS revision
+FALLA init-descarga/Dockerfile FROM: esperado @sha256:<64 hex> / visto FROM alpine:3.20
+FALLAN 2 comprobaciones
+salida=0 (de la cadena de imagenes)
+
+== mutacion uid-java: sed -i 's/UID_CONTENEDORES = 10001L/UID_CONTENEDORES = 10002L/' backend/src/main/java/io/synkra/kubernetes/ConstructorObjetosPais.java
+$ SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/imagenes.sh && SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/verificar-imagenes.sh
+
+
+
+
+
+
+
+
+
+
+
++ docker build -t mutacion.local:1/synkra-init-descarga:1.0.0 init-descarga
+#0 building with "default" instance using docker driver
+
+
+
+
+
+
+
+
+
+
+
+OK imagenes construidas con prefijo mutacion.local:1
+FALLA mutacion.local:1/synkra-backend:0.1.0 User: esperado 10002:10001 / visto 10001:10001
+FALLA mutacion.local:1/synkra-backend:0.1.0 id-u: esperado 10002 / visto 10001
+FALLA mutacion.local:1/synkra-core-ejemplo:2.1.0 User: esperado 10002:10001 / visto 10001:10001
+FALLA mutacion.local:1/synkra-core-ejemplo:2.1.0 id-u: esperado 10002 / visto 10001
+FALLA mutacion.local:1/synkra-init-descarga:1.0.0 User: esperado 10002:10001 / visto 10001:10001
+FALLA mutacion.local:1/synkra-init-descarga:1.0.0 id-u: esperado 10002 / visto 10001
+FALLAN 6 comprobaciones
+salida=0 (de la cadena de imagenes)
+
+== mutacion shellcheck: sed -i '$a D=/tmp; cd $D' init-descarga/descargar.sh
+$ SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/imagenes.sh && SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/verificar-imagenes.sh
+
+
+
+
+
+
+
+
+
+
+
++ docker build -t mutacion.local:1/synkra-init-descarga:1.0.0 init-descarga
+#0 building with "default" instance using docker driver
+
+
+
+
+
+
+
+
+
+
+
+OK imagenes construidas con prefijo mutacion.local:1
+OK imagenes
+salida=0 (de la cadena de imagenes)
+
+== limpieza: docker rmi de las etiquetas mutacion.local:1
+3
+== Id de las imagenes buenas DESPUES
+sha256:e614317d28b2e213333423a4469ca7a60c9aa9a25f598ce53a53bee3060c1658
+sha256:7d57e7d359f907b2af8e6ecdeb642b6264be90940b46eb0865a4224387462c3e
+sha256:1aef4bcb46225d87d235c3e48b0a3680326344cbe9e6b5e21def43d15514a053
