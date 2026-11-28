@@ -1,0 +1,31 @@
+bitacoras/U07-A.md	aviso previo al responsable del proyecto
+bitacoras/U07-D.md	no muerde en el despliegue
+bitacoras/U07-D.md	queda cerrada por construcción en este camino
+bitacoras/U07-E.md	`.withRequestRetryBackoffLimit(0)` (C-76)
+bitacoras/U07-E.md	`LectorPais.estado` (C-82)
+bitacoras/U07-E.md	`LectorPais.contexto` (C-83)
+bitacoras/U07-D.md	`PlanDto.de` usa `plan.estado()` (C-108)
+bitacoras/U07-E.md	C-109 | `s/vencimiento\.vencerPendientes();/;/` (TareasProgramadas)
+bitacoras/U07-D.md	lo cierra la vigilancia por plazo de U07-E
+bitacoras/U07-E.md	`RegistroApi.aplicando()` (C-116)
+revisiones/U07-D/ronda-1.md	C-107 se cumple
+bitacoras/U07-D.md	es un marcador de identidad, no un control de acceso
+revisiones/U07-D/ronda-1.md	`aceptaAplicar`: legítima
+revisiones/U07-C/ronda-1.md	`@Configuration("configuracionReloj")`: aceptado
+revisiones/U07-D/ronda-1.md	`REQUIRES_NEW`: es un defecto del criterio, no del diff
+revisiones/U07-C/ronda-2.md	410 dos veces, luego 501, 409 y 404
+revisiones/U07-E/ronda-1.md	aceptable, sigue el patrón de `logAunNoExiste`
+revisiones/U07-E/ronda-1.md	misma regla (`observada < generation`)
+revisiones/U07-E/ronda-1.md	es un defecto de la plantilla, no del codificador
+revisiones/U07-F/ronda-1.md	ConfirmacionServicio sin cambios: lo acepto
+bitacoras/U07-B.md	contra el último `listo` del país (U06)
+revisiones/U07-D/ronda-1.md	El diagnóstico del `grep -cx` es falso
+bitacoras/U07-E.md	eventos de los pods
+revisiones/U07-E/ronda-2.md	F-01 (resuelto)
+revisiones/U07-D/ronda-1.md	está aprobada y documentada
+revisiones/U07-A/ronda-1.md	la línea 3 del plan (C-30)
+revisiones/U07-B/ronda-1.md	la única llamada a él es `leerPais`
+revisiones/U07-B/ronda-1.md	No esconde nada hoy
+tareas/U07-D-confirmar.md	no queda rastro del 501
+bitacoras/U07-D.md	se quitó `CONFIRMACION_NO_DISPONIBLE`
+revisiones/U07-D/ronda-1.md	Se cambió un comentario para contentar un `grep`

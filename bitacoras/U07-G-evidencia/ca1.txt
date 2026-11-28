@@ -1,0 +1,35 @@
+fecha: 2026-11-27T22:57:46-05:00  sha: ba0b1fd  JAVA_HOME=/home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ ./gradlew :backend:test --rerun --tests '*FronterasModulosTest'
+BUILD SUCCESSFUL in 6s
+$ grep -ho tests=... (XML de FronterasModulosTest)
+tests="15" skipped="0" failures="0" errors="0"
+testcase name="laReglaDeApiMuerdeConUnaFirmaPublicaConFabric8()"
+testcase name="soloElModuloKubernetesImportaFabric8()"
+testcase name="laReglaDeFabric8FueraDeKubernetesMuerdeConUnaClaseDeJuguete()"
+testcase name="generaLaDocumentacionDeModulos()"
+testcase name="elBackendRealRespetaSusFronteras()"
+testcase name="despliegueSoloDependeDeSusModulosPermitidos()"
+testcase name="laApiPublicaDeKubernetesNoMencionaFabric8()"
+testcase name="laDocumentacionGeneradaNoSeVersiona()"
+testcase name="laApiDeRegistroSoloMencionaTiposPropios()"
+testcase name="ningunModuloDependeDeDespliegue()"
+testcase name="verifyFallaCuandoUnModuloImportaUnPaqueteInternoDeOtro()"
+testcase name="verificadorEsModuloCompartido()"
+testcase name="registroSoloDependeDeKubernetesApiYPlataforma()"
+testcase name="despliegueSoloUsaLasApisDeOtrosModulos()"
+testcase name="registroNoTieneRutasDeEscritura()"
+$ grep -Fcx despliegue
+1
+$ grep -Fcx registro
+1
+$ imports ajenos
+imports-ajenos=1
+$ fabric8
+fabric8=1
+$ inverso
+inverso=1
+$ publicas
+publicas=1
+$ ls api
+ls: cannot access 'backend/src/main/java/io/synkra/despliegue/api': No such file or directory
+api=2

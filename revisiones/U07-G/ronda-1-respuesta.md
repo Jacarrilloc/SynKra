@@ -1,0 +1,6 @@
+F-01: Corregido en la ronda 2: el resumen dice ahora que `*despliegue*` también toma dos pruebas de `FronterasModulosTest` (por nombre de método) y la corrida 1 se rehízo con el conteo de todos los XML que produce (`conteo-por-clase-despliegue.txt`: 15 clases de `despliegue` más `FronterasModulosTest tests="2"`, suma 100).
+F-02: Corregido en la ronda 2: la aceptación de `ConfirmacionServicio` se atribuye a `revisiones/U07-F/ronda-1.md` y la cita de C-87 es literal («en este camino»). `bitacoras/U07-G-evidencia/citas.txt` lista cada cita con su fuente y `ca6.sh` las comprueba con `grep -F` contra la fuente y contra el resumen (sale vacío).
+F-03: Corregido en la ronda 2: cada candidata de «Decididas en U07» trae su columna «Decisión» de `CANDIDATAS.md` tal cual (generada desde el archivo) y la frase de su fuente; C-122 pasó a «Abiertas» con su Decisión.
+F-04: Corregido en la ronda 2: `datos.sh` imprime el comando exacto (el `grep -n 'sharedModules' ...` y el `git diff` con los tres pathspec de exclusión); `datos.txt` se regeneró.
+F-05: Corregido en la ronda 2: CA-8 se rehízo al final con el árbol limpio (salvo `ca8.sh`/`ca8.txt`), justo antes de su propio commit; la bitácora anota la cifra que da `ca8.txt`.
+F-06: Corregido en la ronda 2: el resumen usa `$HOME/.gradle/jdks/...`.

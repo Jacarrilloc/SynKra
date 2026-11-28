@@ -3,6 +3,7 @@ package io.synkra;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.tngtech.archunit.base.DescribedPredicate;
 import com.tngtech.archunit.core.domain.JavaClass;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.domain.JavaCodeUnit;
@@ -304,5 +305,44 @@ class FronterasModulosTest {
         var destinos = registro.getDependencies(modulos, DependencyType.values()).uniqueModules()
                 .map(m -> m.getIdentifier().toString()).sorted().toList();
         assertThat(destinos).containsExactly("kubernetes", "plataforma");
+    }
+
+    // ---- U07-T12: las fronteras del módulo despliegue ----
+
+    @Test
+    void despliegueSoloDependeDeSusModulosPermitidos() {
+        var modulos = backendReal();
+        var despliegue = modulos.getModuleByName("despliegue").orElseThrow();
+        var destinos = despliegue.getDependencies(modulos, DependencyType.values()).uniqueModules()
+                .map(m -> m.getIdentifier().toString()).sorted().toList();
+        assertThat(destinos).containsExactly("catalogo", "kubernetes", "plataforma", "registro", "verificador");
+    }
+
+    /** Un tipo de io.synkra que despliegue no puede usar (fuera de su módulo y de las API permitidas), o de io.fabric8. */
+    private static final DescribedPredicate<JavaClass> AJENO_A_DESPLIEGUE = DescribedPredicate.describe(
+            "ajena a las API permitidas de despliegue",
+            t -> {
+                String paquete = t.getPackageName();
+                boolean permitido = List.of("io.synkra.despliegue", "io.synkra.catalogo.api", "io.synkra.kubernetes.api",
+                        "io.synkra.registro.api", "io.synkra.plataforma", "io.synkra.verificador").stream()
+                        .anyMatch(p -> paquete.equals(p) || paquete.startsWith(p + "."));
+                return (paquete.equals("io.synkra") || (paquete.startsWith("io.synkra.") && !permitido))
+                        || paquete.startsWith("io.fabric8");
+            });
+
+    @Test
+    void despliegueSoloUsaLasApisDeOtrosModulos() {
+        ArchRuleDefinition.noClasses().that().resideInAPackage("io.synkra.despliegue..")
+                .should().dependOnClassesThat(AJENO_A_DESPLIEGUE)
+                .as("despliegue solo usa las API de catalogo, kubernetes y registro, plataforma y verificador, y nada de io.fabric8")
+                .check(produccion());
+    }
+
+    @Test
+    void ningunModuloDependeDeDespliegue() {
+        ArchRuleDefinition.noClasses().that().resideOutsideOfPackage("io.synkra.despliegue..")
+                .should().dependOnClassesThat().resideInAPackage("io.synkra.despliegue..")
+                .as("ninguna clase fuera de io.synkra.despliegue depende de io.synkra.despliegue")
+                .check(produccion());
     }
 }
