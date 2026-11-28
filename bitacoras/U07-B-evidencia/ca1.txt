@@ -1,0 +1,24 @@
+2026-11-27T19:56:02-05:00
+sha 717e428
+entorno: JAVA_HOME=$HOME/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2 HOME=KUBECONFIG=mktemp -d falsos GRADLE_USER_HOME real
+$ ./gradlew :backend:test --rerun --tests '*VerificacionVivoTest'
+> Task :verificador:processResources NO-SOURCE
+> Task :verificador:classes UP-TO-DATE
+> Task :verificador:jar UP-TO-DATE
+> Task :verificador:processTestFixturesResources NO-SOURCE
+> Task :verificador:testFixturesClasses UP-TO-DATE
+> Task :verificador:testFixturesJar UP-TO-DATE
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+> Task :backend:test
+[Incubating] Problems report is available at: file:///home/casdav/Projects/Master/wt-m6r-U07-B/build/reports/problems/problems-report.html
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+BUILD SUCCESSFUL in 6s
+9 actionable tasks: 1 executed, 8 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
+$ grep -ho tests=... TEST-*VerificacionVivoTest.xml
+tests="15" skipped="0" failures="0" errors="0"
+$ python3 -I -c ... VerificacionVivoTest/synkra.db
+(0,)
+(4,) (3,)

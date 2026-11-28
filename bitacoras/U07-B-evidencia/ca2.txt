@@ -1,0 +1,10 @@
+2026-11-27T19:56:16-05:00
+sha 717e428
+$ ./gradlew :backend:test --rerun --tests '*CrearPlanTest'
+BUILD SUCCESSFUL in 12s
+$ grep -ho tests=... TEST-*CrearPlanTest.xml
+tests="9" skipped="0" failures="0" errors="0"
+$ python3 -I -c ... CrearPlanTest/synkra.db
+[('cl', 'despliegue', 'pendiente', 'synkra-cl', 0, 0, 1, 1, 1, 1800000), ('co', 'despliegue', 'pendiente', 'synkra-co', 1, 1, 1, 0, 1, 1800000), ('pe', 'despliegue', 'pendiente', 'synkra-pe', 1, 0, 0, 0, 0, 1800000)]
+(0,)
+[('kyc-viejo', 'kyc-pe', 'kyc-co', 1)]

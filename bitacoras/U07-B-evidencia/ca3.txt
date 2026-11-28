@@ -1,0 +1,77 @@
+2026-11-27T19:56:29-05:00
+sha 717e428
+$ ./gradlew :backend:test --rerun --tests '*CambiosPropiedades'
+BUILD SUCCESSFUL in 2s
+$ grep -ho tests=... TEST-*CambiosPropiedades.xml
+tests="4" skipped="0" failures="0" errors="0"
+$ grep -o 'tries = [0-9]*' TEST-*CambiosPropiedades.xml
+tries = 1000
+tries = 1000
+tries = 1000
+tries = 1000
+--- tablas de Statistics (system-out del XML)
+timestamp = 2026-11-27T19:56:32.586735407, CambiosPropiedades:lasTresListasParticionanLaSeleccionYLoQueCorre = 
+                              |-----------------------jqwik-----------------------
+tries = 1000                  | # of calls to property
+checks = 1000                 | # of not rejected calls
+generation = RANDOMIZED       | parameters are randomly generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 1000       | # of all combined edge cases
+edge-cases#tried = 157        | # of edge cases tried in current run
+seed = -962641027126010049    | random seed to reproduce generated values
+
+
+timestamp = 2026-11-27T19:56:32.682585139, [CambiosPropiedades:aplicarLosCambiosAlEstadoQueCorreDaLaSeleccion] (1000) mismo nombre, otra versión o hash = 
+    false (633) : 63 %
+    true  (367) : 37 %
+
+timestamp = 2026-11-27T19:56:32.683134860, [CambiosPropiedades:aplicarLosCambiosAlEstadoQueCorreDaLaSeleccion] (1000) país vacío = 
+    false (864) : 86 %
+    true  (136) : 14 %
+
+timestamp = 2026-11-27T19:56:32.683506486, [CambiosPropiedades:aplicarLosCambiosAlEstadoQueCorreDaLaSeleccion] (1000) sin cambios = 
+    false (778) : 78 %
+    true  (222) : 22 %
+
+timestamp = 2026-11-27T19:56:32.684095388, CambiosPropiedades:aplicarLosCambiosAlEstadoQueCorreDaLaSeleccion = 
+                              |-----------------------jqwik-----------------------
+tries = 1000                  | # of calls to property
+checks = 1000                 | # of not rejected calls
+generation = RANDOMIZED       | parameters are randomly generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 1000       | # of all combined edge cases
+edge-cases#tried = 163        | # of edge cases tried in current run
+seed = 1515256726222215650    | random seed to reproduce generated values
+
+
+timestamp = 2026-11-27T19:56:32.727602895, CambiosPropiedades:sinCambiosEsCoreIgualYMismosPluginsYElCoreDicePorLaImagen = 
+                              |-----------------------jqwik-----------------------
+tries = 1000                  | # of calls to property
+checks = 1000                 | # of not rejected calls
+generation = RANDOMIZED       | parameters are randomly generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 1000       | # of all combined edge cases
+edge-cases#tried = 179        | # of edge cases tried in current run
+seed = 8894938494412378663    | random seed to reproduce generated values
+
+
+timestamp = 2026-11-27T19:56:32.754663890, CambiosPropiedades:unPaisVacioLoAnadeTodoYNoQuitaNiConserva = 
+                              |-----------------------jqwik-----------------------
+tries = 1000                  | # of calls to property
+checks = 1000                 | # of not rejected calls
+generation = RANDOMIZED       | parameters are randomly generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 1000       | # of all combined edge cases
+edge-cases#tried = 156        | # of edge cases tried in current run
+seed = 4371491844420653304    | random seed to reproduce generated values
+
+
+
