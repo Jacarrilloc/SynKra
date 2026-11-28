@@ -1,0 +1,2738 @@
+{
+  "info": {
+    "_postman_id": "2fdbf888-59b9-53b0-b3b5-6ca604d8776d",
+    "name": "SynKra",
+    "description": "Prueba todo el backend REST de SynKra en el orden de la demo: salud, catálogo, verificación, despliegue y registro. Importa también el entorno «SynKra local» y lee postman/README.md.\n\nTodos los errores llevan el cuerpo ErrorApi: {codigo, mensaje, detalles: [{campo, motivo}]}.\n\nLas variables de colección (sha256, planId, despliegueId, ...) las rellenan los tests; sinCluster=true indica que el backend no tiene Kubernetes y que el flujo de despliegue se salta.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Salud",
+      "description": "Sondas de Actuator. No necesitan Kubernetes.",
+      "item": [
+        {
+          "name": "Salud del backend",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const s = pm.response.json();",
+                  "pm.test(\"status UP\", () => pm.expect(s.status).to.eql(\"UP\"));",
+                  "pm.test(\"SQLite UP\", () => pm.expect(s.components.db.status).to.eql(\"UP\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "actuator",
+                "health"
+              ]
+            },
+            "description": "Sonda general de Spring Boot Actuator, con sus componentes (db incluido). No necesita Kubernetes."
+          },
+          "response": []
+        },
+        {
+          "name": "Readiness del backend",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const local = /localhost|127\\.0\\.0\\.1/.test(pm.variables.get(\"baseUrl\"));",
+                  "if (local) {",
+                  "    pm.test(\"local: 404 (las sondas de Kubernetes no se activan fuera del clúster) o 200\",",
+                  "        () => pm.expect(pm.response.code).to.be.oneOf([200, 404]));",
+                  "} else {",
+                  "    pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "    pm.test(\"status UP\", () => pm.expect(pm.response.json().status).to.eql(\"UP\"));",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/health/readiness",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "actuator",
+                "health",
+                "readiness"
+              ]
+            },
+            "description": "Grupo readiness de Actuator. Spring Boot solo lo activa cuando detecta Kubernetes (en kind): con el backend local (bootRun o java -jar) responde 404, y en kind 200 con status UP."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Catálogo",
+      "description": "Cores, versiones, plugins (multipart) y artefactos por hash. No necesitan Kubernetes.",
+      "item": [
+        {
+          "name": "Registrar core 2.1.0",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 201 o 409\", () => pm.expect(pm.response.code).to.be.oneOf([201, 409]));",
+                  "const c = pm.response.json();",
+                  "if (pm.response.code === 201) {",
+                  "    pm.test(\"core con sus versiones\", () => {",
+                  "        pm.expect(c.nombre).to.be.a(\"string\");",
+                  "        pm.expect(c.versiones.map(v => v.version)).to.include(\"2.1.0\");",
+                  "        c.versiones.forEach(v => pm.expect(v.imagen).to.include(\"@sha256:\"));",
+                  "    });",
+                  "    pm.test(\"Location del core\", () => pm.expect(pm.response.headers.get(\"Location\")).to.include(\"/api/cores/\"));",
+                  "} else {",
+                  "    pm.test(\"409: la versión ya estaba registrada (corrida repetida)\", () => pm.expect(c.codigo).to.eql(\"CONFLICTO\"));",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/cores",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cores"
+              ]
+            },
+            "description": "H-01: registra el core y su primera versión con la imagen por digest. 201 con Location; si la versión ya estaba (corrida repetida) responde 409 CONFLICTO y el test lo acepta.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"{{core}}\",\n  \"version\": \"2.1.0\",\n  \"imagen\": \"{{imagenCore}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Registrar core 3.0.0",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 201 o 409\", () => pm.expect(pm.response.code).to.be.oneOf([201, 409]));",
+                  "const c = pm.response.json();",
+                  "if (pm.response.code === 201) {",
+                  "    pm.test(\"core con sus versiones\", () => {",
+                  "        pm.expect(c.nombre).to.be.a(\"string\");",
+                  "        pm.expect(c.versiones.map(v => v.version)).to.include(\"3.0.0\");",
+                  "        c.versiones.forEach(v => pm.expect(v.imagen).to.include(\"@sha256:\"));",
+                  "    });",
+                  "    pm.test(\"Location del core\", () => pm.expect(pm.response.headers.get(\"Location\")).to.include(\"/api/cores/\"));",
+                  "} else {",
+                  "    pm.test(\"409: la versión ya estaba registrada (corrida repetida)\", () => pm.expect(c.codigo).to.eql(\"CONFLICTO\"));",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/cores",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cores"
+              ]
+            },
+            "description": "H-01: segunda versión del mismo core (para el despliegue de kyc-pe 2.0.0 y la reversión).",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"{{core}}\",\n  \"version\": \"3.0.0\",\n  \"imagen\": \"{{imagenCore}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Registrar otro-core 1.0.0",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 201 o 409\", () => pm.expect(pm.response.code).to.be.oneOf([201, 409]));",
+                  "const c = pm.response.json();",
+                  "if (pm.response.code === 201) {",
+                  "    pm.test(\"core con sus versiones\", () => {",
+                  "        pm.expect(c.nombre).to.be.a(\"string\");",
+                  "        pm.expect(c.versiones.map(v => v.version)).to.include(\"1.0.0\");",
+                  "        c.versiones.forEach(v => pm.expect(v.imagen).to.include(\"@sha256:\"));",
+                  "    });",
+                  "    pm.test(\"Location del core\", () => pm.expect(pm.response.headers.get(\"Location\")).to.include(\"/api/cores/\"));",
+                  "} else {",
+                  "    pm.test(\"409: la versión ya estaba registrada (corrida repetida)\", () => pm.expect(c.codigo).to.eql(\"CONFLICTO\"));",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/cores",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cores"
+              ]
+            },
+            "description": "Un segundo core: solo sirve para el caso negativo de subir un plugin a la carpeta de otro core.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"otro-core\",\n  \"version\": \"1.0.0\",\n  \"imagen\": \"{{imagenCore}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar cores",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const l = pm.response.json();",
+                  "pm.test(\"incluye el core de la demo\", () => pm.expect(l.map(c => c.nombre)).to.include(pm.variables.get(\"core\")));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/cores",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cores"
+              ]
+            },
+            "description": "Todos los cores con sus versiones e imágenes."
+          },
+          "response": []
+        },
+        {
+          "name": "Ver core",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const c = pm.response.json();",
+                  "pm.test(\"versiones 2.1.0 y 3.0.0\", () => pm.expect(c.versiones.map(v => v.version)).to.include.members([\"2.1.0\", \"3.0.0\"]));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/cores/{{core}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cores",
+                "{{core}}"
+              ]
+            },
+            "description": "Un core con sus versiones ordenadas como versión semántica."
+          },
+          "response": []
+        },
+        {
+          "name": "Subir plugin kyc-co 1.0.0 (con etiqueta cliente)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 201 o 409\", () => pm.expect(pm.response.code).to.be.oneOf([201, 409]));",
+                  "const p = pm.response.json();",
+                  "if (pm.response.code === 201) {",
+                  "    pm.test(\"plugin kyc-co 1.0.0 con sha256 y tamaño\", () => {",
+                  "        pm.expect(p.core).to.eql(pm.collectionVariables.get(\"core\") || pm.variables.get(\"core\"));",
+                  "        pm.expect(p.nombre).to.eql(\"kyc-co\");",
+                  "        pm.expect(p.version).to.eql(\"1.0.0\");",
+                  "        pm.expect(p.coreCompatible).to.be.a(\"string\");",
+                  "        pm.expect(p.sha256).to.match(/^[0-9a-f]{64}$/);",
+                  "        pm.expect(p.tamano).to.be.above(0);",
+                  "        pm.expect(p.etiquetas).to.include({\"pais\": \"co\", \"cliente\": \"banco-a\"});",
+                  "    });",
+                  "    pm.test(\"Location del plugin\", () => pm.expect(pm.response.headers.get(\"Location\")).to.include(\"/plugins/kyc-co/1.0.0\"));",
+                  "    pm.collectionVariables.set(\"sha256KycCo\", p.sha256);",
+                  "} else {",
+                  "    // 409: el plugin ya estaba (corrida repetida). Se toma el sha256 del catálogo.",
+                  "    pm.test(\"409 CONFLICTO por versión repetida\", () => pm.expect(p.codigo).to.eql(\"CONFLICTO\"));",
+                  "    pm.sendRequest({",
+                  "        url: pm.variables.replaceIn(\"{{baseUrl}}/api/cores/{{core}}/plugins/kyc-co/1.0.0\"),",
+                  "        method: \"GET\"",
+                  "    }, (err, r) => {",
+                  "        if (!err && r.code === 200) { pm.collectionVariables.set(\"sha256KycCo\", r.json().sha256); }",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/cores/{{core}}/plugins",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cores",
+                "{{core}}",
+                "plugins"
+              ]
+            },
+            "description": "H-02: multipart con la parte de archivo «archivo» (el JAR) y la parte opcional «etiquetas» (JSON). Las etiquetas del descriptor (pais: co) y las de la subida (cliente: banco-a) se unen. Guarda sha256KycCo.",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "archivo",
+                  "type": "file",
+                  "src": "{{jarKycCo}}",
+                  "description": "El JAR del plugin (obligatorio)."
+                },
+                {
+                  "key": "etiquetas",
+                  "type": "text",
+                  "value": "{\"cliente\": \"banco-a\"}",
+                  "contentType": "application/json",
+                  "description": "Opcional: objeto JSON de texto a texto que se une a las etiquetas del descriptor."
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Subir plugin kyc-pe 1.3.0",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 201 o 409\", () => pm.expect(pm.response.code).to.be.oneOf([201, 409]));",
+                  "const p = pm.response.json();",
+                  "if (pm.response.code === 201) {",
+                  "    pm.test(\"plugin kyc-pe 1.3.0 con sha256 y tamaño\", () => {",
+                  "        pm.expect(p.core).to.eql(pm.collectionVariables.get(\"core\") || pm.variables.get(\"core\"));",
+                  "        pm.expect(p.nombre).to.eql(\"kyc-pe\");",
+                  "        pm.expect(p.version).to.eql(\"1.3.0\");",
+                  "        pm.expect(p.coreCompatible).to.be.a(\"string\");",
+                  "        pm.expect(p.sha256).to.match(/^[0-9a-f]{64}$/);",
+                  "        pm.expect(p.tamano).to.be.above(0);",
+                  "        pm.expect(p.etiquetas).to.include({\"pais\": \"pe\"});",
+                  "    });",
+                  "    pm.test(\"Location del plugin\", () => pm.expect(pm.response.headers.get(\"Location\")).to.include(\"/plugins/kyc-pe/1.3.0\"));",
+                  "    pm.collectionVariables.set(\"sha256\", p.sha256);",
+                  "} else {",
+                  "    // 409: el plugin ya estaba (corrida repetida). Se toma el sha256 del catálogo.",
+                  "    pm.test(\"409 CONFLICTO por versión repetida\", () => pm.expect(p.codigo).to.eql(\"CONFLICTO\"));",
+                  "    pm.sendRequest({",
+                  "        url: pm.variables.replaceIn(\"{{baseUrl}}/api/cores/{{core}}/plugins/kyc-pe/1.3.0\"),",
+                  "        method: \"GET\"",
+                  "    }, (err, r) => {",
+                  "        if (!err && r.code === 200) { pm.collectionVariables.set(\"sha256\", r.json().sha256); }",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/cores/{{core}}/plugins",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cores",
+                "{{core}}",
+                "plugins"
+              ]
+            },
+            "description": "H-02: kyc-pe 1.3.0, compatible con el core 2.x. Guarda sha256 (el que usa «Descargar artefacto»).",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "archivo",
+                  "type": "file",
+                  "src": "{{jarKycPe130}}",
+                  "description": "El JAR del plugin (obligatorio)."
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Subir plugin kyc-pe 2.0.0",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 201 o 409\", () => pm.expect(pm.response.code).to.be.oneOf([201, 409]));",
+                  "const p = pm.response.json();",
+                  "if (pm.response.code === 201) {",
+                  "    pm.test(\"plugin kyc-pe 2.0.0 con sha256 y tamaño\", () => {",
+                  "        pm.expect(p.core).to.eql(pm.collectionVariables.get(\"core\") || pm.variables.get(\"core\"));",
+                  "        pm.expect(p.nombre).to.eql(\"kyc-pe\");",
+                  "        pm.expect(p.version).to.eql(\"2.0.0\");",
+                  "        pm.expect(p.coreCompatible).to.be.a(\"string\");",
+                  "        pm.expect(p.sha256).to.match(/^[0-9a-f]{64}$/);",
+                  "        pm.expect(p.tamano).to.be.above(0);",
+                  "        pm.expect(p.etiquetas).to.include({\"pais\": \"pe\"});",
+                  "    });",
+                  "    pm.test(\"Location del plugin\", () => pm.expect(pm.response.headers.get(\"Location\")).to.include(\"/plugins/kyc-pe/2.0.0\"));",
+                  "    pm.collectionVariables.set(\"sha256KycPe200\", p.sha256);",
+                  "} else {",
+                  "    // 409: el plugin ya estaba (corrida repetida). Se toma el sha256 del catálogo.",
+                  "    pm.test(\"409 CONFLICTO por versión repetida\", () => pm.expect(p.codigo).to.eql(\"CONFLICTO\"));",
+                  "    pm.sendRequest({",
+                  "        url: pm.variables.replaceIn(\"{{baseUrl}}/api/cores/{{core}}/plugins/kyc-pe/2.0.0\"),",
+                  "        method: \"GET\"",
+                  "    }, (err, r) => {",
+                  "        if (!err && r.code === 200) { pm.collectionVariables.set(\"sha256KycPe200\", r.json().sha256); }",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/cores/{{core}}/plugins",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cores",
+                "{{core}}",
+                "plugins"
+              ]
+            },
+            "description": "H-02: kyc-pe 2.0.0, compatible solo con el core 3.x (sirve para el caso incompatible).",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "archivo",
+                  "type": "file",
+                  "src": "{{jarKycPe200}}",
+                  "description": "El JAR del plugin (obligatorio)."
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar plugins por país",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const l = pm.response.json();",
+                  "pm.test(\"todos son del país pedido\", () => l.forEach(p => pm.expect(p.etiquetas.pais).to.eql(pm.variables.get(\"pais\"))));",
+                  "pm.test(\"trae kyc-pe 1.3.0 y 2.0.0\", () => pm.expect(l.map(p => p.nombre + \"@\" + p.version)).to.include.members([\"kyc-pe@1.3.0\", \"kyc-pe@2.0.0\"]));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/cores/{{core}}/plugins?pais={{pais}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cores",
+                "{{core}}",
+                "plugins"
+              ],
+              "query": [
+                {
+                  "key": "pais",
+                  "value": "{{pais}}"
+                }
+              ]
+            },
+            "description": "H-05: cada parámetro de la consulta es una pareja etiqueta=valor del filtro (todas deben cumplirse)."
+          },
+          "response": []
+        },
+        {
+          "name": "Listar plugins por país y cliente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const l = pm.response.json();",
+                  "pm.test(\"solo kyc-co 1.0.0\", () => pm.expect(l.map(p => p.nombre + \"@\" + p.version)).to.eql([\"kyc-co@1.0.0\"]));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/cores/{{core}}/plugins?pais=co&cliente=banco-a",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cores",
+                "{{core}}",
+                "plugins"
+              ],
+              "query": [
+                {
+                  "key": "pais",
+                  "value": "co"
+                },
+                {
+                  "key": "cliente",
+                  "value": "banco-a"
+                }
+              ]
+            },
+            "description": "H-06: dos etiquetas a la vez; solo kyc-co lleva cliente=banco-a."
+          },
+          "response": []
+        },
+        {
+          "name": "Ver plugin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const p = pm.response.json();",
+                  "pm.test(\"mismo sha256 que la subida\", () => pm.expect(p.sha256).to.eql(pm.collectionVariables.get(\"sha256\")));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/cores/{{core}}/plugins/kyc-pe/1.3.0",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cores",
+                "{{core}}",
+                "plugins",
+                "kyc-pe",
+                "1.3.0"
+              ]
+            },
+            "description": "Un plugin por core, nombre y versión."
+          },
+          "response": []
+        },
+        {
+          "name": "Descargar artefacto por hash",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Content-Type application/java-archive\", () => pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/java-archive\"));",
+                  "pm.test(\"X-Synkra-Sha256 es el hash pedido\", () => pm.expect(pm.response.headers.get(\"X-Synkra-Sha256\")).to.eql(pm.collectionVariables.get(\"sha256\")));",
+                  "pm.test(\"se descarga como kyc-pe-1.3.0.jar\", () => pm.expect(pm.response.headers.get(\"Content-Disposition\")).to.include(\"kyc-pe-1.3.0.jar\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/artefactos/{{sha256}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "artefactos",
+                "{{sha256}}"
+              ]
+            },
+            "description": "H-15: el JAR en flujo por su SHA-256 (lo usa el init container de cada pod). Cabecera X-Synkra-Sha256."
+          },
+          "response": []
+        },
+        {
+          "name": "Catálogo: casos negativos",
+          "item": [
+            {
+              "name": "Core: versión repetida (409)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"HTTP 409\", () => pm.response.to.have.status(409));",
+                      "const e = pm.response.json();",
+                      "pm.test(\"ErrorApi con codigo CONFLICTO\", () => {",
+                      "    pm.expect(e.codigo).to.eql(\"CONFLICTO\");",
+                      "    pm.expect(e.mensaje).to.be.a(\"string\").and.not.empty;",
+                      "    pm.expect(e.detalles).to.be.an(\"array\");",
+                      "});",
+                      "pm.test(\"detalles nombra version\", () => {",
+                      "    const c = e.detalles.map(d => d.campo);",
+                      "    [\"version\"].forEach(x => pm.expect(c).to.include(x));",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/cores",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "cores"
+                  ]
+                },
+                "description": "R-C2: la misma versión otra vez no cambia nada.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"{{core}}\",\n  \"version\": \"2.1.0\",\n  \"imagen\": \"{{imagenCore}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Core: datos inválidos (422)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"HTTP 422\", () => pm.response.to.have.status(422));",
+                      "const e = pm.response.json();",
+                      "pm.test(\"ErrorApi con codigo ENTIDAD_NO_PROCESABLE\", () => {",
+                      "    pm.expect(e.codigo).to.eql(\"ENTIDAD_NO_PROCESABLE\");",
+                      "    pm.expect(e.mensaje).to.be.a(\"string\").and.not.empty;",
+                      "    pm.expect(e.detalles).to.be.an(\"array\");",
+                      "});",
+                      "pm.test(\"detalles nombra nombre, version, imagen\", () => {",
+                      "    const c = e.detalles.map(d => d.campo);",
+                      "    [\"nombre\", \"version\", \"imagen\"].forEach(x => pm.expect(c).to.include(x));",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/cores",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "cores"
+                  ]
+                },
+                "description": "R-C1: todos los detalles inválidos en un solo 422 (nombre, versión e imagen sin digest).",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Core Malo\",\n  \"version\": \"2.1\",\n  \"imagen\": \"nginx:latest\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Core inexistente (404)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"HTTP 404\", () => pm.response.to.have.status(404));",
+                      "const e = pm.response.json();",
+                      "pm.test(\"ErrorApi con codigo NO_ENCONTRADO\", () => {",
+                      "    pm.expect(e.codigo).to.eql(\"NO_ENCONTRADO\");",
+                      "    pm.expect(e.mensaje).to.be.a(\"string\").and.not.empty;",
+                      "    pm.expect(e.detalles).to.be.an(\"array\");",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/cores/no-existe",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "cores",
+                    "no-existe"
+                  ]
+                },
+                "description": "Un core que no está registrado."
+              },
+              "response": []
+            },
+            {
+              "name": "Plugin: versión repetida (409)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"HTTP 409\", () => pm.response.to.have.status(409));",
+                      "const e = pm.response.json();",
+                      "pm.test(\"ErrorApi con codigo CONFLICTO\", () => {",
+                      "    pm.expect(e.codigo).to.eql(\"CONFLICTO\");",
+                      "    pm.expect(e.mensaje).to.be.a(\"string\").and.not.empty;",
+                      "    pm.expect(e.detalles).to.be.an(\"array\");",
+                      "});",
+                      "pm.test(\"detalles nombra version\", () => {",
+                      "    const c = e.detalles.map(d => d.campo);",
+                      "    [\"version\"].forEach(x => pm.expect(c).to.include(x));",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/cores/{{core}}/plugins",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "cores",
+                    "{{core}}",
+                    "plugins"
+                  ]
+                },
+                "description": "R-C9: el mismo plugin y versión otra vez.",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "archivo",
+                      "type": "file",
+                      "src": "{{jarKycPe130}}",
+                      "description": "El JAR del plugin (obligatorio)."
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Plugin: sin parte archivo (422)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"HTTP 422\", () => pm.response.to.have.status(422));",
+                      "const e = pm.response.json();",
+                      "pm.test(\"ErrorApi con codigo ENTIDAD_NO_PROCESABLE\", () => {",
+                      "    pm.expect(e.codigo).to.eql(\"ENTIDAD_NO_PROCESABLE\");",
+                      "    pm.expect(e.mensaje).to.be.a(\"string\").and.not.empty;",
+                      "    pm.expect(e.detalles).to.be.an(\"array\");",
+                      "});",
+                      "pm.test(\"detalles nombra archivo\", () => {",
+                      "    const c = e.detalles.map(d => d.campo);",
+                      "    [\"archivo\"].forEach(x => pm.expect(c).to.include(x));",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/cores/{{core}}/plugins",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "cores",
+                    "{{core}}",
+                    "plugins"
+                  ]
+                },
+                "description": "Multipart sin la parte «archivo».",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "etiquetas",
+                      "type": "text",
+                      "value": "{}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Plugin: el archivo no es un JAR (422)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"HTTP 422\", () => pm.response.to.have.status(422));",
+                      "const e = pm.response.json();",
+                      "pm.test(\"ErrorApi con codigo ARTEFACTO_INVALIDO\", () => {",
+                      "    pm.expect(e.codigo).to.eql(\"ARTEFACTO_INVALIDO\");",
+                      "    pm.expect(e.mensaje).to.be.a(\"string\").and.not.empty;",
+                      "    pm.expect(e.detalles).to.be.an(\"array\");",
+                      "});",
+                      "pm.test(\"detalles nombra archivo\", () => {",
+                      "    const c = e.detalles.map(d => d.campo);",
+                      "    [\"archivo\"].forEach(x => pm.expect(c).to.include(x));",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/cores/{{core}}/plugins",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "cores",
+                    "{{core}}",
+                    "plugins"
+                  ]
+                },
+                "description": "R-C6: un archivo que no es un ZIP legible (por defecto, este README).",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "archivo",
+                      "type": "file",
+                      "src": "{{archivoNoJar}}",
+                      "description": "El JAR del plugin (obligatorio)."
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Plugin: descriptor de otro core (422)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"HTTP 422\", () => pm.response.to.have.status(422));",
+                      "const e = pm.response.json();",
+                      "pm.test(\"ErrorApi con codigo CORE_EQUIVOCADO\", () => {",
+                      "    pm.expect(e.codigo).to.eql(\"CORE_EQUIVOCADO\");",
+                      "    pm.expect(e.mensaje).to.be.a(\"string\").and.not.empty;",
+                      "    pm.expect(e.detalles).to.be.an(\"array\");",
+                      "});",
+                      "pm.test(\"detalles nombra core\", () => {",
+                      "    const c = e.detalles.map(d => d.campo);",
+                      "    [\"core\"].forEach(x => pm.expect(c).to.include(x));",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/cores/otro-core/plugins",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "cores",
+                    "otro-core",
+                    "plugins"
+                  ]
+                },
+                "description": "H-03: el descriptor de kyc-co dice core synkra-core y se sube a la carpeta de otro-core.",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "archivo",
+                      "type": "file",
+                      "src": "{{jarKycCo}}",
+                      "description": "El JAR del plugin (obligatorio)."
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Plugin: descriptor inválido (422)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"HTTP 422\", () => pm.response.to.have.status(422));",
+                      "const e = pm.response.json();",
+                      "pm.test(\"ErrorApi con codigo ENTIDAD_NO_PROCESABLE\", () => {",
+                      "    pm.expect(e.codigo).to.eql(\"ENTIDAD_NO_PROCESABLE\");",
+                      "    pm.expect(e.mensaje).to.be.a(\"string\").and.not.empty;",
+                      "    pm.expect(e.detalles).to.be.an(\"array\");",
+                      "});",
+                      "pm.test(\"detalles nombra version, coreCompatible\", () => {",
+                      "    const c = e.detalles.map(d => d.campo);",
+                      "    [\"version\", \"coreCompatible\"].forEach(x => pm.expect(c).to.include(x));",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/cores/{{core}}/plugins",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "cores",
+                    "{{core}}",
+                    "plugins"
+                  ]
+                },
+                "description": "H-03: JAR cuyo synkra-plugin.yaml tiene versión 1.0 y rango >=2.x< (ver README para generarlo). Todos los fallos del descriptor llegan juntos.",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "archivo",
+                      "type": "file",
+                      "src": "{{jarDescriptorRoto}}",
+                      "description": "El JAR del plugin (obligatorio)."
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Plugin: etiquetas que no son objeto (422)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"HTTP 422\", () => pm.response.to.have.status(422));",
+                      "const e = pm.response.json();",
+                      "pm.test(\"ErrorApi con codigo ENTIDAD_NO_PROCESABLE\", () => {",
+                      "    pm.expect(e.codigo).to.eql(\"ENTIDAD_NO_PROCESABLE\");",
+                      "    pm.expect(e.mensaje).to.be.a(\"string\").and.not.empty;",
+                      "    pm.expect(e.detalles).to.be.an(\"array\");",
+                      "});",
+                      "pm.test(\"detalles nombra etiquetas\", () => {",
+                      "    const c = e.detalles.map(d => d.campo);",
+                      "    [\"etiquetas\"].forEach(x => pm.expect(c).to.include(x));",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/cores/{{core}}/plugins",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "cores",
+                    "{{core}}",
+                    "plugins"
+                  ]
+                },
+                "description": "La parte «etiquetas» debe ser un objeto JSON de texto a texto.",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "archivo",
+                      "type": "file",
+                      "src": "{{jarKycCo}}",
+                      "description": "El JAR del plugin (obligatorio)."
+                    },
+                    {
+                      "key": "etiquetas",
+                      "type": "text",
+                      "value": "[1]",
+                      "contentType": "application/json",
+                      "description": "Opcional: objeto JSON de texto a texto que se une a las etiquetas del descriptor."
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Plugin: core inexistente (404)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"HTTP 404\", () => pm.response.to.have.status(404));",
+                      "const e = pm.response.json();",
+                      "pm.test(\"ErrorApi con codigo NO_ENCONTRADO\", () => {",
+                      "    pm.expect(e.codigo).to.eql(\"NO_ENCONTRADO\");",
+                      "    pm.expect(e.mensaje).to.be.a(\"string\").and.not.empty;",
+                      "    pm.expect(e.detalles).to.be.an(\"array\");",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/cores/no-existe/plugins",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "cores",
+                    "no-existe",
+                    "plugins"
+                  ]
+                },
+                "description": "Subir a la carpeta de un core que no existe.",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "archivo",
+                      "type": "file",
+                      "src": "{{jarKycCo}}",
+                      "description": "El JAR del plugin (obligatorio)."
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Filtro con etiqueta repetida (422)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"HTTP 422\", () => pm.response.to.have.status(422));",
+                      "const e = pm.response.json();",
+                      "pm.test(\"ErrorApi con codigo ENTIDAD_NO_PROCESABLE\", () => {",
+                      "    pm.expect(e.codigo).to.eql(\"ENTIDAD_NO_PROCESABLE\");",
+                      "    pm.expect(e.mensaje).to.be.a(\"string\").and.not.empty;",
+                      "    pm.expect(e.detalles).to.be.an(\"array\");",
+                      "});",
+                      "pm.test(\"detalles nombra pais\", () => {",
+                      "    const c = e.detalles.map(d => d.campo);",
+                      "    [\"pais\"].forEach(x => pm.expect(c).to.include(x));",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/cores/{{core}}/plugins?pais=pe&pais=co",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "cores",
+                    "{{core}}",
+                    "plugins"
+                  ],
+                  "query": [
+                    {
+                      "key": "pais",
+                      "value": "pe"
+                    },
+                    {
+                      "key": "pais",
+                      "value": "co"
+                    }
+                  ]
+                },
+                "description": "H-06: una clave repetida en el filtro es un 422 con su campo."
+              },
+              "response": []
+            },
+            {
+              "name": "Artefacto inexistente (404)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"HTTP 404\", () => pm.response.to.have.status(404));",
+                      "const e = pm.response.json();",
+                      "pm.test(\"ErrorApi con codigo NO_ENCONTRADO\", () => {",
+                      "    pm.expect(e.codigo).to.eql(\"NO_ENCONTRADO\");",
+                      "    pm.expect(e.mensaje).to.be.a(\"string\").and.not.empty;",
+                      "    pm.expect(e.detalles).to.be.an(\"array\");",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/artefactos/0000000000000000000000000000000000000000000000000000000000000000",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "artefactos",
+                    "0000000000000000000000000000000000000000000000000000000000000000"
+                  ]
+                },
+                "description": "Un hash bien formado que no está en el catálogo."
+              },
+              "response": []
+            },
+            {
+              "name": "Artefacto con hash mal formado (404)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"HTTP 404\", () => pm.response.to.have.status(404));",
+                      "const e = pm.response.json();",
+                      "pm.test(\"ErrorApi con codigo NO_ENCONTRADO\", () => {",
+                      "    pm.expect(e.codigo).to.eql(\"NO_ENCONTRADO\");",
+                      "    pm.expect(e.mensaje).to.be.a(\"string\").and.not.empty;",
+                      "    pm.expect(e.detalles).to.be.an(\"array\");",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/artefactos/no-es-un-hash",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "artefactos",
+                    "no-es-un-hash"
+                  ]
+                },
+                "description": "Todo lo que no son 64 hexadecimales en minúsculas es 404."
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3. Verificación",
+      "description": "Verificar una selección sin crear nada. No necesita Kubernetes.",
+      "item": [
+        {
+          "name": "Verificar combinación compatible",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const v = pm.response.json();",
+                  "pm.test(\"APROBADA\", () => pm.expect(v.global).to.eql(\"APROBADA\"));",
+                  "pm.test(\"kyc-pe compatible y sin motivos\", () => { pm.expect(v.plugins[0].compatible).to.be.true; pm.expect(v.plugins[0].motivos).to.be.empty; });",
+                  "pm.test(\"sin motivos globales\", () => pm.expect(v.motivosGlobales).to.be.empty);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/verificaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "verificaciones"
+              ]
+            },
+            "description": "H-09: verifica sin crear nada. kyc-pe 1.3.0 (core 2.x) con el core 2.1.0.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"core\": \"{{core}}\",\n  \"versionCore\": \"2.1.0\",\n  \"plugins\": [\n    {\n      \"nombre\": \"kyc-pe\",\n      \"version\": \"1.3.0\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verificar combinación incompatible",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const v = pm.response.json();",
+                  "pm.test(\"RECHAZADA\", () => pm.expect(v.global).to.eql(\"RECHAZADA\"));",
+                  "pm.test(\"motivo VERSION_INCOMPATIBLE en coreCompatible\", () => {",
+                  "    const m = v.plugins[0].motivos[0];",
+                  "    pm.expect(m.codigo).to.eql(\"VERSION_INCOMPATIBLE\");",
+                  "    pm.expect(m.plugin).to.eql(\"kyc-pe\");",
+                  "    pm.expect(m.campo).to.eql(\"coreCompatible\");",
+                  "});",
+                  "pm.test(\"propone kyc-pe 1.3.0 o el core 3.0.0\", () => {",
+                  "    const a = v.plugins[0].alternativas.map(x => x.tipo + \":\" + x.nombre + \"@\" + x.version);",
+                  "    pm.expect(a).to.include.members([\"PLUGIN:kyc-pe@1.3.0\", \"CORE:\" + pm.variables.get(\"core\") + \"@3.0.0\"]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/verificaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "verificaciones"
+              ]
+            },
+            "description": "H-08 y RF-11: una combinación rechazada sigue siendo 200, con el motivo y alternativas. kyc-pe 2.0.0 pide el core 3.x.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"core\": \"{{core}}\",\n  \"versionCore\": \"2.1.0\",\n  \"plugins\": [\n    {\n      \"nombre\": \"kyc-pe\",\n      \"version\": \"2.0.0\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verificar: versión de core no registrada (422)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 422\", () => pm.response.to.have.status(422));",
+                  "const e = pm.response.json();",
+                  "pm.test(\"ErrorApi con codigo CORE_NO_REGISTRADO\", () => {",
+                  "    pm.expect(e.codigo).to.eql(\"CORE_NO_REGISTRADO\");",
+                  "    pm.expect(e.mensaje).to.be.a(\"string\").and.not.empty;",
+                  "    pm.expect(e.detalles).to.be.an(\"array\");",
+                  "});",
+                  "pm.test(\"detalles nombra versionCore\", () => {",
+                  "    const c = e.detalles.map(d => d.campo);",
+                  "    [\"versionCore\"].forEach(x => pm.expect(c).to.include(x));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/verificaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "verificaciones"
+              ]
+            },
+            "description": "El core no tiene la versión 9.9.9.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"core\": \"{{core}}\",\n  \"versionCore\": \"9.9.9\",\n  \"plugins\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verificar: selección inválida (422)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 422\", () => pm.response.to.have.status(422));",
+                  "const e = pm.response.json();",
+                  "pm.test(\"ErrorApi con codigo SELECCION_INVALIDA\", () => {",
+                  "    pm.expect(e.codigo).to.eql(\"SELECCION_INVALIDA\");",
+                  "    pm.expect(e.mensaje).to.be.a(\"string\").and.not.empty;",
+                  "    pm.expect(e.detalles).to.be.an(\"array\");",
+                  "});",
+                  "pm.test(\"detalles nombra core, versionCore, plugins[0].version\", () => {",
+                  "    const c = e.detalles.map(d => d.campo);",
+                  "    [\"core\", \"versionCore\", \"plugins[0].version\"].forEach(x => pm.expect(c).to.include(x));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/verificaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "verificaciones"
+              ]
+            },
+            "description": "Campos vacíos o sin forma: todos los detalles juntos.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"core\": \"\",\n  \"plugins\": [\n    {\n      \"nombre\": \"kyc-pe\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Despliegue",
+      "description": "Crear plan, confirmar, ver y revertir. Crear un plan lee el clúster y confirmar aplica en él: sin Kubernetes, «Crear plan» responde 503 KUBERNETES_NO_DISPONIBLE y el resto del flujo se salta. Los casos negativos sí corren sin clúster.",
+      "item": [
+        {
+          "name": "Crear plan (kyc-pe 1.3.0 sobre core 2.1.0)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const p = pm.response.json();",
+                  "if (pm.response.code === 503) {",
+                  "    // Backend sin Kubernetes: el plan no se puede preparar porque no se sabe qué corre en el país.",
+                  "    pm.test(\"sin clúster: 503 KUBERNETES_NO_DISPONIBLE\", () => pm.expect(p.codigo).to.eql(\"KUBERNETES_NO_DISPONIBLE\"));",
+                  "    pm.collectionVariables.set(\"sinCluster\", \"true\");",
+                  "    pm.collectionVariables.unset(\"planId\");",
+                  "} else {",
+                  "    pm.collectionVariables.set(\"sinCluster\", \"false\");",
+                  "    pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));",
+                  "    pm.test(\"plan despliegue pendiente con resumen y cambios\", () => {",
+                  "        pm.expect(p.id).to.be.a(\"number\");",
+                  "        pm.expect(p.tipo).to.eql(\"despliegue\");",
+                  "        pm.expect(p.estado).to.eql(\"pendiente\");",
+                  "        pm.expect(p.creadoPor).to.eql(pm.variables.get(\"usuario\"));",
+                  "        pm.expect(p.venceEn).to.be.a(\"string\");",
+                  "        pm.expect(p.resumen.namespace).to.eql(\"synkra-\" + p.pais);",
+                  "        pm.expect(p.resumen.imagen).to.include(\"@sha256:\");",
+                  "        p.resumen.plugins.forEach(x => pm.expect(x.sha256).to.match(/^[0-9a-f]{64}$/));",
+                  "        pm.expect(p.cambios).to.have.all.keys(\"core\", \"anadidos\", \"quitados\", \"iguales\", \"sinCambios\");",
+                  "    });",
+                  "    pm.collectionVariables.set(\"planId\", p.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Synkra-Usuario",
+                "value": "{{usuario}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/despliegues",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "despliegues"
+              ]
+            },
+            "description": "H-11: prepara un plan pendiente para el país: resumen (namespace, imagen por digest, plugins con sha256) y cambios frente a lo que corre. Necesita leer el clúster: sin Kubernetes responde 503 KUBERNETES_NO_DISPONIBLE, el test lo acepta y marca sinCluster=true para saltar el resto del flujo. Guarda planId.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pais\": \"{{pais}}\",\n  \"core\": \"{{core}}\",\n  \"versionCore\": \"2.1.0\",\n  \"plugins\": [\n    {\n      \"nombre\": \"kyc-pe\",\n      \"version\": \"1.3.0\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Confirmar plan",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Necesita Kubernetes: si «Crear plan» respondió 503, esta petición se salta.",
+                  "if (pm.collectionVariables.get(\"sinCluster\") === \"true\") {",
+                  "    if (pm.execution && pm.execution.skipRequest) { pm.execution.skipRequest(); }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.collectionVariables.get(\"sinCluster\") === \"true\") {",
+                  "    pm.test.skip(\"Necesita Kubernetes (sin clúster «Crear plan» respondió 503)\", () => {});",
+                  "} else {",
+                  "    pm.test(\"HTTP 202\", () => pm.response.to.have.status(202));",
+                  "    const c = pm.response.json();",
+                  "    pm.test(\"despliegue registrado en aplicando\", () => {",
+                  "        pm.expect(c.id).to.eql(Number(pm.collectionVariables.get(\"planId\")));",
+                  "        pm.expect(c.estado).to.eql(\"aplicando\");",
+                  "        pm.expect(c.confirmadoPor).to.eql(pm.variables.get(\"usuario\"));",
+                  "        pm.expect(c.confirmadoEn).to.be.a(\"string\");",
+                  "    });",
+                  "    pm.test(\"Location al registro\", () => pm.expect(pm.response.headers.get(\"Location\")).to.eql(\"/api/despliegues/\" + c.id));",
+                  "    pm.collectionVariables.set(\"despliegueId\", c.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Synkra-Usuario",
+                "value": "{{usuario}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/despliegues/{{planId}}/confirmacion",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "despliegues",
+                "{{planId}}",
+                "confirmacion"
+              ]
+            },
+            "description": "H-12: construye y aplica los objetos del país y registra el despliegue en «aplicando» (202, Location al registro). El id del despliegue es el del plan. Guarda despliegueId."
+          },
+          "response": []
+        },
+        {
+          "name": "Confirmar el mismo plan otra vez (409)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Necesita Kubernetes: si «Crear plan» respondió 503, esta petición se salta.",
+                  "if (pm.collectionVariables.get(\"sinCluster\") === \"true\") {",
+                  "    if (pm.execution && pm.execution.skipRequest) { pm.execution.skipRequest(); }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.collectionVariables.get(\"sinCluster\") === \"true\") {",
+                  "    pm.test.skip(\"Necesita Kubernetes (sin clúster «Crear plan» respondió 503)\", () => {});",
+                  "} else {",
+                  "    pm.test(\"HTTP 409\", () => pm.response.to.have.status(409));",
+                  "    const e = pm.response.json();",
+                  "    pm.test(\"ErrorApi con codigo PLAN_NO_PENDIENTE\", () => {",
+                  "        pm.expect(e.codigo).to.eql(\"PLAN_NO_PENDIENTE\");",
+                  "        pm.expect(e.mensaje).to.be.a(\"string\").and.not.empty;",
+                  "        pm.expect(e.detalles).to.be.an(\"array\");",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Synkra-Usuario",
+                "value": "{{usuario}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/despliegues/{{planId}}/confirmacion",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "despliegues",
+                "{{planId}}",
+                "confirmacion"
+              ]
+            },
+            "description": "R-D5: un plan ya confirmado no se confirma dos veces."
+          },
+          "response": []
+        },
+        {
+          "name": "Ver despliegue confirmado",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Necesita Kubernetes: si «Crear plan» respondió 503, esta petición se salta.",
+                  "if (pm.collectionVariables.get(\"sinCluster\") === \"true\") {",
+                  "    if (pm.execution && pm.execution.skipRequest) { pm.execution.skipRequest(); }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.collectionVariables.get(\"sinCluster\") === \"true\") {",
+                  "    pm.test.skip(\"Necesita Kubernetes (sin clúster «Crear plan» respondió 503)\", () => {});",
+                  "} else {",
+                  "    pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "    const d = pm.response.json();",
+                  "    pm.test(\"despliegue del país con veredicto APROBADA\", () => {",
+                  "        pm.expect(d.id).to.eql(Number(pm.collectionVariables.get(\"despliegueId\")));",
+                  "        pm.expect(d.pais).to.eql(pm.variables.get(\"pais\"));",
+                  "        pm.expect(d.tipo).to.eql(\"despliegue\");",
+                  "        pm.expect(d.estado).to.be.oneOf([\"aplicando\", \"listo\", \"fallido\"]);",
+                  "        pm.expect(d.veredicto.global).to.eql(\"APROBADA\");",
+                  "        pm.expect(d.plugins[0].sha256).to.eql(pm.collectionVariables.get(\"sha256\"));",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/despliegues/{{despliegueId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "despliegues",
+                "{{despliegueId}}"
+              ]
+            },
+            "description": "H-18: el despliegue en el registro, con el veredicto guardado. Un plan pendiente (sin confirmar) no está en el registro: da 404."
+          },
+          "response": []
+        },
+        {
+          "name": "Esperar a que el despliegue quede listo",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Necesita Kubernetes: si «Crear plan» respondió 503, esta petición se salta.",
+                  "if (pm.collectionVariables.get(\"sinCluster\") === \"true\") {",
+                  "    if (pm.execution && pm.execution.skipRequest) { pm.execution.skipRequest(); }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.collectionVariables.get(\"sinCluster\") === \"true\") {",
+                  "    pm.test.skip(\"Necesita Kubernetes (sin clúster «Crear plan» respondió 503)\", () => {});",
+                  "} else {",
+                  "    // Vuelve a pedir el despliegue cada 5 s mientras siga «aplicando» (la vigilancia lo cierra en <= 3 min).",
+                  "    const d = pm.response.json();",
+                  "    const n = Number(pm.collectionVariables.get(\"intentos_despliegueId\") || 0);",
+                  "    if (pm.response.code === 200 && d.estado === \"aplicando\" && n < 40) {",
+                  "        pm.collectionVariables.set(\"intentos_despliegueId\", n + 1);",
+                  "        console.log(\"despliegue 1: sigue aplicando, intento \" + (n + 1));",
+                  "        setTimeout(() => {}, 5000);",
+                  "        postman.setNextRequest(pm.info.requestName);",
+                  "    } else {",
+                  "        pm.collectionVariables.unset(\"intentos_despliegueId\");",
+                  "        pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "        pm.test(\"estado listo\", () => pm.expect(d.estado).to.eql(\"listo\"));",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/despliegues/{{despliegueId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "despliegues",
+                "{{despliegueId}}"
+              ]
+            },
+            "description": "Sondea cada 5 s (hasta 40 veces) mientras el despliegue siga en «aplicando». Pensada para el Collection Runner o newman (usa postman.setNextRequest)."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear plan 2 (kyc-pe 2.0.0 sobre core 3.0.0)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Necesita Kubernetes: si «Crear plan» respondió 503, esta petición se salta.",
+                  "if (pm.collectionVariables.get(\"sinCluster\") === \"true\") {",
+                  "    if (pm.execution && pm.execution.skipRequest) { pm.execution.skipRequest(); }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.collectionVariables.get(\"sinCluster\") === \"true\") {",
+                  "    pm.test.skip(\"Necesita Kubernetes (sin clúster «Crear plan» respondió 503)\", () => {});",
+                  "} else {",
+                  "    const p = pm.response.json();",
+                  "    if (pm.response.code === 503) {",
+                  "        // Backend sin Kubernetes: el plan no se puede preparar porque no se sabe qué corre en el país.",
+                  "        pm.test(\"sin clúster: 503 KUBERNETES_NO_DISPONIBLE\", () => pm.expect(p.codigo).to.eql(\"KUBERNETES_NO_DISPONIBLE\"));",
+                  "        pm.collectionVariables.set(\"sinCluster\", \"true\");",
+                  "        pm.collectionVariables.unset(\"planId2\");",
+                  "    } else {",
+                  "        pm.collectionVariables.set(\"sinCluster\", \"false\");",
+                  "        pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));",
+                  "        pm.test(\"plan despliegue pendiente con resumen y cambios\", () => {",
+                  "            pm.expect(p.id).to.be.a(\"number\");",
+                  "            pm.expect(p.tipo).to.eql(\"despliegue\");",
+                  "            pm.expect(p.estado).to.eql(\"pendiente\");",
+                  "            pm.expect(p.creadoPor).to.eql(pm.variables.get(\"usuario\"));",
+                  "            pm.expect(p.venceEn).to.be.a(\"string\");",
+                  "            pm.expect(p.resumen.namespace).to.eql(\"synkra-\" + p.pais);",
+                  "            pm.expect(p.resumen.imagen).to.include(\"@sha256:\");",
+                  "            p.resumen.plugins.forEach(x => pm.expect(x.sha256).to.match(/^[0-9a-f]{64}$/));",
+                  "            pm.expect(p.cambios).to.have.all.keys(\"core\", \"anadidos\", \"quitados\", \"iguales\", \"sinCambios\");",
+                  "        });",
+                  "        pm.collectionVariables.set(\"planId2\", p.id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Synkra-Usuario",
+                "value": "{{usuario}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/despliegues",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "despliegues"
+              ]
+            },
+            "description": "Segundo despliegue del país, para tener a qué revertir. Guarda planId2.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pais\": \"{{pais}}\",\n  \"core\": \"{{core}}\",\n  \"versionCore\": \"3.0.0\",\n  \"plugins\": [\n    {\n      \"nombre\": \"kyc-pe\",\n      \"version\": \"2.0.0\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Confirmar plan 2",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Necesita Kubernetes: si «Crear plan» respondió 503, esta petición se salta.",
+                  "if (pm.collectionVariables.get(\"sinCluster\") === \"true\") {",
+                  "    if (pm.execution && pm.execution.skipRequest) { pm.execution.skipRequest(); }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.collectionVariables.get(\"sinCluster\") === \"true\") {",
+                  "    pm.test.skip(\"Necesita Kubernetes (sin clúster «Crear plan» respondió 503)\", () => {});",
+                  "} else {",
+                  "    pm.test(\"HTTP 202\", () => pm.response.to.have.status(202));",
+                  "    const c = pm.response.json();",
+                  "    pm.test(\"despliegue registrado en aplicando\", () => {",
+                  "        pm.expect(c.id).to.eql(Number(pm.collectionVariables.get(\"planId2\")));",
+                  "        pm.expect(c.estado).to.eql(\"aplicando\");",
+                  "        pm.expect(c.confirmadoPor).to.eql(pm.variables.get(\"usuario\"));",
+                  "        pm.expect(c.confirmadoEn).to.be.a(\"string\");",
+                  "    });",
+                  "    pm.test(\"Location al registro\", () => pm.expect(pm.response.headers.get(\"Location\")).to.eql(\"/api/despliegues/\" + c.id));",
+                  "    pm.collectionVariables.set(\"despliegueId2\", c.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Synkra-Usuario",
+                "value": "{{usuario}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/despliegues/{{planId2}}/confirmacion",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "despliegues",
+                "{{planId2}}",
+                "confirmacion"
+              ]
+            },
+            "description": "Guarda despliegueId2."
+          },
+          "response": []
+        },
+        {
+          "name": "Esperar a que el despliegue 2 quede listo",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Necesita Kubernetes: si «Crear plan» respondió 503, esta petición se salta.",
+                  "if (pm.collectionVariables.get(\"sinCluster\") === \"true\") {",
+                  "    if (pm.execution && pm.execution.skipRequest) { pm.execution.skipRequest(); }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.collectionVariables.get(\"sinCluster\") === \"true\") {",
+                  "    pm.test.skip(\"Necesita Kubernetes (sin clúster «Crear plan» respondió 503)\", () => {});",
+                  "} else {",
+                  "    // Vuelve a pedir el despliegue cada 5 s mientras siga «aplicando» (la vigilancia lo cierra en <= 3 min).",
+                  "    const d = pm.response.json();",
+                  "    const n = Number(pm.collectionVariables.get(\"intentos_despliegueId2\") || 0);",
+                  "    if (pm.response.code === 200 && d.estado === \"aplicando\" && n < 40) {",
+                  "        pm.collectionVariables.set(\"intentos_despliegueId2\", n + 1);",
+                  "        console.log(\"despliegue 2: sigue aplicando, intento \" + (n + 1));",
+                  "        setTimeout(() => {}, 5000);",
+                  "        postman.setNextRequest(pm.info.requestName);",
+                  "    } else {",
+                  "        pm.collectionVariables.unset(\"intentos_despliegueId2\");",
+                  "        pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "        pm.test(\"estado listo\", () => pm.expect(d.estado).to.eql(\"listo\"));",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/despliegues/{{despliegueId2}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "despliegues",
+                "{{despliegueId2}}"
+              ]
+            },
+            "description": "Igual que la espera anterior, para el despliegue 2."
+          },
+          "response": []
+        },
+        {
+          "name": "Revertir al despliegue 1",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Necesita Kubernetes: si «Crear plan» respondió 503, esta petición se salta.",
+                  "if (pm.collectionVariables.get(\"sinCluster\") === \"true\") {",
+                  "    if (pm.execution && pm.execution.skipRequest) { pm.execution.skipRequest(); }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.collectionVariables.get(\"sinCluster\") === \"true\") {",
+                  "    pm.test.skip(\"Necesita Kubernetes (sin clúster «Crear plan» respondió 503)\", () => {});",
+                  "} else {",
+                  "    const p = pm.response.json();",
+                  "    if (pm.response.code === 503) {",
+                  "        // Backend sin Kubernetes: el plan no se puede preparar porque no se sabe qué corre en el país.",
+                  "        pm.test(\"sin clúster: 503 KUBERNETES_NO_DISPONIBLE\", () => pm.expect(p.codigo).to.eql(\"KUBERNETES_NO_DISPONIBLE\"));",
+                  "        pm.collectionVariables.set(\"sinCluster\", \"true\");",
+                  "        pm.collectionVariables.unset(\"planReversionId\");",
+                  "    } else {",
+                  "        pm.collectionVariables.set(\"sinCluster\", \"false\");",
+                  "        pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));",
+                  "        pm.test(\"plan reversion pendiente con resumen y cambios\", () => {",
+                  "            pm.expect(p.id).to.be.a(\"number\");",
+                  "            pm.expect(p.tipo).to.eql(\"reversion\");",
+                  "            pm.expect(p.estado).to.eql(\"pendiente\");",
+                  "            pm.expect(p.creadoPor).to.eql(pm.variables.get(\"usuario\"));",
+                  "            pm.expect(p.venceEn).to.be.a(\"string\");",
+                  "            pm.expect(p.resumen.namespace).to.eql(\"synkra-\" + p.pais);",
+                  "            pm.expect(p.resumen.imagen).to.include(\"@sha256:\");",
+                  "            p.resumen.plugins.forEach(x => pm.expect(x.sha256).to.match(/^[0-9a-f]{64}$/));",
+                  "            pm.expect(p.cambios).to.have.all.keys(\"core\", \"anadidos\", \"quitados\", \"iguales\", \"sinCambios\");",
+                  "        });",
+                  "        pm.collectionVariables.set(\"planReversionId\", p.id);",
+                  "    }",
+                  "    pm.test(\"origenId es el despliegue 1\", () => pm.expect(p.origenId).to.eql(Number(pm.collectionVariables.get(\"despliegueId\"))));",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Synkra-Usuario",
+                "value": "{{usuario}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/despliegues/{{despliegueId}}/reversion",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "despliegues",
+                "{{despliegueId}}",
+                "reversion"
+              ]
+            },
+            "description": "H-20 (R-D11): revertir es crear un plan nuevo de tipo «reversion» con el core y los plugins del despliegue origen, que debe estar «listo». Sin cuerpo. Guarda planReversionId."
+          },
+          "response": []
+        },
+        {
+          "name": "Confirmar la reversión",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Necesita Kubernetes: si «Crear plan» respondió 503, esta petición se salta.",
+                  "if (pm.collectionVariables.get(\"sinCluster\") === \"true\") {",
+                  "    if (pm.execution && pm.execution.skipRequest) { pm.execution.skipRequest(); }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.collectionVariables.get(\"sinCluster\") === \"true\") {",
+                  "    pm.test.skip(\"Necesita Kubernetes (sin clúster «Crear plan» respondió 503)\", () => {});",
+                  "} else {",
+                  "    pm.test(\"HTTP 202\", () => pm.response.to.have.status(202));",
+                  "    const c = pm.response.json();",
+                  "    pm.test(\"despliegue registrado en aplicando\", () => {",
+                  "        pm.expect(c.id).to.eql(Number(pm.collectionVariables.get(\"planReversionId\")));",
+                  "        pm.expect(c.estado).to.eql(\"aplicando\");",
+                  "        pm.expect(c.confirmadoPor).to.eql(pm.variables.get(\"usuario\"));",
+                  "        pm.expect(c.confirmadoEn).to.be.a(\"string\");",
+                  "    });",
+                  "    pm.test(\"Location al registro\", () => pm.expect(pm.response.headers.get(\"Location\")).to.eql(\"/api/despliegues/\" + c.id));",
+                  "    pm.collectionVariables.set(\"despliegueReversionId\", c.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Synkra-Usuario",
+                "value": "{{usuario}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/despliegues/{{planReversionId}}/confirmacion",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "despliegues",
+                "{{planReversionId}}",
+                "confirmacion"
+              ]
+            },
+            "description": "La reversión se confirma como cualquier plan."
+          },
+          "response": []
+        },
+        {
+          "name": "Despliegue: casos negativos",
+          "item": [
+            {
+              "name": "Plan con plugin incompatible (422)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"HTTP 422\", () => pm.response.to.have.status(422));",
+                      "const e = pm.response.json();",
+                      "pm.test(\"ErrorApi con codigo COMBINACION_RECHAZADA\", () => {",
+                      "    pm.expect(e.codigo).to.eql(\"COMBINACION_RECHAZADA\");",
+                      "    pm.expect(e.mensaje).to.be.a(\"string\").and.not.empty;",
+                      "    pm.expect(e.detalles).to.be.an(\"array\");",
+                      "});",
+                      "pm.test(\"detalles nombra plugins.kyc-pe\", () => {",
+                      "    const c = e.detalles.map(d => d.campo);",
+                      "    [\"plugins.kyc-pe\"].forEach(x => pm.expect(c).to.include(x));",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "X-Synkra-Usuario",
+                    "value": "{{usuario}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/despliegues",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "despliegues"
+                  ]
+                },
+                "description": "R-D3: la verificación va antes de leer el clúster, así que también funciona sin Kubernetes. Un detalle por motivo, con campo plugins.<nombre>.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"pais\": \"{{pais}}\",\n  \"core\": \"{{core}}\",\n  \"versionCore\": \"2.1.0\",\n  \"plugins\": [\n    {\n      \"nombre\": \"kyc-pe\",\n      \"version\": \"2.0.0\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Plan con país no permitido (422)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"HTTP 422\", () => pm.response.to.have.status(422));",
+                      "const e = pm.response.json();",
+                      "pm.test(\"ErrorApi con codigo PAIS_NO_PERMITIDO\", () => {",
+                      "    pm.expect(e.codigo).to.eql(\"PAIS_NO_PERMITIDO\");",
+                      "    pm.expect(e.mensaje).to.be.a(\"string\").and.not.empty;",
+                      "    pm.expect(e.detalles).to.be.an(\"array\");",
+                      "});",
+                      "pm.test(\"detalles nombra pais\", () => {",
+                      "    const c = e.detalles.map(d => d.campo);",
+                      "    [\"pais\"].forEach(x => pm.expect(c).to.include(x));",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "X-Synkra-Usuario",
+                    "value": "{{usuario}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/despliegues",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "despliegues"
+                  ]
+                },
+                "description": "R-D1: el país debe estar en SYNKRA_PAISES (por defecto co,pe).",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"pais\": \"mx\",\n  \"core\": \"{{core}}\",\n  \"versionCore\": \"2.1.0\",\n  \"plugins\": [\n    {\n      \"nombre\": \"kyc-pe\",\n      \"version\": \"1.3.0\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Plan con usuario inválido (422)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"HTTP 422\", () => pm.response.to.have.status(422));",
+                      "const e = pm.response.json();",
+                      "pm.test(\"ErrorApi con codigo USUARIO_INVALIDO\", () => {",
+                      "    pm.expect(e.codigo).to.eql(\"USUARIO_INVALIDO\");",
+                      "    pm.expect(e.mensaje).to.be.a(\"string\").and.not.empty;",
+                      "    pm.expect(e.detalles).to.be.an(\"array\");",
+                      "});",
+                      "pm.test(\"detalles nombra X-Synkra-Usuario\", () => {",
+                      "    const c = e.detalles.map(d => d.campo);",
+                      "    [\"X-Synkra-Usuario\"].forEach(x => pm.expect(c).to.include(x));",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "X-Synkra-Usuario",
+                    "value": "Ana Perez"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/despliegues",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "despliegues"
+                  ]
+                },
+                "description": "R-D8: X-Synkra-Usuario es opcional (sin ella, «anonimo»), pero si llega debe tener de 1 a 64 caracteres en minúsculas, dígitos, punto, guion o guion bajo.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"pais\": \"{{pais}}\",\n  \"core\": \"{{core}}\",\n  \"versionCore\": \"2.1.0\",\n  \"plugins\": [\n    {\n      \"nombre\": \"kyc-pe\",\n      \"version\": \"1.3.0\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Confirmar plan inexistente (404)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"HTTP 404\", () => pm.response.to.have.status(404));",
+                      "const e = pm.response.json();",
+                      "pm.test(\"ErrorApi con codigo NO_ENCONTRADO\", () => {",
+                      "    pm.expect(e.codigo).to.eql(\"NO_ENCONTRADO\");",
+                      "    pm.expect(e.mensaje).to.be.a(\"string\").and.not.empty;",
+                      "    pm.expect(e.detalles).to.be.an(\"array\");",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-Synkra-Usuario",
+                    "value": "{{usuario}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/despliegues/999999/confirmacion",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "despliegues",
+                    "999999",
+                    "confirmacion"
+                  ]
+                },
+                "description": "Un plan que no existe."
+              },
+              "response": []
+            },
+            {
+              "name": "Revertir despliegue inexistente (404)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"HTTP 404\", () => pm.response.to.have.status(404));",
+                      "const e = pm.response.json();",
+                      "pm.test(\"ErrorApi con codigo NO_ENCONTRADO\", () => {",
+                      "    pm.expect(e.codigo).to.eql(\"NO_ENCONTRADO\");",
+                      "    pm.expect(e.mensaje).to.be.a(\"string\").and.not.empty;",
+                      "    pm.expect(e.detalles).to.be.an(\"array\");",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-Synkra-Usuario",
+                    "value": "{{usuario}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/despliegues/999999/reversion",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "despliegues",
+                    "999999",
+                    "reversion"
+                  ]
+                },
+                "description": "El origen de la reversión no está en el registro."
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "5. Registro",
+      "description": "Vista general, historial por país y detalle. Solo lectura.",
+      "item": [
+        {
+          "name": "Vista general por país",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const l = pm.response.json();",
+                  "pm.test(\"un elemento por país configurado (co y pe)\", () => pm.expect(l.map(v => v.pais)).to.include.members([\"co\", \"pe\"]));",
+                  "pm.test(\"lectura conocida\", () => l.forEach(v => pm.expect(v.lectura).to.be.oneOf([\"vacio\", \"leido\", \"inconsistente\", \"no_disponible\"])));",
+                  "const v = l.find(x => x.pais === pm.variables.get(\"pais\"));",
+                  "if (pm.collectionVariables.get(\"sinCluster\") === \"true\") {",
+                  "    pm.test(\"sin clúster: lectura no_disponible\", () => pm.expect(v.lectura).to.eql(\"no_disponible\"));",
+                  "} else if (pm.collectionVariables.get(\"despliegueReversionId\")) {",
+                  "    pm.test(\"con clúster: el país se leyó\", () => pm.expect(v.lectura).to.eql(\"leido\"));",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/paises",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "paises"
+              ]
+            },
+            "description": "H-19: un elemento por país configurado con lo que corre (lectura del clúster) y si concuerda con el último «listo». Sin Kubernetes responde 200 igual, con lectura «no_disponible» en cada país."
+          },
+          "response": []
+        },
+        {
+          "name": "Historial del país",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "const l = pm.response.json();",
+                  "pm.test(\"es una lista\", () => pm.expect(l).to.be.an(\"array\"));",
+                  "pm.test(\"todos del país\", () => l.forEach(d => pm.expect(d.pais).to.eql(pm.variables.get(\"pais\"))));",
+                  "if (pm.collectionVariables.get(\"despliegueId\")) {",
+                  "    pm.test(\"incluye el despliegue 1\", () => pm.expect(l.map(d => d.id)).to.include(Number(pm.collectionVariables.get(\"despliegueId\"))));",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/paises/{{pais}}/despliegues",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "paises",
+                "{{pais}}",
+                "despliegues"
+              ]
+            },
+            "description": "H-18: los despliegues registrados del país (sin el veredicto ni el contexto, que van en el detalle)."
+          },
+          "response": []
+        },
+        {
+          "name": "Detalle de un despliegue",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Necesita Kubernetes: si «Crear plan» respondió 503, esta petición se salta.",
+                  "if (pm.collectionVariables.get(\"sinCluster\") === \"true\") {",
+                  "    if (pm.execution && pm.execution.skipRequest) { pm.execution.skipRequest(); }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.collectionVariables.get(\"sinCluster\") === \"true\") {",
+                  "    pm.test.skip(\"Necesita Kubernetes (sin clúster «Crear plan» respondió 503)\", () => {});",
+                  "} else {",
+                  "    pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "    const d = pm.response.json();",
+                  "    pm.test(\"campos del detalle\", () => pm.expect(d).to.include.keys(\"id\", \"pais\", \"tipo\", \"origenId\", \"core\", \"versionCore\", \"imagen\", \"plugins\", \"creadoPor\", \"confirmadoPor\", \"confirmadoEn\", \"estado\", \"terminadoEn\", \"veredicto\", \"contexto\"));",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/despliegues/{{despliegueId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "despliegues",
+                "{{despliegueId}}"
+              ]
+            },
+            "description": "H-18: un despliegue con su veredicto y, si falló, el contexto (logs y eventos)."
+          },
+          "response": []
+        },
+        {
+          "name": "Registro: casos negativos",
+          "item": [
+            {
+              "name": "Historial con país inválido (422)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"HTTP 422\", () => pm.response.to.have.status(422));",
+                      "const e = pm.response.json();",
+                      "pm.test(\"ErrorApi con codigo PAIS_INVALIDO\", () => {",
+                      "    pm.expect(e.codigo).to.eql(\"PAIS_INVALIDO\");",
+                      "    pm.expect(e.mensaje).to.be.a(\"string\").and.not.empty;",
+                      "    pm.expect(e.detalles).to.be.an(\"array\");",
+                      "});",
+                      "pm.test(\"detalles nombra pais\", () => {",
+                      "    const c = e.detalles.map(d => d.campo);",
+                      "    [\"pais\"].forEach(x => pm.expect(c).to.include(x));",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/paises/PER/despliegues",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "paises",
+                    "PER",
+                    "despliegues"
+                  ]
+                },
+                "description": "El país debe ser de dos letras en minúscula."
+              },
+              "response": []
+            },
+            {
+              "name": "Despliegue inexistente (404)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"HTTP 404\", () => pm.response.to.have.status(404));",
+                      "const e = pm.response.json();",
+                      "pm.test(\"ErrorApi con codigo NO_ENCONTRADO\", () => {",
+                      "    pm.expect(e.codigo).to.eql(\"NO_ENCONTRADO\");",
+                      "    pm.expect(e.mensaje).to.be.a(\"string\").and.not.empty;",
+                      "    pm.expect(e.detalles).to.be.an(\"array\");",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/despliegues/999999",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "despliegues",
+                    "999999"
+                  ]
+                },
+                "description": "Un id que no está en el registro."
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "core",
+      "value": "synkra-core",
+      "description": "Nombre del core de la demo (el de los descriptores de kyc-co y kyc-pe)."
+    },
+    {
+      "key": "sha256",
+      "value": "",
+      "description": "Lo fija «Subir plugin kyc-pe 1.3.0»."
+    },
+    {
+      "key": "sha256KycCo",
+      "value": "",
+      "description": "Lo fija «Subir plugin kyc-co 1.0.0»."
+    },
+    {
+      "key": "sha256KycPe200",
+      "value": "",
+      "description": "Lo fija «Subir plugin kyc-pe 2.0.0»."
+    },
+    {
+      "key": "planId",
+      "value": "",
+      "description": "Lo fija «Crear plan»."
+    },
+    {
+      "key": "despliegueId",
+      "value": "",
+      "description": "Lo fija «Confirmar plan» (es el mismo id del plan)."
+    },
+    {
+      "key": "planId2",
+      "value": ""
+    },
+    {
+      "key": "despliegueId2",
+      "value": ""
+    },
+    {
+      "key": "planReversionId",
+      "value": ""
+    },
+    {
+      "key": "despliegueReversionId",
+      "value": ""
+    },
+    {
+      "key": "sinCluster",
+      "value": "",
+      "description": "true si «Crear plan» respondió 503 KUBERNETES_NO_DISPONIBLE."
+    }
+  ]
+}

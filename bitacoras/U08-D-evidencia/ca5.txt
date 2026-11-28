@@ -1,0 +1,110 @@
+fecha: 2026-11-28T01:28:39-05:00
+sha: d8390bd (arbol: 1 cambios sin confirmar)
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U08-D-evidencia/ca5.sh
+> Task :verificador:compileJava UP-TO-DATE
+> Task :backend:compileJava UP-TO-DATE
+> Task :backend:processResources UP-TO-DATE
+> Task :backend:classes UP-TO-DATE
+> Task :verificador:compileTestFixturesJava UP-TO-DATE
+> Task :backend:compileTestJava UP-TO-DATE
+> Task :backend:processTestResources UP-TO-DATE
+> Task :backend:testClasses UP-TO-DATE
+> Task :verificador:processResources NO-SOURCE
+> Task :verificador:classes UP-TO-DATE
+> Task :verificador:jar UP-TO-DATE
+> Task :verificador:processTestFixturesResources NO-SOURCE
+> Task :verificador:testFixturesClasses UP-TO-DATE
+> Task :verificador:testFixturesJar UP-TO-DATE
+
+> Task :backend:test
+
+ConstruirObjetosPaisTest > dosPlanesQueSoloDifierenEnUnPluginDanAnotacionesDistintas() FAILED
+    java.lang.AssertionError at ConstruirObjetosPaisTest.java:119
+
+ConstruirObjetosPaisTest > elMismoPlanConLosPluginsEnOtroOrdenDaLaMismaAnotacion() FAILED
+    java.lang.AssertionError at ConstruirObjetosPaisTest.java:129
+
+ConstruirObjetosPaisTest > laPlantillaDelPodLlevaElSha256DeLaConfiguracionDelConfigMap() FAILED
+    org.opentest4j.AssertionFailedError at ConstruirObjetosPaisTest.java:111
+
+35 tests completed, 3 failed
+
+> Task :backend:test FAILED
+
+[Incubating] Problems report is available at: file:///home/casdav/Projects/Master/wt-m6r-U08-D/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':backend:test'.
+> There were failing tests. See the report at: file:///home/casdav/Projects/Master/wt-m6r-U08-D/backend/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 7s
+9 actionable tasks: 1 executed, 8 up-to-date
+gradle=1
+kind delete cluster --name synkra --kubeconfig "/home/casdav/Projects/Master/wt-m6r-U08-D/.kube/kind-synkra.yaml"
+Deleting cluster "synkra" ...
+Deleted nodes: ["synkra-worker" "synkra-control-plane"]
+kind-registry
+borrar=0
+install=0
+ok preparacion GET /actuator/health 200 UP
+ok CU1 core synkra-core 2.1.0 registrado (201)
+4xx 409 CONFLICTO POST /api/cores
+ok CU1 core synkra-core 3.0.0 registrado (201)
+ok CU1 el 422 detalla nombre, version e imagen
+4xx 422 ENTIDAD_NO_PROCESABLE POST /api/cores
+ok CU1 kyc-co 1.0.0 subido (201) con el sha256 del jar local
+4xx 409 CONFLICTO POST /api/cores/synkra-core/plugins
+ok CU1 kyc-pe 1.3.0 subido (201) con el sha256 del jar local
+ok CU1 kyc-pe 2.0.0 subido (201) con el sha256 del jar local
+ok CU1 GET /api/cores/synkra-core lista 2.1.0 y 3.0.0
+ok CU1 ?pais=co trae kyc-co 1.0.0
+ok CU1 kyc-co 1.0.0 lleva pais co y cliente e2e
+ok CU1 ?pais=pe trae kyc-pe 1.3.0 y 2.0.0
+OK CU1
+tiempo CU1 2s
+ok CU2 plan creado: pendiente y creadoPor e2e
+ok CU2 cambios: añade, quita y conserva lo que corresponde frente a lo que corría
+cambios de CU2 (antes: vacío): {"core":{"antes":null,"despues":"localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76","igual":false},"anadidos":[{"nombre":"kyc-co","version":"1.0.0","sha256":"90f9ef4d8fde6c3103f346df6270c1edb64170fb00f2c81c0ff4366925376d3c"}],"quitados":[],"iguales":[],"sinCambios":false}
+4xx 422 PAIS_NO_PERMITIDO POST /api/despliegues
+4xx 422 USUARIO_INVALIDO POST /api/despliegues
+ok CU2 confirmación de 1: aplicando y confirmadoPor e2e
+4xx 409 PLAN_NO_PENDIENTE POST /api/despliegues/1/confirmacion
+ok CU2 el despliegue 1 llegó a listo en 18s
+ok CU2 rollout status de synkra-core terminó
+ok CU2 la imagen del contenedor core es la registrada
+ok CU2 el ConfigMap lista solo kyc-co 1.0.0
+ok CU2 lo que el core cargó es exactamente kyc-co 1.0.0
+ok CU2 managedFields de deployment/synkra-core: synkra Apply
+ok CU2 managedFields de configmap/synkra-core-config: synkra Apply
+ok CU2 managedFields de service/synkra-core: synkra Apply
+ok CU2 GET /api/despliegues/1: listo con su imagen y sus plugins
+ok CU2 GET /api/paises: co concuerda true con ultimoDespliegueId 1
+CU2 anotacion=vacía pods=synkra-core-6b79bf8b66-p299p
+OK CU2
+tiempo CU2 23s
+ok CU3 plan creado: pendiente y creadoPor e2e
+ok CU3 cambios: añade, quita y conserva lo que corresponde frente a lo que corría
+ok CU3 cambios: solo se añade kyc-pe 1.3.0
+ok CU3 confirmación de 2: aplicando y confirmadoPor e2e
+ok CU3 el despliegue 2 llegó a listo en 6s
+ok CU3 rollout status de synkra-core terminó
+FALLA CU3: la plantilla del pod no cambió: synkra.io/config-sha256 era 'vacía' y es 'vacía' (un cambio solo de plugins no recreó el pod)
+
+real	0m31,365s
+user	0m1,131s
+sys	0m0,871s
+e2e=1

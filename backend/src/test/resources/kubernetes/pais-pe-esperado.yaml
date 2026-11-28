@@ -51,6 +51,8 @@ spec:
       labels:
         app.kubernetes.io/name: synkra-core
         app.kubernetes.io/managed-by: synkra
+      annotations:
+        synkra.io/config-sha256: cdcd487f62cd4f25c9ca95b63fbd1f715f8583c4be513d9c88e9d9c2e2e6239f
     spec:
       automountServiceAccountToken: false
       initContainers:

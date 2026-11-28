@@ -1,0 +1,99 @@
+fecha: 2026-11-28T02:57:37-05:00
+sha: c436428 (arbol: 4 cambios sin confirmar)
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U08-D-evidencia/ca4.sh
+ok preparacion GET /actuator/health 200 UP
+ok CU1 core synkra-core 2.1.0 ya estaba (409 CONFLICTO); imagen localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76
+ok CU1 el registro sirve el digest sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76
+4xx 409 CONFLICTO POST /api/cores
+ok CU1 core synkra-core 3.0.0 ya estaba (409 CONFLICTO); imagen localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76
+ok CU1 el registro sirve el digest sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76
+ok CU1 el 422 detalla nombre, version e imagen
+4xx 422 ENTIDAD_NO_PROCESABLE POST /api/cores
+ok CU1 kyc-co 1.0.0 ya estaba (409 CONFLICTO) y GET lo trae con su coreCompatible
+4xx 409 CONFLICTO POST /api/cores/synkra-core/plugins
+ok CU1 kyc-pe 1.3.0 ya estaba (409 CONFLICTO) y GET lo trae con su coreCompatible
+ok CU1 kyc-pe 2.0.0 ya estaba (409 CONFLICTO) y GET lo trae con su coreCompatible
+ok CU1 GET /api/cores/synkra-core lista 2.1.0 y 3.0.0
+ok CU1 ?pais=co trae kyc-co 1.0.0
+ok CU1 ?pais=pe trae kyc-pe 1.3.0 y 2.0.0
+OK CU1
+tiempo CU1 1s
+ok CU2 plan creado: pendiente y creadoPor e2e
+ok CU2 cambios: añade, quita y conserva lo que corresponde frente a lo que corría
+cambios de CU2 (antes: kyc-co 1.0.0,kyc-pe 1.3.0): {"core":{"antes":"localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76","despues":"localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76","igual":true},"anadidos":[],"quitados":[{"nombre":"kyc-pe","version":"1.3.0","sha256":"3bccc0bdbeabce892015da00b4fbda4487db214a324314950036ef316564974f"}],"iguales":[{"nombre":"kyc-co","version":"1.0.0","sha256":"90f9ef4d8fde6c3103f346df6270c1edb64170fb00f2c81c0ff4366925376d3c"}],"sinCambios":false}
+4xx 422 PAIS_NO_PERMITIDO POST /api/despliegues
+4xx 422 USUARIO_INVALIDO POST /api/despliegues
+ok CU2 confirmación de 6: aplicando y confirmadoPor e2e
+4xx 409 PLAN_NO_PENDIENTE POST /api/despliegues/6/confirmacion
+ok CU2 el despliegue 6 llegó a listo en 15s
+ok CU2 rollout status de synkra-core terminó
+ok CU2 la imagen del contenedor core es la registrada
+ok CU2 el ConfigMap lista solo kyc-co 1.0.0
+ok CU2 lo que el core cargó es exactamente kyc-co 1.0.0
+ok CU2 managedFields de deployment/synkra-core: synkra Apply
+ok CU2 managedFields de configmap/synkra-core-config: synkra Apply
+ok CU2 managedFields de service/synkra-core: synkra Apply
+ok CU2 GET /api/despliegues/6: listo con su imagen y sus plugins
+ok CU2 GET /api/paises: co concuerda true con ultimoDespliegueId 6
+CU2 anotacion=c484c4b025f4a6605fbb92d23e28a7dd7f97f32679248bf97be07674bc3c294b pods=synkra-core-c6fc84b85-wcv74
+OK CU2
+tiempo CU2 16s
+ok CU3 plan creado: pendiente y creadoPor e2e
+ok CU3 cambios: añade, quita y conserva lo que corresponde frente a lo que corría
+ok CU3 cambios: solo se añade kyc-pe 1.3.0
+ok CU3 confirmación de 7: aplicando y confirmadoPor e2e
+ok CU3 el despliegue 7 llegó a listo en 15s
+ok CU3 rollout status de synkra-core terminó
+ok CU3 la anotación synkra.io/config-sha256 cambió (c484c4b025f4a6605fbb92d23e28a7dd7f97f32679248bf97be07674bc3c294b a 8e171718abb1fb0639c96f8bf0487210b34eb843831f50d76b4cf9e5a66739f4)
+ok CU3 hay un pod nuevo (synkra-core-c6fc84b85-wcv74 a synkra-core-846b8569bf-c5fvd)
+ok CU3 la imagen del contenedor core no cambió
+ok CU3 el ConfigMap lista kyc-co 1.0.0 y kyc-pe 1.3.0
+ok CU3 lo que el core cargó es exactamente kyc-co 1.0.0,kyc-pe 1.3.0
+ok CU3 GET /api/paises: co concuerda true con ultimoDespliegueId 7
+OK CU3
+tiempo CU3 16s
+ok CU4 el 422 trae un detalle de plugins.kyc-pe
+motivo: El plugin 'kyc-pe' 2.0.0 requiere el core 'synkra-core' en 3.x y se pidió 2.1.0
+4xx 422 COMBINACION_RECHAZADA POST /api/despliegues
+CU4 imagenes antes=localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76 localhost:5001/synkra-init-descarga:1.0.0 despues=localhost:5001/synkra-core-ejemplo:2.1.0@sha256:a7b22c290bff6eed482303efc0efdb6448063ebb317805301e9f48835b182e76 localhost:5001/synkra-init-descarga:1.0.0
+ok CU4 las imágenes del namespace no cambiaron
+ok CU4 el resourceVersion del Deployment sigue en 1532
+ok CU4 el resourceVersion del ConfigMap sigue en 1462
+ok CU4 el historial de co tiene el mismo largo
+ok CU4 lo que el core cargó sigue siendo lo de 7
+OK CU4
+tiempo CU4 0s
+ok CU5 plan de 3.0.0 con kyc-pe 2.0.0 aprobado: pendiente
+ok CU5 confirmación de 8: aplicando y confirmadoPor e2e
+4xx 409 DESPLIEGUE_EN_CURSO POST /api/despliegues/9/confirmacion
+ok CU5 el despliegue 8 llegó a fallido en 184s
+D4 tardó 185s en fallar
+ok CU5 D4 trae contexto con logCore que nombra kyc-pe
+ok CU5 pod del core caído: synkra-core-55597859bd-g9nq9
+ok CU5 el pod viejo synkra-core-846b8569bf-c5fvd sigue Ready
+ok CU5 lo que el core sirve por el Service sigue siendo lo de 7
+ok CU5 GET /api/paises: co concuerda false con ultimoDespliegueId 7
+4xx 422 ORIGEN_NO_LISTO POST /api/despliegues/8/reversion
+4xx 404 NO_ENCONTRADO POST /api/despliegues/0/reversion
+ok CU5 la reversión es un plan de tipo reversion con origen 7
+ok CU5 confirmación de 10: aplicando y confirmadoPor e2e
+ok CU5 el despliegue 10 llegó a listo en 7s
+ok CU5 rollout status de synkra-core terminó
+ok CU5 todos los pods del core están Ready
+ok CU5 ningún pod del core en CrashLoopBackOff
+ok CU5 las imágenes del namespace son las de CU4
+ok CU5 el ConfigMap es el de 7
+ok CU5 lo que el core cargó es lo de 7
+ok CU5 el historial termina en 10 reversion listo, 8 despliegue fallido, 7 despliegue listo
+ok CU5 GET /api/paises: co concuerda true con ultimoDespliegueId 10
+OK CU5
+tiempo CU5 192s
+OK e2e: CU1 a CU5, 10 respuestas 4xx con codigo, mensaje y detalles
+
+real	3m45,088s
+user	0m2,757s
+sys	0m2,279s
+e2e-2=0
