@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: synkra-datos
+  namespace: synkra
+  labels:
+    app.kubernetes.io/name: synkra-backend
+    app.kubernetes.io/part-of: synkra
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 1Gi

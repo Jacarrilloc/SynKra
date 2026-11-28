@@ -1,0 +1,36 @@
+[
+  {
+    "id": 9,
+    "pais": "pe",
+    "tipo": "reversion",
+    "origenId": 5,
+    "core": "synkra-core",
+    "versionCore": "2.0.0",
+    "imagen": "localhost:5001/synkra-core@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "plugins": [
+      { "nombre": "kyc-pe", "version": "1.0.0", "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "etiquetas": { "core": "2.x", "pais": "pe", "version": "1.0.0" } }
+    ],
+    "creadoPor": "ana",
+    "confirmadoPor": "ana",
+    "confirmadoEn": "2026-11-27T11:00:00.123Z",
+    "estado": "aplicando",
+    "terminadoEn": null
+  },
+  {
+    "id": 5,
+    "pais": "pe",
+    "tipo": "despliegue",
+    "origenId": null,
+    "core": "synkra-core",
+    "versionCore": "2.0.0",
+    "imagen": "localhost:5001/synkra-core@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "plugins": [
+      { "nombre": "kyc-pe", "version": "1.0.0", "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "etiquetas": { "core": "2.x", "pais": "pe", "version": "1.0.0" } }
+    ],
+    "creadoPor": "ana",
+    "confirmadoPor": "luis",
+    "confirmadoEn": "2026-11-27T10:00:00Z",
+    "estado": "listo",
+    "terminadoEn": "2026-11-27T10:05:00Z"
+  }
+]

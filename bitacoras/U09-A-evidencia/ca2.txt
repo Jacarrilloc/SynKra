@@ -1,0 +1,115 @@
+fecha: 2026-11-28T00:11:00-05:00
+sha: c41f004
+imagen: mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d arm64
+
++ rm -rf front.Tests/TestResults
++ scripts/dotnet-docker.sh test front.Tests --filter ApiSynkraTest --logger 'trx;LogFileName=api.trx' --results-directory front.Tests/TestResults
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Synkra.Front -> /src/front/bin/Debug/net10.0/Synkra.Front.dll
+  Synkra.Front.Tests -> /src/front.Tests/bin/Debug/net10.0/Synkra.Front.Tests.dll
+Test run for /src/front.Tests/bin/Debug/net10.0/Synkra.Front.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: /src/front.Tests/TestResults/api.trx
+
+Passed!  - Failed:     0, Passed:    19, Skipped:     0, Total:    19, Duration: 69 ms - Synkra.Front.Tests.dll (net10.0)
++ echo salida=0
+salida=0
++ python3 -I bitacoras/U09-A-evidencia/trx.py front.Tests/TestResults/api.trx
+total=19 executed=19 passed=19 failed=0 notExecuted=0
+CampoDesconocidoEnLaRespuestaDaRespuestaInvalida
+CancelacionPedidaSePropagaSinEnvolver
+ConfiguracionConEsquemaAjenoNoArranca
+ConfiguracionConUrlRelativaNoArranca
+ConfiguracionConUrlValidaTerminaEnBarra
+ConfiguracionSinUrlNoArranca
+DespliegueFallidoTraeVeredictoYContexto
+DespliegueListoNoTraeContexto
+Error404DaCodigoYMensajeDeLaApi
+Error422DaLosDetallesConCampoYMotivo
+ErrorSinCuerpoDeLaApiDaRespuestaInvalida
+FalloDeConexionDaApiNoDisponible
+HistorialEscapaElPais
+HistorialPideLaRutaDelPaisYLeeTipoOrigenYFechas
+LaUrlBaseConPrefijoSeRespeta
+PideConAcceptJson
+TiempoAgotadoDaApiNoDisponible
+VistaGeneralConListaVaciaDevuelveListaVacia
+VistaGeneralLeeLosDosPaisesConTodosSusCampos
++ grep -o '"[a-zA-Z0-9]*":' front.Tests/Fixtures/paises-dos.json front.Tests/Fixtures/historial-pe.json front.Tests/Fixtures/despliegue-fallido.json front.Tests/Fixtures/error-422-pais.json
++ sort -u
+front.Tests/Fixtures/despliegue-fallido.json:"confirmadoEn":
+front.Tests/Fixtures/despliegue-fallido.json:"confirmadoPor":
+front.Tests/Fixtures/despliegue-fallido.json:"contexto":
+front.Tests/Fixtures/despliegue-fallido.json:"core":
+front.Tests/Fixtures/despliegue-fallido.json:"creadoPor":
+front.Tests/Fixtures/despliegue-fallido.json:"estado":
+front.Tests/Fixtures/despliegue-fallido.json:"etiquetas":
+front.Tests/Fixtures/despliegue-fallido.json:"eventos":
+front.Tests/Fixtures/despliegue-fallido.json:"id":
+front.Tests/Fixtures/despliegue-fallido.json:"imagen":
+front.Tests/Fixtures/despliegue-fallido.json:"logCore":
+front.Tests/Fixtures/despliegue-fallido.json:"logInit":
+front.Tests/Fixtures/despliegue-fallido.json:"motivos":
+front.Tests/Fixtures/despliegue-fallido.json:"nombre":
+front.Tests/Fixtures/despliegue-fallido.json:"origenId":
+front.Tests/Fixtures/despliegue-fallido.json:"pais":
+front.Tests/Fixtures/despliegue-fallido.json:"plugins":
+front.Tests/Fixtures/despliegue-fallido.json:"sha256":
+front.Tests/Fixtures/despliegue-fallido.json:"terminadoEn":
+front.Tests/Fixtures/despliegue-fallido.json:"tipo":
+front.Tests/Fixtures/despliegue-fallido.json:"valido":
+front.Tests/Fixtures/despliegue-fallido.json:"veredicto":
+front.Tests/Fixtures/despliegue-fallido.json:"version":
+front.Tests/Fixtures/despliegue-fallido.json:"versionCore":
+front.Tests/Fixtures/error-422-pais.json:"campo":
+front.Tests/Fixtures/error-422-pais.json:"codigo":
+front.Tests/Fixtures/error-422-pais.json:"detalles":
+front.Tests/Fixtures/error-422-pais.json:"mensaje":
+front.Tests/Fixtures/error-422-pais.json:"motivo":
+front.Tests/Fixtures/historial-pe.json:"confirmadoEn":
+front.Tests/Fixtures/historial-pe.json:"confirmadoPor":
+front.Tests/Fixtures/historial-pe.json:"core":
+front.Tests/Fixtures/historial-pe.json:"creadoPor":
+front.Tests/Fixtures/historial-pe.json:"estado":
+front.Tests/Fixtures/historial-pe.json:"etiquetas":
+front.Tests/Fixtures/historial-pe.json:"id":
+front.Tests/Fixtures/historial-pe.json:"imagen":
+front.Tests/Fixtures/historial-pe.json:"nombre":
+front.Tests/Fixtures/historial-pe.json:"origenId":
+front.Tests/Fixtures/historial-pe.json:"pais":
+front.Tests/Fixtures/historial-pe.json:"plugins":
+front.Tests/Fixtures/historial-pe.json:"sha256":
+front.Tests/Fixtures/historial-pe.json:"terminadoEn":
+front.Tests/Fixtures/historial-pe.json:"tipo":
+front.Tests/Fixtures/historial-pe.json:"version":
+front.Tests/Fixtures/historial-pe.json:"versionCore":
+front.Tests/Fixtures/paises-dos.json:"concuerda":
+front.Tests/Fixtures/paises-dos.json:"core":
+front.Tests/Fixtures/paises-dos.json:"imagen":
+front.Tests/Fixtures/paises-dos.json:"lectura":
+front.Tests/Fixtures/paises-dos.json:"nombre":
+front.Tests/Fixtures/paises-dos.json:"pais":
+front.Tests/Fixtures/paises-dos.json:"plugins":
+front.Tests/Fixtures/paises-dos.json:"sha256":
+front.Tests/Fixtures/paises-dos.json:"ultimoDespliegueId":
+front.Tests/Fixtures/paises-dos.json:"version":
+front.Tests/Fixtures/paises-dos.json:"versionCore":
++ grep -nE 'UnmappedMemberHandling\.Disallow|RespectNullableAnnotations = true|RespectRequiredConstructorParameters = true|SnakeCaseLower' front/Api/ApiSynkra.cs
+12:        UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
+13:        RespectNullableAnnotations = true,
+14:        RespectRequiredConstructorParameters = true,
+15:        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseLower, allowIntegerValues: false) },
++ grep -rn JsonPropertyName front/
++ echo renombres=1
+renombres=1
++ grep -rnE 'Http(Method\.)?(Post|Put|Delete|Patch)|PostAsync|PutAsync|DeleteAsync|PatchAsync|X-Synkra-Usuario' front/ '--include=*.cs' '--include=*.razor'
++ echo escrituras=1
+escrituras=1
++ grep -n 'Synkra:ApiUrl\|ApiUrl' front/appsettings.json front/Api/ConfiguracionApi.cs
+front/appsettings.json:10:    "ApiUrl": "http://localhost:8080/"
+front/Api/ConfiguracionApi.cs:5:    public const string Clave = "Synkra:ApiUrl";
+front/Api/ConfiguracionApi.cs:15:            throw new InvalidOperationException("Synkra:ApiUrl falta o no es una URL absoluta http o https");
++ grep -n 'ConfiguracionApi.UrlBase\|AddHttpClient' front/Program.cs
+7:var urlApi = ConfiguracionApi.UrlBase(builder.Configuration);
+10:builder.Services.AddHttpClient<ApiSynkra>(c => c.BaseAddress = urlApi);

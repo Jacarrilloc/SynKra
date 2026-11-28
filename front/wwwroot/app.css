@@ -1,0 +1,9 @@
+body { font-family: system-ui, sans-serif; margin: 0; }
+nav { display: flex; gap: 1rem; padding: .75rem 1rem; background: #1f2d3d; color: #fff; }
+nav a { color: #cfe3ff; text-decoration: none; }
+nav a.active { color: #fff; font-weight: bold; }
+main { padding: 1rem; }
+table { border-collapse: collapse; }
+th, td { border: 1px solid #ccc; padding: .35rem .6rem; text-align: left; vertical-align: top; }
+td ul { margin: 0; padding-left: 1rem; }
+[data-estado="error"] { color: #8a1f11; }

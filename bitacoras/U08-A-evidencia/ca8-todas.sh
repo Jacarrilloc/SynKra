@@ -1,0 +1,1 @@
+for m in guardia-nombre guardia-servidor guardia-global receta-sin-guardia nombre-variable rbac-delete rbac-clusterrole ns-etiqueta; do echo "### $m"; bash bitacoras/U08-A-evidencia/ca8.sh $m 2>&1; done

@@ -1,0 +1,22 @@
+# VERDE F-06: fecha 2026-11-28T05:14:17Z sha 63c85b9 JAVA_HOME=
+7:version = "0.2.0"
+35:    static final String IMAGEN_INIT_POR_DEFECTO = "localhost:5001/synkra-init-descarga:1.1.0";
+$ SYNKRA_REGISTRO_IMAGENES=mutacion.local:1 bash scripts/imagenes.sh   (copia)
+FALLA entorno: JAVA_HOME (sin definir) no es Java 21
+imagenes.sh salida=1
+0
+$ bash scripts/verificar-imagenes.sh   (copia, contra las imagenes buenas)
+FALLA versiones: newTag del overlay '0.1.0', build.gradle.kts dice '0.2.0'
+FALLA versiones: SYNKRA_KUBERNETES_IMAGEN_INIT 'localhost:5001/synkra-init-descarga:1.0.0', IMAGEN_INIT_POR_DEFECTO dice 'localhost:5001/synkra-init-descarga:1.1.0'
+FALLA versiones: el overlay de kind no coincide con el origen de las versiones
+FALLA localhost:5001/synkra-backend:0.2.0 existe: esperado imagen construida / visto no existe
+FALLA localhost:5001/synkra-init-descarga:1.1.0 existe: esperado imagen construida / visto no existe
+FALLA localhost:5001/synkra-backend:0.2.0 ExposedPorts: esperado 8080/tcp / visto 
+FALLA localhost:5001/synkra-init-descarga:1.1.0 Entrypoint: esperado ["/usr/local/bin/descargar.sh"] / visto 
+FALLA localhost:5001/synkra-init-descarga:1.1.0 sin-apk: esperado  / visto docker: Error response from daemon: No such image: localhost:5001/synkra-init-descarga:1.1.0
+verificar-imagenes.sh salida=1
+$ kubectl kustomize deploy/overlays/kind | python3 -I scripts/verificar-backend.py   (copia)
+FALLA imagen: esperado 'localhost:5001/synkra-backend:0.2.0' / visto 'localhost:5001/synkra-backend:0.1.0'
+FALLA variables: esperado {'SYNKRA_DATA': '/data', 'SYNKRA_PAISES': 'co,pe', 'MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED': 'true', 'JAVA_TOOL_OPTIONS': '-XX:MaxRAMPercentage=70', 'SYNKRA_REGISTRO_PERMITIDO': 'localhost:5001', 'SYNKRA_KUBERNETES_IMAGEN_INIT': 'localhost:5001/synkra-init-descarga:1.1.0'} / visto {'SYNKRA_REGISTRO_PERMITIDO': 'localhost:5001', 'SYNKRA_KUBERNETES_IMAGEN_INIT': 'localhost:5001/synkra-init-descarga:1.0.0', 'SYNKRA_DATA': '/data', 'SYNKRA_PAISES': 'co,pe', 'MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED': 'true', 'JAVA_TOOL_OPTIONS': '-XX:MaxRAMPercentage=70'}
+verificar-backend.py salida=1
+0

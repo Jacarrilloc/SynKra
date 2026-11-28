@@ -1,0 +1,20 @@
+# fecha: 2026-11-28T05:13:59Z  sha: 63c85b9  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca7.sh
+$ bash -n scripts/imagenes.sh scripts/verificar-imagenes.sh scripts/certificado-tls.sh; echo "sintaxis=$?"
+sintaxis=0
+$ grep -n "set -euo pipefail" scripts/imagenes.sh scripts/verificar-imagenes.sh scripts/certificado-tls.sh
+scripts/imagenes.sh:6:set -euo pipefail
+scripts/verificar-imagenes.sh:4:set -euo pipefail
+scripts/certificado-tls.sh:4:set -euo pipefail
+$ echo 'no: [yaml' | python3 -I scripts/verificar-backend.py; echo "yaml=$?"
+FALLA entrada: YAML no valido: while parsing a flow sequence   in "<unicode string>", line 1, column 5:     no: [yaml         ^ expected ',' or ']', but got '<stream end>'   in "<unicode string>", line 2, column 1:          ^
+yaml=1
+$ : | python3 -I scripts/verificar-backend.py; echo "vacio=$?"
+FALLA entrada: no hay manifiestos en la entrada estandar
+vacio=1
+$ JAVA_HOME=/no/existe bash scripts/imagenes.sh; echo "java=$?"
+FALLA entorno: JAVA_HOME (/no/existe) no es Java 21
+java=1
+$ (openssl falso que sale con 7 en el PATH) bash scripts/certificado-tls.sh "$D/c"; echo "openssl=$?"; ls -A "$D/c" | wc -l
+FALLA certificado: openssl req -x509 salió con 7
+openssl=1
+0

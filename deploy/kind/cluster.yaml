@@ -1,0 +1,19 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: synkra
+nodes:
+  - role: control-plane
+    image: kindest/node@sha256:3489c7674813ba5d8b1a9977baea8a6e553784dab7b84759d1014dbd78f7ebd5
+    labels:
+      ingress-ready: "true"
+    extraPortMappings:
+      - containerPort: 80
+        hostPort: 80
+        protocol: TCP
+        listenAddress: "127.0.0.1"
+      - containerPort: 443
+        hostPort: 443
+        protocol: TCP
+        listenAddress: "127.0.0.1"
+  - role: worker
+    image: kindest/node@sha256:3489c7674813ba5d8b1a9977baea8a6e553784dab7b84759d1014dbd78f7ebd5

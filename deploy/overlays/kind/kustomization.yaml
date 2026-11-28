@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base/backend # U08-C lo cambia a ../../base
+  - ingress.yaml
+patches:
+  - path: backend-kind.yaml
+images:
+  - name: synkra-backend
+    newName: localhost:5001/synkra-backend
+    newTag: 0.1.0

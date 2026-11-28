@@ -1,0 +1,43 @@
+fecha: 2026-11-28T04:49:49Z
+sha: 0fa392b
+comando: bash bitacoras/U08-A-evidencia/rojo.sh   # copia de 0fa392b con stubs de kind/kubectl/docker
+---
+commit 0fa392bb03f579f42f7e7a73ef19a79a17198e4d
+Author: Julian Carrillo <78111031+Jacarrilloc@users.noreply.github.com>
+Date:   Fri Nov 27 23:49:25 2026 -0500
+
+    U08-A: ca4.sh y verificar-base.py (rojo primero, sin implementacion)
+    
+    Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+
+ bitacoras/U08-A-evidencia/ca4.sh |  19 ++++++++
+ scripts/verificar-base.py        | 103 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 122 insertions(+)
+stub: kubectl bloqueado en el rojo (AUTONOMIA-01)
+install otro salida=2
+0
+cluster otro salida=2
+0
+registro otro salida=2
+0
+aplicar-base otro salida=2
+0
+status otro salida=2
+0
+guardia otro salida=2
+0
+mismo-nombre salida=2
+0
+global salida=2
+0
+falta salida=2
+0
+falso-intacto
+stub: kubectl bloqueado en el rojo (AUTONOMIA-01)
+nada-aplicado
+make: *** No hay ninguna regla para construir el objetivo 'guardia'.  Alto.
+real salida=2
+--- verificar-base.py sobre kustomize inexistente (deploy/base no existe)
+FALLA entrada: YAML invalido: mapping values are not allowed here   in "<unicode string>", line 1, column 31:     error: must build at directory: not a valid directory: evalsym ...                                    ^
+salida=1
+--- salida final=0

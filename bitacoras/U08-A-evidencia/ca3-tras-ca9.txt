@@ -1,0 +1,21 @@
+# sha=16740a8 fecha=2026-11-28T00:32:36-05:00 arch=x86_64 (tras ca9.txt)
+$ bash ca3.sh
+The push refers to repository [localhost:5001/synkra-prueba-registro]
+47465c9fe4b1: Pushed
+269b60c1a347: Pushed
+e6f31ffc071e: Pushed
+8f4e1177a675: Pushed
+f90c3e905677: Pushed
+1: digest: sha256:7518da9b12dd746278282a729dee2e65eabdeb449db4d0b28d46ef6e90308f58 size: 1916
+
+ Info -> Not all multiplatform-content is present and only the available single-platform image was pushed
+         sha256:1be55279f18a2fe1a74edf2664cac61c1bea305b7b4642dab412e7affdcb3e33 -> sha256:7518da9b12dd746278282a729dee2e65eabdeb449db4d0b28d46ef6e90308f58
+push=0
+{"name":"synkra-prueba-registro","tags":["1"]}
+Image is up to date for sha256:1bc3f1a4432290d5ac3341603f15bf99c5b2feb4a9e3195e530aadc66fbcc65e
+synkra-control-plane pull=0
+Image is up to date for sha256:1bc3f1a4432290d5ac3341603f15bf99c5b2feb4a9e3195e530aadc66fbcc65e
+synkra-worker pull=0
+Deleted: localhost:5001/synkra-prueba-registro:1
+Deleted: localhost:5001/synkra-prueba-registro:1
+Untagged: localhost:5001/synkra-prueba-registro:1

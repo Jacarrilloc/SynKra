@@ -1,0 +1,30 @@
+fecha: 2026-11-28T05:12:24Z
+sha: 8ee75bf
+comando: bash bitacoras/U08-A-evidencia/ca1.sh
+---
+contexto permitido: kind-synkra (https://127.0.0.1:35427)
+Set kubectl context to "kind-synkra"
+contexto permitido: kind-synkra (https://127.0.0.1:35427)
+kubectl --kubeconfig "/home/julian/Escritorio/Proyectos/wt-m6r-U08-A/.kube/kind-synkra.yaml" wait --for=condition=Ready nodes --all --timeout=180s
+node/synkra-control-plane condition met
+node/synkra-worker condition met
+salida=0
+kind-synkra
+600
+700
+.gitignore:10:/.kube/	/home/julian/Escritorio/Proyectos/wt-m6r-U08-A/.kube/kind-synkra.yaml
+[('synkra-control-plane', 'True', 'true', 'arm64'), ('synkra-worker', 'True', '-', 'arm64')]
+80/tcp -> 127.0.0.1:80
+443/tcp -> 127.0.0.1:443
+6443/tcp -> 127.0.0.1:35427
+contexto permitido: kind-synkra (https://127.0.0.1:35427)
+Set kubectl context to "kind-synkra"
+contexto permitido: kind-synkra (https://127.0.0.1:35427)
+kubectl --kubeconfig "/home/julian/Escritorio/Proyectos/wt-m6r-U08-A/.kube/kind-synkra.yaml" wait --for=condition=Ready nodes --all --timeout=180s
+node/synkra-control-plane condition met
+node/synkra-worker condition met
+salida=0
+no-recreado
+0
+variable=1
+--- salida final=0

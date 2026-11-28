@@ -1,0 +1,11 @@
+fecha: 2026-11-28T05:12:31Z
+sha: 8ee75bf
+comando: bash bitacoras/U08-A-evidencia/ca5.sh
+---
+3
+0
+OK base: 8 objetos
+salida=0
+[('Namespace', '-', 'synkra'), ('Namespace', '-', 'synkra-co'), ('Namespace', '-', 'synkra-pe'), ('Role', 'synkra-co', 'synkra-deployer'), ('Role', 'synkra-pe', 'synkra-deployer'), ('RoleBinding', 'synkra-co', 'synkra-deployer'), ('RoleBinding', 'synkra-pe', 'synkra-deployer'), ('ServiceAccount', 'synkra', 'deployer')]
+prohibidos=1
+--- salida final=0

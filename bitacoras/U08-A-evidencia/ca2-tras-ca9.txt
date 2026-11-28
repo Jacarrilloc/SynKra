@@ -1,0 +1,17 @@
+# sha=16740a8 fecha=2026-11-28T00:32:34-05:00 arch=x86_64 (tras ca9.txt)
+$ bash ca2.sh
+contexto permitido: kind-synkra (https://127.0.0.1:44323)
+scripts/registro-local.sh
+registro listo en 127.0.0.1:5001
+salida=0
+7348dc503eab2420733357e129814d13414203371080c62ef40268400b40064b
+true registry@sha256:1be55279f18a2fe1a74edf2664cac61c1bea305b7b4642dab412e7affdcb3e33 always bridge kind 
+5000/tcp -> 127.0.0.1:5001
+{} v2=0
+[host."http://kind-registry:5000"]
+[host."http://kind-registry:5000"]
+contexto permitido: kind-synkra (https://127.0.0.1:44323)
+scripts/registro-local.sh
+registro listo en 127.0.0.1:5001
+salida=0
+7348dc503eab2420733357e129814d13414203371080c62ef40268400b40064b

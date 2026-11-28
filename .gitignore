@@ -5,3 +5,7 @@ build/
 
 # jqwik
 **/.jqwik-database
+
+# U08: kubeconfig del proyecto y certificados locales
+/.kube/
+/.tls/

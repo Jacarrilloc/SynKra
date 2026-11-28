@@ -1,0 +1,15 @@
+# fecha: 2026-11-28T04:51:22Z  sha: f8f1c42  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2  script: bitacoras/U08-B-evidencia/ca6.sh
+c4dd4210662318185a5546ef9dc6b4ecf9389902ecbc3ac62f8cb507c35fcbe0
+espera=124
+readiness tras 181 s
+/actuator/health/liveness 000
+/actuator/health/readiness 000
+/actuator/health 000
+Error response from daemon: container c4dd4210662318185a5546ef9dc6b4ecf9389902ecbc3ac62f8cb507c35fcbe0 is not running
+total 0
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import sqlite3,sys; print(sqlite3.connect(sys.argv[1]).execute('select max(version) from flyway_schema_history').fetchone())
+                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: flyway_schema_history
+0
