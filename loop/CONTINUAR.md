@@ -48,7 +48,7 @@ Para que eso no vuelva a pasar:
 ## Estado al corte (2026-11-27 22:10 UTC)
 
 - `main` en `9289073`. U01, U03 y U04 terminadas. PRs #54 a #83 fusionados (#77 a #83 los fusionó el orquestador a las 21:55 UTC, según la regla de David).
-- `CANDIDATAS.md` llega hasta **C-101**. La siguiente libre es **C-102**.
+- `CANDIDATAS.md` llega hasta **C-102**. La siguiente libre es **C-103**.
 - **Nadie corre en este momento** (pausa de David a las 22:08 UTC). No hay agentes en vuelo.
 
 ### PRs abiertos
@@ -61,6 +61,7 @@ Para que eso no vuelva a pasar:
 | 4 | #87 | `m6r/U05-T08` → `m6r/U05-T07` | U05-T08 imagen del init, VERDE ronda 1 (apilado sobre #85) |
 | 5 | #88 | `m6r/U02-T09` → `m6r/U02-T08` | U02-T09 plugin `kyc-co`, VERDE ronda 2 (apilado sobre #86) |
 | 6 | #89 | `m6r/U02-T10` → `m6r/U02-T09` | U02-T10 plugin `kyc-pe`, VERDE ronda 1 (apilado sobre #88) |
+| 7 | #90 | `m6r/U05-T09` → `m6r/U05-T08` | U05-T09 fronteras `kubernetes`, VERDE ronda 2 (apilado sobre #87) |
 
 El #6 es antiguo y no se toca.
 
@@ -70,7 +71,8 @@ El #6 es antiguo y no se toca.
 |---|---|---|---|---|
 | U05-T07 script de descarga (ola 33) | `../wt-m6r-U05-T07`, `m6r/U05-T07` | `5e7a45e` | **VERDE en la ronda 2** (informe en `696eecc`). PR #85. | Esperar fusión humana |
 | U05-T08 imagen del init (ola 34) | `../wt-m6r-U05-T08`, `m6r/U05-T08` | `696eecc` | **VERDE en la ronda 1** (informe en `26b6124`). PR #87, apilado sobre #85. | Esperar fusión humana; U05-T09 sale de esta punta |
-| U05-T09 fronteras `kubernetes` (ola 35) | `../wt-m6r-U05-T09`, `m6r/U05-T09` | `26b6124` (punta VERDE de U05-T08) | Ronda 1 NO-VERDE (`2e4e971`: F-01 la API `yaml*` sin prueba; F-02 el cierre del cliente sin lectura de vuelta). Codificador ronda 2 hecho, `3b9f31c` (código en `11216ee`). **En vuelo (01:15 UTC del 28-nov):** revisor ronda 2. | Si no hay `revisiones/U05-T09/ronda-2.md`, repetir el revisor ronda 2 (base `26b6124`, HEAD `3b9f31c`) |
+| U05-T09 fronteras `kubernetes` (ola 35) | `../wt-m6r-U05-T09`, `m6r/U05-T09` | `26b6124` | **VERDE en la ronda 2** (informe en `03943ec`). PR #90, apilado sobre #87. | Esperar fusión humana; U05-T10 sale de esta punta |
+| U05-T10 resumen de U05 (ola 36) | `../wt-m6r-U05-T10`, `m6r/U05-T10` | `03943ec` (punta VERDE de U05-T09) | **En vuelo (01:35 UTC del 28-nov):** codificador ronda 1, tarea con hash `1d025eb`. | Si la rama no tiene commits del codificador, redespacharlo; si los tiene, revisor ronda 1 |
 | U02-T09 plugin `kyc-co` (ola 35) | `../wt-m6r-U02-T09`, `m6r/U02-T09` | `d99cf36` | **VERDE en la ronda 2** (informe en `288e5c0`). PR #88, apilado sobre #86. | Esperar fusión humana; U02-T10 sale de esta punta |
 | U02-T10 plugin `kyc-pe` (ola 36) | `../wt-m6r-U02-T10`, `m6r/U02-T10` | `288e5c0` | **VERDE en la ronda 1** (informe en `3538d67`). PR #89, apilado sobre #88. | Esperar fusión humana; U02-T11 sale de esta punta |
 | U02-T11 imagen del core (ola 37) | `../wt-m6r-U02-T11`, `m6r/U02-T11` | `3538d67` (punta VERDE de U02-T10) | Codificador ronda 1 hecho, `a430a1f`. **En vuelo (01:25 UTC del 28-nov):** revisor ronda 1. | Si no hay `revisiones/U02-T11/ronda-1.md`, repetir el revisor (base `3538d67`, HEAD `a430a1f`) |
