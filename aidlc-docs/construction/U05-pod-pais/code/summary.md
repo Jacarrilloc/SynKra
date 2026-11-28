@@ -121,7 +121,7 @@ Usuario numérico no root (10001:10001) y entrypoint en la ruta que invoca el De
 | U05-T09 | Fronteras del módulo; cliente deja de ser bean; `ObjetosPais` sin Fabric8 | #90 (abierto, apilado) | 2 |
 | U05-T10 | Este resumen | este PR (U05-T10) | (pendiente) |
 
-Las rondas son los informes `revisiones/U05-T<NN>/ronda-N.md` (sin contar `ronda-N-respuesta.md`), contados con `ls`; todas terminaron en VERDE. Los PR salen de `gh pr list`; el PR de T03 es #76 y los de T01 y T02 son #70 y #71. Los PR #68, #73, #74 y #77 son de la rama del orquestador (`orq/U05-U02-tareas`), no de tareas.
+Las rondas son los informes `revisiones/U05-T<NN>/ronda-N.md` (sin contar `ronda-N-respuesta.md`), contados con `ls`; todas terminaron en VERDE. Los PR salen de `gh pr list`;. Los PR #68, #73, #74 y #77 son de la rama del orquestador (`orq/U05-U02-tareas`), no de tareas.
 
 ## Candidatas abiertas que nombran U05, U07 o U08
 
