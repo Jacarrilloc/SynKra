@@ -1,0 +1,51 @@
+fecha: 2026-11-27T21:06:55-05:00  sha: 1a01b96  JAVA_HOME=/home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ ./gradlew :backend:test --rerun --tests '*registro*'; echo "salida=$?"
+> Task :verificador:compileJava
+> Task :backend:compileJava
+> Task :backend:processResources
+> Task :backend:classes
+> Task :verificador:compileTestFixturesJava
+
+> Task :backend:compileTestJava
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+
+> Task :backend:processTestResources
+> Task :backend:testClasses
+> Task :verificador:processResources NO-SOURCE
+> Task :verificador:classes
+> Task :verificador:jar
+> Task :verificador:processTestFixturesResources NO-SOURCE
+> Task :verificador:testFixturesClasses
+> Task :verificador:testFixturesJar
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+2026-11-27T21:07:08.872-05:00  INFO 419231 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-27T21:07:08.957-05:00  INFO 419231 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-27T21:07:08.958-05:00  INFO 419231 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-27T21:07:08.959-05:00  INFO 419231 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-27T21:07:08.961-05:00  INFO 419231 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-27T21:07:08.965-05:00  INFO 419231 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-27T21:07:08.968-05:00  INFO 419231 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-27T21:07:08.968-05:00  INFO 419231 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-27T21:07:08.970-05:00  INFO 419231 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-27T21:07:08.972-05:00  INFO 419231 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-27T21:07:08.973-05:00  INFO 419231 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-27T21:07:08.974-05:00  INFO 419231 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-27T21:07:08.975-05:00  INFO 419231 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-27T21:07:08.978-05:00  INFO 419231 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+> Task :backend:test
+
+[Incubating] Problems report is available at: file:///home/casdav/Projects/Master/wt-m6r-U06-D/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 13s
+9 actionable tasks: 9 executed
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.9.2/userguide/configuration_cache_enabling.html
+salida=0

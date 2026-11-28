@@ -1,0 +1,19 @@
+fecha: 2026-11-27T21:10:18-05:00  sha: 1a01b96
+$ git diff --name-status --diff-filter=A 7f07b11 HEAD -- backend/src/test
+A	backend/src/test/java/io/synkra/despliegue/CambiosPropiedades.java
+A	backend/src/test/java/io/synkra/despliegue/CatalogoDePrueba.java
+A	backend/src/test/java/io/synkra/despliegue/CrearPlanTest.java
+A	backend/src/test/java/io/synkra/despliegue/PaisPermitidoTest.java
+A	backend/src/test/java/io/synkra/despliegue/PlanPendienteTest.java
+A	backend/src/test/java/io/synkra/despliegue/PlanRepositorioTest.java
+A	backend/src/test/java/io/synkra/despliegue/RelojMovible.java
+A	backend/src/test/java/io/synkra/despliegue/VencimientoPlanesTest.java
+A	backend/src/test/java/io/synkra/despliegue/VerificacionVivoTest.java
+A	backend/src/test/java/io/synkra/kubernetes/SimuladorKubernetes.java
+A	backend/src/test/java/io/synkra/plataforma/RelojTest.java
+$ grep -n U06 CANDIDATAS.md | cut -c1-12
+97:| C-90 | 
+114:| C-107 
+117:| C-110 
+118:| C-111 
+127:| C-120 

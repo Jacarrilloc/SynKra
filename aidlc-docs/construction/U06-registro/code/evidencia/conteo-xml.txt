@@ -1,0 +1,7 @@
+fecha: 2026-11-27T21:08:01-05:00  sha: 1a01b96
+$ ls backend/build/test-results/test/TEST-*.xml | wc -l
+48
+$ grep -L 'skipped="0" failures="0" errors="0"' backend/build/test-results/test/TEST-*.xml | wc -l
+0
+$ cat backend/build/test-results/test/TEST-*.xml | grep -o -h '<testsuite [^>]*' | grep -o ' tests="[0-9]*"' | grep -o '[0-9]*' | paste -sd+ | bc
+566

@@ -1,0 +1,18 @@
+fecha: 2026-11-27T21:10:35-05:00  (tomada justo antes de su propio commit: el diff no incluye ese commit y el sha es el de su padre)
+$ git rev-parse --short HEAD; git diff --name-only ade68f6...HEAD | grep -v -E '^(aidlc-docs/construction/U06-registro/code/|bitacoras/U06-D\.md$|bitacoras/U06-D-evidencia/)'; echo "fuera=$?"
+ed9d1e5
+CANDIDATAS.md
+aidlc-docs/audit.md
+loop/CONTINUAR.md
+tareas/U06-C-vista-general-fronteras.md
+tareas/U06-D-resumen.md
+tareas/U07-C-plan-vence.md
+tareas/U07-D-confirmar.md
+tareas/U07-E-vigilancia-reinicio.md
+tareas/U07-F-reversion.md
+fuera=0
+
+Nota: con base ade68f6 salen archivos que no son de esta tarea (CANDIDATAS.md, aidlc-docs/audit.md, loop/CONTINUAR.md, tareas/*): vienen de la rama del orquestador, ya fusionada en eb33d68 (#102), que es la base real de esta rama (el orquestador lo aclaró). Con esa base:
+$ git rev-parse --short HEAD; git diff --name-only eb33d68...HEAD | grep -v -E '^(aidlc-docs/construction/U06-registro/code/|bitacoras/U06-D\.md$|bitacoras/U06-D-evidencia/)'; echo "fuera=$?"
+ed9d1e5
+fuera=1
