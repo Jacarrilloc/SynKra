@@ -1118,3 +1118,7 @@ Se despacha el codificador de la ronda 2.
 **Input del usuario:** "ya me voy  a dormir, toma las acciones recomendadas, si llegas a necesitar algo, claro siempre y cuando todo sea en un limite razonable y se mantenga dentro de los lineamientos de proyectoy el contexto que tienes"
 
 **Acción del orquestador:** se sigue con las acciones recomendadas dentro de los lineamientos (AUTONOMIA-01, solo `kind-synkra`, sin `sudo`, sin descargas nuevas no declaradas, fusiones por tandas de lo VERDE). Lo que pida a una persona (el recorrido de U09-E en el navegador, con `/etc/hosts`) se deja preparado y se le pide al despertar. Una tarea que llegue a la ronda 4 se para y se anota para David.
+
+## 2026-11-28T07:03Z: U09-D, primera parte (sin clúster)
+
+**Acción del orquestador:** el codificador de U09-D terminó la parte sin clúster en `5cbaa9d` (código en `2cd582c`): CA-2 a CA-6 verificados; CA-1, CA-7 y CA-8 pendientes hasta la unión de U09-B y U09-C y el cierre de U08. **Arbitraje:** se acepta la desviación de la decisión 4 (`COPY . .` antes de `dotnet restore` en lugar de copiar solo el `.csproj`), porque sin los `.razor` y `wwwroot` el SDK web no restaura `Microsoft.AspNetCore.App.Internal.Assets` y `/_framework/blazor.web.js` daba 404; `ca4.sh` ahora comprueba que responde 200.
