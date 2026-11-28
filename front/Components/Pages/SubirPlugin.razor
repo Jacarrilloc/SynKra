@@ -31,6 +31,13 @@
     </div>
 }
 
+@if (_errorArchivo is not null)
+{
+    <div id="error-archivo" data-estado="error">
+        <p data-campo="error">No se pudo leer el archivo: @_errorArchivo</p>
+    </div>
+}
+
 @if (_subido is not null)
 {
     <section id="subido">
@@ -62,6 +69,7 @@
     private bool _subiendo;
     private PluginRegistrado? _subido;
     private ErrorApiSynkraException? _error;
+    private string? _errorArchivo;
 
     private void ElegirArchivo(InputFileChangeEventArgs e) => _archivo = e.File;
 
@@ -76,6 +84,7 @@
 
         _subiendo = true;
         _error = null;
+        _errorArchivo = null;
         _subido = null;
         try
         {
@@ -85,6 +94,10 @@
         catch (ErrorApiSynkraException e)
         {
             _error = e;
+        }
+        catch (IOException e)
+        {
+            _errorArchivo = e.Message;
         }
         finally
         {

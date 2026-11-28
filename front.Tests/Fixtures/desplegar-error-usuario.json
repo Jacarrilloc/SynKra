@@ -2,6 +2,6 @@
   "codigo": "USUARIO_INVALIDO",
   "mensaje": "El usuario no es válido",
   "detalles": [
-    { "campo": "X-Synkra-Usuario", "motivo": "El usuario debe estar en minúsculas, sin espacios" }
+    { "campo": "X-Synkra-Usuario", "motivo": "El usuario debe tener de 1 a 64 caracteres: minúsculas, dígitos, punto, guion o guion bajo" }
   ]
 }

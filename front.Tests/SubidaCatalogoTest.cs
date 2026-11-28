@@ -126,4 +126,19 @@ public class SubidaCatalogoTest : BunitContext
         Assert.Equal("CONFLICTO: La solicitud entra en conflicto con el estado actual", Texto(cut, "[data-estado='error'] [data-campo='error']"));
         Assert.Empty(cut.FindAll("section#subido"));
     }
+
+    [Fact]
+    public void ArchivoPorEncimaDelTopeMuestraUnErrorYNoLlamaALaApi()
+    {
+        var cut = Pinta();
+        cut.FindComponent<InputFile>().UploadFiles(InputFileContent.CreateFromBinary(new byte[26 * 1024 * 1024], "grande.jar"));
+
+        cut.Find("button[data-accion='subir']").Click();
+
+        cut.WaitForAssertion(() => cut.Find("#error-archivo [data-campo='error']"));
+        Assert.StartsWith("No se pudo leer el archivo:", Texto(cut, "#error-archivo [data-campo='error']"));
+        Assert.Empty(_m.Peticiones);
+        Assert.Empty(cut.FindAll("section#subido"));
+        Assert.False(Deshabilitado(cut));
+    }
 }

@@ -92,11 +92,14 @@ public class ReversionDetalleTest : BunitContext
 
         Assert.DoesNotContain(_m.Peticiones, p => p.Ruta.Contains("/confirmacion"));
         Assert.Empty(cut.FindAll("p[data-estado='confirmado']"));
+        cut.Find("input[data-campo='usuario']").Change("luis");
 
         cut.Find("button[data-accion='confirmar']").Click();
 
         cut.WaitForAssertion(() => cut.Find("p[data-estado='confirmado']"));
         Assert.Contains((HttpMethod.Post, "/api/despliegues/13/confirmacion"), _m.Peticiones.ToArray());
+        var i = _m.Peticiones.ToList().FindIndex(p => p.Ruta == "/api/despliegues/13/confirmacion");
+        Assert.Equal("luis", _m.Usuarios[i]);
         Assert.Equal("despliegues/13", cut.Find("p[data-estado='confirmado'] a").GetAttribute("href"));
         Assert.True(Deshabilitado(cut, "confirmar"));
     }
@@ -115,8 +118,9 @@ public class ReversionDetalleTest : BunitContext
     {
         var cut = Pinta();
 
-        // Es un enlace sin manejador de clic: navegar no llama a la API.
+        // Es un enlace sin manejador de clic: navegar no llama a la API. bUnit rechaza el clic si no hay manejador.
         var cancelar = cut.Find("a[data-accion='cancelar']");
+        Assert.Throws<MissingEventHandlerException>(() => cancelar.Click());
 
         Assert.Equal("despliegues/3", cancelar.GetAttribute("href"));
         Assert.Equal([(HttpMethod.Get, "/api/despliegues/3")], _m.Peticiones.ToArray());

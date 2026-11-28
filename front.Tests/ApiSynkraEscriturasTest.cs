@@ -78,7 +78,7 @@ public class ApiSynkraEscriturasTest
         Assert.Equal(422, e.Estado);
         Assert.Equal("SELECCION_INVALIDA", e.Codigo);
         Assert.Equal("La selección no es válida", e.Message);
-        Assert.Equal([new DetalleError("core", "El core 'otro' no existe")], e.Detalles.ToArray());
+        Assert.Equal([new DetalleError("core", "El core debe cumplir el patrón de nombres (minúsculas, dígitos y guiones)")], e.Detalles.ToArray());
     }
 
     [Fact]
@@ -154,7 +154,7 @@ public class ApiSynkraEscriturasTest
         Assert.Equal(422, e.Estado);
         Assert.Equal("USUARIO_INVALIDO", e.Codigo);
         Assert.Equal("El usuario no es válido", e.Message);
-        Assert.Equal([new DetalleError("X-Synkra-Usuario", "El usuario debe estar en minúsculas, sin espacios")], e.Detalles.ToArray());
+        Assert.Equal([new DetalleError("X-Synkra-Usuario", "El usuario debe tener de 1 a 64 caracteres: minúsculas, dígitos, punto, guion o guion bajo")], e.Detalles.ToArray());
     }
 
     [Fact]

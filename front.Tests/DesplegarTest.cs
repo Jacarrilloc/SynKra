@@ -240,11 +240,14 @@ public class DesplegarTest : BunitContext
     {
         var cut = ConPlan();
         Assert.DoesNotContain(_m.Peticiones, p => p.Ruta.EndsWith("/confirmacion"));
+        cut.Find("input[data-campo='usuario']").Change("luis");
 
         cut.Find("button[data-accion='confirmar']").Click();
 
         cut.WaitForAssertion(() => cut.Find("p[data-estado='confirmado']"));
         Assert.Contains((HttpMethod.Post, "/api/despliegues/12/confirmacion"), _m.Peticiones.ToArray());
+        var i = _m.Peticiones.ToList().FindIndex(p => p.Ruta == "/api/despliegues/12/confirmacion");
+        Assert.Equal("luis", _m.Usuarios[i]);
         var enlace = cut.Find("p[data-estado='confirmado'] a");
         Assert.Equal("despliegues/12", enlace.GetAttribute("href"));
         Assert.Equal("Ver el despliegue #12", enlace.TextContent.Trim());
@@ -319,7 +322,7 @@ public class DesplegarTest : BunitContext
 
         cut.WaitForAssertion(() => cut.Find("#veredicto [data-estado='error']"));
         Assert.Equal("SELECCION_INVALIDA: La selección no es válida", Texto(cut, "#veredicto [data-campo='error']"));
-        Assert.Equal("core: El core 'otro' no existe", Texto(cut, "#veredicto li"));
+        Assert.Equal("core: El core debe cumplir el patrón de nombres (minúsculas, dígitos y guiones)", Texto(cut, "#veredicto li"));
         Assert.Null(cut.Find("section#veredicto").GetAttribute("data-global"));
         Assert.True(Deshabilitado(cut, "preparar"));
         Assert.True(Deshabilitado(cut, "confirmar"));
@@ -386,5 +389,69 @@ public class DesplegarTest : BunitContext
         Assert.Equal("APROBADA", cut.Find("section#veredicto").GetAttribute("data-global"));
         Assert.Equal("kyc-pe", cut.Find("#veredicto tr[data-plugin]").GetAttribute("data-plugin"));
         Assert.Empty(cut.FindAll("#veredicto li[data-campo='motivo']"));
+    }
+
+    [Fact]
+    public void CambiarElPaisDescartaElPlan()
+    {
+        var cut = ConPlan();
+
+        Pais(cut, "co");
+
+        Assert.Empty(cut.FindAll("section#plan"));
+        Assert.True(Deshabilitado(cut, "confirmar"));
+        Assert.DoesNotContain(_m.Peticiones, p => p.Ruta.Contains("/confirmacion"));
+    }
+
+    [Fact]
+    public void UnFiltroQueOcultaUnPluginMarcadoLoDesmarcaYVuelveAVerificar()
+    {
+        Verificacion(Cuerpo("2.1.0"), "desplegar-veredicto-vacio.json");
+        Verificacion(Cuerpo("2.1.0", ("kyc-co", "1.0.0")), "desplegar-veredicto-aprobado.json");
+        var cut = Pinta();
+        Core(cut, "synkra-core");
+        Version(cut, "2.1.0");
+        Marca(cut, "kyc-co", "1.0.0");
+        cut.WaitForAssertion(() => Assert.Equal(2, Verificaciones()));
+
+        cut.Find("input[data-campo='filtro']").Change("pais=pe");
+        cut.Find("button[data-accion='filtrar']").Click();
+
+        cut.WaitForAssertion(() => Assert.Equal(3, Verificaciones()));
+        Assert.Equal(Cuerpo("2.1.0"), CuerposDeVerificacion()[^1]);
+        Assert.Empty(cut.FindAll("input[data-plugin='kyc-co']"));
+        Assert.DoesNotContain(cut.FindAll("input[type='checkbox'][data-plugin]"), c => c.HasAttribute("checked"));
+    }
+
+    [Fact]
+    public void UnFiltroSinIgualMandaLaClaveConValorVacio()
+    {
+        _m.Responde(HttpMethod.Get, "/api/cores/synkra-core/plugins?pais=", HttpStatusCode.OK, ManejadorHttpSimulado.Fixture("desplegar-plugins-pe.json"));
+        var cut = Pinta();
+        Core(cut, "synkra-core");
+
+        cut.Find("input[data-campo='filtro']").Change("pais");
+        cut.Find("button[data-accion='filtrar']").Click();
+
+        cut.WaitForAssertion(() => Assert.Equal(2, cut.FindAll("input[type='checkbox'][data-plugin]").Count));
+        Assert.Contains((HttpMethod.Get, "/api/cores/synkra-core/plugins?pais="), _m.Peticiones.ToArray());
+    }
+
+    [Fact]
+    public async Task UnPlanQueLlegaTrasCambiarLaSeleccionNoSeMuestra()
+    {
+        var plan = _m.Retiene(HttpMethod.Post, "/api/despliegues", CuerpoPlan("pe", "2.1.0", ("kyc-pe", "1.3.0")), HttpStatusCode.Created,
+            ManejadorHttpSimulado.Fixture("desplegar-plan-pe.json"));
+        Verificacion(Cuerpo("2.1.0"), "desplegar-veredicto-vacio.json");
+        var cut = Aprobada();
+        cut.Find("button[data-accion='preparar']").Click();
+        cut.WaitForAssertion(() => Assert.True(plan.Llego));
+
+        Marca(cut, "kyc-pe", "1.3.0", false);
+        plan.Suelta();
+        await Task.Delay(300);
+
+        Assert.Empty(cut.FindAll("section#plan"));
+        Assert.True(Deshabilitado(cut, "confirmar"));
     }
 }
