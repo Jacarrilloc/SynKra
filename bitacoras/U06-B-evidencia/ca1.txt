@@ -1,0 +1,9 @@
+# fecha: 2026-11-28T01:13:06Z  sha: c4a4c1c
+$ ./gradlew :backend:test --rerun --tests *HistorialTest
+BUILD SUCCESSFUL in 7s
+$ grep -ho 'tests=...' backend/build/test-results/test/TEST-*HistorialTest.xml
+tests="8" skipped="0" failures="0" errors="0"
+$ python3 -I -c "..." backend/build/sqlite-pruebas/HistorialTest/synkra.db
+[(25,), (22,), (23,), (21,)]
+[(21, 'pe', 'despliegue', None, 'listo'), (22, 'pe', 'despliegue', None, 'fallido'), (23, 'pe', 'despliegue', None, 'aplicando'), (24, 'co', 'despliegue', None, 'listo'), (25, 'pe', 'reversion', 21, 'aplicando')]
+[(22,)]
