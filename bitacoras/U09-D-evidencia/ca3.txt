@@ -1,0 +1,52 @@
+fecha: 2026-11-28T05:29:57-05:00
+sha: ec6108e 0 cambios de codigo sin confirmar
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U09-D-evidencia/ca3.sh
+OK versiones: backend 0.1.0, init 1.0.0, front 0.1.0
+ok backend/Dockerfile FROM
+ok backend/Dockerfile FROM
+ok core/Dockerfile FROM
+ok core/Dockerfile FROM
+ok init-descarga/Dockerfile FROM
+ok init-descarga/Dockerfile FROM
+ok front/Dockerfile FROM
+ok front/Dockerfile FROM
+ok localhost:5001/synkra-init-descarga:1.0.0 etiqueta
+ok localhost:5001/synkra-backend:0.1.0 User
+ok localhost:5001/synkra-backend:0.1.0 id-u
+ok localhost:5001/synkra-backend:0.1.0 arquitectura
+ok localhost:5001/synkra-core-ejemplo:2.1.0 User
+ok localhost:5001/synkra-core-ejemplo:2.1.0 id-u
+ok localhost:5001/synkra-core-ejemplo:2.1.0 arquitectura
+ok localhost:5001/synkra-init-descarga:1.0.0 User
+ok localhost:5001/synkra-init-descarga:1.0.0 id-u
+ok localhost:5001/synkra-init-descarga:1.0.0 arquitectura
+ok localhost:5001/synkra-front:0.1.0 User
+ok localhost:5001/synkra-front:0.1.0 id-u
+ok localhost:5001/synkra-front:0.1.0 arquitectura
+ok localhost:5001/synkra-backend:0.1.0 ExposedPorts
+ok localhost:5001/synkra-core-ejemplo:2.1.0 ExposedPorts
+ok localhost:5001/synkra-core-ejemplo:2.1.0 Volumes
+ok localhost:5001/synkra-init-descarga:1.0.0 Entrypoint
+ok localhost:5001/synkra-init-descarga:1.0.0 sin-apk
+ok localhost:5001/synkra-front:0.1.0 ExposedPorts
+ok localhost:5001/synkra-front:0.1.0 ASPNETCORE_HTTP_PORTS
+ok localhost:5001/synkra-front:0.1.0 Entrypoint
+ok localhost:5001/synkra-front:0.1.0 runtime
+ok localhost:5001/synkra-front:0.1.0 sin-sdk
+OK imagenes
+verificar=0
+etapa=0
+['Microsoft.AspNetCore.App.Internal.Assets/10.0.15']
+0
+Microsoft.AspNetCore.App 10.0.15 [/usr/share/dotnet/shared/Microsoft.AspNetCore.App]
+Microsoft.NETCore.App 10.0.15 [/usr/share/dotnet/shared/Microsoft.NETCore.App]
+total 324
+-rwxr-xr-x 1 0 0  78192 Nov 28 08:01 Synkra.Front
+-rw-r--r-- 1 0 0    408 Nov 28 08:01 Synkra.Front.deps.json
+-rw-r--r-- 1 0 0 125952 Nov 28 08:01 Synkra.Front.dll
+-rw-r--r-- 1 0 0  75408 Nov 28 08:01 Synkra.Front.pdb
+touch: cannot touch '/app/x': Permission denied
+escribe=1

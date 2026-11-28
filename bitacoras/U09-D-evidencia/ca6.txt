@@ -1,0 +1,77 @@
+fecha: 2026-11-28T05:30:06-05:00
+sha: ec6108e 0 cambios de codigo sin confirmar
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U09-D-evidencia/ca6.sh
+id-antes=sha256:d1d80b7a3418e937e9974d80402c1870e5d7185ae9295cc2952c69423e4e1313
+=== user-0 :: sed -i 's/^USER .*/USER 0/' front/Dockerfile
+imagenes=0
+FALLA mutacion.local:1/synkra-front:0.1.0 User: esperado 10001:10001 / visto 0
+FALLA mutacion.local:1/synkra-front:0.1.0 User-no-root: esperado distinto de vacio/root/0 / visto 0
+FALLA mutacion.local:1/synkra-front:0.1.0 id-u: esperado 10001 / visto 0
+FALLAN 3 comprobaciones
+verificar=1
+=== sin-digest :: sed -i '/aspnet/ s/@sha256:[0-9a-f]*//' front/Dockerfile
+imagenes=0
+FALLA front/Dockerfile FROM: esperado @sha256:<64 hex> / visto FROM mcr.microsoft.com/dotnet/aspnet:10.0.15
+FALLAN 1 comprobaciones
+verificar=1
+=== una-etapa :: sed -i '/aspnet/ s#FROM .*#FROM mcr.microsoft.com/dotnet/sdk:10.0.404@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d#' front/Dockerfile
+imagenes=0
+FALLA mutacion.local:1/synkra-front:0.1.0 sin-sdk: esperado  / visto 10.0.404 [/usr/share/dotnet/sdk]
+FALLAN 1 comprobaciones
+verificar=1
+=== sin-root :: sed -i '/runAsNonRoot: true/d' deploy/base/front/deployment.yaml
+FALLA sin-root.pod: esperado {'runAsNonRoot': True, 'runAsUser': 10001, 'runAsGroup': 10001, 'seccompProfile': {'type': 'RuntimeDefault'}} / visto {'runAsGroup': 10001, 'runAsUser': 10001, 'seccompProfile': {'type': 'RuntimeDefault'}}
+front=1
+FALLA sin-root.pod: esperado {'runAsNonRoot': True, 'runAsUser': 10001, 'runAsGroup': 10001, 'seccompProfile': {'type': 'RuntimeDefault'}} / visto {'runAsGroup': 10001, 'runAsUser': 10001, 'seccompProfile': {'type': 'RuntimeDefault'}}
+front-base=1
+=== escribible :: sed -i 's/readOnlyRootFilesystem: true/readOnlyRootFilesystem: false/' deploy/base/front/deployment.yaml
+FALLA sin-root.contenedor: esperado {'allowPrivilegeEscalation': False, 'readOnlyRootFilesystem': True, 'capabilities': {'drop': ['ALL']}} / visto {'allowPrivilegeEscalation': False, 'capabilities': {'drop': ['ALL']}, 'readOnlyRootFilesystem': False}
+front=1
+FALLA sin-root.contenedor: esperado {'allowPrivilegeEscalation': False, 'readOnlyRootFilesystem': True, 'capabilities': {'drop': ['ALL']}} / visto {'allowPrivilegeEscalation': False, 'capabilities': {'drop': ['ALL']}, 'readOnlyRootFilesystem': False}
+front-base=1
+=== token :: sed -i 's/automountServiceAccountToken: false/automountServiceAccountToken: true/' deploy/base/front/deployment.yaml
+FALLA token: esperado False / visto True
+front=1
+FALLA token: esperado False / visto True
+front-base=1
+=== url-api :: sed -i 's#http://synkra-backend.synkra.svc:8080/#https://synkra.local/#' deploy/base/front/deployment.yaml
+FALLA variables: esperado [{'name': 'Synkra__ApiUrl', 'value': 'http://synkra-backend.synkra.svc:8080/'}] / visto [{'name': 'Synkra__ApiUrl', 'value': 'https://synkra.local/'}]
+front=1
+FALLA variables: esperado [{'name': 'Synkra__ApiUrl', 'value': 'http://synkra-backend.synkra.svc:8080/'}] / visto [{'name': 'Synkra__ApiUrl', 'value': 'https://synkra.local/'}]
+front-base=1
+=== ruta-raiz :: sed -i '/service:/{n;s/synkra-front/synkra-backend/}' deploy/overlays/kind/ingress-front.yaml
+FALLA ingress.rutas: esperado [('synkra.local', [('/', 'Prefix', 'synkra-front', {'name': 'http'})])] / visto [('synkra.local', [('/', 'Prefix', 'synkra-backend', {'name': 'http'})])]
+front=1
+=== raiz-doble :: sed -i 's#- path: /api$#- path: /#' deploy/overlays/kind/ingress.yaml
+FALLA ingress.rutas: esperado [('synkra.local', [('/api', 'Prefix', 'synkra-backend', {'name': 'http'}), ('/actuator/health', 'Prefix', 'synkra-backend', {'name': 'http'})])] / visto [('synkra.local', [('/', 'Prefix', 'synkra-backend', {'name': 'http'}), ('/actuator/health', 'Prefix', 'synkra-backend', {'name': 'http'})])]
+backend=1
+FALLA ruta-raiz: el Ingress synkra-backend tambien tiene la ruta /
+front=1
+=== sin-tls :: sed -i '/^  tls:/,/secretName/d' deploy/overlays/kind/ingress-front.yaml
+FALLA tls: esperado [{'hosts': ['synkra.local'], 'secretName': 'synkra-local-tls'}] / visto None
+front=1
+=== base-sin-front :: sed -i '/^  - front$/d' deploy/base/kustomization.yaml
+FALLA objetos: falta ('Deployment', 'synkra', 'synkra-front')
+FALLA objetos: falta ('Service', 'synkra', 'synkra-front')
+base=1
+FALLA entrada: no hay manifiestos en la entrada estandar
+backend=1
+FALLA entrada: no hay manifiestos en la entrada estandar
+versiones=1
+FALLA entrada: no hay manifiestos en la entrada estandar
+front=1
+=== tag-distinto :: sed -i '/newName: localhost:5001\/synkra-front/{n;s/0.1.0/0.2.0/}' deploy/overlays/kind/kustomization.yaml
+FALLA versiones: newTag de synkra-front '0.2.0', Synkra.Front.csproj dice '0.1.0'
+versiones=1
+FALLA imagen: esperado 'localhost:5001/synkra-front:0.1.0' / visto 'localhost:5001/synkra-front:0.2.0'
+front=1
+=== primero :: sed -i 's/c = por_nombre\["synkra-backend"\]/c = por_nombre["synkra-front"]/' scripts/verificar-backend.py
+FALLA versiones: SYNKRA_KUBERNETES_IMAGEN_INIT None, IMAGEN_INIT_POR_DEFECTO dice 'localhost:5001/synkra-init-descarga:1.0.0'
+versiones=1
+=== orden del render (Deployments)
+['synkra-backend', 'synkra-front']
+id-despues=sha256:d1d80b7a3418e937e9974d80402c1870e5d7185ae9295cc2952c69423e4e1313
+imagen-buena-intacta

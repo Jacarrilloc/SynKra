@@ -1,0 +1,24 @@
+fecha: 2026-11-28T05:33:20-05:00
+sha: ec6108e
+$ bash repite.sh ca7-variante 3
+--- ca7-variante corrida 1
+variante=0
+registro-cambio
+desplegar=0
+corre-la-variante
+restaurado=0
+corre-lo-subido
+--- ca7-variante corrida 2
+variante=0
+registro-cambio
+desplegar=0
+corre-la-variante
+restaurado=0
+corre-lo-subido
+--- ca7-variante corrida 3
+variante=0
+registro-cambio
+desplegar=0
+corre-la-variante
+restaurado=0
+corre-lo-subido

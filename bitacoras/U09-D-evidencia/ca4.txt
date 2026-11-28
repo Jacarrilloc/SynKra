@@ -1,0 +1,16 @@
+fecha: 2026-11-28T05:30:03-05:00
+sha: ec6108e 0 cambios de codigo sin confirmar
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U09-D-evidencia/ca4.sh
+833f0d687a6c549c87c3783d8d178b1cb2114aa2bb74d514c8ac45fa226e5db3
+espera=0
+200
+blazor.web.js 200
+<h1>Vista general</h1>
+API_NO_DISPONIBLE: No se pudo conectar con la API de SynKra
+10001
+0
+malo=139
+1

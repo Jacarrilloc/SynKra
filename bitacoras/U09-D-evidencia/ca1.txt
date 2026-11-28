@@ -1,0 +1,23 @@
+fecha: 2026-11-28T05:29:40-05:00
+sha: ec6108e 0 cambios de codigo sin confirmar
+uname -m: x86_64
+docker arch: amd64
+JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ bash bitacoras/U09-D-evidencia/ca1.sh
+b=0
+c=0
+899488ab7d398e08ac192166d114e672bacf350c
+85479d56ec36af6804401d7a23343a576612c611
+d5d7babb78d10f8d445bf2ea6c0a6d78cafaab77
+CatalogoTest salida=0
+total=25 executed=25 passed=25 failed=0 notExecuted=0
+DesplegarTest salida=0
+total=21 executed=21 passed=21 failed=0 notExecuted=0
+DetalleTest salida=0
+total=21 executed=21 passed=21 failed=0 notExecuted=0
+1
+1
+1
+todo=0
+total=117 executed=117 passed=117 failed=0 notExecuted=0
+resto=1
