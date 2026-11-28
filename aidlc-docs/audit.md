@@ -1000,3 +1000,9 @@ Se despacha el codificador de la ronda 2.
 ## 2026-11-28T02:14Z: fusión de #103 y cierre de U06
 
 **Acción del orquestador:** bajo la autorización de David de las 01:25:21Z, fusión de #103 (U06-D, resumen; solo documentación) en `bd0826f`. El diff contra `eb33d68` solo toca `aidlc-docs/construction/U06-registro/code/`, `bitacoras/U06-D*` y `revisiones/U06-D/`, así que no se repite `./gradlew check` (el revisor lo corrió en la punta: 566 pruebas en verde). U06 queda terminada: se marcan U06-T01 a T08 en el plan y se actualiza la línea de Code Generation Parte 2 en `aidlc-state.md`.
+
+## 2026-11-28T02:16Z: revisión de pendientes pedida por David
+
+**Input del usuario (02:15:48Z):** "Por si acaso revisa si hay cosas pendinetes y/o sin terminar"
+
+**Acción del orquestador:** el plan de U03 tenía U03-T01 a T07 sin marcar aunque están fusionadas (la última en el PR #26); se marcan. U03-T08 (OpenAPI, Should) queda sin marcar con la nota de que no se hizo, como dice su resumen.
