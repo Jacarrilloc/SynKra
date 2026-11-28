@@ -9,7 +9,7 @@ TOPE_ESPERA=60   # segundos maximos para la readiness (caso 1) y para que el cor
 JAR_COMPATIBLE="$RAIZ/plugins/kyc-pe/build/libs/kyc-pe-1.3.0.jar"
 JAR_INCOMPATIBLE="$RAIZ/plugins/kyc-pe/build/libs/kyc-pe-2.0.0.jar"
 SUFIJO="$$-$(date +%s)"
-TMP="$(mktemp -d)"
+TMP=""
 CONTENEDORES=()
 FALLOS=0
 
@@ -18,9 +18,13 @@ limpiar() {
   for c in "${CONTENEDORES[@]:-}"; do
     [ -n "$c" ] && docker rm -f "$c" >/dev/null 2>&1 || true
   done
-  rm -rf "$TMP"
+  [ -z "$TMP" ] || rm -rf "$TMP"
 }
+# El trap se instala antes de crear nada; las senales terminan el script (y disparan EXIT).
 trap limpiar EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM HUP
+TMP="$(mktemp -d)"
 
 for f in "$JAR_COMPATIBLE" "$JAR_INCOMPATIBLE"; do
   [ -f "$f" ] || { echo "FALTA $f (corre ./gradlew :plugins:kyc-pe:assemble)" >&2; exit 2; }
@@ -31,11 +35,12 @@ docker image inspect "$IMAGEN" >/dev/null 2>&1 || { echo "FALTA la imagen $IMAGE
 # Formato real de plugins-activos.yaml (C-81): lista en la raiz de {nombre, version}.
 preparar() {
   local caso="$1" version="$2" d="$TMP/$1"
-  mkdir -p "$d/plugins" "$d/config"
-  cp "$JAR_COMPATIBLE" "$JAR_INCOMPATIBLE" "$d/plugins/"
-  printf -- '- nombre: kyc-pe\n  version: "%s"\n' "$version" > "$d/config/plugins-activos.yaml"
-  chmod 755 "$d" "$d/plugins" "$d/config"
-  chmod 644 "$d"/plugins/*.jar "$d/config/plugins-activos.yaml"
+  # Encadenado con &&: no depende de set -e (que bash ignora dentro de una funcion llamada con ||).
+  mkdir -p "$d/plugins" "$d/config" \
+    && cp "$JAR_COMPATIBLE" "$JAR_INCOMPATIBLE" "$d/plugins/" \
+    && printf -- '- nombre: kyc-pe\n  version: "%s"\n' "$version" > "$d/config/plugins-activos.yaml" \
+    && chmod 755 "$d" "$d/plugins" "$d/config" \
+    && chmod 644 "$d"/plugins/*.jar "$d/config/plugins-activos.yaml"
 }
 
 ok()    { echo "ok $1"; }
@@ -46,10 +51,10 @@ falla() { echo "FALLA $1: $2"; FALLOS=$((FALLOS + 1)); }
 caso1() {
   local caso="caso1-kyc-pe-1.3.0" nombre="smoke-c1-$SUFIJO" t0 estado="" puerto="" cuerpo corriendo
   preparar "$caso" "1.3.0" || { falla "$caso" "no se pudo preparar /plugins y /config"; return; }
+  CONTENEDORES+=("$nombre")   # antes del run: si crea el contenedor y falla al arrancarlo, el trap lo borra
   docker run -d --name "$nombre" -p 127.0.0.1::8080 \
     -v "$TMP/$caso/plugins:/plugins:ro" -v "$TMP/$caso/config:/config:ro" "$IMAGEN" >/dev/null \
     || { falla "$caso" "docker run fallo"; return; }
-  CONTENEDORES+=("$nombre")
   t0=$SECONDS
   while [ $((SECONDS - t0)) -lt "$TOPE_ESPERA" ]; do
     corriendo="$(docker inspect -f '{{.State.Running}}' "$nombre" 2>/dev/null || true)"
@@ -78,10 +83,10 @@ caso1() {
 caso2() {
   local caso="caso2-kyc-pe-2.0.0" nombre="smoke-c2-$SUFIJO" t0 codigo="" corriendo logs
   preparar "$caso" "2.0.0" || { falla "$caso" "no se pudo preparar /plugins y /config"; return; }
+  CONTENEDORES+=("$nombre")   # antes del run (ver caso 1)
   docker run -d --name "$nombre" \
     -v "$TMP/$caso/plugins:/plugins:ro" -v "$TMP/$caso/config:/config:ro" "$IMAGEN" >/dev/null \
     || { falla "$caso" "docker run fallo"; return; }
-  CONTENEDORES+=("$nombre")
   t0=$SECONDS
   while [ $((SECONDS - t0)) -lt "$TOPE_ESPERA" ]; do
     corriendo="$(docker inspect -f '{{.State.Running}}' "$nombre" 2>/dev/null || true)"
