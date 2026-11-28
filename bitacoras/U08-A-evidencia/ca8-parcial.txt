@@ -1,0 +1,40 @@
+fecha: 2026-11-28T04:52:38Z
+sha: 7ac5e8e
+comando: for m in rbac-delete rbac-clusterrole ns-etiqueta nombre-variable; do bash bitacoras/U08-A-evidencia/ca8.sh $m; done
+---
+### rbac-delete
+sed: el Role de synkra-co gana delete en deployments
+-    verbs: ["get", "list", "watch", "create", "update", "patch"]
++    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+FALLA reglas: ('Role', 'synkra-co', 'synkra-deployer') tiene [{'apiGroups': ['apps'], 'resources': ['deployments'], 'verbs': ['get', 'list', 'watch', 'create', 'update', 'patch', 'delete']}, {'apiGroups': [''], 'resources': ['configmaps', 'services'], 'verbs': ['get', 'list', 'watch', 'create', 'update', 'patch']}, {'apiGroups': [''], 'resources': ['pods', 'pods/log', 'events'], 'verbs': ['get', 'list', 'watch']}, {'apiGroups': [''], 'resourceNames': ['synkra-co'], 'resources': ['namespaces'], 'verbs': ['get']}] y se esperaba [{'apiGroups': ['apps'], 'resources': ['deployments'], 'verbs': ['get', 'list', 'watch', 'create', 'update', 'patch']}, {'apiGroups': [''], 'resources': ['configmaps', 'services'], 'verbs': ['get', 'list', 'watch', 'create', 'update', 'patch']}, {'apiGroups': [''], 'resources': ['pods', 'pods/log', 'events'], 'verbs': ['get', 'list', 'watch']}, {'apiGroups': [''], 'resources': ['namespaces'], 'resourceNames': ['synkra-co'], 'verbs': ['get']}]
+FALLA prohibidos: ('Role', 'synkra-co', 'synkra-deployer') usa ['delete'] en verbs
+salida=1
+### rbac-clusterrole
+append: ClusterRole y ClusterRoleBinding para deployer
++apiVersion: rbac.authorization.k8s.io/v1
++kind: ClusterRole
++metadata:
++  name: x
++rules: []
++apiVersion: rbac.authorization.k8s.io/v1
++kind: ClusterRoleBinding
++metadata:
++  name: x
++roleRef: {apiGroup: rbac.authorization.k8s.io, kind: ClusterRole, name: x}
++subjects:
+FALLA sin-cluster: ('ClusterRole', '-', 'x')
+FALLA sin-cluster: ('ClusterRoleBinding', '-', 'x')
+FALLA objetos: sobra ('ClusterRole', '-', 'x')
+FALLA objetos: sobra ('ClusterRoleBinding', '-', 'x')
+salida=1
+### ns-etiqueta
+sed: synkra-pe pierde synkra.io/pais
+-    synkra.io/pais: pe
+FALLA etiquetas: ('Namespace', '-', 'synkra-pe') tiene {'app.kubernetes.io/part-of': 'synkra'} y se esperaba {'app.kubernetes.io/part-of': 'synkra', 'synkra.io/pais': 'pe'}
+salida=1
+### nombre-variable
+sed: vuelve CLUSTER ?= synkra y cluster-delete usa --name $(CLUSTER)
++CLUSTER ?= synkra
+-	kind delete cluster --name synkra --kubeconfig "$(KUBECONFIG_SYNKRA)"
++	kind delete cluster --name $(CLUSTER) --kubeconfig "$(KUBECONFIG_SYNKRA)"
+1

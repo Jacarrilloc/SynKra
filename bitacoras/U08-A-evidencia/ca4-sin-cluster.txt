@@ -1,0 +1,30 @@
+fecha: 2026-11-28T04:52:01Z
+sha: 7ac5e8e
+comando: bash bitacoras/U08-A-evidencia/ca4.sh   # PARCIAL: kind-synkra no existe (bloqueo inotify)
+---
+error: stat /home/julian/Escritorio/Proyectos/wt-m6r-U08-A/.kube/kind-synkra.yaml: no such file or directory
+install otro salida=2
+1
+cluster otro salida=2
+1
+registro otro salida=2
+1
+aplicar-base otro salida=2
+1
+status otro salida=2
+1
+guardia otro salida=2
+1
+mismo-nombre salida=2
+0
+global salida=2
+1
+falta salida=2
+1
+falso-intacto
+error: stat /home/julian/Escritorio/Proyectos/wt-m6r-U08-A/.kube/kind-synkra.yaml: no such file or directory
+nada-aplicado
+falta el kubeconfig /home/julian/Escritorio/Proyectos/wt-m6r-U08-A/.kube/kind-synkra.yaml: corre make cluster
+make: *** [Makefile:20: guardia] Error 1
+real salida=2
+--- salida final=0
