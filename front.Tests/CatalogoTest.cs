@@ -101,6 +101,12 @@ public class CatalogoTest : BunitContext
         var filas = cut.FindAll("section[data-core='synkra-core'] tr[data-plugin]");
         Assert.Equal(3, filas.Count);
         Assert.Equal("3.x", Celda(cut.Find("tr[data-plugin='kyc-pe'][data-version='2.0.0']"), "coreCompatible"));
+
+        // otro-core solo tiene la version 1.0.0: sus plugins 2.x y 3.x se muestran igual
+        Ok("/api/cores/otro-core/plugins", "catalogo-plugins-synkra-core.json");
+        var otra = Render<Catalogo>();
+        otra.WaitForAssertion(() => Assert.Equal(3, otra.FindAll("section[data-core='otro-core'] tr[data-plugin]").Count));
+        Assert.Equal(["2.x", "2.x", "3.x"], otra.FindAll("section[data-core='otro-core'] td[data-campo='coreCompatible']").Select(c => c.TextContent.Trim()).ToArray());
     }
 
     [Fact]
