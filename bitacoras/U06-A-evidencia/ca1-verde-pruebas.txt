@@ -1,0 +1,6 @@
+2026-11-27T19:39:52-05:00
+2512df7
+$ ./gradlew :backend:test --rerun --tests *RegistroRepositoriosTest
+BUILD SUCCESSFUL in 3s
+$ grep -ho 'tests=...'
+tests="13" skipped="0" failures="0" errors="0"

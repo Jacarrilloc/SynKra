@@ -1,0 +1,8 @@
+2026-11-27T19:36:30-05:00
+6296584
+$ ./gradlew :backend:test --rerun --tests '*ContextoFalloTest'
+BUILD SUCCESSFUL in 3s
+$ grep -ho tests=...
+tests="9" skipped="0" failures="0" errors="0"
+$ python3 -I ... (CA-3)
+[(1, 200, 'linea-0801', 65536, '[truncado]', 0)]

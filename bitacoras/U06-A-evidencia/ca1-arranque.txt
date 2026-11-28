@@ -1,0 +1,11 @@
+2026-11-27T19:36:40-05:00
+2512df7
+$ ./gradlew :backend:bootJar
+BUILD SUCCESSFUL in 953ms
+SYNKRA_DATA=mktemp -d
+0
+health rc=0
+['reg_contexto', 'reg_despliegue', 'reg_plugin']
+[('1',), ('2',), ('3',)]
+[('reg_despliegue', 'RESTRICT')]
+[('reg_despliegue_pais',)]

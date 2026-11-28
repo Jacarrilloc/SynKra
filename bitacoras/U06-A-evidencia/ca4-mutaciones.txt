@@ -1,0 +1,80 @@
+=== R-R1
+2026-11-27T19:36:53-05:00
+copia de HEAD 2512df7
+$ sed -i 's/propagation = Propagation.REQUIRED/propagation = Propagation.REQUIRES_NEW/' backend/src/main/java/io/synkra/registro/RegistroServicio.java
+52c52
+<     @Transactional(propagation = Propagation.REQUIRED)
+---
+>     @Transactional(propagation = Propagation.REQUIRES_NEW)
+$ ./gradlew :backend:test --tests '*TransicionesRegistroTest' --tests '*ContextoFalloTest'
+TransicionesRegistroTest > id7RegistradoDentroDeUnaTransaccionRevertidaNoQuedaNada() FAILED
+TransicionesRegistroTest > pedirAplicandoComoResultadoSeRechaza() FAILED
+TransicionesRegistroTest > registrarDejaElDespliegueEnAplicandoSinTerminadoEnYConSuPlugin() FAILED
+TransicionesRegistroTest > registrarSinPluginsEsValidoYPluginsNuloCuentaComoVacio() FAILED
+> Task :backend:test FAILED
+24 tests completed, 4 failed
+BUILD FAILED in 2m 5s
+$ grep -l '<failure' ...
+backend/build/test-results/test/TEST-io.synkra.registro.TransicionesRegistroTest.xml
+testcase name="id7RegistradoDentroDeUnaTransaccionRevertidaNoQuedaNada()"
+testcase name="pedirAplicandoComoResultadoSeRechaza()"
+testcase name="registrarDejaElDespliegueEnAplicandoSinTerminadoEnYConSuPlugin()"
+testcase name="registrarSinPluginsEsValidoYPluginsNuloCuentaComoVacio()"
+=== R-R2
+2026-11-27T19:38:59-05:00
+copia de HEAD 2512df7
+$ sed -i 's/ and estado = 'aplicando'"/"/' backend/src/main/java/io/synkra/registro/RegistroServicio.java
+82c82
+<                 + "where id = ? and estado = 'aplicando'", minusculas(resultado), reloj.millis(), id);
+---
+>                 + "where id = ?", minusculas(resultado), reloj.millis(), id);
+$ ./gradlew :backend:test --tests '*TransicionesRegistroTest' --tests '*ContextoFalloTest'
+TransicionesRegistroTest > id3UnListoNoPasaAFallido() FAILED
+TransicionesRegistroTest > id4UnFallidoNoPasaAListo() FAILED
+24 tests completed, 2 failed
+> Task :backend:test FAILED
+BUILD FAILED in 4s
+$ grep -l '<failure' ...
+backend/build/test-results/test/TEST-io.synkra.registro.TransicionesRegistroTest.xml
+testcase name="id3UnListoNoPasaAFallido()"
+testcase name="id4UnFallidoNoPasaAListo()"
+=== R-R3
+2026-11-27T19:39:04-05:00
+copia de HEAD 2512df7
+$ sed -i 's/resultado == EstadoDespliegue.FALLIDO \&\& contexto == null/false/' backend/src/main/java/io/synkra/registro/RegistroServicio.java
+75c75
+<         if (resultado == EstadoDespliegue.FALLIDO && contexto == null) {
+---
+>         if (false) {
+$ ./gradlew :backend:test --tests '*TransicionesRegistroTest' --tests '*ContextoFalloTest'
+TransicionesRegistroTest > id5FallidoSinContextoSeRechazaYNadaCambia() FAILED
+24 tests completed, 1 failed
+> Task :backend:test FAILED
+BUILD FAILED in 5s
+$ grep -l '<failure' ...
+backend/build/test-results/test/TEST-io.synkra.registro.TransicionesRegistroTest.xml
+testcase name="id5FallidoSinContextoSeRechazaYNadaCambia()"
+=== R-R4
+2026-11-27T19:39:09-05:00
+copia de HEAD 2512df7
+$ sed -i 's/bytes.length <= BYTES_MAX/true/' backend/src/main/java/io/synkra/registro/TruncadoContexto.java
+37c37
+<         if (bytes.length <= BYTES_MAX) {
+---
+>         if (true) {
+$ ./gradlew :backend:test --tests '*TransicionesRegistroTest' --tests '*ContextoFalloTest'
+ContextoFalloTest > integracionElId1FallidoGuardaElContextoTruncado() FAILED
+ContextoFalloTest > cienKbDeEnieDanUtf8ValidoSinCaracterPartido() FAILED
+ContextoFalloTest > milLineasLargasRecibenLosDosCortes() FAILED
+ContextoFalloTest > unTextoDe100KbQuedaEn65536BytesConMarcaYElFinalOriginal() FAILED
+ContextoFalloTest > unTextoDeExactamente65536BytesQuedaIgualYSinMarca() FAILED
+> Task :backend:test FAILED
+24 tests completed, 5 failed
+BUILD FAILED in 4s
+$ grep -l '<failure' ...
+backend/build/test-results/test/TEST-io.synkra.registro.ContextoFalloTest.xml
+testcase name="integracionElId1FallidoGuardaElContextoTruncado()"
+testcase name="cienKbDeEnieDanUtf8ValidoSinCaracterPartido()"
+testcase name="milLineasLargasRecibenLosDosCortes()"
+testcase name="unTextoDe100KbQuedaEn65536BytesConMarcaYElFinalOriginal()"
+testcase name="unTextoDeExactamente65536BytesQuedaIgualYSinMarca()"

@@ -1,0 +1,52 @@
+fecha: 2026-11-27T19:57:34-05:00
+sha base: 220229a (cada mutacion en copia de git archive HEAD)
+comando: ./gradlew :backend:test --rerun --tests '*TransicionesRegistroTest' --tests '*RegistroRepositoriosTest' --tests '*ContextoFalloTest'
+=== pais: sed 's/Pattern.compile("\[a-z\]{2}")/Pattern.compile("pe")/' backend/src/main/java/io/synkra/registro/RegistroServicio.java
+TransicionesRegistroTest > cualquierPaisDeDosLetrasMinusculasEsValido() FAILED
+> Task :backend:test FAILED
+40 tests completed, 1 failed
+BUILD FAILED in 11s
+=== npe: sed 's/var plugins = validar(nuevo);/var plugins = validar(nuevo); if (plugins.size() > 1) throw new NullPointerException();/' backend/src/main/java/io/synkra/registro/RegistroServicio.java
+TransicionesRegistroTest > id9DosPluginsConElMismoNombreRechazanElAltaEntera() FAILED
+> Task :backend:test FAILED
+40 tests completed, 1 failed
+BUILD FAILED in 9s
+=== reloj: sed 's/reloj.millis()/System.currentTimeMillis()/' backend/src/main/java/io/synkra/registro/RegistroServicio.java
+TransicionesRegistroTest > terminadoEnUsaElRelojDelConstructorDePaquete() FAILED
+40 tests completed, 1 failed
+> Task :backend:test FAILED
+BUILD FAILED in 8s
+=== tx: sed '0,/@Transactional$/{/@Transactional$/d}' backend/src/main/java/io/synkra/registro/RegistroServicio.java
+TransicionesRegistroTest > siFallaElContextoElEstadoNoQuedaEnFallido() FAILED
+40 tests completed, 1 failed
+> Task :backend:test FAILED
+BUILD FAILED in 8s
+=== r1: sed 's/propagation = Propagation.REQUIRED/propagation = Propagation.REQUIRES_NEW/' backend/src/main/java/io/synkra/registro/RegistroServicio.java
+TransicionesRegistroTest > cualquierPaisDeDosLetrasMinusculasEsValido() FAILED
+TransicionesRegistroTest > pedirAplicandoComoResultadoSeRechaza() FAILED
+TransicionesRegistroTest > registrarDejaElDespliegueEnAplicandoSinTerminadoEnYConSuPlugin() FAILED
+TransicionesRegistroTest > id7RegistradoDentroDeUnaTransaccionRevertidaNoQuedaNada() FAILED
+TransicionesRegistroTest > registrarSinPluginsEsValidoYPluginsNuloCuentaComoVacio() FAILED
+> Task :backend:test FAILED
+40 tests completed, 5 failed
+BUILD FAILED in 2m 38s
+=== r2: sed 's/ and estado = 'aplicando'//' backend/src/main/java/io/synkra/registro/RegistroServicio.java
+TransicionesRegistroTest > id4UnFallidoNoPasaAListo() FAILED
+TransicionesRegistroTest > id3UnListoNoPasaAFallido() FAILED
+40 tests completed, 2 failed
+> Task :backend:test FAILED
+BUILD FAILED in 8s
+=== r3: sed 's/resultado == EstadoDespliegue.FALLIDO \&\& contexto == null/false/' backend/src/main/java/io/synkra/registro/RegistroServicio.java
+TransicionesRegistroTest > id5FallidoSinContextoSeRechazaYNadaCambia() FAILED
+40 tests completed, 1 failed
+> Task :backend:test FAILED
+BUILD FAILED in 8s
+=== r4: sed 's/bytes.length <= BYTES_MAX/true/' backend/src/main/java/io/synkra/registro/TruncadoContexto.java
+ContextoFalloTest > integracionElId1FallidoGuardaElContextoTruncado() FAILED
+ContextoFalloTest > cienKbDeEnieDanUtf8ValidoSinCaracterPartido() FAILED
+ContextoFalloTest > milLineasLargasRecibenLosDosCortes() FAILED
+ContextoFalloTest > unTextoDe100KbQuedaEn65536BytesConMarcaYElFinalOriginal() FAILED
+ContextoFalloTest > unTextoDeExactamente65536BytesQuedaIgualYSinMarca() FAILED
+> Task :backend:test FAILED
+40 tests completed, 5 failed
+BUILD FAILED in 8s

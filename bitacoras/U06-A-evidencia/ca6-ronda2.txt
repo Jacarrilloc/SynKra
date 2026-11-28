@@ -1,0 +1,44 @@
+fecha: 2026-11-27T20:02:54-05:00
+$ git rev-parse --short HEAD; git diff --stat 97f9f80...HEAD
+2ad5c72
+ .../java/io/synkra/registro/ContextoGuardado.java  |   8 +
+ .../io/synkra/registro/ContextoRepositorio.java    |  13 +
+ .../main/java/io/synkra/registro/Despliegue.java   |  21 ++
+ .../io/synkra/registro/DespliegueRepositorio.java  |  15 ++
+ .../java/io/synkra/registro/PluginRegistrado.java  |   8 +
+ .../registro/PluginRegistradoRepositorio.java      |  12 +
+ .../java/io/synkra/registro/RegistroServicio.java  | 165 ++++++++++++
+ .../java/io/synkra/registro/TruncadoContexto.java  |  48 ++++
+ .../java/io/synkra/registro/api/ContextoFallo.java |  11 +
+ .../io/synkra/registro/api/EstadoDespliegue.java   |   8 +
+ .../io/synkra/registro/api/NuevoDespliegue.java    |  22 ++
+ .../io/synkra/registro/api/PluginDesplegado.java   |   6 +
+ .../java/io/synkra/registro/api/RegistroApi.java   |  21 ++
+ .../io/synkra/registro/api/TipoDespliegue.java     |   7 +
+ .../api/TransicionNoPermitidaException.java        |   9 +
+ .../java/io/synkra/registro/api/package-info.java  |   5 +
+ .../main/java/io/synkra/registro/package-info.java |   2 +
+ .../main/resources/db/migration/V3__registro.sql   |  38 +++
+ .../java/io/synkra/registro/ContextoFalloTest.java | 148 ++++++++++
+ .../synkra/registro/RegistroRepositoriosTest.java  | 186 +++++++++++++
+ .../synkra/registro/TransicionesRegistroTest.java  | 300 +++++++++++++++++++++
+ bitacoras/U06-A-evidencia/ca1-arranque.txt         |  11 +
+ bitacoras/U06-A-evidencia/ca1-rojo.txt             |  43 +++
+ bitacoras/U06-A-evidencia/ca1-verde-pruebas.txt    |   6 +
+ bitacoras/U06-A-evidencia/ca2-ca3-rojo.txt         |  23 ++
+ bitacoras/U06-A-evidencia/ca2-id8-sola.txt         |   5 +
+ bitacoras/U06-A-evidencia/ca2-ronda2.txt           |  10 +
+ bitacoras/U06-A-evidencia/ca2.txt                  |  10 +
+ bitacoras/U06-A-evidencia/ca3.txt                  |   8 +
+ bitacoras/U06-A-evidencia/ca4-mutaciones.txt       |  80 ++++++
+ bitacoras/U06-A-evidencia/ca4-ronda2.txt           |  52 ++++
+ bitacoras/U06-A-evidencia/ca5-ronda2.txt           |  43 +++
+ bitacoras/U06-A-evidencia/ca5.txt                  |  43 +++
+ bitacoras/U06-A-evidencia/ca6.txt                  |   3 +
+ bitacoras/U06-A.md                                 |  67 +++++
+ revisiones/U06-A/ronda-1-respuesta.md              |   7 +
+ revisiones/U06-A/ronda-1.md                        |  62 +++++
+ 37 files changed, 1526 insertions(+)
+$ git diff --name-only 97f9f80...HEAD | grep -v -E "(V3__registro.sql|backend/src/(main|test)/java/io/synkra/registro/|^bitacoras/U06-A|^revisiones/U06-A/)"; echo fuera_de_lista_rc=$?
+fuera_de_lista_rc=1
+nota: el commit que añade este archivo es posterior; solo suma ca6-ronda2.txt

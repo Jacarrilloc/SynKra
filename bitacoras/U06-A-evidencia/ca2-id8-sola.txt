@@ -1,0 +1,5 @@
+fecha: 2026-11-27T20:01:47-05:00
+sha: 220229a
+$ ./gradlew :backend:test --rerun --tests '*TransicionesRegistroTest.id8*'  (id8 sola)
+BUILD SUCCESSFUL in 5s
+tests="1" skipped="0" failures="0" errors="0"
