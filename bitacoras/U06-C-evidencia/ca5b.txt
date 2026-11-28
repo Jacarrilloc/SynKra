@@ -1,0 +1,21 @@
+# fecha: 2026-11-28T01:34:23Z  sha: 86d317b
+$ sed -i -e 's/^    public List<VistaPais> vistaGeneral() {/    @org.springframework.transaction.annotation.Transactional(readOnly = true)\n    public List<VistaPais> vistaGeneral() {/' $F
+VistaGeneralTest > laVistaNoRetieneLaUnicaConexionMientrasLeeElCluster() FAILED
+> Task :backend:test FAILED
+BUILD FAILED in 12s
+concordanciaConVaciosYMixtos() tiempo=0.186s ok
+sinLecturaLaImagenEsNulaYLosPluginsVaciosNuncaNulos() tiempo=0.028s ok
+laVistaNoRetieneLaUnicaConexionMientrasLeeElCluster() tiempo=5.02s FALLA: org.opentest4j.AssertionFailedError: [el otro hilo terminó en menos de 5 s] 
+expected: 
+  10L
+ but was: 
+  java.util.concurrent.TimeoutException
+  	at java.base/java.util.concurrent.FutureTask.get(FutureTask.java:204)
+  	at io.synkra.registro.VistaGeneralTest.lambda$laVistaNoRetieneLaUnicaConexionMi
+pePluginsOrdenadosImagenLeidaYCoreDelUltimoListo() tiempo=0.013s ok
+getApiPaisesDa200ConElMismoContenidoYLasClavesExactas() tiempo=0.163s ok
+concordanciaPorImagenConDigestYConjuntoDePlugins() tiempo=0.004s ok
+ultimoListoRechazaPaisMalFormado() tiempo=0.005s ok
+ultimoListoTomaElMasRecienteListoDesempataPorIdYNoMiraSynkraPaises() tiempo=0.017s ok
+daLosDiezPaisesEnElOrdenConfiguradoSinMxConLaLecturaLaConcordanciaYElUltimoListo() tiempo=0.008s ok
+soloLeePaisesConfiguradosUnaVezCadaUnoEnOrdenYNadaMas() tiempo=0.016s ok

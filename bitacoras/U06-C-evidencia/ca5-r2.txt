@@ -1,0 +1,179 @@
+# fecha de inicio: 2026-11-28T01:46:35Z  sha: e506ed3
+
+=== R-R6 digest: Concordancia no compara la imagen (cl da true)
+$ sed -i -e s/if\ \(\!registrado.imagen\(\).equals\(enClaster.imagenCore\(\)\)\)\ \{/if\ \(false\)\ \{/ "$D/backend/src/main/java/io/synkra/registro/Concordancia.java"
+BUILD FAILED in 10s
+$ grep -l "<failure" "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.registro.VistaGeneralTest.xml
+pruebas caídas:
+   VistaGeneralTest.concordanciaPorImagenConDigestYConjuntoDePlugins()
+   VistaGeneralTest.daLosDiezPaisesEnElOrdenConfiguradoSinMxConLaLecturaLaConcordanciaYElUltimoListo()
+
+=== R-R6 sha256: Concordancia compara solo por (nombre, version) (co da true)
+$ sed -i -e s/new\ Terna\(p.nombre\(\)\,\ p.version\(\)\,\ p.sha256\(\)\)/new\ Terna\(p.nombre\(\)\,\ p.version\(\)\,\ \"\"\)/g "$D/backend/src/main/java/io/synkra/registro/Concordancia.java"
+BUILD FAILED in 10s
+$ grep -l "<failure" "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.registro.VistaGeneralTest.xml
+pruebas caídas:
+   VistaGeneralTest.concordanciaPorImagenConDigestYConjuntoDePlugins()
+   VistaGeneralTest.daLosDiezPaisesEnElOrdenConfiguradoSinMxConLaLecturaLaConcordanciaYElUltimoListo()
+
+=== R-R6 conjunto: Concordancia compara las listas en orden (pe da false)
+$ sed -i -e s/Set\<Terna\>\ esperados\ =\ new\ HashSet\<\>\(\)\;/List\<Terna\>\ esperados\ =\ new\ java.util.ArrayList\<\>\(\)\;/ -e s/Set\<Terna\>\ corriendo\ =\ new\ HashSet\<\>\(\)\;/List\<Terna\>\ corriendo\ =\ new\ java.util.ArrayList\<\>\(\)\;/ "$D/backend/src/main/java/io/synkra/registro/Concordancia.java"
+BUILD FAILED in 10s
+$ grep -l "<failure" "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.registro.VistaGeneralTest.xml
+pruebas caídas:
+   VistaGeneralTest.getApiPaisesDa200ConElMismoContenidoYLasClavesExactas()
+   VistaGeneralTest.concordanciaPorImagenConDigestYConjuntoDePlugins()
+   VistaGeneralTest.daLosDiezPaisesEnElOrdenConfiguradoSinMxConLaLecturaLaConcordanciaYElUltimoListo()
+
+=== R-R6 de más: Concordancia acepta que lo leído contenga lo registrado (sv da true)
+$ sed -i -e s/return\ esperados.equals\(corriendo\)\;/return\ corriendo.containsAll\(esperados\)\;/ "$D/backend/src/main/java/io/synkra/registro/Concordancia.java"
+BUILD FAILED in 10s
+$ grep -l "<failure" "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.registro.VistaGeneralTest.xml
+pruebas caídas:
+   VistaGeneralTest.concordanciaPorImagenConDigestYConjuntoDePlugins()
+   VistaGeneralTest.daLosDiezPaisesEnElOrdenConfiguradoSinMxConLaLecturaLaConcordanciaYElUltimoListo()
+
+=== R-R6 vacíos: «uno sin el otro» da true (bo y uy dan true)
+$ sed -i -e s/return\ ultimo.isEmpty\(\)\ \\\&\\\&\ leido.isEmpty\(\)\;/return\ true\;/ "$D/backend/src/main/java/io/synkra/registro/Concordancia.java"
+BUILD FAILED in 10s
+$ grep -l "<failure" "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.registro.VistaGeneralTest.xml
+pruebas caídas:
+   VistaGeneralTest.concordanciaConVaciosYMixtos()
+   VistaGeneralTest.daLosDiezPaisesEnElOrdenConfiguradoSinMxConLaLecturaLaConcordanciaYElUltimoListo()
+
+=== último listo: quitar estado = 'listo' de ultimoListo (pe toma el 47)
+$ sed -i -e s/\ and\ estado\ =\ \'listo\'\ /\ / "$D/backend/src/main/java/io/synkra/registro/RegistroServicio.java"
+BUILD FAILED in 11s
+$ grep -l "<failure" "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.registro.VistaGeneralTest.xml
+pruebas caídas:
+   VistaGeneralTest.getApiPaisesDa200ConElMismoContenidoYLasClavesExactas()
+   VistaGeneralTest.ultimoListoTomaElMasRecienteListoDesempataPorIdYNoMiraSynkraPaises()
+   VistaGeneralTest.daLosDiezPaisesEnElOrdenConfiguradoSinMxConLaLecturaLaConcordanciaYElUltimoListo()
+
+=== desempate: id DESC pasa a id ASC en ultimoListo (cl toma el 45 y da true)
+$ sed -i -e s/order\ by\ confirmado_en\ desc\,\ id\ desc\ limit\ 1/order\ by\ confirmado_en\ desc\,\ id\ asc\ limit\ 1/ "$D/backend/src/main/java/io/synkra/registro/RegistroServicio.java"
+BUILD FAILED in 11s
+$ grep -l "<failure" "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.registro.VistaGeneralTest.xml
+pruebas caídas:
+   VistaGeneralTest.elJsonTambienTraeLaImagenYLosPluginsDelCluster()
+   VistaGeneralTest.ultimoListoTomaElMasRecienteListoDesempataPorIdYNoMiraSynkraPaises()
+   VistaGeneralTest.daLosDiezPaisesEnElOrdenConfiguradoSinMxConLaLecturaLaConcordanciaYElUltimoListo()
+
+=== R-R7: vistaGeneral recorre List.of(pe, co, mx) en vez de paises.lista()
+$ sed -i -e s/for\ \(var\ pais\ :\ paises.lista\(\)\)\ \{/for\ \(var\ pais\ :\ List.of\(\"pe\"\,\ \"co\"\,\ \"mx\"\)\)\ \{/ "$D/backend/src/main/java/io/synkra/registro/VistaGeneralServicio.java"
+BUILD FAILED in 10s
+$ grep -l "<failure" "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.registro.VistaGeneralTest.xml
+pruebas caídas:
+   VistaGeneralTest.sinLecturaLaImagenEsNulaYLosPluginsVaciosNuncaNulos()
+   VistaGeneralTest.elJsonTambienTraeLaImagenYLosPluginsDelCluster()
+   VistaGeneralTest.imagenYPluginsSonLosDelClusterNoLosDelRegistro()
+   VistaGeneralTest.pePluginsOrdenadosImagenLeidaYCoreDelUltimoListo()
+   VistaGeneralTest.getApiPaisesDa200ConElMismoContenidoYLasClavesExactas()
+   VistaGeneralTest.daLosDiezPaisesEnElOrdenConfiguradoSinMxConLaLecturaLaConcordanciaYElUltimoListo()
+   VistaGeneralTest.soloLeePaisesConfiguradosUnaVezCadaUnoEnOrdenYNadaMas()
+
+=== no disponible: ClienteNoDisponible/LecturaFallida dan concuerda = false (py y ve dan false)
+$ sed -i -e /LecturaCluster.NO_DISPONIBLE/s/List.of\(\)\,\ null\,\ id/List.of\(\)\,\ false\,\ id/ "$D/backend/src/main/java/io/synkra/registro/VistaGeneralServicio.java"
+BUILD FAILED in 10s
+$ grep -l "<failure" "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.registro.VistaGeneralTest.xml
+pruebas caídas:
+   VistaGeneralTest.getApiPaisesDa200ConElMismoContenidoYLasClavesExactas()
+   VistaGeneralTest.daLosDiezPaisesEnElOrdenConfiguradoSinMxConLaLecturaLaConcordanciaYElUltimoListo()
+
+=== conexión: @Transactional(readOnly = true) en VistaGeneralServicio.vistaGeneral
+$ sed -i -e s/\^\ \ \ \ public\ List\<VistaPais\>\ vistaGeneral\(\)\ \{/\ \ \ \ @org.springframework.transaction.annotation.Transactional\(readOnly\ =\ true\)\\n\ \ \ \ public\ List\<VistaPais\>\ vistaGeneral\(\)\ \{/ "$D/backend/src/main/java/io/synkra/registro/VistaGeneralServicio.java"
+BUILD FAILED in 15s
+$ grep -l "<failure" "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.registro.VistaGeneralTest.xml
+pruebas caídas:
+   VistaGeneralTest.laVistaNoRetieneLaUnicaConexionMientrasLeeElCluster()
+
+=== frontera: RegistroServicio recibe un CatalogoApi en un campo nuevo con @Autowired
+$ sed -i -e s/\^\ \ \ \ private\ final\ Clock\ reloj\;/\ \ \ \ private\ final\ Clock\ reloj\;\\n\ \ \ \ @Autowired\ private\ io.synkra.catalogo.api.CatalogoApi\ catalogo\;/ "$D/backend/src/main/java/io/synkra/registro/RegistroServicio.java"
+BUILD FAILED in 10s
+$ grep -l "<failure" "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.FronterasModulosTest.xml
+pruebas caídas:
+   FronterasModulosTest.elBackendRealRespetaSusFronteras()
+   FronterasModulosTest.registroSoloDependeDeKubernetesApiYPlataforma()
+
+=== API: VistaPais gana un componente LecturaPais lectura2 (con constructor de 8 para que compile)
+$ sed -i -e s/String\ versionCore\)\ \{\}/String\ versionCore\,\ io.synkra.kubernetes.api.LecturaPais\ lectura2\)\ \{\\n\ \ \ \ public\ VistaPais\(String\ pais\,\ LecturaCluster\ lectura\,\ String\ imagen\,\ List\<PluginCorriendo\>\ plugins\,\ Boolean\ concuerda\,\ Long\ ultimoDespliegueId\,\ String\ core\,\ String\ versionCore\)\ \{\\n\ \ \ \ \ \ \ \ this\(pais\,\ lectura\,\ imagen\,\ plugins\,\ concuerda\,\ ultimoDespliegueId\,\ core\,\ versionCore\,\ null\)\;\\n\ \ \ \ \}\\n\}/ "$D/backend/src/main/java/io/synkra/registro/api/VistaPais.java"
+BUILD FAILED in 10s
+$ grep -l "<failure" "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.FronterasModulosTest.xml
+pruebas caídas:
+   FronterasModulosTest.laApiDeRegistroSoloMencionaTiposPropios()
+
+=== escritura: RutasVistaGeneral gana un @PostMapping vacío
+$ sed -i -e s/\^\ \ \ \ private\ static\ VistaPaisDto\ dto\(VistaPais\ v\)\ \{/\ \ \ \ @org.springframework.web.bind.annotation.PostMapping\(\"\\/api\\/x\"\)\\n\ \ \ \ void\ escribe\(\)\ \{\}\\n\\n\ \ \ \ private\ static\ VistaPaisDto\ dto\(VistaPais\ v\)\ \{/ "$D/backend/src/main/java/io/synkra/registro/RutasVistaGeneral.java"
+BUILD FAILED in 10s
+$ grep -l "<failure" "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.FronterasModulosTest.xml
+pruebas caídas:
+   FronterasModulosTest.registroNoTieneRutasDeEscritura()
+
+=== F-01 E3: la imagen sale del último listo del registro y no del clúster (cl muestra B)
+$ sed -i -e s/LecturaCluster.LEIDO\,\ lectura.imagenCore\(\)\,\ plugins\,/LecturaCluster.LEIDO\,\ ultimo.map\(DespliegueRegistrado::imagen\).orElse\(lectura.imagenCore\(\)\)\,\ plugins\,/ "$D/backend/src/main/java/io/synkra/registro/VistaGeneralServicio.java"
+BUILD FAILED in 10s
+$ grep -l "<failure" "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.registro.VistaGeneralTest.xml
+pruebas caídas:
+   VistaGeneralTest.elJsonTambienTraeLaImagenYLosPluginsDelCluster()
+   VistaGeneralTest.imagenYPluginsSonLosDelClusterNoLosDelRegistro()
+
+=== F-01 E4: los plugins salen del registro cuando hay último listo (co muestra sha c, sv sin kyc-extra)
+$ sed -i -e s/LecturaCluster.LEIDO\,\ lectura.imagenCore\(\)\,\ plugins\,/LecturaCluster.LEIDO\,\ lectura.imagenCore\(\)\,\ ultimo.map\(u\ -\>\ u.plugins\(\).stream\(\).map\(p\ -\>\ new\ PluginCorriendo\(p.nombre\(\)\,\ p.version\(\)\,\ p.sha256\(\)\)\).toList\(\)\).orElse\(plugins\)\,/ "$D/backend/src/main/java/io/synkra/registro/VistaGeneralServicio.java"
+BUILD FAILED in 10s
+$ grep -l "<failure" "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.registro.VistaGeneralTest.xml
+pruebas caídas:
+   VistaGeneralTest.elJsonTambienTraeLaImagenYLosPluginsDelCluster()
+   VistaGeneralTest.imagenYPluginsSonLosDelClusterNoLosDelRegistro()
+
+=== F-02 E5: @RequestMapping("/api/x") sin method en un método de RutasVistaGeneral
+$ sed -i -e s/\^\ \ \ \ private\ static\ VistaPaisDto\ dto\(VistaPais\ v\)\ \{/\ \ \ \ @org.springframework.web.bind.annotation.RequestMapping\(\"\\/api\\/x\"\)\\n\ \ \ \ void\ escribe\(\)\ \{\}\\n\\n\ \ \ \ private\ static\ VistaPaisDto\ dto\(VistaPais\ v\)\ \{/ "$D/backend/src/main/java/io/synkra/registro/RutasVistaGeneral.java"
+BUILD FAILED in 10s
+$ grep -l "<failure" "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.FronterasModulosTest.xml
+pruebas caídas:
+   FronterasModulosTest.registroNoTieneRutasDeEscritura()
+
+=== F-02 E6: @RequestMapping(method = POST) a nivel de clase en RutasVistaGeneral
+$ sed -i -e s/\^@RestController/@RestController\\n@org.springframework.web.bind.annotation.RequestMapping\(path\ =\ \"\\/api\\/y\"\,\ method\ =\ org.springframework.web.bind.annotation.RequestMethod.POST\)/ "$D/backend/src/main/java/io/synkra/registro/RutasVistaGeneral.java"
+BUILD FAILED in 10s
+$ grep -l "<failure" "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.FronterasModulosTest.xml
+backend/build/test-results/test/TEST-io.synkra.registro.VistaGeneralTest.xml
+pruebas caídas:
+   FronterasModulosTest.registroNoTieneRutasDeEscritura()
+   VistaGeneralTest.elJsonTambienTraeLaImagenYLosPluginsDelCluster()
+   VistaGeneralTest.getApiPaisesDa200ConElMismoContenidoYLasClavesExactas()
+
+=== F-03 E7: VistaGeneralApi gana un parámetro de tipo con límite LecturaPais
+$ sed -i -e s/public\ interface\ VistaGeneralApi\ \{/public\ interface\ VistaGeneralApi\<T\ extends\ io.synkra.kubernetes.api.LecturaPais\>\ \{/ "$D/backend/src/main/java/io/synkra/registro/api/VistaGeneralApi.java"
+/tmp/tmp.JsyYSKDHZu/backend/src/main/java/io/synkra/registro/RutasVistaGeneral.java:26: error: incompatible types: invalid method reference
+  /tmp/tmp.JsyYSKDHZu/backend/src/main/java/io/synkra/registro/RutasVistaGeneral.java:26: error: incompatible types: invalid method reference
+BUILD FAILED in 962ms
+$ grep -l "<failure" "$D"/backend/build/test-results/test/TEST-*.xml
+grep: /tmp/tmp.JsyYSKDHZu/backend/build/test-results/test/TEST-*.xml: No such file or directory
+pruebas caídas:
+Traceback (most recent call last):
+  File "<stdin>", line 3, in <module>
+  File "/usr/lib/python3.14/xml/etree/ElementTree.py", line 1214, in parse
+    tree.parse(source, parser)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/xml/etree/ElementTree.py", line 566, in parse
+    source = open(source, "rb")
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmp.JsyYSKDHZu/backend/build/test-results/test/TEST-*.xml'
+
+# fin: 2026-11-28T01:49:48Z

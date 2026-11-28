@@ -1,0 +1,56 @@
+# fecha: 2026-11-28T01:25:43Z  base: 658dfe0 + VistaGeneralTest y firmas vacías (se commitean justo después)
+$ ./gradlew :backend:test --rerun --tests *VistaGeneralTest
+> Task :verificador:compileJava UP-TO-DATE
+> Task :backend:compileJava UP-TO-DATE
+> Task :backend:processResources UP-TO-DATE
+> Task :backend:classes UP-TO-DATE
+> Task :verificador:compileTestFixturesJava UP-TO-DATE
+> Task :backend:compileTestJava UP-TO-DATE
+> Task :backend:processTestResources UP-TO-DATE
+> Task :backend:testClasses UP-TO-DATE
+> Task :verificador:processResources NO-SOURCE
+> Task :verificador:classes UP-TO-DATE
+> Task :verificador:jar UP-TO-DATE
+> Task :verificador:processTestFixturesResources NO-SOURCE
+> Task :verificador:testFixturesClasses UP-TO-DATE
+> Task :verificador:testFixturesJar UP-TO-DATE
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+> Task :backend:test
+VistaGeneralTest > concordanciaConVaciosYMixtos() FAILED
+    java.lang.UnsupportedOperationException at VistaGeneralTest.java:305
+VistaGeneralTest > sinLecturaLaImagenEsNulaYLosPluginsVaciosNuncaNulos() FAILED
+    java.lang.UnsupportedOperationException at VistaGeneralTest.java:184
+VistaGeneralTest > laVistaNoRetieneLaUnicaConexionMientrasLeeElCluster() FAILED
+    java.lang.UnsupportedOperationException at VistaGeneralTest.java:285
+VistaGeneralTest > pePluginsOrdenadosImagenLeidaYCoreDelUltimoListo() FAILED
+    java.lang.UnsupportedOperationException at VistaGeneralTest.java:171
+VistaGeneralTest > getApiPaisesDa200ConElMismoContenidoYLasClavesExactas() FAILED
+    org.opentest4j.AssertionFailedError at VistaGeneralTest.java:205
+VistaGeneralTest > concordanciaPorImagenConDigestYConjuntoDePlugins() FAILED
+    java.lang.UnsupportedOperationException at VistaGeneralTest.java:315
+VistaGeneralTest > ultimoListoRechazaPaisMalFormado() FAILED
+    java.lang.AssertionError at VistaGeneralTest.java:264
+VistaGeneralTest > ultimoListoTomaElMasRecienteListoDesempataPorIdYNoMiraSynkraPaises() FAILED
+    java.lang.UnsupportedOperationException at VistaGeneralTest.java:251
+VistaGeneralTest > daLosDiezPaisesEnElOrdenConfiguradoSinMxConLaLecturaLaConcordanciaYElUltimoListo() FAILED
+    java.lang.UnsupportedOperationException at VistaGeneralTest.java:157
+VistaGeneralTest > soloLeePaisesConfiguradosUnaVezCadaUnoEnOrdenYNadaMas() FAILED
+    java.lang.UnsupportedOperationException at VistaGeneralTest.java:193
+2026-11-27T20:25:50.436-05:00  INFO 211125 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-27T20:25:50.438-05:00  INFO 211125 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-27T20:25:50.443-05:00  INFO 211125 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-27T20:25:50.454-05:00  INFO 211125 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+> Task :backend:test FAILED
+10 tests completed, 10 failed
+[Incubating] Problems report is available at: file:///home/casdav/Projects/Master/wt-m6r-U06-C/build/reports/problems/problems-report.html
+FAILURE: Build failed with an exception.
+* What went wrong:
+Execution failed for task ':backend:test'.
+> There were failing tests. See the report at: file:///home/casdav/Projects/Master/wt-m6r-U06-C/backend/build/reports/tests/test/index.html
+* Try:
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+BUILD FAILED in 6s
+9 actionable tasks: 1 executed, 8 up-to-date

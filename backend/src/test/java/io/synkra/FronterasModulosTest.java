@@ -21,6 +21,7 @@ import io.synkra.fronteras.AppFronteras;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
+import org.springframework.modulith.core.DependencyType;
 import org.springframework.modulith.core.ApplicationModules;
 import org.springframework.modulith.core.Violations;
 import org.springframework.modulith.docs.Documenter;
@@ -172,5 +173,136 @@ class FronterasModulosTest {
                 .hasMessageContaining("ApiLimite (límite de tipo)")
                 .hasMessageContaining("ApiAnotada (anotación)")
                 .hasMessageNotContaining("ApiLimpia");
+    }
+
+    // ---- U06-T07: las fronteras del módulo registro ----
+
+    private static final String API_REGISTRO = "io.synkra.registro.api..";
+
+    /** Un tipo de io.synkra fuera de la API de registro, o de io.fabric8. */
+    private static boolean ajenoALaApiDeRegistro(JavaClass t) {
+        String paquete = t.getPackageName();
+        boolean propio = paquete.equals("io.synkra.registro.api") || paquete.startsWith("io.synkra.registro.api.");
+        return (paquete.startsWith("io.synkra.") && !propio) || paquete.startsWith("io.fabric8");
+    }
+
+    private static void revisaAjenos(List<String> mencionados, String donde, Iterable<JavaClass> tipos) {
+        for (JavaClass t : tipos) {
+            if (ajenoALaApiDeRegistro(t)) {
+                mencionados.add(donde + " menciona " + t.getName());
+            }
+        }
+    }
+
+    /** Las firmas públicas de la API de registro solo mencionan tipos de su propio paquete (y del JDK). */
+    private static ArchRule laApiDeRegistroSoloMencionaTipos(String paqueteApi) {
+        ArchCondition<JavaClass> condicion = new ArchCondition<>("mencionar solo tipos propios en su API pública") {
+            @Override
+            public void check(JavaClass cls, ConditionEvents eventos) {
+                if (!cls.getModifiers().contains(JavaModifier.PUBLIC)) {
+                    return;
+                }
+                List<String> m = new ArrayList<>();
+                cls.getSuperclass().ifPresent(t -> revisaAjenos(m, cls.getName() + " (superclase)", t.getAllInvolvedRawTypes()));
+                cls.getInterfaces().forEach(t -> revisaAjenos(m, cls.getName() + " (interfaz)", t.getAllInvolvedRawTypes()));
+                cls.getTypeParameters().forEach(v -> v.getUpperBounds()
+                        .forEach(b -> revisaAjenos(m, cls.getName() + " (límite de tipo)", b.getAllInvolvedRawTypes())));
+                cls.getAnnotations().forEach(a -> revisaAjenos(m, cls.getName() + " (anotación)", List.of(a.getRawType())));
+                for (JavaCodeUnit u : cls.getCodeUnits()) {
+                    if (!u.getModifiers().contains(JavaModifier.PUBLIC) && !u.getModifiers().contains(JavaModifier.PROTECTED)) {
+                        continue;
+                    }
+                    u.getTypeParameters().forEach(v -> v.getUpperBounds()
+                            .forEach(b -> revisaAjenos(m, u.getFullName() + " (límite de tipo)", b.getAllInvolvedRawTypes())));
+                    u.getAnnotations().forEach(a -> revisaAjenos(m, u.getFullName() + " (anotación)", List.of(a.getRawType())));
+                    revisaAjenos(m, u.getFullName(), u.getReturnType().getAllInvolvedRawTypes());
+                    for (var p : u.getParameterTypes()) {
+                        revisaAjenos(m, u.getFullName(), p.getAllInvolvedRawTypes());
+                    }
+                    u.getThrowsClause().getTypes().forEach(t -> revisaAjenos(m, u.getFullName() + " (throws)", t.getAllInvolvedRawTypes()));
+                }
+                for (JavaField f : cls.getFields()) {
+                    // En un record, cada componente es un campo privado: también cuenta.
+                    if (cls.isRecord() || f.getModifiers().contains(JavaModifier.PUBLIC)
+                            || f.getModifiers().contains(JavaModifier.PROTECTED)) {
+                        revisaAjenos(m, f.getFullName(), f.getType().getAllInvolvedRawTypes());
+                    }
+                }
+                m.forEach(texto -> eventos.add(SimpleConditionEvent.violated(cls, texto)));
+            }
+        };
+        return ArchRuleDefinition.classes().that().resideInAPackage(paqueteApi).should(condicion);
+    }
+
+    @Test
+    void laApiDeRegistroSoloMencionaTiposPropios() {
+        laApiDeRegistroSoloMencionaTipos(API_REGISTRO).check(produccion());
+    }
+
+    private static final List<String> ANOTACIONES_DE_ESCRITURA = List.of(
+            "org.springframework.web.bind.annotation.PostMapping",
+            "org.springframework.web.bind.annotation.PutMapping",
+            "org.springframework.web.bind.annotation.PatchMapping",
+            "org.springframework.web.bind.annotation.DeleteMapping");
+    private static final List<String> VERBOS_DE_ESCRITURA = List.of("POST", "PUT", "PATCH", "DELETE");
+
+    private static boolean escribe(com.tngtech.archunit.core.domain.JavaAnnotation<?> a) {
+        String tipo = a.getRawType().getName();
+        if (ANOTACIONES_DE_ESCRITURA.contains(tipo)) {
+            return true;
+        }
+        if (!tipo.equals("org.springframework.web.bind.annotation.RequestMapping")) {
+            return false;
+        }
+        // @RequestMapping sin method acepta todos los verbos (también los de escritura).
+        Object[] verbos = a.get("method").map(v -> v instanceof Object[] arr ? arr : new Object[] {v}).orElse(new Object[0]);
+        if (verbos.length == 0) {
+            return true;
+        }
+        for (Object verbo : verbos) {
+            String nombre = verbo instanceof com.tngtech.archunit.core.domain.JavaEnumConstant e ? e.name() : String.valueOf(verbo);
+            if (VERBOS_DE_ESCRITURA.contains(nombre)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Ningún método de las clases del paquete lleva una anotación de ruta de escritura. */
+    private static ArchRule sinRutasDeEscritura(String paquete) {
+        ArchCondition<JavaClass> condicion = new ArchCondition<>("no tener métodos con rutas de escritura") {
+            @Override
+            public void check(JavaClass cls, ConditionEvents eventos) {
+                for (var a : cls.getAnnotations()) {
+                    if (escribe(a)) {
+                        eventos.add(SimpleConditionEvent.violated(cls, cls.getName() + " lleva @" + a.getRawType().getSimpleName()
+                                + " a nivel de clase"));
+                    }
+                }
+                for (var metodo : cls.getMethods()) {
+                    for (var a : metodo.getAnnotations()) {
+                        if (escribe(a)) {
+                            eventos.add(SimpleConditionEvent.violated(cls,
+                                    metodo.getFullName() + " lleva @" + a.getRawType().getSimpleName()));
+                        }
+                    }
+                }
+            }
+        };
+        return ArchRuleDefinition.classes().that().resideInAPackage(paquete).should(condicion);
+    }
+
+    @Test
+    void registroNoTieneRutasDeEscritura() {
+        sinRutasDeEscritura("io.synkra.registro..").check(produccion());
+    }
+
+    @Test
+    void registroSoloDependeDeKubernetesApiYPlataforma() {
+        var modulos = backendReal();
+        var registro = modulos.getModuleByName("registro").orElseThrow();
+        var destinos = registro.getDependencies(modulos, DependencyType.values()).uniqueModules()
+                .map(m -> m.getIdentifier().toString()).sorted().toList();
+        assertThat(destinos).containsExactly("kubernetes", "plataforma");
     }
 }

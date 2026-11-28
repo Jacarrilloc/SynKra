@@ -37,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 class RegistroServicio implements RegistroApi {
 
     private static final Pattern PAIS = Pattern.compile("[a-z]{2}");
+    private static final String MSG_PAIS = "pais: dos letras minúsculas";
     private static final Pattern SHA256 = Pattern.compile("[0-9a-f]{64}");
 
     private final JdbcAggregateTemplate plantilla;
@@ -134,7 +135,7 @@ class RegistroServicio implements RegistroApi {
     @Transactional(readOnly = true)
     public List<DespliegueRegistrado> historial(String pais) {
         if (pais == null || !PAIS.matcher(pais).matches()) {
-            throw new IllegalArgumentException("pais: dos letras minúsculas");
+            throw new IllegalArgumentException(MSG_PAIS);
         }
         var filas = jdbc.query("select " + COLUMNAS + " from reg_despliegue where pais = ? "
                 + "order by confirmado_en desc, id desc", RegistroServicio::fila, pais);
@@ -147,6 +148,22 @@ class RegistroServicio implements RegistroApi {
             salida.add(con(f, plugins.getOrDefault(f.id(), List.of()), null));
         }
         return List.copyOf(salida);
+    }
+
+    /** R-R6: el último {@code listo} por el orden de R-R5 (el desempate por id también vale aquí). */
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<DespliegueRegistrado> ultimoListo(String pais) {
+        if (pais == null || !PAIS.matcher(pais).matches()) {
+            throw new IllegalArgumentException(MSG_PAIS);
+        }
+        var filas = jdbc.query("select " + COLUMNAS + " from reg_despliegue where pais = ? and estado = 'listo' "
+                + "order by confirmado_en desc, id desc limit 1", RegistroServicio::fila, pais);
+        if (filas.isEmpty()) {
+            return Optional.empty();
+        }
+        var base = filas.get(0);
+        return Optional.of(con(base, pluginsDe(List.of(base.id())).getOrDefault(base.id(), List.of()), null));
     }
 
     private static DespliegueRegistrado con(DespliegueRegistrado f, List<PluginDesplegado> plugins,
@@ -202,7 +219,7 @@ class RegistroServicio implements RegistroApi {
             throw new IllegalArgumentException("id debe ser mayor que 0");
         }
         if (n.pais() == null || !PAIS.matcher(n.pais()).matches()) {
-            throw new IllegalArgumentException("pais: dos letras minúsculas");
+            throw new IllegalArgumentException(MSG_PAIS);
         }
         if (n.tipo() == null) {
             throw new IllegalArgumentException("tipo obligatorio");
