@@ -1,0 +1,32 @@
+fecha=2026-11-28T07:40:34Z
+sha-codigo=f49d08d (HEAD=f49d08d)
+uname -m=x86_64
+RepoDigests=mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
+
+$ scripts/dotnet-docker.sh test front.Tests --filter DesplegarTest --logger "trx;LogFileName=desplegar.trx" --results-directory front.Tests/TestResults
+Passed!  - Failed:     0, Passed:    21, Skipped:     0, Total:    21, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
+salida=0
+
+$ python3 -I bitacoras/U09-A-evidencia/trx.py front.Tests/TestResults/desplegar.trx
+total=21 executed=21 passed=21 failed=0 notExecuted=0
+CambiarElPaisDescartaElPlan
+CambiarLaSeleccionDescartaElPlan
+CargaPaisesYCoresDeLaApi
+ConVeredictoAprobadoPrepararSeHabilitaYConfirmarNo
+ConVeredictoRechazadoLosBotonesEstanDeshabilitados
+ConfirmarLlamaALaConfirmacionDelPlanYEnlazaAlDetalle
+ElPaisNoEntraEnLaVerificacion
+ElegirCoreYVersionVerificaSinPlugins
+ErrorAlConfirmarSeMuestraYDescartaElPlan
+ErrorAlPrepararSeMuestraYNoHayPlan
+FiltroPorEtiquetaPideLaConsultaALaApi
+MarcarUnPluginVuelveAVerificarConLaSeleccion
+NoFiltraNiComparaVersiones
+PrepararCreaElPlanYMuestraResumenYCambios
+RespuestaViejaNoPisaLaNueva
+SinClicNoHayConfirmacion
+SinPaisPrepararSigueDeshabilitado
+UnFiltroQueOcultaUnPluginMarcadoLoDesmarcaYVuelveAVerificar
+UnFiltroSinIgualMandaLaClaveConValorVacio
+UnPlanQueLlegaTrasCambiarLaSeleccionNoSeMuestra
+VerificacionConErrorDeshabilitaLosBotones

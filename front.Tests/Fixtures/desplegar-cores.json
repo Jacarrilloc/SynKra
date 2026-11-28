@@ -1,0 +1,9 @@
+[
+  {
+    "nombre": "synkra-core",
+    "versiones": [
+      { "version": "2.1.0", "imagen": "localhost:5001/synkra-core-ejemplo@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
+      { "version": "3.0.0", "imagen": "localhost:5001/synkra-core-ejemplo@sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd" }
+    ]
+  }
+]

@@ -1,0 +1,18 @@
+fecha=2026-11-28T07:40:25Z
+sha-codigo=f49d08d (HEAD=f49d08d)
+uname -m=x86_64
+RepoDigests=mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
+
+$ B=$(git merge-base HEAD main); git merge-base --is-ancestor 0910a09 "$B"; echo "base=$?"
+base=0
+$ git diff --stat 0910a09 "$B" -- front front.Tests scripts/dotnet-docker.sh | wc -l
+0
+$ git rev-parse HEAD:front/Api/ApiSynkra.cs HEAD:front/Api/ModelosCatalogo.cs HEAD:front/Api/ApiSynkra.Catalogo.cs
+899488ab7d398e08ac192166d114e672bacf350c
+85479d56ec36af6804401d7a23343a576612c611
+d5d7babb78d10f8d445bf2ea6c0a6d78cafaab77
+$ git diff -U0 "$B" HEAD -- front/Api/ApiSynkra.cs | grep -E '^[-+][^-+]'   (B=367e09fd5243122b0e7506a6840365945e066f25)
+-/// <summary>Cliente tipado de la API REST de SynKra. Solo lecturas; todo lo que devuelve sale tal cual de la API.</summary>
+-public class ApiSynkra
++/// <summary>Cliente tipado de la API REST de SynKra; todo lo que devuelve sale tal cual de la API.</summary>
++public partial class ApiSynkra
