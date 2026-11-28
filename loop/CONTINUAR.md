@@ -47,7 +47,7 @@ Contratos que fijaron U06-A y U07-A (los asumen las tareas siguientes; están en
 
 ### PRs
 
-#95 a #105 **fusionados** por autorización de David (la última tanda, #100 U07-C y #101 U06-C, a las 02:02 UTC). `main` en `20ca4e1` (882 pruebas en verde). **U06 TERMINADA** (#97, #99, #101, #103). El #6 es antiguo y no se toca.
+#95 a #106 **fusionados**, y la rama del orquestador en #107 por autorización de David (la última tanda, #100 U07-C y #101 U06-C, a las 02:02 UTC). `main` en `20ca4e1` (882 pruebas en verde). **U06 TERMINADA** (#97, #99, #101, #103). El #6 es antiguo y no se toca.
 
 ### En vuelo (sesión de David, 2026-11-28 00:55 UTC; si la sesión se cortó, se perdieron)
 
@@ -56,7 +56,6 @@ Contratos que fijaron U06-A y U07-A (los asumen las tareas siguientes; están en
 | U06-A registro base | `m6r/U06-A` | `97f9f80` | **VERDE ronda 2**, fusionado (#97) | — |
 | U07-A planes y país | `m6r/U07-A` | `97f9f80` | **VERDE ronda 1**, fusionado (#96) | — |
 | U07-F y U07-G | (sin rama) | — | U07-G **escrita** (fronteras de `despliegue` con `allowedDependencies` en su `package-info.java`, y resumen de U07; revisor normal, no `sonnet`, porque toca código). Antes de U07-G, fusionar la rama del orquestador a `main` para que C-121 a C-123 estén en su árbol |
-| U07-F reversión | `../wt-m6r-U07-F`, `m6r/U07-F` | `1783515` | Ronda 2 NO-VERDE. Codificador ronda 3 terminó (`b923f41`, código en `8cd0286`). **Revisor ronda 3 despachado**. Si sale NO-VERDE, se para y se lleva a David | Repetir el revisor ronda 3 si no hay `revisiones/U07-F/ronda-3.md` |
 | (fila anterior de U07-E y U07-F) | (sin rama) | — | **Escritas** (hashes `4252363` y `2f97d8d`, tras corregir los greps de C-122). U07-E: `TareasProgramadas` con `synkra.programacion.activa`, apagada en pruebas; toca `kubernetes` por C-76, C-82 y C-83. U07-F: 422 `ORIGEN_NO_LISTO` y `ORIGEN_DESACTUALIZADO` | En cadena tras U07-D |
 | U06-C y U07-C | (sin rama) | — | **Escritas** (hashes `004d66e` y `7dbe5d3`). U07-C crea el bean `Clock` en `plataforma/Reloj.java` (U06-C no puede crear otro); U06-C usa `@MockitoBean AdaptadorKubernetes`; confirmar da 501 hasta U07-D | Despachar U06-C cuando U06-B salga VERDE y U07-C cuando U07-B salga VERDE |
 
