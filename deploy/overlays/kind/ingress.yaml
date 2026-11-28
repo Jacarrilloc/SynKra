@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: synkra-backend
+  namespace: synkra
+  labels:
+    app.kubernetes.io/name: synkra-backend
+    app.kubernetes.io/part-of: synkra
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "25m" # por encima de synkra.max-artefacto (20 MB): el 413 lo da R-C5
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts: [synkra.local]
+      secretName: synkra-local-tls
+  rules:
+    - host: synkra.local
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: synkra-backend
+                port:
+                  name: http
+          - path: /actuator/health
+            pathType: Prefix
+            backend:
+              service:
+                name: synkra-backend
+                port:
+                  name: http

@@ -1,0 +1,38 @@
+# fecha: 2026-11-28T04:49:51Z  sha: 345adc4  JAVA_HOME=/home/julian/.gradle/jdks/eclipse_adoptium-21-aarch64-linux.2
+$ ./gradlew :backend:bootJar :core:bootJar
+gradle=0
+$ docker build -t rojo.local:1/synkra-backend:0.1.0 backend
+sha256:750a49da28a77ddf3a817c8dd79a722ff30ac35d3a6afb5359508dfae17cc7f3
+$ docker build -t rojo.local:1/synkra-core-ejemplo:2.1.0 core
+sha256:bc85891d787959746a4ded07e13c7feca85b913bc49cb4e7b94805d80450ccdf
+$ docker build -t rojo.local:1/synkra-init-descarga:1.0.0 init-descarga
+sha256:ac596d84d4f1fabe1ba20b87d9be9ddc54ab562ed4964ee75886dacdfde75609
+$ SYNKRA_REGISTRO_IMAGENES=rojo.local:1 bash scripts/verificar-imagenes.sh
+FALLA backend/Dockerfile FROM: esperado @sha256:<64 hex> / visto FROM eclipse-temurin:21-jre-alpine AS capas
+FALLA backend/Dockerfile FROM: esperado @sha256:<64 hex> / visto FROM eclipse-temurin:21-jre-alpine
+ok core/Dockerfile FROM
+ok core/Dockerfile FROM
+FALLA init-descarga/Dockerfile FROM: esperado @sha256:<64 hex> / visto FROM alpine:3.20
+ok rojo.local:1/synkra-init-descarga:1.0.0 etiqueta
+ok rojo.local:1/synkra-backend:0.1.0 User
+ok rojo.local:1/synkra-backend:0.1.0 id-u
+ok rojo.local:1/synkra-backend:0.1.0 arquitectura
+ok rojo.local:1/synkra-core-ejemplo:2.1.0 User
+ok rojo.local:1/synkra-core-ejemplo:2.1.0 id-u
+ok rojo.local:1/synkra-core-ejemplo:2.1.0 arquitectura
+ok rojo.local:1/synkra-init-descarga:1.0.0 User
+ok rojo.local:1/synkra-init-descarga:1.0.0 id-u
+ok rojo.local:1/synkra-init-descarga:1.0.0 arquitectura
+ok rojo.local:1/synkra-backend:0.1.0 ExposedPorts
+ok rojo.local:1/synkra-core-ejemplo:2.1.0 ExposedPorts
+ok rojo.local:1/synkra-core-ejemplo:2.1.0 Volumes
+ok rojo.local:1/synkra-init-descarga:1.0.0 Entrypoint
+FALLA rojo.local:1/synkra-init-descarga:1.0.0 sin-apk: esperado  / visto /sbin/apk
+FALLAN 4 comprobaciones
+verificar=1
+$ python3 -I scripts/verificar-backend.py < /dev/null
+FALLA entrada: no hay manifiestos en la entrada estandar
+salida=1
+$ kubectl kustomize deploy/overlays/kind | python3 -I scripts/verificar-backend.py
+FALLA entrada: YAML no valido: mapping values are not allowed here   in "<unicode string>", line 1, column 31:     error: must build at directory: not a valid directory: evalsym ...                                    ^
+salida=1

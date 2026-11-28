@@ -1,0 +1,15 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: synkra-backend
+  namespace: synkra
+spec:
+  template:
+    spec:
+      containers:
+        - name: synkra-backend
+          env:
+            - name: SYNKRA_REGISTRO_PERMITIDO # R-C3, H-31: el unico registro permitido es el local
+              value: localhost:5001
+            - name: SYNKRA_KUBERNETES_IMAGEN_INIT # igual al defecto; explicito para ver que imagen usan los paises
+              value: localhost:5001/synkra-init-descarga:1.0.0
