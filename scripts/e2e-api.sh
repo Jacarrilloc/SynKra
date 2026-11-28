@@ -231,7 +231,11 @@ pods_core() { # nombres de los pods del core que no se estan borrando, "a,b"
   printf '%s' "$SALIDA" > "$TMP/pods.json"
   ejecutar "jq pods" jq -r '[.items[] | select(.metadata.deletionTimestamp==null) | .metadata.name] | sort | join(",")' "$TMP/pods.json"
 }
-imagenes_ns() { ejecutar "imagenes del namespace" kc get deploy -n "$NS" -o jsonpath='{..image}'; }
+# kubectl recorre el mapa del pod en orden cambiante (a veces initContainers antes de containers): se ordenan las imagenes.
+imagenes_ns() {
+  ejecutar "imagenes del namespace" kc get deploy -n "$NS" -o jsonpath='{..image}'
+  SALIDA="$(printf '%s' "$SALIDA" | tr ' ' '\n' | sort | paste -sd' ' -)"
+}
 imagen_core() { ejecutar "imagen del contenedor core" kc get deploy synkra-core -n "$NS" -o jsonpath='{.spec.template.spec.containers[?(@.name=="core")].image}'; }
 anotacion() { ejecutar "anotacion de la plantilla" kc get deploy synkra-core -n "$NS" -o jsonpath='{.spec.template.metadata.annotations.synkra\.io/config-sha256}'; }
 rollout() { ejecutar "rollout status" kc rollout status deployment/synkra-core -n "$NS" --timeout=300s; }
