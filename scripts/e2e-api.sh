@@ -74,7 +74,7 @@ PY
   shift
   for campo in nombre version core coreCompatible; do
     i=$((i + 1))
-    valor="$(printf '%s\n' "$salida" | sed -n "${i}p")"
+    valor="$(printf '%s\n' "$salida" | sed -n "${i}p")" || falla preparacion "sed leyendo $campo de $jar salió con $?"
     esperado="$1"
     shift
     [ "$valor" = "$esperado" ] || falla preparacion "$jar dice $campo $valor (el guion asume $esperado)"
@@ -88,7 +88,8 @@ PLUGIN_PE13="kyc-pe 1.3.0"
 PLUGIN_PE20="kyc-pe 2.0.0"
 
 # El core: version compilada en core/build.gradle.kts (tiene que caer en 2.x) y la mentirosa de CU5 (3.x, distinta).
-VC="$(grep -E '^version *= *"' "$RAIZ/core/build.gradle.kts" | head -1 | sed -E 's/.*"([^"]+)".*/\1/')"
+VC="$(grep -E '^version *= *"' "$RAIZ/core/build.gradle.kts" | head -1 | sed -E 's/.*"([^"]+)".*/\1/')" \
+  || falla preparacion "no se pudo leer la version de core/build.gradle.kts (grep, head o sed salió con $?)"
 case "$VC" in
   2.*) ;;
   *) falla preparacion "la versión del core en core/build.gradle.kts es '$VC' y no cae en 2.x" ;;
@@ -154,7 +155,8 @@ espero() {
 provocada() {
   [ "$1" -eq $((N4 + 1)) ] || falla "$CASO" "la 4xx $1 llegó cuando iba la $((N4 + 1))"
   N4=$((N4 + 1))
-  echo "4xx $ESTADO $(jq -r .codigo "$CUERPO") $METODO $RUTA"
+  jq_c .codigo
+  echo "4xx $ESTADO $SALIDA $METODO $RUTA"
 }
 
 # jq sobre el cuerpo de la ultima respuesta. En las dos, el filtro es el ULTIMO argumento y lo anterior son opciones de jq.
@@ -207,10 +209,12 @@ esperar_estado() {
   while :; do
     pedir GET "/api/despliegues/$id"
     espero 200
-    est="$(jq -r .estado "$CUERPO")"
+    jq_c .estado
+    est="$SALIDA"
     [ "$est" != "$quiero" ] || break
     if [ "$est" != aplicando ] || [ $((SECONDS - t0)) -ge "$E2E_ESPERA" ]; then
-      falla "$CASO" "el despliegue $id quedó en $est (esperado $quiero), contexto: $(jq -c .contexto "$CUERPO")"
+      jq_c -c .contexto
+      falla "$CASO" "el despliegue $id quedó en $est (esperado $quiero), contexto: $SALIDA"
     fi
     sleep 3
   done
@@ -234,7 +238,7 @@ pods_core() { # nombres de los pods del core que no se estan borrando, "a,b"
 # kubectl recorre el mapa del pod en orden cambiante (a veces initContainers antes de containers): se ordenan las imagenes.
 imagenes_ns() {
   ejecutar "imagenes del namespace" kc get deploy -n "$NS" -o jsonpath='{..image}'
-  SALIDA="$(printf '%s' "$SALIDA" | tr ' ' '\n' | sort | paste -sd' ' -)"
+  SALIDA="$(printf '%s' "$SALIDA" | tr ' ' '\n' | sort | paste -sd' ' -)" || falla "$CASO" "ordenar las imagenes salió con $?"
 }
 imagen_core() { ejecutar "imagen del contenedor core" kc get deploy synkra-core -n "$NS" -o jsonpath='{.spec.template.spec.containers[?(@.name=="core")].image}'; }
 anotacion() { ejecutar "anotacion de la plantilla" kc get deploy synkra-core -n "$NS" -o jsonpath='{.spec.template.metadata.annotations.synkra\.io/config-sha256}'; }
@@ -248,7 +252,7 @@ cm_plugins() { # lo que lista el ConfigMap, "a 1,b 2"
   ejecutar "yaml del ConfigMap" python3 -I -c 'import sys, yaml
 for p in sorted(yaml.safe_load(open(sys.argv[1])) or [], key=lambda p: (p["nombre"], p["version"])):
     print("%s %s" % (p["nombre"], p["version"]))' "$TMP/activos.yaml"
-  SALIDA="$(printf '%s' "$SALIDA" | paste -sd, -)"
+  SALIDA="$(printf '%s' "$SALIDA" | paste -sd, -)" || falla "$CASO" "paste de los plugins del ConfigMap salió con $?"
 }
 core_cargo() { # lo que el core cargo, por el proxy de la API de Kubernetes: "a 1,b 2"
   local intento rc
@@ -308,7 +312,8 @@ fi
 ok "GET /actuator/health 200 UP"
 
 ejecutar "HEAD del manifiesto en el registro" curl -sS --max-time 15 -I -H "Accept: $ACEPTA" "http://$REGISTRO_HOST/v2/$REPO_CORE/manifests/$VC"
-DIGEST="$(printf '%s\n' "$SALIDA" | tr -d '\r' | awk -F': ' 'tolower($1)=="docker-content-digest"{print $2}')"
+DIGEST="$(printf '%s\n' "$SALIDA" | tr -d '\r' | awk -F': ' 'tolower($1)=="docker-content-digest"{print $2}')" \
+  || falla preparacion "leer el digest de la cabecera del registro salió con $?"
 case "$DIGEST" in
   sha256:????????????????????????????????????????????????????????????????) ;;
   *) falla preparacion "el registro no tiene $REPO_CORE:$VC (corre make imagenes)" ;;
@@ -416,7 +421,8 @@ jq_exige "plan creado: pendiente y creadoPor e2e" '.estado=="pendiente" and .cre
 jq_c .id
 D2="$SALIDA"
 verifica_cambios "$ANTES_CSV" "$PLUGIN_CO" "$([ "$ANTES_IMG" = "$IMAGEN" ] && echo true || echo false)"
-echo "cambios de CU2 (antes: ${ANTES_CSV:-vacío}): $(jq -c .cambios "$CUERPO")"
+jq_c -c .cambios
+echo "cambios de CU2 (antes: ${ANTES_CSV:-vacío}): $SALIDA"
 # 4xx 4: pais fuera de la lista
 cuerpo_plan "$TMP/plan-mx.json" mx "$VC" "$PLUGIN_CO"
 pedir POST /api/despliegues json "$TMP/plan-mx.json"
@@ -506,7 +512,8 @@ cuerpo_plan "$TMP/plan-malo.json" "$PAIS" "$VC" "$PLUGIN_CO" "$PLUGIN_PE20"
 pedir POST /api/despliegues json "$TMP/plan-malo.json"
 espero 422 COMBINACION_RECHAZADA
 jq_exige "el 422 trae un detalle de plugins.kyc-pe" 'any(.detalles[]; .campo=="plugins.kyc-pe")'
-echo "motivo: $(jq -r '.detalles[] | select(.campo=="plugins.kyc-pe") | .motivo' "$CUERPO")"
+jq_c '.detalles[] | select(.campo=="plugins.kyc-pe") | .motivo'
+echo "motivo: $SALIDA"
 provocada 7
 imagenes_ns
 I1="$SALIDA"
