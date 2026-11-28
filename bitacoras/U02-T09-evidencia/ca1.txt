@@ -1,0 +1,10 @@
+BUILD SUCCESSFUL in 1s
+tests="17" skipped="0" failures="0" errors="0"
+nombre: kyc-co
+version: 1.0.0
+core: synkra-core
+coreCompatible: 2.x
+etiquetas:
+  pais: co
+descripcion: Validación KYC simulada para Colombia
+0

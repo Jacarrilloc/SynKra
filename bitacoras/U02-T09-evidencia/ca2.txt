@@ -1,0 +1,4 @@
+[{"nombre":"kyc-co","version":"1.0.0"}]
+{"aprobado":true,"motivo":"Documento válido"}
+{"aprobado":false,"motivo":"El documento debe tener de 6 a 10 caracteres"}
+{"aprobado":false,"motivo":"El documento solo admite dígitos ASCII (0-9)"}
