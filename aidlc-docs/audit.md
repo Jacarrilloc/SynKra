@@ -1084,3 +1084,7 @@ Se despacha el codificador de la ronda 2.
 ## 2026-11-28T05:34Z: fusión de #110 (U09-A)
 
 **Acción del orquestador:** U09-A salió VERDE en la ronda 4 corta (solo el CA-1 enmendado). Bajo la autorización de David de las 01:25:21Z (y el pedido de Julian de fusionar U09-A si salía VERDE), fusión de #110 en `0910a09`, `MERGEABLE`/`CLEAN`. El diff solo toca `front/`, `front.Tests/`, `scripts/dotnet-docker.sh`, bitácoras y revisiones: el backend no cambia, así que no se repite `./gradlew check`; el revisor corrió las 29 pruebas del front en la ronda 3 y el CA-1 en la 4.
+
+## 2026-11-28T05:35Z: fusión de #111 (U08-A)
+
+**Acción del orquestador:** U08-A salió VERDE en la ronda 2. Fusión de #111 en `2eb1fe7` (las fusiones de U08 las hace el orquestador, pedido de Julian; autorización de David de las 01:25:21Z), `MERGEABLE`/`CLEAN`. No toca el backend (solo `Makefile`, `deploy/`, `scripts/` y `.gitignore`), así que no se repite `./gradlew check`; el revisor corrió sus diez criterios en esta máquina. `kind-synkra` queda arriba con el kubeconfig `../wt-m6r-U08-A/.kube/kind-synkra.yaml`.
