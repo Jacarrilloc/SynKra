@@ -13,4 +13,5 @@ q("select (select count(*) from reg_despliegue r join dep_plan p on p.id = r.id 
   " (select count(*) from dep_plan where estado = 'confirmado' and id not in (select id from reg_despliegue)),"
   " (select count(*) from reg_despliegue r join dep_plan p on p.id = r.id where r.confirmado_en < p.creado_en or r.confirmado_en >= p.vence_en)")
 q("select r.confirmado_en - p.creado_en, r.imagen = json_extract(p.resumen, '$.imagen') from dep_plan p join reg_despliegue r on r.id = p.id where p.pais = 'pe'")
+q("select x.nombre, x.version, substr(x.sha256, 1, 8), x.etiquetas from reg_plugin x join dep_plan p on p.id = x.despliegue_id where p.pais = 'cl' order by x.nombre")  # extra de la ronda 2 (F-01, M4 y M5)
 EOF

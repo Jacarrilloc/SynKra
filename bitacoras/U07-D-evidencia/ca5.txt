@@ -1,5 +1,5 @@
-2026-11-27T21:15:30-05:00
-6bd8db6
+2026-11-27T21:31:58-05:00
+45b4248
 --- script (ca5.sh):
 # Una copia de «git archive HEAD» por mutación; el worktree no se toca (sin git stash).
 RAIZ=$(pwd); echo "HEAD: $(git rev-parse --short HEAD); ultimo commit que toca codigo: $(git log -1 --format=%h -- backend)"
@@ -37,14 +37,14 @@ mut "fuera de la tx: @Transactional en confirmar" ConfirmacionServicio.java -e '
 mut "sin cluster: sin comprobar disponible()" ConfirmacionServicio.java -e 's/if (!kubernetes.disponible()) {/if (false) {/'
 mut "P4 al crear: VerificacionVivo no busca en las demas carpetas" VerificacionVivo.java -e 's/for (var otro : catalogo.listarCores()) {/for (var otro : java.util.List.<io.synkra.catalogo.api.CoreRegistrado>of()) {/'
 --- salida:
-HEAD: 6bd8db6; ultimo commit que toca codigo: 6bd8db6
+HEAD: 45b4248; ultimo commit que toca codigo: 45b4248
 
 === MUTACION: R-D6 no vuelve a verificar
 sed -i -e /\^\ \ \ \ \ \ \ \ PlanServicio.rechazaSiNoCompatible\(verificado.veredicto\(\)\)\;\$/d backend/src/main/java/io/synkra/despliegue/ConfirmacionServicio.java
   | 59d58
   | <         PlanServicio.rechazaSiNoCompatible(verificado.veredicto());
-14 tests completed, 2 failed
-BUILD FAILED in 13s
+15 tests completed, 2 failed
+BUILD FAILED in 10s
 XML con <failure:
 io.synkra.despliegue.CarpetaEquivocadaPlanTest.xml
 io.synkra.despliegue.ConfirmarTest.xml
@@ -58,8 +58,8 @@ sed -i -e /\^\ \ \ \ \ \ \ \ PlanServicio.rechazaSiNoCompatible\(verificado.vere
   | <         PlanServicio.rechazaSiNoCompatible(verificado.veredicto());
   | 76a76
   | >         PlanServicio.rechazaSiNoCompatible(verificado.veredicto());
-14 tests completed, 2 failed
-BUILD FAILED in 13s
+15 tests completed, 2 failed
+BUILD FAILED in 10s
 XML con <failure:
 io.synkra.despliegue.CarpetaEquivocadaPlanTest.xml
 io.synkra.despliegue.ConfirmarTest.xml
@@ -73,8 +73,8 @@ sed -i -e s/if\ \(\!resumenCatalogo.armar\(plan.pais\(\)\,\ verificado.seleccion
   | <         if (!resumenCatalogo.armar(plan.pais(), verificado.seleccion()).equals(resumen)) {
   | ---
   | >         if (false) {
-14 tests completed, 1 failed
-BUILD FAILED in 12s
+15 tests completed, 1 failed
+BUILD FAILED in 10s
 XML con <failure:
 io.synkra.despliegue.ConfirmarTest.xml
 pruebas caidas:
@@ -86,8 +86,8 @@ sed -i -e s/anyMatch\(d\ -\>\ d.estado\(\)\ ==\ EstadoDespliegue.APLICANDO\)/any
   | <         if (registro.historial(plan.pais()).stream().anyMatch(d -> d.estado() == EstadoDespliegue.APLICANDO)) {
   | ---
   | >         if (registro.historial(plan.pais()).stream().anyMatch(d -> false)) {
-14 tests completed, 2 failed
-BUILD FAILED in 12s
+15 tests completed, 2 failed
+BUILD FAILED in 10s
 XML con <failure:
 io.synkra.despliegue.ConfirmarTest.xml
 pruebas caidas:
@@ -100,8 +100,8 @@ sed -i -e s/anyMatch\(d\ -\>\ d.estado\(\)\ ==\ EstadoDespliegue.APLICANDO\)/any
   | <         if (registro.historial(plan.pais()).stream().anyMatch(d -> d.estado() == EstadoDespliegue.APLICANDO)) {
   | ---
   | >         if (registro.historial(plan.pais()).stream().anyMatch(d -> true)) {
-14 tests completed, 1 failed
-BUILD FAILED in 12s
+15 tests completed, 1 failed
+BUILD FAILED in 10s
 XML con <failure:
 io.synkra.despliegue.ConfirmarTest.xml
 pruebas caidas:
@@ -111,8 +111,8 @@ pruebas caidas:
 sed -i -e /\^\ \ \ \ @Transactional\$/d backend/src/main/java/io/synkra/despliegue/ReservaConfirmacion.java
   | 47d46
   | <     @Transactional
-14 tests completed, 2 failed
-BUILD FAILED in 12s
+15 tests completed, 2 failed
+BUILD FAILED in 10s
 XML con <failure:
 io.synkra.despliegue.ConfirmarTest.xml
 pruebas caidas:
@@ -125,8 +125,8 @@ sed -i -e s/\ AND\ estado\ =\ \'pendiente\'\ AND\ vence_en/\ AND\ vence_en/ back
   | <     private static final String CONFIRMAR = "UPDATE dep_plan SET estado = 'confirmado' WHERE id = ? AND estado = 'pendiente' AND vence_en > ?";
   | ---
   | >     private static final String CONFIRMAR = "UPDATE dep_plan SET estado = 'confirmado' WHERE id = ? AND vence_en > ?";
-14 tests completed, 1 failed
-BUILD FAILED in 12s
+15 tests completed, 1 failed
+BUILD FAILED in 10s
 XML con <failure:
 io.synkra.despliegue.ConfirmarTest.xml
 pruebas caidas:
@@ -138,8 +138,8 @@ sed -i -e s/plan.creadoPor\(\)\,\ confirmadoPor\,\ ahora\,\ veredicto/plan.cread
   | <                 plan.versionCore(), imagenDe(plan), plan.creadoPor(), confirmadoPor, ahora, veredicto, plugins));
   | ---
   | >                 plan.versionCore(), imagenDe(plan), plan.creadoPor(), plan.creadoPor(), ahora, veredicto, plugins));
-14 tests completed, 1 failed
-BUILD FAILED in 12s
+15 tests completed, 1 failed
+BUILD FAILED in 10s
 XML con <failure:
 io.synkra.despliegue.ConfirmarTest.xml
 pruebas caidas:
@@ -151,8 +151,8 @@ sed -i -e s/if\ \(\!FORMA.matcher\(cabecera\).matches\(\)\)\ \{/if\ \(false\)\ \
   | <         if (!FORMA.matcher(cabecera).matches()) {
   | ---
   | >         if (false) {
-14 tests completed, 2 failed
-BUILD FAILED in 12s
+15 tests completed, 2 failed
+BUILD FAILED in 10s
 XML con <failure:
 io.synkra.despliegue.ConfirmarTest.xml
 pruebas caidas:
@@ -163,11 +163,13 @@ pruebas caidas:
 sed -i -e s/\^\\\(\ \ \ \ \ \ \ \ var\ plugins\ =\ resumen.plugins\(\).\*\\\)\$/\ \ \ \ \ \ \ \ kubernetes.aplicar\(objetos\)\;\\n\\1/ backend/src/main/java/io/synkra/despliegue/ConfirmacionServicio.java
   | 73a74
   | >         kubernetes.aplicar(objetos);
-14 tests completed, 5 failed
-BUILD FAILED in 12s
+15 tests completed, 6 failed
+BUILD FAILED in 10s
 XML con <failure:
+io.synkra.despliegue.ConfirmarSinClusterTest.xml
 io.synkra.despliegue.ConfirmarTest.xml
 pruebas caidas:
+   ConfirmarSinClusterTest.unaExcepcionInesperadaAlAplicarDejaElRegistroFallidoConElNombreDeLaClase()
    ConfirmarTest.clSoloBloqueaUnAplicandoYSinCabeceraElUsuarioEsAnonimo()
    ConfirmarTest.boSiAplicarFallaQuedaFallidoSinReintentos()
    ConfirmarTest.coUnSegundoPlanConUnoAplicandoDa409DespliegueEnCurso()
@@ -178,8 +180,8 @@ pruebas caidas:
 sed -i -e /\^\ \ \ \ \ \ \ \ \ \ \ \ fallido\(plan.id\(\)\,\ e.getMessage\(\)\)\;\$/d backend/src/main/java/io/synkra/despliegue/ConfirmacionServicio.java
   | 81d80
   | <             fallido(plan.id(), e.getMessage());
-14 tests completed, 1 failed
-BUILD FAILED in 11s
+15 tests completed, 1 failed
+BUILD FAILED in 10s
 XML con <failure:
 io.synkra.despliegue.ConfirmarTest.xml
 pruebas caidas:
@@ -189,11 +191,13 @@ pruebas caidas:
 sed -i -e s/\^\ \ \ \ Confirmado\ confirmar\(long\ id/\ \ \ \ @org.springframework.transaction.annotation.Transactional\\n\ \ \ \ Confirmado\ confirmar\(long\ id/ backend/src/main/java/io/synkra/despliegue/ConfirmacionServicio.java
   | 52a53
   | >     @org.springframework.transaction.annotation.Transactional
-14 tests completed, 1 failed
+15 tests completed, 2 failed
 BUILD FAILED in 10s
 XML con <failure:
+io.synkra.despliegue.ConfirmarSinClusterTest.xml
 io.synkra.despliegue.ConfirmarTest.xml
 pruebas caidas:
+   ConfirmarSinClusterTest.unaExcepcionInesperadaAlAplicarDejaElRegistroFallidoConElNombreDeLaClase()
    ConfirmarTest.boSiAplicarFallaQuedaFallidoSinReintentos()
 
 === MUTACION: sin cluster: sin comprobar disponible()
@@ -202,7 +206,7 @@ sed -i -e s/if\ \(\!kubernetes.disponible\(\)\)\ \{/if\ \(false\)\ \{/ backend/s
   | <         if (!kubernetes.disponible()) {
   | ---
   | >         if (false) {
-14 tests completed, 1 failed
+15 tests completed, 1 failed
 BUILD FAILED in 10s
 XML con <failure:
 io.synkra.despliegue.ConfirmarSinClusterTest.xml
@@ -215,7 +219,7 @@ sed -i -e s/for\ \(var\ otro\ :\ catalogo.listarCores\(\)\)\ \{/for\ \(var\ otro
   | <         for (var otro : catalogo.listarCores()) {
   | ---
   | >         for (var otro : java.util.List.<io.synkra.catalogo.api.CoreRegistrado>of()) {
-14 tests completed, 3 failed
+15 tests completed, 3 failed
 BUILD FAILED in 10s
 XML con <failure:
 io.synkra.despliegue.CarpetaEquivocadaPlanTest.xml

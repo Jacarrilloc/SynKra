@@ -1,0 +1,99 @@
+2026-11-27T21:31:03-05:00
+45b4248
+--- script (ca5-r2.sh):
+# Una copia de «git archive HEAD» por mutación; el worktree no se toca (sin git stash).
+RAIZ=$(pwd); echo "HEAD: $(git rev-parse --short HEAD); ultimo commit que toca codigo: $(git log -1 --format=%h -- backend)"
+S=backend/src/main/java/io/synkra/despliegue
+mut() { # nombre archivo sed-args...
+  local nombre=$1 archivo=$2; shift 2
+  local D; D=$(mktemp -d); git archive HEAD | tar -x -C "$D"; (cd "$D" && git init -q)
+  echo; echo "=== MUTACION: $nombre"
+  printf 'sed -i'; printf ' %q' "$@"; printf ' %q\n' "$S/$archivo"
+  sed -i "$@" "$D/$S/$archivo"
+  diff <(cd "$RAIZ" && git show HEAD:"$S/$archivo") "$D/$S/$archivo" | sed 's/^/  | /'
+  (cd "$D" && ./gradlew :backend:test --rerun --tests '*ConfirmarTest' --tests '*CarpetaEquivocadaPlanTest' --tests '*ConfirmarSinClusterTest' 2>&1 | grep -E "^BUILD|tests completed")
+  echo "XML con <failure:"; grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml | sed 's|.*/TEST-||'
+  echo "pruebas caidas:"; python3 -I - "$D"/backend/build/test-results/test/TEST-*.xml <<'EOF'
+import sys, xml.etree.ElementTree as ET
+for f in sys.argv[1:]:
+    for t in ET.parse(f).getroot().iter('testcase'):
+        if t.find('failure') is not None or t.find('error') is not None:
+            print("  ", t.get('classname').rsplit('.', 1)[1] + "." + t.get('name'))
+EOF
+  rm -rf "$D"
+}
+# Ronda 2: las cinco mutaciones M1 a M5 del revisor (F-01). Antes de las pruebas nuevas daban BUILD SUCCESSFUL.
+mut "M1 excepcion no AplicacionFallida no queda fallido" ConfirmacionServicio.java -e '/^            fallido(plan.id(), e.getMessage() == null/d'
+mut "M2 sin vence_en en el WHERE" ReservaConfirmacion.java -e 's/ AND vence_en > ?"/"/' -e 's/jdbc.update(CONFIRMAR, plan.id(), ahora.toEpochMilli())/jdbc.update(CONFIRMAR, plan.id())/'
+mut "M3 el 410 de reservar pasa a 409" ReservaConfirmacion.java -e 's/HttpStatus.GONE/HttpStatus.CONFLICT/'
+mut "M4 se registra sin plugins" ConfirmacionServicio.java -e 's/texto(VeredictoDto.de(verificado.veredicto())), plugins)/texto(VeredictoDto.de(verificado.veredicto())), List.of())/'
+mut "M5 plugins sin etiquetas del catalogo" ConfirmacionServicio.java -e 's/catalogo.obtenerPlugin(plan.core(), p.nombre(), p.version()).etiquetas()/java.util.Map.of()/'
+--- salida:
+HEAD: 45b4248; ultimo commit que toca codigo: 45b4248
+
+=== MUTACION: M1 excepcion no AplicacionFallida no queda fallido
+sed -i -e /\^\ \ \ \ \ \ \ \ \ \ \ \ fallido\(plan.id\(\)\,\ e.getMessage\(\)\ ==\ null/d backend/src/main/java/io/synkra/despliegue/ConfirmacionServicio.java
+  | 85d84
+  | <             fallido(plan.id(), e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage());
+15 tests completed, 1 failed
+BUILD FAILED in 10s
+XML con <failure:
+io.synkra.despliegue.ConfirmarSinClusterTest.xml
+pruebas caidas:
+   ConfirmarSinClusterTest.unaExcepcionInesperadaAlAplicarDejaElRegistroFallidoConElNombreDeLaClase()
+
+=== MUTACION: M2 sin vence_en en el WHERE
+sed -i -e s/\ AND\ vence_en\ \>\ \?\"/\"/ -e s/jdbc.update\(CONFIRMAR\,\ plan.id\(\)\,\ ahora.toEpochMilli\(\)\)/jdbc.update\(CONFIRMAR\,\ plan.id\(\)\)/ backend/src/main/java/io/synkra/despliegue/ReservaConfirmacion.java
+  | 29c29
+  | <     private static final String CONFIRMAR = "UPDATE dep_plan SET estado = 'confirmado' WHERE id = ? AND estado = 'pendiente' AND vence_en > ?";
+  | ---
+  | >     private static final String CONFIRMAR = "UPDATE dep_plan SET estado = 'confirmado' WHERE id = ? AND estado = 'pendiente'";
+  | 50c50
+  | <         int cambiadas = jdbc.update(CONFIRMAR, plan.id(), ahora.toEpochMilli());
+  | ---
+  | >         int cambiadas = jdbc.update(CONFIRMAR, plan.id());
+15 tests completed, 1 failed
+BUILD FAILED in 10s
+XML con <failure:
+io.synkra.despliegue.ConfirmarTest.xml
+pruebas caidas:
+   ConfirmarTest.arElCatalogoCambioEntreMediasVuelveAVerificar()
+
+=== MUTACION: M3 el 410 de reservar pasa a 409
+sed -i -e s/HttpStatus.GONE/HttpStatus.CONFLICT/ backend/src/main/java/io/synkra/despliegue/ReservaConfirmacion.java
+  | 54c54
+  | <                 throw error(HttpStatus.GONE, CodigosDespliegue.PLAN_VENCIDO, MotivosDespliegue.PLAN_VENCIDO_MENSAJE);
+  | ---
+  | >                 throw error(HttpStatus.CONFLICT, CodigosDespliegue.PLAN_VENCIDO, MotivosDespliegue.PLAN_VENCIDO_MENSAJE);
+15 tests completed, 1 failed
+BUILD FAILED in 10s
+XML con <failure:
+io.synkra.despliegue.ConfirmarTest.xml
+pruebas caidas:
+   ConfirmarTest.arElCatalogoCambioEntreMediasVuelveAVerificar()
+
+=== MUTACION: M4 se registra sin plugins
+sed -i -e s/texto\(VeredictoDto.de\(verificado.veredicto\(\)\)\)\,\ plugins\)/texto\(VeredictoDto.de\(verificado.veredicto\(\)\)\)\,\ List.of\(\)\)/ backend/src/main/java/io/synkra/despliegue/ConfirmacionServicio.java
+  | 76c76
+  | <         var confirmadoEn = reserva.reservar(plan, confirmadoPor, texto(VeredictoDto.de(verificado.veredicto())), plugins);
+  | ---
+  | >         var confirmadoEn = reserva.reservar(plan, confirmadoPor, texto(VeredictoDto.de(verificado.veredicto())), List.of());
+15 tests completed, 1 failed
+BUILD FAILED in 10s
+XML con <failure:
+io.synkra.despliegue.ConfirmarTest.xml
+pruebas caidas:
+   ConfirmarTest.clSoloBloqueaUnAplicandoYSinCabeceraElUsuarioEsAnonimo()
+
+=== MUTACION: M5 plugins sin etiquetas del catalogo
+sed -i -e s/catalogo.obtenerPlugin\(plan.core\(\)\,\ p.nombre\(\)\,\ p.version\(\)\).etiquetas\(\)/java.util.Map.of\(\)/ backend/src/main/java/io/synkra/despliegue/ConfirmacionServicio.java
+  | 75c75
+  | <                 catalogo.obtenerPlugin(plan.core(), p.nombre(), p.version()).etiquetas())).toList();
+  | ---
+  | >                 java.util.Map.of())).toList();
+15 tests completed, 1 failed
+BUILD FAILED in 10s
+XML con <failure:
+io.synkra.despliegue.ConfirmarTest.xml
+pruebas caidas:
+   ConfirmarTest.clSoloBloqueaUnAplicandoYSinCabeceraElUsuarioEsAnonimo()

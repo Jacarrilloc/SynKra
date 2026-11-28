@@ -1,5 +1,5 @@
-2026-11-27T21:13:33-05:00
-6bd8db6
+2026-11-27T21:30:23-05:00
+45b4248
 --- script (ca6.sh):
 ./gradlew :backend:test --rerun :backend:check 2>&1 | grep -E "BUILD|tests completed|FAILED"
 for f in backend/build/test-results/test/TEST-*.xml; do grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' "$f"; done
@@ -13,8 +13,11 @@ grep -rn "@Scheduled\|@EnableScheduling" backend/src/main/java; echo "programado
 grep -n "Transactional" backend/src/main/java/io/synkra/despliegue/ConfirmacionServicio.java; echo "confirmar-tx=$?"
 # Extra (el grep literal de arriba ve el comentario «nunca REQUIRES_NEW» de RegistroServicio, de U06): solo uso real, no comentarios
 grep -rnE "Propagation\.REQUIRES_NEW|propagation *= *[A-Za-z.]*REQUIRES_NEW" backend/src/main/java; echo "requiresNew-uso=$?"
+# Extra: el grep literal de tablas-reg casa con un comentario de Plan.java (reg_despliegue, de U07-A); solo literales de texto (SQL):
+grep -rnE '"[^"]*reg_' backend/src/main/java/io/synkra/despliegue; echo "tablas-reg-sql=$?"
+grep -rn "reg_" backend/src/main/java/io/synkra/despliegue
 --- salida:
-BUILD SUCCESSFUL in 42s
+BUILD SUCCESSFUL in 39s
 backend/build/test-results/test/TEST-io.synkra.catalogo.ArtefactosPorHashTest.xml:tests="10" skipped="0" failures="0" errors="0"
 backend/build/test-results/test/TEST-io.synkra.catalogo.CatalogoRepositoriosTest.xml:tests="19" skipped="0" failures="0" errors="0"
 backend/build/test-results/test/TEST-io.synkra.catalogo.CatalogoVerificadorTest.xml:tests="14" skipped="0" failures="0" errors="0"
@@ -31,7 +34,7 @@ backend/build/test-results/test/TEST-io.synkra.catalogo.RutasSegurasPropiedades.
 backend/build/test-results/test/TEST-io.synkra.catalogo.SubirPluginTest.xml:tests="52" skipped="0" failures="0" errors="0"
 backend/build/test-results/test/TEST-io.synkra.despliegue.CambiosPropiedades.xml:tests="4" skipped="0" failures="0" errors="0"
 backend/build/test-results/test/TEST-io.synkra.despliegue.CarpetaEquivocadaPlanTest.xml:tests="3" skipped="0" failures="0" errors="0"
-backend/build/test-results/test/TEST-io.synkra.despliegue.ConfirmarSinClusterTest.xml:tests="1" skipped="0" failures="0" errors="0"
+backend/build/test-results/test/TEST-io.synkra.despliegue.ConfirmarSinClusterTest.xml:tests="2" skipped="0" failures="0" errors="0"
 backend/build/test-results/test/TEST-io.synkra.despliegue.ConfirmarTest.xml:tests="10" skipped="0" failures="0" errors="0"
 backend/build/test-results/test/TEST-io.synkra.despliegue.CrearPlanTest.xml:tests="9" skipped="0" failures="0" errors="0"
 backend/build/test-results/test/TEST-io.synkra.despliegue.PaisPermitidoTest.xml:tests="6" skipped="0" failures="0" errors="0"
@@ -67,7 +70,8 @@ backend/build/test-results/test/TEST-io.synkra.registro.TransicionesRegistroTest
 backend/build/test-results/test/TEST-io.synkra.registro.VistaGeneralTest.xml:tests="12" skipped="0" failures="0" errors="0"
 backend/build/test-results/test/TEST-io.synkra.SynkraAppTest.xml:tests="3" skipped="0" failures="0" errors="0"
 registro-interno=1
-tablas-reg=1
+backend/src/main/java/io/synkra/despliegue/Plan.java:10: * {@code origenId} apunta a {@code reg_despliegue} (otro módulo) sin clave foránea.
+tablas-reg=0
 backend/src/main/java/io/synkra/despliegue/ConfirmacionServicio.java
 2
 vigilancia=1
@@ -76,3 +80,5 @@ requiresNew=0
 programado=1
 confirmar-tx=1
 requiresNew-uso=1
+tablas-reg-sql=1
+backend/src/main/java/io/synkra/despliegue/Plan.java:10: * {@code origenId} apunta a {@code reg_despliegue} (otro módulo) sin clave foránea.

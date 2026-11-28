@@ -10,3 +10,6 @@ grep -rn "@Scheduled\|@EnableScheduling" backend/src/main/java; echo "programado
 grep -n "Transactional" backend/src/main/java/io/synkra/despliegue/ConfirmacionServicio.java; echo "confirmar-tx=$?"
 # Extra (el grep literal de arriba ve el comentario «nunca REQUIRES_NEW» de RegistroServicio, de U06): solo uso real, no comentarios
 grep -rnE "Propagation\.REQUIRES_NEW|propagation *= *[A-Za-z.]*REQUIRES_NEW" backend/src/main/java; echo "requiresNew-uso=$?"
+# Extra: el grep literal de tablas-reg casa con un comentario de Plan.java (reg_despliegue, de U07-A); solo literales de texto (SQL):
+grep -rnE '"[^"]*reg_' backend/src/main/java/io/synkra/despliegue; echo "tablas-reg-sql=$?"
+grep -rn "reg_" backend/src/main/java/io/synkra/despliegue

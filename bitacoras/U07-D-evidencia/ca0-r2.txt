@@ -1,0 +1,7 @@
+2026-11-27T21:34:45-05:00
+45b4248
+--- ca0-grep.sh (comillas simples, ejecutado como archivo: bash ca0-grep.sh):
+grep -cx 'synkra.paises=${SYNKRA_PAISES:co,pe}' backend/src/main/resources/application.properties
+--- salida:
+1
+--- el mismo comando pegado dentro de un eval del arnés del codificador da 0 (expansion de ${...} por el arnés); no es defecto del criterio

@@ -1,5 +1,5 @@
-2026-11-27T21:12:21-05:00
-6bd8db6
+2026-11-27T21:29:53-05:00
+45b4248
 --- script (ca3.sh):
 ./gradlew :backend:test --rerun --tests '*ConfirmarSinClusterTest' 2>&1 | grep -E "BUILD|tests completed|FAILED"
 grep -ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-*ConfirmarSinClusterTest.xml
@@ -43,9 +43,9 @@ curl -s -o /dev/null -w '%{http_code}\n' localhost:18093/api/despliegues/81
 kill $PID; wait $PID 2>/dev/null
 python3 -I -c "import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); print(c.execute('select id, estado from dep_plan order by id').fetchall()); print(c.execute('select count(*) from reg_despliegue').fetchone())" "$SYNKRA_DATA/synkra.db"
 --- salida:
-BUILD SUCCESSFUL in 7s
-tests="1" skipped="0" failures="0" errors="0"
-BUILD SUCCESSFUL in 992ms
+BUILD SUCCESSFUL in 6s
+tests="2" skipped="0" failures="0" errors="0"
+BUILD SUCCESSFUL in 1s
 201
 201
 201
