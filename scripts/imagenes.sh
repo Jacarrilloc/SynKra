@@ -26,9 +26,9 @@ echo "+ ./gradlew :backend:bootJar :core:bootJar"
 
 construir() { # imagen directorio
   echo "+ docker build -t $1 $2"
-  local rc=0
+  local rc=0 nombre="${1##*/}"
   docker build -t "$1" "$2" || rc=$?
-  [ "$rc" -eq 0 ] || { echo "FALLA ${1%%:*}: docker build -t $1 $2 salió con $rc" >&2; exit 1; }
+  [ "$rc" -eq 0 ] || { echo "FALLA ${nombre%%:*}: docker build -t $1 $2 salió con $rc" >&2; exit 1; }
 }
 construir "$REG/synkra-backend:$VB" backend
 construir "$REG/synkra-core-ejemplo:$VC" core

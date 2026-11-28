@@ -43,10 +43,11 @@ imagen() { # nombre ruta sed-expr
   (cd "$D" && git diff --no-index --quiet "$RAIZ/$2" "$2") && echo "MUTACION NO APLICADA"
   echo '$ SYNKRA_REGISTRO_IMAGENES='$R' bash scripts/imagenes.sh && SYNKRA_REGISTRO_IMAGENES='$R' bash scripts/verificar-imagenes.sh'
   (cd "$D" && SYNKRA_REGISTRO_IMAGENES=$R bash scripts/imagenes.sh > "$D/imagenes.log" 2>&1); local rc=$?
-  grep -vE 'Installing|fetch https|^#[0-9]+ (DONE|CACHED|exporting|naming|unpacking|transferring|resolve|sha256)|^$' "$D/imagenes.log" | tail -30
+  grep -vE 'Installing|fetch https|^\+ docker build|^#0 |^#[0-9]+ \[|^#[0-9]+ (DONE|CACHED|exporting|naming|unpacking|transferring|resolve|sha256)|^$' "$D/imagenes.log" | tail -30
   echo "imagenes.sh salida=$rc"
   if [ "$rc" -eq 0 ]; then
-    (cd "$D" && SYNKRA_REGISTRO_IMAGENES=$R bash scripts/verificar-imagenes.sh 2>&1 | grep -v '^ok '); echo "verificar-imagenes.sh salida=${PIPESTATUS[0]}"
+    (cd "$D" && SYNKRA_REGISTRO_IMAGENES=$R bash scripts/verificar-imagenes.sh > "$D/ver.log" 2>&1); rc=$?
+    grep -v '^ok ' "$D/ver.log"; echo "verificar-imagenes.sh salida=$rc"
   fi
   rm -rf "$D"
 }
