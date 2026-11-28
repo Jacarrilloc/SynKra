@@ -1126,3 +1126,7 @@ Se despacha el codificador de la ronda 2.
 ## 2026-11-28T07:04Z: enmienda del CA-5 de U09-B y U09-C
 
 **Acción del orquestador:** el codificador de U09-B señaló que la decisión 6 (cabecera `<th>Core compatible</th>`) y el segundo `grep` del CA-5 (decisión 10, `resto=1`) se contradicen. Cambiar el criterio es del orquestador: el `grep` ignora ahora el texto visible entre etiquetas (`th`, `td`, `span`, `label`, `caption`, `h1-h6`), que no es una regla de versión. La misma enmienda se aplica a U09-C, que tiene el mismo patrón. Hashes nuevos: U09-B `d8040d5f4ea6778623ee254cff508bb223b6eb07`, U09-C `81b92afc69bc8ba3e1c402f0ab8eca2d2eb36777`. Otras notas del codificador de U09-B (mutación «filtra» reforzada, «enlace-vista» con `@($"#{id}")`, `[Parameter]` en el rojo, dos fixtures nuevos) se dejan al revisor.
+
+## 2026-11-28T07:12Z: fusión de #114 (U09-B)
+
+**Acción del orquestador:** U09-B salió VERDE en la ronda 1. Fusión de #114 en `00c54ef` (autorización de David de las 01:25:21Z y 06:58:50Z), `MERGEABLE`/`CLEAN`. Solo toca `front/` y `front.Tests/`: no se repite `./gradlew check`; el revisor corrió las 64 pruebas del front.
