@@ -31,7 +31,7 @@ public class VistaGeneralTest : BunitContext
         cut.WaitForAssertion(() =>
         {
             var filas = cut.FindAll("table#vista-general tr[data-pais]");
-            Assert.Equal(["co", "pe"], filas.Select(f => f.GetAttribute("data-pais")).ToArray());
+            Assert.Equal(["co", "pe"], filas.Select(f => f.GetAttribute("data-pais")!).ToArray());
         });
         Assert.Equal("co", Celda(cut, "co", "pais"));
         Assert.Equal("synkra-core", Celda(cut, "co", "core"));
