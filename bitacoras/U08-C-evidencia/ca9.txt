@@ -1,5 +1,5 @@
-fecha: 2026-11-28T01:02:46-05:00
-sha: a4924e6 (arbol: 12 cambios sin confirmar)
+fecha: 2026-11-28T01:14:10-05:00
+sha: 03f4ecc (arbol: 1 cambios sin confirmar)
 uname -m: x86_64
 docker arch: amd64
 JAVA_HOME: /home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
@@ -19,5 +19,11 @@ FALLA tls: .tls tiene solo tls.crt; no se regenera ni se borra
 media-pareja=1
 tls.crt
 secreto-intacto
-scripts/desplegar.sh:10:k() { kubectl "$@"; }
-sin-kubeconfig-mutado=0
+scripts/desplegar.sh:10:k() { kubectl ; }
+sin-kubeconfig-mutado-k=0
+32c32
+< kubectl --kubeconfig "$KC" apply -f "$TMP/secreto.yaml" || rc=$?
+---
+> kubectl apply -f "$TMP/secreto.yaml" || { echo "FALLA tls: apply"; exit 1; }
+scripts/secreto-tls.sh:32:kubectl apply -f  || { echo ; exit 1; }
+sin-kubeconfig-mutado-patron-revisor=0
