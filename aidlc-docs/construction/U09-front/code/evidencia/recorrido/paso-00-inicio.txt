@@ -1,0 +1,26 @@
+fecha: 2026-11-28T10:59:48Z
+sha: 70b7af12b525485a1ae9c0a4a78025e0b9de827d
+paso: 00 inicio
+VC=2.1.0 (versión del core, de core/build.gradle.kts)
+
+## log del front (System.Net.Http.HttpClient.ApiSynkra), desde el arranque del pod
+      Sending HTTP request GET http://synkra-backend.synkra.svc:8080/api/paises
+      Received HTTP response headers after 106.9734ms - 200
+
+## llamadas (MÉTODO ruta código; las rutas con consulta pueden salir redactadas como ?*)
+GET /api/paises 200
+
+## API: GET /api/paises
+[{"pais":"co","lectura":"leido","concuerda":true,"ultimoDespliegueId":5},{"pais":"pe","lectura":"vacio","concuerda":true,"ultimoDespliegueId":null}]
+
+## API: GET /api/paises/pe/despliegues
+[]
+
+## kubectl: synkra-pe
+imagen: no hay
+pods:
+no hay pods
+resourceVersion Deployment/synkra-core
+no hay
+resourceVersion ConfigMap/synkra-core-config
+no hay
