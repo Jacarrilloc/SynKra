@@ -1,0 +1,45 @@
+# fecha: 2026-11-28T01:35:57Z  (tomada justo antes del commit que la agrega; el sha es el de su padre)
+$ git rev-parse --short HEAD
+8cfea32
+$ git diff --stat e0f5c62...HEAD
+ .../main/java/io/synkra/registro/Concordancia.java |  37 +++
+ .../io/synkra/registro/PaisesConfigurados.java     |  43 +++
+ .../java/io/synkra/registro/RegistroServicio.java  |  16 +
+ .../java/io/synkra/registro/RutasVistaGeneral.java |  33 ++
+ .../io/synkra/registro/VistaGeneralServicio.java   |  72 +++++
+ .../io/synkra/registro/api/LecturaCluster.java     |  13 +
+ .../io/synkra/registro/api/PluginCorriendo.java    |   4 +
+ .../java/io/synkra/registro/api/RegistroApi.java   |   8 +
+ .../io/synkra/registro/api/VistaGeneralApi.java    |  10 +
+ .../java/io/synkra/registro/api/VistaPais.java     |  19 ++
+ .../main/java/io/synkra/registro/package-info.java |   3 +
+ backend/src/main/resources/application.properties  |   3 +
+ .../test/java/io/synkra/FronterasModulosTest.java  | 115 +++++++
+ .../io/synkra/registro/PaisesConfiguradosTest.java |  45 +++
+ .../java/io/synkra/registro/VistaGeneralTest.java  | 335 +++++++++++++++++++++
+ bitacoras/U06-C-evidencia/ca1.sh                   |   6 +
+ bitacoras/U06-C-evidencia/ca1.txt                  |  10 +
+ bitacoras/U06-C-evidencia/ca2.sh                   |  12 +
+ bitacoras/U06-C-evidencia/ca2.txt                  |  36 +++
+ bitacoras/U06-C-evidencia/ca3.sh                   |  27 ++
+ bitacoras/U06-C-evidencia/ca3.txt                  |   7 +
+ bitacoras/U06-C-evidencia/ca4.sh                   |  11 +
+ bitacoras/U06-C-evidencia/ca4.txt                  |  37 +++
+ bitacoras/U06-C-evidencia/ca5.sh                   |  74 +++++
+ bitacoras/U06-C-evidencia/ca5.txt                  | 122 ++++++++
+ bitacoras/U06-C-evidencia/ca5b.sh                  |  15 +
+ bitacoras/U06-C-evidencia/ca5b.txt                 |  21 ++
+ bitacoras/U06-C-evidencia/ca6.sh                   |   5 +
+ bitacoras/U06-C-evidencia/ca6.txt                  | 124 ++++++++
+ bitacoras/U06-C-evidencia/rojo-fronteras.txt       |  43 +++
+ bitacoras/U06-C-evidencia/rojo-paises.txt          |  40 +++
+ bitacoras/U06-C-evidencia/rojo-vista.txt           |  56 ++++
+ bitacoras/U06-C.md                                 |  67 +++++
+ 33 files changed, 1469 insertions(+)
+$ git diff --name-status e0f5c62...HEAD -- backend/src/test
+M	backend/src/test/java/io/synkra/FronterasModulosTest.java
+A	backend/src/test/java/io/synkra/registro/PaisesConfiguradosTest.java
+A	backend/src/test/java/io/synkra/registro/VistaGeneralTest.java
+$ git diff e0f5c62...HEAD -- backend/src/test/java/io/synkra/FronterasModulosTest.java
+$ grep -c '^-[^-]'
+0

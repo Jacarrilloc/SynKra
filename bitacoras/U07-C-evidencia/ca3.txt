@@ -1,0 +1,12 @@
+2026-11-27T20:25:33-05:00
+6e6a6c4
+0
+$ ./gradlew :backend:bootJar
+BUILD SUCCESSFUL in 6s
+$ bash ca3.sh
+410 PLAN_VENCIDO El plan venció sin confirmarse
+410 PLAN_VENCIDO El plan venció sin confirmarse
+501 CONFIRMACION_NO_DISPONIBLE La confirmación todavía no está disponible
+409 PLAN_NO_PENDIENTE El plan ya no está pendiente
+404 NO_ENCONTRADO Recurso no encontrado
+[(71, 'vencido'), (72, 'pendiente'), (73, 'confirmado'), (74, 'pendiente')]

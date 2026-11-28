@@ -1,0 +1,7 @@
+# fecha: 2026-11-28T01:28:23Z  sha: f73b9f0  puerto 18091 libre: 0 sockets
+BUILD SUCCESSFUL in 974ms
+200
+--- cuerpo literal:
+[{"pais":"pe","lectura":"no_disponible","imagen":null,"plugins":[],"concuerda":null,"ultimoDespliegueId":61,"core":"synkra-core","versionCore":"2.1.0"},{"pais":"co","lectura":"no_disponible","imagen":null,"plugins":[],"concuerda":null,"ultimoDespliegueId":null,"core":null,"versionCore":null},{"pais":"ar","lectura":"no_disponible","imagen":null,"plugins":[],"concuerda":null,"ultimoDespliegueId":null,"core":null,"versionCore":null}]
+[('pe', 'no_disponible', None, 61, '2.1.0', None, []), ('co', 'no_disponible', None, None, None, None, []), ('ar', 'no_disponible', None, None, None, None, [])]
+['concuerda', 'core', 'imagen', 'lectura', 'pais', 'plugins', 'ultimoDespliegueId', 'versionCore']

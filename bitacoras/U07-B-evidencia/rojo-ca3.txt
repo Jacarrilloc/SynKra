@@ -1,0 +1,53 @@
+2026-11-27T19:54:20-05:00
+7a673ef
+$ ./gradlew :backend:test --rerun --tests '*CambiosPropiedades'
+> Task :verificador:compileJava UP-TO-DATE
+> Task :backend:compileJava
+> Task :backend:processResources UP-TO-DATE
+> Task :backend:classes
+> Task :verificador:compileTestFixturesJava UP-TO-DATE
+> Task :backend:compileTestJava
+> Task :backend:processTestResources UP-TO-DATE
+> Task :backend:testClasses
+> Task :verificador:processResources NO-SOURCE
+> Task :verificador:classes UP-TO-DATE
+> Task :verificador:jar UP-TO-DATE
+> Task :verificador:processTestFixturesResources NO-SOURCE
+> Task :verificador:testFixturesClasses UP-TO-DATE
+> Task :verificador:testFixturesJar UP-TO-DATE
+
+> Task :backend:test FAILED
+
+CambiosPropiedades > lasTresListasParticionanLaSeleccionYLoQueCorre FAILED
+    java.lang.UnsupportedOperationException at CambiosPropiedades.java:117
+
+CambiosPropiedades > aplicarLosCambiosAlEstadoQueCorreDaLaSeleccion FAILED
+    java.lang.UnsupportedOperationException at CambiosPropiedades.java:100
+
+CambiosPropiedades > sinCambiosEsCoreIgualYMismosPluginsYElCoreDicePorLaImagen FAILED
+    java.lang.UnsupportedOperationException at CambiosPropiedades.java:137
+
+CambiosPropiedades > unPaisVacioLoAnadeTodoYNoQuitaNiConserva FAILED
+    java.lang.UnsupportedOperationException at CambiosPropiedades.java:148
+
+4 tests completed, 4 failed
+
+[Incubating] Problems report is available at: file:///home/casdav/Projects/Master/wt-m6r-U07-B/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':backend:test'.
+> There were failing tests. See the report at: file:///home/casdav/Projects/Master/wt-m6r-U07-B/backend/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 2s
+9 actionable tasks: 3 executed, 6 up-to-date

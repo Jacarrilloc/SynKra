@@ -1,0 +1,10 @@
+2026-11-27T20:38:18-05:00
+sha 7246352
+$ ./gradlew :backend:test --rerun --tests '*RelojTest'
+BUILD SUCCESSFUL in 4s
+$ grep -ho tests=...
+tests="1" skipped="0" failures="0" errors="0"
+$ grep -rln "Clock\.system" backend/src/main/java
+backend/src/main/java/io/synkra/plataforma/Reloj.java
+$ grep -rn "Clock\.\(fixed\|offset\|tick\)" backend/src/main/java; echo otros=$?
+otros=1

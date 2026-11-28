@@ -1,0 +1,124 @@
+# fecha: 2026-11-28T01:34:41Z  sha: ab2b679
+$ ./gradlew :backend:test --rerun :backend:check
+$ grep -E '^BUILD|FAILED'
+BUILD SUCCESSFUL in 34s
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.catalogo.ArtefactosPorHashTest.xml
+backend/build/test-results/test/TEST-io.synkra.catalogo.ArtefactosPorHashTest.xml:tests="10" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.catalogo.CatalogoRepositoriosTest.xml
+backend/build/test-results/test/TEST-io.synkra.catalogo.CatalogoRepositoriosTest.xml:tests="19" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.catalogo.CatalogoVerificadorTest.xml
+backend/build/test-results/test/TEST-io.synkra.catalogo.CatalogoVerificadorTest.xml:tests="14" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.catalogo.CoreRegistradoTest.xml
+backend/build/test-results/test/TEST-io.synkra.catalogo.CoreRegistradoTest.xml:tests="4" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.catalogo.InterfazCatalogoTest.xml
+backend/build/test-results/test/TEST-io.synkra.catalogo.InterfazCatalogoTest.xml:tests="6" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.catalogo.ListarPluginsTest.xml
+backend/build/test-results/test/TEST-io.synkra.catalogo.ListarPluginsTest.xml:tests="14" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.catalogo.RecepcionArtefactoTest.xml
+backend/build/test-results/test/TEST-io.synkra.catalogo.RecepcionArtefactoTest.xml:tests="67" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.catalogo.RegistrarCoreTest.xml
+backend/build/test-results/test/TEST-io.synkra.catalogo.RegistrarCoreTest.xml:tests="19" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.catalogo.RegistroPermitidoCaracterizacionTest.xml
+backend/build/test-results/test/TEST-io.synkra.catalogo.RegistroPermitidoCaracterizacionTest.xml:tests="2" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.catalogo.RegistroPermitidoTest.xml
+backend/build/test-results/test/TEST-io.synkra.catalogo.RegistroPermitidoTest.xml:tests="7" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.catalogo.RutasCoresTest.xml
+backend/build/test-results/test/TEST-io.synkra.catalogo.RutasCoresTest.xml:tests="15" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.catalogo.RutasPluginsTest.xml
+backend/build/test-results/test/TEST-io.synkra.catalogo.RutasPluginsTest.xml:tests="28" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.catalogo.RutasSegurasPropiedades.xml
+backend/build/test-results/test/TEST-io.synkra.catalogo.RutasSegurasPropiedades.xml:tests="4" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.catalogo.SubirPluginTest.xml
+backend/build/test-results/test/TEST-io.synkra.catalogo.SubirPluginTest.xml:tests="52" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.FronterasModulosTest.xml
+backend/build/test-results/test/TEST-io.synkra.FronterasModulosTest.xml:tests="12" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.kubernetes.AplicarTest.xml
+backend/build/test-results/test/TEST-io.synkra.kubernetes.AplicarTest.xml:tests="10" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.kubernetes.ClienteKubernetesTest.xml
+backend/build/test-results/test/TEST-io.synkra.kubernetes.ClienteKubernetesTest.xml:tests="10" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.kubernetes.ConfiguracionKubernetesTest.xml
+backend/build/test-results/test/TEST-io.synkra.kubernetes.ConfiguracionKubernetesTest.xml:tests="2" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.kubernetes.ConstruirObjetosPaisTest.xml
+backend/build/test-results/test/TEST-io.synkra.kubernetes.ConstruirObjetosPaisTest.xml:tests="32" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.kubernetes.EstadoYContextoTest.xml
+backend/build/test-results/test/TEST-io.synkra.kubernetes.EstadoYContextoTest.xml:tests="20" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.kubernetes.GuardiaNamespaceTest.xml
+backend/build/test-results/test/TEST-io.synkra.kubernetes.GuardiaNamespaceTest.xml:tests="22" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.kubernetes.ImagenInitCaracterizacionTest.xml
+backend/build/test-results/test/TEST-io.synkra.kubernetes.ImagenInitCaracterizacionTest.xml:tests="2" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.kubernetes.ImagenInitConfiguradaTest.xml
+backend/build/test-results/test/TEST-io.synkra.kubernetes.ImagenInitConfiguradaTest.xml:tests="3" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.kubernetes.LeerPaisTest.xml
+backend/build/test-results/test/TEST-io.synkra.kubernetes.LeerPaisTest.xml:tests="24" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.kubernetes.YamlObjetosPaisTest.xml
+backend/build/test-results/test/TEST-io.synkra.kubernetes.YamlObjetosPaisTest.xml:tests="2" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.plataforma.BaseDeDatosTest.xml
+backend/build/test-results/test/TEST-io.synkra.plataforma.BaseDeDatosTest.xml:tests="4" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.plataforma.DialectoSqliteTest.xml
+backend/build/test-results/test/TEST-io.synkra.plataforma.DialectoSqliteTest.xml:tests="6" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.plataforma.ErrorApiTest.xml
+backend/build/test-results/test/TEST-io.synkra.plataforma.ErrorApiTest.xml:tests="13" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.plataforma.RepositorioSqliteTest.xml
+backend/build/test-results/test/TEST-io.synkra.plataforma.RepositorioSqliteTest.xml:tests="4" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.plataforma.RutaDatosPorDefectoTest.xml
+backend/build/test-results/test/TEST-io.synkra.plataforma.RutaDatosPorDefectoTest.xml:tests="1" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.plataforma.SaludTest.xml
+backend/build/test-results/test/TEST-io.synkra.plataforma.SaludTest.xml:tests="3" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.plataforma.ValidacionErroresTest.xml
+backend/build/test-results/test/TEST-io.synkra.plataforma.ValidacionErroresTest.xml:tests="8" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.registro.ContextoFalloTest.xml
+backend/build/test-results/test/TEST-io.synkra.registro.ContextoFalloTest.xml:tests="9" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.registro.HistorialTest.xml
+backend/build/test-results/test/TEST-io.synkra.registro.HistorialTest.xml:tests="8" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.registro.PaisesConfiguradosTest.xml
+backend/build/test-results/test/TEST-io.synkra.registro.PaisesConfiguradosTest.xml:tests="5" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.registro.RegistroReinicioTest.xml
+backend/build/test-results/test/TEST-io.synkra.registro.RegistroReinicioTest.xml:tests="1" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.registro.RegistroRepositoriosTest.xml
+backend/build/test-results/test/TEST-io.synkra.registro.RegistroRepositoriosTest.xml:tests="13" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.registro.TransicionesRegistroTest.xml
+backend/build/test-results/test/TEST-io.synkra.registro.TransicionesRegistroTest.xml:tests="18" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.registro.VistaGeneralTest.xml
+backend/build/test-results/test/TEST-io.synkra.registro.VistaGeneralTest.xml:tests="10" skipped="0" failures="0" errors="0"
+$ for f in backend/build/test-results/test/TEST-*.xml
+$ grep -Ho 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' backend/build/test-results/test/TEST-io.synkra.SynkraAppTest.xml
+backend/build/test-results/test/TEST-io.synkra.SynkraAppTest.xml:tests="3" skipped="0" failures="0" errors="0"

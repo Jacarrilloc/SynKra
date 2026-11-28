@@ -1,0 +1,6 @@
+# U06-C: respuesta a la ronda 1
+
+F-01: Corregido en e038be3: `VistaGeneralTest` gana `imagenYPluginsSonLosDelClusterNoLosDelRegistro` y `elJsonTambienTraeLaImagenYLosPluginsDelCluster` (imagen de `cl` = A y no B; plugins de `sv` con `kyc-extra`; plugins de `co` con sha `f`; `bo`), por la API y por el JSON. Las mutaciones E3 (imagen del registro) y E4 (plugins del registro) ahora dan BUILD FAILED y caen esas dos pruebas (`bitacoras/U06-C-evidencia/ca5-r2.txt`). La base no cambia: las salidas de Python de CA-1 son las mismas (`ca1-r2.txt`).
+F-02: Corregido en d102ca0: `registroNoTieneRutasDeEscritura` rechaza `@RequestMapping` sin `method` y las anotaciones de escritura a nivel de clase. Mutaciones E5 (sin `method`) y E6 (clase con `method = POST`) caen en esa prueba (`ca5-r2.txt`).
+F-03: Corregido en d102ca0: `startsWith("io.synkra.")` con punto, y la regla revisa también anotaciones públicas y límites de parámetros de tipo (de clase y de método). Mutación E7 (clase pública `Fuga<T extends LecturaPais>` en `registro.api`) cae `laApiDeRegistroSoloMencionaTiposPropios` (`ca5-r2b.txt`; el primer intento con un límite en la interfaz existente no compilaba por el tipo crudo, queda al final de `ca5-r2.txt`).
+F-04: Corregido en e506ed3: constante `MSG_PAIS` en `RegistroServicio` para los tres literales; sin cambios fuera de `registro/**`.

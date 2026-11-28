@@ -1,0 +1,33 @@
+2026-11-27T20:29:06-05:00
+$ git rev-parse --short HEAD; git diff --stat 285ef22...HEAD
+88b54e9
+ .../io/synkra/despliegue/CodigosDespliegue.java    |   3 +
+ .../io/synkra/despliegue/GuardaConfirmacion.java   |  44 ++++
+ .../io/synkra/despliegue/MotivosDespliegue.java    |   3 +
+ .../java/io/synkra/despliegue/PlanServicio.java    |   5 +-
+ .../io/synkra/despliegue/RutasConfirmacion.java    |  30 +++
+ .../io/synkra/despliegue/VencimientoPlanes.java    |  37 +++
+ .../src/main/java/io/synkra/plataforma/Reloj.java  |  15 ++
+ .../io/synkra/despliegue/CatalogoDePrueba.java     |  46 ++++
+ .../io/synkra/despliegue/PlanPendienteTest.java    | 256 +++++++++++++++++++++
+ .../java/io/synkra/despliegue/RelojMovible.java    |  35 +++
+ .../test/java/io/synkra/plataforma/RelojTest.java  |  41 ++++
+ bitacoras/U07-C-evidencia/ca1.txt                  |   9 +
+ bitacoras/U07-C-evidencia/ca2.txt                  |  10 +
+ bitacoras/U07-C-evidencia/ca3.sh                   |  20 ++
+ bitacoras/U07-C-evidencia/ca3.txt                  |  12 +
+ bitacoras/U07-C-evidencia/ca4.sh                   |  22 ++
+ bitacoras/U07-C-evidencia/ca4.txt                  | 124 ++++++++++
+ bitacoras/U07-C-evidencia/ca5.txt                  |  50 ++++
+ .../U07-C-evidencia/rojo-PlanPendienteTest.xml     | 171 ++++++++++++++
+ bitacoras/U07-C-evidencia/rojo-RelojTest.xml       |  46 ++++
+ bitacoras/U07-C-evidencia/rojo.txt                 |  82 +++++++
+ bitacoras/U07-C-evidencia/verde.txt                |  34 +++
+ bitacoras/U07-C.md                                 | 117 ++++++++++
+ 23 files changed, 1210 insertions(+), 2 deletions(-)
+$ git diff --name-status 285ef22...HEAD -- backend/src/main/java/io/synkra/plataforma backend/src/test
+A	backend/src/main/java/io/synkra/plataforma/Reloj.java
+A	backend/src/test/java/io/synkra/despliegue/CatalogoDePrueba.java
+A	backend/src/test/java/io/synkra/despliegue/PlanPendienteTest.java
+A	backend/src/test/java/io/synkra/despliegue/RelojMovible.java
+A	backend/src/test/java/io/synkra/plataforma/RelojTest.java

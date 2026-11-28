@@ -1,0 +1,9 @@
+2026-11-27T20:38:11-05:00
+sha 7246352
+$ ./gradlew :backend:test --rerun --tests '*PlanPendienteTest'
+BUILD SUCCESSFUL in 6s
+$ grep -ho tests=... TEST-*PlanPendienteTest.xml
+tests="9" skipped="0" failures="0" errors="0"
+$ python3 -I -c ... synkra.db
+[('ar', 'vencido', 1795010400123), ('ar', 'pendiente', 1795010430123), ('bo', 'confirmado', 1795017600123), ('cl', 'pendiente', 1795003200123), ('co', 'pendiente', 1795003200123), ('ec', 'vencido', 1794999600123), ('ec', 'pendiente', 1795000200123), ('pe', 'pendiente', 1795003200123), ('py', 'pendiente', 1795006800123), ('uy', 'vencido', 1795014000123)]
+(0,)

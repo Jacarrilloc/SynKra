@@ -1,0 +1,28 @@
+=== M2 otra carpeta (sin busqueda en los demas cores)
+2026-11-27T20:00:48-05:00
+sha 09439f4
+$ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"
+$ sed -i 's/if (otro.nombre().equals(core)) {/if (true) {/'  "$D/backend/src/main/java/io/synkra/despliegue/VerificacionVivo.java"
+$ diff -u (original, mutado)
+@@ -98,7 +98,7 @@
+             return propio.get();
+         }
+         for (var otro : catalogo.listarCores()) {
+-            if (otro.nombre().equals(core)) {
++            if (true) {
+                 continue;
+             }
+             var ajeno = vista.descriptor(otro.nombre(), nombre, version);
+$ (cd "$D" && ./gradlew :backend:test --tests '*VerificacionVivoTest' --tests '*CrearPlanTest' --tests '*CambiosPropiedades')
+VerificacionVivoTest > s7DaCoreEquivocadoYS6PluginAusente() FAILED
+VerificacionVivoTest > laSeleccionDaElVeredictoDeLaSuiteConAlternativas(Caso) > Caso[id=S7, grupo=CARPETA_EQUIVOCADA, descripcion=kyc-xx 1.0.0 es de la carpeta de otro-core, entrada=PorSeleccion[seleccion=Seleccion[core=synkra-core, versionCore=2.1.0, plugins=[Descriptor[nombre=kyc-xx, version=1.0.0, core=otro-core, coreCompatible=RangoVersion[minimo=1.0.0, maximo=Optional[2.0.0], texto=1.x], etiquetas={}, descripcion=Optional.empty]]]], esperado=Esperado[origen=VEREDICTO, global=Optional[RECHAZADA], motivos=[MotivoEsperado[codigo=CORE_EQUIVOCADO, plugin=Optional[kyc-xx], campo=Option… FAILED
+> Task :backend:test FAILED
+28 tests completed, 2 failed
+BUILD FAILED in 11s
+$ grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.VerificacionVivoTest.xml
+pruebas caídas en la clase dueña (VerificacionVivoTest):
+   s7DaCoreEquivocadoYS6PluginAusente()
+   Caso[id=S7, grupo=CARPETA_EQUIVOCADA, descripcion=kyc-xx 1.0.0 es de la carpeta de otro-core, entrada=PorSeleccion[seleccion=Seleccion[core=synkra-core, versionCore=2.1.0, plugins=[Descriptor[nombre=kyc-xx, version=1.0.0, core=otro-core, coreCompatible=RangoVersion[minimo=1.0.0, maximo=Optional[2.0.0], texto=1.x], etiquetas={}, descripcion=Optional.empty]]]], esperado=Esperado[origen=VEREDICTO, global=Optional[RECHAZADA], motivos=[MotivoEsperado[codigo=CORE_EQUIVOCADO, plugin=Optional[kyc-xx], campo=Option…
+$ rm -rf "$D"
+archivos rastreados modificados en el worktree: 2

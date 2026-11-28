@@ -1,0 +1,23 @@
+2026-11-27T20:39:30-05:00
+$ git rev-parse --short HEAD; git diff --stat 285ef22...HEAD (antes del commit de bitácora, respuesta y evidencia de esta ronda)
+7246352
+ .../io/synkra/despliegue/CodigosDespliegue.java    |   3 +
+ .../io/synkra/despliegue/GuardaConfirmacion.java   |  45 ++++
+ .../io/synkra/despliegue/MotivosDespliegue.java    |   3 +
+ .../java/io/synkra/despliegue/PlanServicio.java    |   5 +-
+ .../io/synkra/despliegue/RutasConfirmacion.java    |  30 +++
+ .../io/synkra/despliegue/VencimientoPlanes.java    |  36 +++
+ .../src/main/java/io/synkra/plataforma/Reloj.java  |  15 ++
+ .../io/synkra/despliegue/CatalogoDePrueba.java     |  46 ++++
+ .../io/synkra/despliegue/PlanPendienteTest.java    | 257 +++++++++++++++++++++
+ .../java/io/synkra/despliegue/RelojMovible.java    |  35 +++
+ .../synkra/despliegue/VencimientoPlanesTest.java   | 100 ++++++++
+ .../test/java/io/synkra/plataforma/RelojTest.java  |  41 ++++
+ 12 files changed, 614 insertions(+), 2 deletions(-)
+$ git diff --name-status 285ef22...HEAD -- backend/src/main/java/io/synkra/plataforma backend/src/test
+A	backend/src/main/java/io/synkra/plataforma/Reloj.java
+A	backend/src/test/java/io/synkra/despliegue/CatalogoDePrueba.java
+A	backend/src/test/java/io/synkra/despliegue/PlanPendienteTest.java
+A	backend/src/test/java/io/synkra/despliegue/RelojMovible.java
+A	backend/src/test/java/io/synkra/despliegue/VencimientoPlanesTest.java
+A	backend/src/test/java/io/synkra/plataforma/RelojTest.java

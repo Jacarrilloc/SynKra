@@ -1,0 +1,37 @@
+$ git rev-parse --short HEAD; git diff --stat 8182b9d...HEAD
+09439f4
+ .../java/io/synkra/despliegue/CalculoCambios.java  |  42 +++
+ .../main/java/io/synkra/despliegue/CambioCore.java |   4 +
+ .../main/java/io/synkra/despliegue/Cambios.java    |   7 +
+ .../io/synkra/despliegue/CodigosDespliegue.java    |   5 +
+ .../io/synkra/despliegue/MotivosDespliegue.java    |  15 +
+ .../java/io/synkra/despliegue/PlanPreparado.java   |   4 +
+ .../java/io/synkra/despliegue/PlanServicio.java    | 115 +++++++
+ .../java/io/synkra/despliegue/PluginPedido.java    |   4 +
+ .../java/io/synkra/despliegue/PluginResumen.java   |   4 +
+ .../main/java/io/synkra/despliegue/Resumen.java    |   6 +
+ .../java/io/synkra/despliegue/RutasPlanes.java     |  46 +++
+ .../io/synkra/despliegue/RutasVerificacion.java    |  27 ++
+ .../java/io/synkra/despliegue/VeredictoDto.java    |  40 +++
+ .../io/synkra/despliegue/VerificacionVivo.java     | 127 ++++++++
+ .../io/synkra/despliegue/CambiosPropiedades.java   | 158 ++++++++++
+ .../java/io/synkra/despliegue/CrearPlanTest.java   | 337 +++++++++++++++++++++
+ .../io/synkra/despliegue/VerificacionVivoTest.java | 298 ++++++++++++++++++
+ .../io/synkra/kubernetes/SimuladorKubernetes.java  | 122 ++++++++
+ bitacoras/U07-B-evidencia/ca1.txt                  |  24 ++
+ bitacoras/U07-B-evidencia/ca2.txt                  |  10 +
+ bitacoras/U07-B-evidencia/ca3.txt                  |  77 +++++
+ bitacoras/U07-B-evidencia/ca4.txt                  |  14 +
+ bitacoras/U07-B-evidencia/ca5-1.txt                |  30 ++
+ bitacoras/U07-B-evidencia/ca5-2.txt                |  28 ++
+ bitacoras/U07-B-evidencia/ca5-3.txt                |  26 ++
+ bitacoras/U07-B-evidencia/ca5-4.txt                |  30 ++
+ bitacoras/U07-B-evidencia/ca5-5.txt                |  34 +++
+ bitacoras/U07-B-evidencia/ca5-6.txt                |  36 +++
+ bitacoras/U07-B-evidencia/rojo-ca1.txt             |  98 ++++++
+ bitacoras/U07-B-evidencia/rojo-ca2.txt             |  76 +++++
+ bitacoras/U07-B-evidencia/rojo-ca3.txt             |  53 ++++
+ bitacoras/U07-B.md                                 |   8 +
+ 32 files changed, 1905 insertions(+)
+$ git diff --name-status 8182b9d...HEAD -- backend/src/test/java/io/synkra/kubernetes
+A	backend/src/test/java/io/synkra/kubernetes/SimuladorKubernetes.java

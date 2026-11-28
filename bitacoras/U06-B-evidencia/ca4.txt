@@ -1,0 +1,48 @@
+# worktree HEAD 6043f15; estado: 1 cambios sin commitear. Copias con git archive HEAD (sin git stash).
+
+=== R-R5 orden
+$ sed -i 's/order by confirmado_en desc, id desc/order by confirmado_en asc, id desc/' /tmp/tmp.K2ZaFBgTTw/backend/src/main/java/io/synkra/registro/RegistroServicio.java
+9 tests completed, 4 failed
+BUILD FAILED in 11s
+$ grep -l '<failure' /tmp/tmp.K2ZaFBgTTw/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.registro.HistorialTest.xml
+backend/build/test-results/test/TEST-io.synkra.registro.RegistroReinicioTest.xml
+  cae: HistorialTest.laApiDeRegistroObtieneYValida()
+  cae: HistorialTest.historialDePeVaDelMasRecienteAlMasAntiguoYDesempataPorId()
+  cae: HistorialTest.cadaElementoTraeLasClavesDelResumenYNoVeredictoNiContexto()
+  cae: RegistroReinicioTest.elHistorialYElDetalleSobrevivenAlReinicio()
+
+=== R-R5 desempate
+$ sed -i 's/order by confirmado_en desc, id desc/order by confirmado_en desc/' /tmp/tmp.UDhMgeK4G5/backend/src/main/java/io/synkra/registro/RegistroServicio.java
+BUILD SUCCESSFUL in 10s
+$ grep -l '<failure' /tmp/tmp.UDhMgeK4G5/backend/build/test-results/test/TEST-*.xml
+
+=== R-R5 filtro de pais
+$ sed -i 's/from reg_despliegue where pais = ? "/from reg_despliegue where ? is not null "/' /tmp/tmp.X3PdUHKv9l/backend/src/main/java/io/synkra/registro/RegistroServicio.java
+9 tests completed, 4 failed
+BUILD FAILED in 10s
+$ grep -l '<failure' /tmp/tmp.X3PdUHKv9l/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.registro.HistorialTest.xml
+  cae: HistorialTest.laApiDeRegistroObtieneYValida()
+  cae: HistorialTest.otrosPaisesYPaisSinFilas()
+  cae: HistorialTest.historialDePeVaDelMasRecienteAlMasAntiguoYDesempataPorId()
+  cae: HistorialTest.cadaElementoTraeLasClavesDelResumenYNoVeredictoNiContexto()
+
+=== detalle: contexto siempre nulo
+$ sed -i 's/contexto = c.isEmpty() ? null : c.get(0);/contexto = null;/' /tmp/tmp.JCGp1SQQ6B/backend/src/main/java/io/synkra/registro/RegistroServicio.java
+9 tests completed, 3 failed
+BUILD FAILED in 11s
+$ grep -l '<failure' /tmp/tmp.JCGp1SQQ6B/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.registro.HistorialTest.xml
+backend/build/test-results/test/TEST-io.synkra.registro.RegistroReinicioTest.xml
+  cae: HistorialTest.detalleDeUnFallidoTraeContextoYVeredictoComoObjeto()
+  cae: HistorialTest.laApiDeRegistroObtieneYValida()
+  cae: RegistroReinicioTest.elHistorialYElDetalleSobrevivenAlReinicio()
+
+=== R-R8 base en memoria
+$ sed -i 's#return "jdbc:sqlite:" + archivo(directorio);#return "jdbc:sqlite::memory:";#' /tmp/tmp.BYC1geIzq2/backend/src/main/java/io/synkra/plataforma/BaseDeDatos.java
+9 tests completed, 1 failed
+BUILD FAILED in 8s
+$ grep -l '<failure' /tmp/tmp.BYC1geIzq2/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.registro.RegistroReinicioTest.xml
+  cae: RegistroReinicioTest.elHistorialYElDetalleSobrevivenAlReinicio()

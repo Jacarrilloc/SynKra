@@ -1,0 +1,82 @@
+> Task :verificador:compileJava UP-TO-DATE
+> Task :backend:compileJava
+> Task :backend:processResources UP-TO-DATE
+> Task :backend:classes
+> Task :verificador:compileTestFixturesJava UP-TO-DATE
+
+> Task :backend:compileTestJava
+Note: /home/casdav/Projects/Master/wt-m6r-U07-C/backend/src/test/java/io/synkra/despliegue/PlanPendienteTest.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+
+> Task :backend:processTestResources UP-TO-DATE
+> Task :backend:testClasses
+> Task :verificador:processResources NO-SOURCE
+> Task :verificador:classes UP-TO-DATE
+> Task :verificador:jar UP-TO-DATE
+> Task :verificador:processTestFixturesResources NO-SOURCE
+> Task :verificador:testFixturesClasses UP-TO-DATE
+> Task :verificador:testFixturesJar UP-TO-DATE
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+
+> Task :backend:test
+
+PlanPendienteTest > crearEnPaisVacioNoEscribeEnElCluster() FAILED
+    org.opentest4j.AssertionFailedError at PlanPendienteTest.java:110
+
+PlanPendienteTest > laFronteraEsVenceEnExacto() FAILED
+    org.opentest4j.AssertionFailedError at PlanPendienteTest.java:110
+
+PlanPendienteTest > elBarridoVenceSoloLosPlanesCuyoVenceEnLlego() FAILED
+    org.opentest4j.AssertionFailedError at PlanPendienteTest.java:110
+
+PlanPendienteTest > unPlanConfirmadoDa409YNoCambia() FAILED
+    org.opentest4j.AssertionFailedError at PlanPendienteTest.java:110
+
+PlanPendienteTest > crearEnPaisSinCambiosNoEscribeEnElCluster() FAILED
+    org.opentest4j.AssertionFailedError at PlanPendienteTest.java:110
+
+PlanPendienteTest > crearEnPaisConOtroPluginNoEscribeEnElCluster() FAILED
+    org.opentest4j.AssertionFailedError at PlanPendienteTest.java:110
+
+PlanPendienteTest > confirmarUnPlanVencidoDa410YLoDejaVencidoSinTocarOtros() FAILED
+    org.opentest4j.AssertionFailedError at PlanPendienteTest.java:110
+
+PlanPendienteTest > unIdInexistenteODeFormaInvalidaNoEsUnPlan() FAILED
+    org.opentest4j.AssertionFailedError at PlanPendienteTest.java:253
+
+PlanPendienteTest > confirmarUnPlanVigenteDa501SinTocarElClusterNiLaFila() FAILED
+    org.opentest4j.AssertionFailedError at PlanPendienteTest.java:110
+
+RelojTest > hayExactamenteUnBeanClockEnUtcConLaHoraReal() FAILED
+    java.lang.AssertionError at RelojTest.java:36
+
+2026-11-27T20:24:18.658-05:00  INFO 206962 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-27T20:24:18.660-05:00  INFO 206962 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-27T20:24:18.664-05:00  INFO 206962 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-27T20:24:18.671-05:00  INFO 206962 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+2026-11-27T20:24:18.680-05:00  INFO 206962 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-27T20:24:18.681-05:00  INFO 206962 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+
+> Task :backend:test FAILED
+
+10 tests completed, 10 failed
+
+[Incubating] Problems report is available at: file:///home/casdav/Projects/Master/wt-m6r-U07-C/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':backend:test'.
+> There were failing tests. See the report at: file:///home/casdav/Projects/Master/wt-m6r-U07-C/backend/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 8s
+9 actionable tasks: 3 executed, 6 up-to-date

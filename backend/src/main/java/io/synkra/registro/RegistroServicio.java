@@ -4,15 +4,24 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.synkra.registro.api.ContextoFallo;
+import io.synkra.registro.api.DespliegueRegistrado;
 import io.synkra.registro.api.EstadoDespliegue;
 import io.synkra.registro.api.NuevoDespliegue;
 import io.synkra.registro.api.PluginDesplegado;
 import io.synkra.registro.api.RegistroApi;
 import io.synkra.registro.api.TipoDespliegue;
 import io.synkra.registro.api.TransicionNoPermitidaException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.Clock;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.NoSuchElementException;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
@@ -28,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 class RegistroServicio implements RegistroApi {
 
     private static final Pattern PAIS = Pattern.compile("[a-z]{2}");
+    private static final String MSG_PAIS = "pais: dos letras minúsculas";
     private static final Pattern SHA256 = Pattern.compile("[0-9a-f]{64}");
 
     private final JdbcAggregateTemplate plantilla;
@@ -95,6 +105,108 @@ class RegistroServicio implements RegistroApi {
         }
     }
 
+    private static final String COLUMNAS = "id, pais, tipo, origen_id, core, version_core, imagen, creado_por, "
+            + "confirmado_por, confirmado_en, estado, terminado_en, veredicto";
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<DespliegueRegistrado> obtener(long id) {
+        if (id <= 0) {
+            return Optional.empty();
+        }
+        var filas = jdbc.query("select " + COLUMNAS + " from reg_despliegue where id = ?",
+                RegistroServicio::fila, id);
+        if (filas.isEmpty()) {
+            return Optional.empty();
+        }
+        var base = filas.get(0);
+        var plugins = pluginsDe(List.of(id)).getOrDefault(id, List.of());
+        ContextoFallo contexto = null;
+        if (base.estado() == EstadoDespliegue.FALLIDO) {
+            var c = jdbc.query("select log_core, log_init, eventos from reg_contexto where despliegue_id = ?",
+                    (rs, n) -> new ContextoFallo(rs.getString(1), rs.getString(2), rs.getString(3)), id);
+            contexto = c.isEmpty() ? null : c.get(0);
+        }
+        return Optional.of(con(base, plugins, contexto));
+    }
+
+    /** R-R5: el desempate por id es parte de la regla (dos confirmaciones en el mismo milisegundo). */
+    @Override
+    @Transactional(readOnly = true)
+    public List<DespliegueRegistrado> historial(String pais) {
+        if (pais == null || !PAIS.matcher(pais).matches()) {
+            throw new IllegalArgumentException(MSG_PAIS);
+        }
+        var filas = jdbc.query("select " + COLUMNAS + " from reg_despliegue where pais = ? "
+                + "order by confirmado_en desc, id desc", RegistroServicio::fila, pais);
+        if (filas.isEmpty()) {
+            return List.of();
+        }
+        var plugins = pluginsDe(filas.stream().map(DespliegueRegistrado::id).toList());
+        var salida = new ArrayList<DespliegueRegistrado>(filas.size());
+        for (var f : filas) {
+            salida.add(con(f, plugins.getOrDefault(f.id(), List.of()), null));
+        }
+        return List.copyOf(salida);
+    }
+
+    /** R-R6: el último {@code listo} por el orden de R-R5 (el desempate por id también vale aquí). */
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<DespliegueRegistrado> ultimoListo(String pais) {
+        if (pais == null || !PAIS.matcher(pais).matches()) {
+            throw new IllegalArgumentException(MSG_PAIS);
+        }
+        var filas = jdbc.query("select " + COLUMNAS + " from reg_despliegue where pais = ? and estado = 'listo' "
+                + "order by confirmado_en desc, id desc limit 1", RegistroServicio::fila, pais);
+        if (filas.isEmpty()) {
+            return Optional.empty();
+        }
+        var base = filas.get(0);
+        return Optional.of(con(base, pluginsDe(List.of(base.id())).getOrDefault(base.id(), List.of()), null));
+    }
+
+    private static DespliegueRegistrado con(DespliegueRegistrado f, List<PluginDesplegado> plugins,
+            ContextoFallo contexto) {
+        return new DespliegueRegistrado(f.id(), f.pais(), f.tipo(), f.origenId(), f.core(), f.versionCore(),
+                f.imagen(), f.creadoPor(), f.confirmadoPor(), f.confirmadoEn(), f.estado(), f.terminadoEn(),
+                f.veredicto(), plugins, contexto);
+    }
+
+    private static DespliegueRegistrado fila(ResultSet rs, int n) throws SQLException {
+        long origen = rs.getLong("origen_id");
+        Long origenId = rs.wasNull() ? null : origen;
+        long fin = rs.getLong("terminado_en");
+        Instant terminado = rs.wasNull() ? null : Instant.ofEpochMilli(fin);
+        return new DespliegueRegistrado(rs.getLong("id"), rs.getString("pais"),
+                TipoDespliegue.valueOf(rs.getString("tipo").toUpperCase(java.util.Locale.ROOT)), origenId,
+                rs.getString("core"), rs.getString("version_core"), rs.getString("imagen"),
+                rs.getString("creado_por"), rs.getString("confirmado_por"),
+                Instant.ofEpochMilli(rs.getLong("confirmado_en")),
+                EstadoDespliegue.valueOf(rs.getString("estado").toUpperCase(java.util.Locale.ROOT)), terminado,
+                rs.getString("veredicto"), List.of(), null);
+    }
+
+    /** Una sola consulta por llamada, ordenada por nombre. */
+    private Map<Long, List<PluginDesplegado>> pluginsDe(List<Long> ids) {
+        var marcas = String.join(",", java.util.Collections.nCopies(ids.size(), "?"));
+        var salida = new LinkedHashMap<Long, List<PluginDesplegado>>();
+        jdbc.query("select despliegue_id, nombre, version, sha256, etiquetas from reg_plugin "
+                + "where despliegue_id in (" + marcas + ") order by despliegue_id, nombre", rs -> {
+            salida.computeIfAbsent(rs.getLong(1), k -> new ArrayList<>()).add(new PluginDesplegado(
+                    rs.getString(2), rs.getString(3), rs.getString(4), leerEtiquetas(rs.getString(5))));
+        }, ids.toArray());
+        return salida;
+    }
+
+    private Map<String, String> leerEtiquetas(String texto) {
+        try {
+            return json.readValue(texto, new TypeReference<TreeMap<String, String>>() {});
+        } catch (JsonProcessingException e) {
+            throw new IllegalStateException("etiquetas guardadas ilegibles", e);
+        }
+    }
+
     private static String minusculas(Enum<?> e) {
         return e.name().toLowerCase(java.util.Locale.ROOT);
     }
@@ -107,7 +219,7 @@ class RegistroServicio implements RegistroApi {
             throw new IllegalArgumentException("id debe ser mayor que 0");
         }
         if (n.pais() == null || !PAIS.matcher(n.pais()).matches()) {
-            throw new IllegalArgumentException("pais: dos letras minúsculas");
+            throw new IllegalArgumentException(MSG_PAIS);
         }
         if (n.tipo() == null) {
             throw new IllegalArgumentException("tipo obligatorio");

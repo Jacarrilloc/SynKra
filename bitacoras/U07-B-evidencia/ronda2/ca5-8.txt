@@ -1,0 +1,26 @@
+=== M8 (revisor, F-01) resumen sin sorted
+2026-11-27T20:13:52-05:00
+sha c9d0814
+$ D=$(mktemp -d); git archive HEAD | tar -x -C "$D"
+$ sed -i -e 's/^                \.sorted(Comparator\.comparing(PluginResumen::nombre)\.thenComparing(PluginResumen::version))$//'  "$D/backend/src/main/java/io/synkra/despliegue/PlanServicio.java"
+$ diff -u (original, mutado)
+@@ -62,7 +62,7 @@
+         var elegidos = verificado.seleccion().plugins().stream()
+                 .map(d -> new PluginResumen(d.nombre(), d.version().toString(),
+                         catalogo.obtenerPlugin(core, d.nombre(), d.version().toString()).sha256()))
+-                .sorted(Comparator.comparing(PluginResumen::nombre).thenComparing(PluginResumen::version))
++
+                 .toList();
+         var resumen = new Resumen(namespace, core, verificado.seleccion().versionCore().toString(), imagen, elegidos);
+ 
+$ (cd "$D" && ./gradlew :backend:test --tests '*VerificacionVivoTest' --tests '*CrearPlanTest' --tests '*CambiosPropiedades')
+CrearPlanTest > cambiaUnPluginYSeQuedaOtroDistingueAnadidosQuitadosEIguales() FAILED
+> Task :backend:test FAILED
+28 tests completed, 1 failed
+BUILD FAILED in 11s
+$ grep -l '<failure' "$D"/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.despliegue.CrearPlanTest.xml
+pruebas caídas en la clase dueña (CrearPlanTest):
+   cambiaUnPluginYSeQuedaOtroDistingueAnadidosQuitadosEIguales()
+$ rm -rf "$D"
+archivos rastreados modificados en el worktree: 0

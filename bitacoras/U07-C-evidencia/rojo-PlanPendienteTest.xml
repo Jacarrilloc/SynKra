@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.synkra.despliegue.PlanPendienteTest" tests="9" skipped="0" failures="9" errors="0" timestamp="2026-11-28T01:24:13.132Z" hostname="casdav-Legion-Pro-5-16ADR10" time="5.011">
+  <properties/>
+  <testcase name="crearEnPaisVacioNoEscribeEnElCluster()" classname="io.synkra.despliegue.PlanPendienteTest" time="1.122">
+    <failure message="org.opentest4j.AssertionFailedError: &#10;expected: 2026-11-18T12:00:00.123Z&#10; but was: 2026-11-28T01:24:17.272Z" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+expected: 2026-11-18T12:00:00.123Z
+ but was: 2026-11-28T01:24:17.272Z
+	at io.synkra.despliegue.PlanPendienteTest.crearA(PlanPendienteTest.java:110)
+	at io.synkra.despliegue.PlanPendienteTest.crearEnPaisVacioNoEscribeEnElCluster(PlanPendienteTest.java:163)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="laFronteraEsVenceEnExacto()" classname="io.synkra.despliegue.PlanPendienteTest" time="0.043">
+    <failure message="org.opentest4j.AssertionFailedError: &#10;expected: 2026-11-18T15:00:00.123Z&#10; but was: 2026-11-28T01:24:17.451Z" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+expected: 2026-11-18T15:00:00.123Z
+ but was: 2026-11-28T01:24:17.451Z
+	at io.synkra.despliegue.PlanPendienteTest.crearA(PlanPendienteTest.java:110)
+	at io.synkra.despliegue.PlanPendienteTest.laFronteraEsVenceEnExacto(PlanPendienteTest.java:220)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="elBarridoVenceSoloLosPlanesCuyoVenceEnLlego()" classname="io.synkra.despliegue.PlanPendienteTest" time="0.086">
+    <failure message="org.opentest4j.AssertionFailedError: &#10;expected: 2026-11-18T11:00:00.123Z&#10; but was: 2026-11-28T01:24:17.495Z" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+expected: 2026-11-18T11:00:00.123Z
+ but was: 2026-11-28T01:24:17.495Z
+	at io.synkra.despliegue.PlanPendienteTest.crearA(PlanPendienteTest.java:110)
+	at io.synkra.despliegue.PlanPendienteTest.elBarridoVenceSoloLosPlanesCuyoVenceEnLlego(PlanPendienteTest.java:147)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="unPlanConfirmadoDa409YNoCambia()" classname="io.synkra.despliegue.PlanPendienteTest" time="0.024">
+    <failure message="org.opentest4j.AssertionFailedError: &#10;expected: 2026-11-18T16:00:00.123Z&#10; but was: 2026-11-28T01:24:17.580Z" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+expected: 2026-11-18T16:00:00.123Z
+ but was: 2026-11-28T01:24:17.580Z
+	at io.synkra.despliegue.PlanPendienteTest.crearA(PlanPendienteTest.java:110)
+	at io.synkra.despliegue.PlanPendienteTest.unPlanConfirmadoDa409YNoCambia(PlanPendienteTest.java:236)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="crearEnPaisSinCambiosNoEscribeEnElCluster()" classname="io.synkra.despliegue.PlanPendienteTest" time="0.269">
+    <failure message="org.opentest4j.AssertionFailedError: &#10;expected: 2026-11-18T12:00:00.123Z&#10; but was: 2026-11-28T01:24:17.845Z" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+expected: 2026-11-18T12:00:00.123Z
+ but was: 2026-11-28T01:24:17.845Z
+	at io.synkra.despliegue.PlanPendienteTest.crearA(PlanPendienteTest.java:110)
+	at io.synkra.despliegue.PlanPendienteTest.crearEnPaisSinCambiosNoEscribeEnElCluster(PlanPendienteTest.java:181)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="crearEnPaisConOtroPluginNoEscribeEnElCluster()" classname="io.synkra.despliegue.PlanPendienteTest" time="0.137">
+    <failure message="org.opentest4j.AssertionFailedError: &#10;expected: 2026-11-18T12:00:00.123Z&#10; but was: 2026-11-28T01:24:17.890Z" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+expected: 2026-11-18T12:00:00.123Z
+ but was: 2026-11-28T01:24:17.890Z
+	at io.synkra.despliegue.PlanPendienteTest.crearA(PlanPendienteTest.java:110)
+	at io.synkra.despliegue.PlanPendienteTest.crearEnPaisConOtroPluginNoEscribeEnElCluster(PlanPendienteTest.java:172)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="confirmarUnPlanVencidoDa410YLoDejaVencidoSinTocarOtros()" classname="io.synkra.despliegue.PlanPendienteTest" time="0.072">
+    <failure message="org.opentest4j.AssertionFailedError: &#10;expected: 2026-11-18T14:00:00.123Z&#10; but was: 2026-11-28T01:24:18.014Z" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+expected: 2026-11-18T14:00:00.123Z
+ but was: 2026-11-28T01:24:18.014Z
+	at io.synkra.despliegue.PlanPendienteTest.crearA(PlanPendienteTest.java:110)
+	at io.synkra.despliegue.PlanPendienteTest.confirmarUnPlanVencidoDa410YLoDejaVencidoSinTocarOtros(PlanPendienteTest.java:200)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="unIdInexistenteODeFormaInvalidaNoEsUnPlan()" classname="io.synkra.despliegue.PlanPendienteTest" time="0.029">
+    <failure message="org.opentest4j.AssertionFailedError: &#10;expected: 400 BAD_REQUEST&#10; but was: 404 NOT_FOUND" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+expected: 400 BAD_REQUEST
+ but was: 404 NOT_FOUND
+	at io.synkra.despliegue.PlanPendienteTest.unIdInexistenteODeFormaInvalidaNoEsUnPlan(PlanPendienteTest.java:253)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="confirmarUnPlanVigenteDa501SinTocarElClusterNiLaFila()" classname="io.synkra.despliegue.PlanPendienteTest" time="0.042">
+    <failure message="org.opentest4j.AssertionFailedError: &#10;expected: 2026-11-18T13:00:00.123Z&#10; but was: 2026-11-28T01:24:18.116Z" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+expected: 2026-11-18T13:00:00.123Z
+ but was: 2026-11-28T01:24:18.116Z
+	at io.synkra.despliegue.PlanPendienteTest.crearA(PlanPendienteTest.java:110)
+	at io.synkra.despliegue.PlanPendienteTest.confirmarUnPlanVigenteDa501SinTocarElClusterNiLaFila(PlanPendienteTest.java:188)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <system-out><![CDATA[20:24:13.231 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [io.synkra.despliegue.PlanPendienteTest]: PlanPendienteTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+20:24:13.323 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration io.synkra.SynkraApp for test class io.synkra.despliegue.PlanPendienteTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-11-27T20:24:14.232-05:00  INFO 206962 --- [    Test worker] io.synkra.despliegue.PlanPendienteTest   : Starting PlanPendienteTest using Java 21.0.13.1 with PID 206962 (started by casdav in /home/casdav/Projects/Master/wt-m6r-U07-C/backend)
+2026-11-27T20:24:14.233-05:00  INFO 206962 --- [    Test worker] io.synkra.despliegue.PlanPendienteTest   : No active profile set, falling back to 1 default profile: "default"
+2026-11-27T20:24:14.755-05:00  INFO 206962 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2026-11-27T20:24:14.794-05:00  INFO 206962 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 34 ms. Found 5 JDBC repository interfaces.
+2026-11-27T20:24:15.135-05:00  INFO 206962 --- [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 0 (http)
+2026-11-27T20:24:15.146-05:00  INFO 206962 --- [    Test worker] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-11-27T20:24:15.147-05:00  INFO 206962 --- [    Test worker] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-11-27T20:24:15.191-05:00  INFO 206962 --- [    Test worker] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-11-27T20:24:15.192-05:00  INFO 206962 --- [    Test worker] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 948 ms
+2026-11-27T20:24:15.450-05:00  INFO 206962 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Starting...
+2026-11-27T20:24:15.530-05:00  INFO 206962 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : synkra-sqlite - Added connection org.sqlite.jdbc4.JDBC4Connection@5cb6b81b
+2026-11-27T20:24:15.531-05:00  INFO 206962 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Start completed.
+2026-11-27T20:24:15.604-05:00  INFO 206962 --- [    Test worker] org.flywaydb.core.FlywayExecutor         : Database: jdbc:sqlite:/home/casdav/Projects/Master/wt-m6r-U07-C/backend/build/sqlite-pruebas/PlanPendienteTest/synkra.db (SQLite 3.49)
+2026-11-27T20:24:15.622-05:00  INFO 206962 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "main"."flyway_schema_history" does not exist yet
+2026-11-27T20:24:15.624-05:00  INFO 206962 --- [    Test worker] o.f.core.internal.command.DbValidate     : Successfully validated 3 migrations (execution time 00:00.008s)
+2026-11-27T20:24:15.626-05:00  INFO 206962 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "main"."flyway_schema_history" ...
+2026-11-27T20:24:15.707-05:00  INFO 206962 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Current version of schema "main": << Empty Schema >>
+2026-11-27T20:24:15.710-05:00  INFO 206962 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "main" to version "1 - base"
+2026-11-27T20:24:15.720-05:00  INFO 206962 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "main" to version "2 - catalogo"
+2026-11-27T20:24:15.726-05:00  INFO 206962 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "main" to version "4 - despliegue"
+2026-11-27T20:24:15.733-05:00  INFO 206962 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Successfully applied 3 migrations to schema "main", now at version v4 (execution time 00:00.002s)
+2026-11-27T20:24:16.162-05:00  INFO 206962 --- [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-11-27T20:24:16.240-05:00  INFO 206962 --- [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 36993 (http) with context path '/'
+2026-11-27T20:24:16.249-05:00  INFO 206962 --- [    Test worker] io.synkra.despliegue.PlanPendienteTest   : Started PlanPendienteTest in 2.205 seconds (process running for 3.978)
+2026-11-27T20:24:17.084-05:00  INFO 206962 --- [o-auto-1-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-11-27T20:24:17.085-05:00  INFO 206962 --- [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-11-27T20:24:17.085-05:00  INFO 206962 --- [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+2026-11-27T20:24:17.253-05:00  INFO 206962 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[42177] received request: GET /apis/apps/v1/namespaces/synkra-pe/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T20:24:17.264-05:00  INFO 206962 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[42177] received request: GET /api/v1/namespaces/synkra-pe/configmaps/synkra-core-config HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T20:24:17.449-05:00  INFO 206962 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[42177] received request: GET /apis/apps/v1/namespaces/synkra-uy/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T20:24:17.450-05:00  INFO 206962 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[42177] received request: GET /api/v1/namespaces/synkra-uy/configmaps/synkra-core-config HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T20:24:17.492-05:00  INFO 206962 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[42177] received request: GET /apis/apps/v1/namespaces/synkra-ec/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T20:24:17.494-05:00  INFO 206962 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[42177] received request: GET /api/v1/namespaces/synkra-ec/configmaps/synkra-core-config HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T20:24:17.578-05:00  INFO 206962 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[42177] received request: GET /apis/apps/v1/namespaces/synkra-bo/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T20:24:17.579-05:00  INFO 206962 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[42177] received request: GET /api/v1/namespaces/synkra-bo/configmaps/synkra-core-config HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T20:24:17.710-05:00  INFO 206962 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[42177] received request: POST /apis/apps/v1/namespaces/synkra-cl/deployments HTTP/1.1 and responded: HTTP/1.1 201 Created
+2026-11-27T20:24:17.815-05:00  INFO 206962 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[42177] received request: POST /api/v1/namespaces/synkra-cl/configmaps HTTP/1.1 and responded: HTTP/1.1 201 Created
+2026-11-27T20:24:17.828-05:00  INFO 206962 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[42177] received request: GET /apis/apps/v1/namespaces/synkra-cl/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 200 OK
+2026-11-27T20:24:17.830-05:00  INFO 206962 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[42177] received request: GET /api/v1/namespaces/synkra-cl/configmaps/synkra-core-config HTTP/1.1 and responded: HTTP/1.1 200 OK
+2026-11-27T20:24:17.870-05:00  INFO 206962 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[42177] received request: POST /apis/apps/v1/namespaces/synkra-co/deployments HTTP/1.1 and responded: HTTP/1.1 201 Created
+2026-11-27T20:24:17.873-05:00  INFO 206962 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[42177] received request: POST /api/v1/namespaces/synkra-co/configmaps HTTP/1.1 and responded: HTTP/1.1 201 Created
+2026-11-27T20:24:17.885-05:00  INFO 206962 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[42177] received request: GET /apis/apps/v1/namespaces/synkra-co/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 200 OK
+2026-11-27T20:24:17.888-05:00  INFO 206962 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[42177] received request: GET /api/v1/namespaces/synkra-co/configmaps/synkra-core-config HTTP/1.1 and responded: HTTP/1.1 200 OK
+2026-11-27T20:24:18.011-05:00  INFO 206962 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[42177] received request: GET /apis/apps/v1/namespaces/synkra-ar/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T20:24:18.013-05:00  INFO 206962 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[42177] received request: GET /api/v1/namespaces/synkra-ar/configmaps/synkra-core-config HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T20:24:18.114-05:00  INFO 206962 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[42177] received request: GET /apis/apps/v1/namespaces/synkra-py/deployments/synkra-core HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T20:24:18.115-05:00  INFO 206962 --- [ntloop-thread-0] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[42177] received request: GET /api/v1/namespaces/synkra-py/configmaps/synkra-core-config HTTP/1.1 and responded: HTTP/1.1 404 Not Found
+2026-11-27T20:24:18.147-05:00  INFO 206962 --- [    Test worker] io.fabric8.mockwebserver.MockWebServer   : MockWebServer[42177] done accepting connections
+]]></system-out>
+  <system-err><![CDATA[Nov 27, 2026 8:24:13 PM io.fabric8.mockwebserver.MockWebServer info
+INFO: MockWebServer[42177] starting to accept connections on localhost
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (/home/casdav/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.17.8/f09415827a71be7ed621c7bd02550678f28bc81c/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+]]></system-err>
+</testsuite>

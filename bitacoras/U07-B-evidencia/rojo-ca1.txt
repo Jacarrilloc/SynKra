@@ -1,0 +1,98 @@
+2026-11-27T19:52:08-05:00
+9395920
+$ ./gradlew :backend:test --rerun --tests '*VerificacionVivoTest'
+Starting a Gradle Daemon, 1 busy Daemon could not be reused, use --status for details
+> Task :verificador:compileJava
+> Task :backend:compileJava
+> Task :backend:processResources
+> Task :backend:classes
+> Task :verificador:compileTestFixturesJava
+
+> Task :backend:compileTestJava
+Note: /home/casdav/Projects/Master/wt-m6r-U07-B/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: /home/casdav/Projects/Master/wt-m6r-U07-B/backend/src/test/java/io/synkra/catalogo/RutasCoresTest.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+
+> Task :backend:processTestResources
+> Task :backend:testClasses
+> Task :verificador:processResources NO-SOURCE
+> Task :verificador:classes
+> Task :verificador:jar
+> Task :verificador:processTestFixturesResources NO-SOURCE
+> Task :verificador:testFixturesClasses
+> Task :verificador:testFixturesJar
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+
+> Task :backend:test
+
+VerificacionVivoTest > sinCamposDaCoreYVersionCoreInvalidosYUnCoreNuloNoRompe() FAILED
+    org.opentest4j.AssertionFailedError at VerificacionVivoTest.java:256
+
+VerificacionVivoTest > s7DaCoreEquivocadoYS6PluginAusente() FAILED
+    java.lang.NullPointerException at VerificacionVivoTest.java:221
+
+VerificacionVivoTest > laSeleccionMalFormadaDa422ConTodosLosCamposYSinRepetirLoRecibido() FAILED
+    org.opentest4j.AssertionFailedError at VerificacionVivoTest.java:237
+
+VerificacionVivoTest > pluginsNuloEsCoreSinPlugins() FAILED
+    org.opentest4j.AssertionFailedError at VerificacionVivoTest.java:284
+
+VerificacionVivoTest > s4DaLasDosAlternativasEnOrden() FAILED
+    org.opentest4j.AssertionFailedError at VerificacionVivoTest.java:208
+
+VerificacionVivoTest > laSeleccionDaElVeredictoDeLaSuiteConAlternativas(Caso) > Caso[id=S1, grupo=VALIDAS, descripcion=synkra-core 2.1.0 con kyc-co 1.0.0, entrada=PorSeleccion[seleccion=Seleccion[core=synkra-core, versionCore=2.1.0, plugins=[Descriptor[nombre=kyc-co, version=1.0.0, core=synkra-core, coreCompatible=RangoVersion[minimo=2.0.0, maximo=Optional[3.0.0], texto=2.x], etiquetas={}, descripcion=Optional.empty]]]], esperado=Esperado[origen=VEREDICTO, global=Optional[APROBADA], motivos=[], alternativas=[]]] FAILED
+    org.opentest4j.AssertionFailedError at VerificacionVivoTest.java:174
+
+VerificacionVivoTest > laSeleccionDaElVeredictoDeLaSuiteConAlternativas(Caso) > Caso[id=S2, grupo=VALIDAS, descripcion=synkra-core 2.1.0 con kyc-pe 1.3.0, entrada=PorSeleccion[seleccion=Seleccion[core=synkra-core, versionCore=2.1.0, plugins=[Descriptor[nombre=kyc-pe, version=1.3.0, core=synkra-core, coreCompatible=RangoVersion[minimo=2.0.0, maximo=Optional[3.0.0], texto=2.x], etiquetas={}, descripcion=Optional.empty]]]], esperado=Esperado[origen=VEREDICTO, global=Optional[APROBADA], motivos=[], alternativas=[]]] FAILED
+    org.opentest4j.AssertionFailedError at VerificacionVivoTest.java:174
+
+VerificacionVivoTest > laSeleccionDaElVeredictoDeLaSuiteConAlternativas(Caso) > Caso[id=S3, grupo=VALIDAS, descripcion=synkra-core 2.1.0 sin plugins, entrada=PorSeleccion[seleccion=Seleccion[core=synkra-core, versionCore=2.1.0, plugins=[]]], esperado=Esperado[origen=VEREDICTO, global=Optional[APROBADA], motivos=[], alternativas=[]]] FAILED
+    org.opentest4j.AssertionFailedError at VerificacionVivoTest.java:174
+
+VerificacionVivoTest > laSeleccionDaElVeredictoDeLaSuiteConAlternativas(Caso) > Caso[id=S4, grupo=VERSION_INCOMPATIBLE, descripcion=kyc-pe 2.0.0 (3.x) sobre synkra-core 2.1.0, entrada=PorSeleccion[seleccion=Seleccion[core=synkra-core, versionCore=2.1.0, plugins=[Descriptor[nombre=kyc-pe, version=2.0.0, core=synkra-core, coreCompatible=RangoVersion[minimo=3.0.0, maximo=Optional[4.0.0], texto=3.x], etiquetas={}, descripcion=Optional.empty]]]], esperado=Esperado[origen=VEREDICTO, global=Optional[RECHAZADA], motivos=[MotivoEsperado[codigo=VERSION_INCOMPATIBLE, plugin=Optional[kyc-pe], cam… FAILED
+    org.opentest4j.AssertionFailedError at VerificacionVivoTest.java:174
+
+VerificacionVivoTest > laSeleccionDaElVeredictoDeLaSuiteConAlternativas(Caso) > Caso[id=S5, grupo=VERSION_INCOMPATIBLE, descripcion=kyc-co 1.0.0 (2.x) sobre synkra-core 3.0.0, entrada=PorSeleccion[seleccion=Seleccion[core=synkra-core, versionCore=3.0.0, plugins=[Descriptor[nombre=kyc-co, version=1.0.0, core=synkra-core, coreCompatible=RangoVersion[minimo=2.0.0, maximo=Optional[3.0.0], texto=2.x], etiquetas={}, descripcion=Optional.empty]]]], esperado=Esperado[origen=VEREDICTO, global=Optional[RECHAZADA], motivos=[MotivoEsperado[codigo=VERSION_INCOMPATIBLE, plugin=Optional[kyc-co], cam… FAILED
+    org.opentest4j.AssertionFailedError at VerificacionVivoTest.java:174
+
+VerificacionVivoTest > laSeleccionDaElVeredictoDeLaSuiteConAlternativas(Caso) > Caso[id=S6, grupo=PLUGIN_AUSENTE, descripcion=kyc-mx 1.0.0 no está en la carpeta de synkra-core, entrada=PorSeleccion[seleccion=Seleccion[core=synkra-core, versionCore=2.1.0, plugins=[Descriptor[nombre=kyc-mx, version=1.0.0, core=synkra-core, coreCompatible=RangoVersion[minimo=2.0.0, maximo=Optional[3.0.0], texto=2.x], etiquetas={}, descripcion=Optional.empty]]]], esperado=Esperado[origen=VEREDICTO, global=Optional[RECHAZADA], motivos=[MotivoEsperado[codigo=PLUGIN_AUSENTE, plugin=Optional[kyc-mx], campo=Op… FAILED
+    org.opentest4j.AssertionFailedError at VerificacionVivoTest.java:174
+
+VerificacionVivoTest > laSeleccionDaElVeredictoDeLaSuiteConAlternativas(Caso) > Caso[id=S7, grupo=CARPETA_EQUIVOCADA, descripcion=kyc-xx 1.0.0 es de la carpeta de otro-core, entrada=PorSeleccion[seleccion=Seleccion[core=synkra-core, versionCore=2.1.0, plugins=[Descriptor[nombre=kyc-xx, version=1.0.0, core=otro-core, coreCompatible=RangoVersion[minimo=1.0.0, maximo=Optional[2.0.0], texto=1.x], etiquetas={}, descripcion=Optional.empty]]]], esperado=Esperado[origen=VEREDICTO, global=Optional[RECHAZADA], motivos=[MotivoEsperado[codigo=CORE_EQUIVOCADO, plugin=Optional[kyc-xx], campo=Option… FAILED
+    org.opentest4j.AssertionFailedError at VerificacionVivoTest.java:174
+
+VerificacionVivoTest > laSeleccionDaElVeredictoDeLaSuiteConAlternativas(Caso) > Caso[id=S10, grupo=REPETIDO, descripcion=kyc-pe 1.3.0 y kyc-pe 2.0.0 a la vez, entrada=PorSeleccion[seleccion=Seleccion[core=synkra-core, versionCore=2.1.0, plugins=[Descriptor[nombre=kyc-pe, version=1.3.0, core=synkra-core, coreCompatible=RangoVersion[minimo=2.0.0, maximo=Optional[3.0.0], texto=2.x], etiquetas={}, descripcion=Optional.empty], Descriptor[nombre=kyc-pe, version=2.0.0, core=synkra-core, coreCompatible=RangoVersion[minimo=3.0.0, maximo=Optional[4.0.0], texto=3.x], etiquetas={}, descripcion=Op… FAILED
+    org.opentest4j.AssertionFailedError at VerificacionVivoTest.java:174
+
+VerificacionVivoTest > coreNoRegistradoOVersionNoRegistradaDa422() FAILED
+    org.opentest4j.AssertionFailedError at VerificacionVivoTest.java:266
+
+2026-11-27T19:52:22.711-05:00  INFO 35442 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-11-27T19:52:22.713-05:00  INFO 35442 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-11-27T19:52:22.717-05:00  INFO 35442 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown initiated...
+2026-11-27T19:52:22.800-05:00  INFO 35442 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : synkra-sqlite - Shutdown completed.
+
+> Task :backend:test FAILED
+
+15 tests completed, 14 failed
+
+[Incubating] Problems report is available at: file:///home/casdav/Projects/Master/wt-m6r-U07-B/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':backend:test'.
+> There were failing tests. See the report at: file:///home/casdav/Projects/Master/wt-m6r-U07-B/backend/build/reports/tests/test/index.html
+
+* Try:
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 15s
+9 actionable tasks: 9 executed

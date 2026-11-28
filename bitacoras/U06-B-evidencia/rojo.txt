@@ -1,0 +1,42 @@
+# fecha: 2026-11-28T01:11:40Z  sha: ba52b53 (+ pruebas sin commitear, sin implementación)
+$ ./gradlew :backend:test --rerun --tests *HistorialTest --tests *RegistroReinicioTest
+    symbol:   class DespliegueRegistrado
+    location: package io.synkra.registro.api
+  /home/casdav/Projects/Master/wt-m6r-U06-B/backend/src/test/java/io/synkra/registro/RegistroReinicioTest.java:66: error: cannot find symbol
+              historialAntes = api.historial("pe");
+                                  ^
+    symbol:   method historial(String)
+    location: variable api of type RegistroApi
+  /home/casdav/Projects/Master/wt-m6r-U06-B/backend/src/test/java/io/synkra/registro/RegistroReinicioTest.java:67: error: cannot find symbol
+              detalleAntes = api.obtener(32).orElseThrow();
+                                ^
+    symbol:   method obtener(int)
+    location: variable api of type RegistroApi
+  /home/casdav/Projects/Master/wt-m6r-U06-B/backend/src/test/java/io/synkra/registro/RegistroReinicioTest.java:78: error: cannot find symbol
+              assertThat(api.historial("pe")).isEqualTo(historialAntes);
+                            ^
+    symbol:   method historial(String)
+    location: variable api of type RegistroApi
+  /home/casdav/Projects/Master/wt-m6r-U06-B/backend/src/test/java/io/synkra/registro/RegistroReinicioTest.java:79: error: cannot find symbol
+              assertThat(api.obtener(32)).contains(detalleAntes);
+                            ^
+    symbol:   method obtener(int)
+    location: variable api of type RegistroApi
+  Note: /home/casdav/Projects/Master/wt-m6r-U06-B/backend/src/test/java/io/synkra/kubernetes/LeerPaisTest.java uses or overrides a deprecated API.
+  Note: Recompile with -Xlint:deprecation for details.
+  Note: /home/casdav/Projects/Master/wt-m6r-U06-B/backend/src/test/java/io/synkra/catalogo/RutasCoresTest.java uses unchecked or unsafe operations.
+  Note: Recompile with -Xlint:unchecked for details.
+  17 errors
+
+* Try:
+> Check your code and dependencies to fix the compilation error(s)
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.9.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 2s
+5 actionable tasks: 5 executed

@@ -1,0 +1,9 @@
+# fecha: 2026-11-28T01:13:14Z  sha: c4a4c1c
+$ ./gradlew :backend:test --rerun --tests *RegistroReinicioTest
+BUILD SUCCESSFUL in 8s
+$ grep -ho 'tests=...' backend/build/test-results/test/TEST-*RegistroReinicioTest.xml
+tests="1" skipped="0" failures="0" errors="0"
+$ python3 -I -c "..." backend/build/sqlite-pruebas/RegistroReinicioTest/synkra.db
+[(31, 'listo', 1), (32, 'fallido', 1), (33, 'listo', 1)]
+[('1',), ('2',), ('3',)]
+[(32,)]

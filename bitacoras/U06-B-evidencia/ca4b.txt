@@ -1,0 +1,15 @@
+# worktree HEAD 6043f15; estado: 3 cambios sin commitear. Copias con git archive HEAD (sin git stash).
+
+=== R-R5 desempate invertido (id asc)
+$ sed -i 's/order by confirmado_en desc, id desc/order by confirmado_en desc, id asc/' /tmp/tmp.hAsseRTfP0/backend/src/main/java/io/synkra/registro/RegistroServicio.java
+9 tests completed, 3 failed
+BUILD FAILED in 9s
+$ grep -l '<failure' /tmp/tmp.hAsseRTfP0/backend/build/test-results/test/TEST-*.xml
+backend/build/test-results/test/TEST-io.synkra.registro.HistorialTest.xml
+  cae: HistorialTest.laApiDeRegistroObtieneYValida()
+  cae: HistorialTest.historialDePeVaDelMasRecienteAlMasAntiguoYDesempataPorId()
+  cae: HistorialTest.cadaElementoTraeLasClavesDelResumenYNoVeredictoNiContexto()
+
+=== plan de la consulta sin ', id desc' (por que la mutacion literal sobrevive)
+[(3, 0, 0, 'SEARCH reg_despliegue USING COVERING INDEX reg_despliegue_pais (pais=?)')]
+[(3, 0, 0, 'SEARCH reg_despliegue USING COVERING INDEX reg_despliegue_pais (pais=?)')]
