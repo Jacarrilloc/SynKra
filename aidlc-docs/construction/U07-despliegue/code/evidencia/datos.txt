@@ -1,4 +1,4 @@
-fecha: 2026-11-27T23:03:05-05:00  sha: ba0b1fd  JAVA_HOME=/home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+fecha: 2026-11-27T23:14:46-05:00  sha: ba0b1fd  JAVA_HOME=/home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
 $ ls backend/src/main/java/io/synkra/despliegue/
 CalculoCambios.java
 CambioCore.java
@@ -44,19 +44,19 @@ V1__base.sql
 V2__catalogo.sql
 V3__registro.sql
 V4__despliegue.sql
-$ grep -rn Sharedmodules
+$ grep -n 'sharedModules' backend/src/main/java/io/synkra/SynkraApp.java
 8:@Modulithic(sharedModules = "verificador")
-$ git diff --name-status 1d69064^1...1d69064^2 -- backend/src ':!despliegue (main y test)'
+$ git diff --name-status 1d69064^1...1d69064^2 -- backend/src ':!backend/src/main/java/io/synkra/despliegue' ':!backend/src/test/java/io/synkra/despliegue' ':!backend/src/test/java/io/synkra/FronterasModulosTest.java'
 M	backend/src/main/resources/application.properties
 A	backend/src/main/resources/db/migration/V4__despliegue.sql
-$ git diff --name-status 0c83a20^1...0c83a20^2 -- backend/src ':!despliegue (main y test)'
+$ git diff --name-status 0c83a20^1...0c83a20^2 -- backend/src ':!backend/src/main/java/io/synkra/despliegue' ':!backend/src/test/java/io/synkra/despliegue' ':!backend/src/test/java/io/synkra/FronterasModulosTest.java'
 A	backend/src/test/java/io/synkra/kubernetes/SimuladorKubernetes.java
-$ git diff --name-status 208d5f9^1...208d5f9^2 -- backend/src ':!despliegue (main y test)'
+$ git diff --name-status 208d5f9^1...208d5f9^2 -- backend/src ':!backend/src/main/java/io/synkra/despliegue' ':!backend/src/test/java/io/synkra/despliegue' ':!backend/src/test/java/io/synkra/FronterasModulosTest.java'
 A	backend/src/main/java/io/synkra/plataforma/Reloj.java
 A	backend/src/test/java/io/synkra/plataforma/RelojTest.java
-$ git diff --name-status 39a242c^1...39a242c^2 -- backend/src ':!despliegue (main y test)'
+$ git diff --name-status 39a242c^1...39a242c^2 -- backend/src ':!backend/src/main/java/io/synkra/despliegue' ':!backend/src/test/java/io/synkra/despliegue' ':!backend/src/test/java/io/synkra/FronterasModulosTest.java'
 M	backend/src/test/java/io/synkra/kubernetes/SimuladorKubernetes.java
-$ git diff --name-status 20ca4e1^1...20ca4e1^2 -- backend/src ':!despliegue (main y test)'
+$ git diff --name-status 20ca4e1^1...20ca4e1^2 -- backend/src ':!backend/src/main/java/io/synkra/despliegue' ':!backend/src/test/java/io/synkra/despliegue' ':!backend/src/test/java/io/synkra/FronterasModulosTest.java'
 M	backend/src/main/java/io/synkra/kubernetes/ConfiguracionKubernetes.java
 M	backend/src/main/java/io/synkra/kubernetes/LectorPais.java
 M	backend/src/main/java/io/synkra/registro/RegistroServicio.java
@@ -69,4 +69,4 @@ A	backend/src/test/java/io/synkra/kubernetes/ReintentosClienteTest.java
 M	backend/src/test/java/io/synkra/kubernetes/SimuladorKubernetes.java
 A	backend/src/test/java/io/synkra/registro/AplicandoTest.java
 A	backend/src/test/resources/config/application.properties
-$ git diff --name-status b73d9d0^1...b73d9d0^2 -- backend/src ':!despliegue (main y test)'
+$ git diff --name-status b73d9d0^1...b73d9d0^2 -- backend/src ':!backend/src/main/java/io/synkra/despliegue' ':!backend/src/test/java/io/synkra/despliegue' ':!backend/src/test/java/io/synkra/FronterasModulosTest.java'

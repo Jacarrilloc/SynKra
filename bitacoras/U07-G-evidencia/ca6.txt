@@ -1,2 +1,2 @@
-fecha: 2026-11-27T23:03:59-05:00  sha: ba0b1fd  (resumen sobre el árbol de a662ac3 más el resumen sin commitear)  comando: bash bitacoras/U07-G-evidencia/ca6.sh
+fecha: 2026-11-27T23:15:47-05:00  sha: ba0b1fd  comando: bash bitacoras/U07-G-evidencia/ca6.sh (ronda 2)
 0

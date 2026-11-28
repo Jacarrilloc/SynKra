@@ -1,5 +1,5 @@
-fecha: 2026-11-27T22:56:25-05:00  sha: ba0b1fd  JAVA_HOME=/home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
-$ for f in backend/build/test-results/test/TEST-*despliegue*.xml; do echo "$(basename $f .xml | sed 's/TEST-io.synkra.//') $(grep -o -m1 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' $f)"; done
+fecha: 2026-11-27T23:14:40-05:00  sha: ba0b1fd  JAVA_HOME=/home/casdav/.gradle/jdks/eclipse_adoptium-21-amd64-linux.2
+$ for f in backend/build/test-results/test/TEST-*.xml; do echo "$(basename $f .xml | sed 's/TEST-io.synkra.//') $(grep -o -m1 'tests="[0-9]*" skipped="[0-9]*" failures="[0-9]*" errors="[0-9]*"' $f)"; done
 despliegue.CambiosPropiedades tests="4" skipped="0" failures="0" errors="0"
 despliegue.CarpetaEquivocadaPlanTest tests="3" skipped="0" failures="0" errors="0"
 despliegue.ConfirmarSinClusterTest tests="2" skipped="0" failures="0" errors="0"
@@ -15,3 +15,6 @@ despliegue.VerificacionVivoTest tests="15" skipped="0" failures="0" errors="0"
 despliegue.VigilanciaCoincideTest tests="3" skipped="0" failures="0" errors="0"
 despliegue.VigilanciaDobleTest tests="4" skipped="0" failures="0" errors="0"
 despliegue.VigilanciaTest tests="8" skipped="0" failures="0" errors="0"
+FronterasModulosTest tests="2" skipped="0" failures="0" errors="0"
+$ cat backend/build/test-results/test/TEST-*.xml | grep -o -h '<testsuite [^>]*' | grep -o ' tests="[0-9]*"' | grep -o '[0-9]*' | paste -sd+ | bc
+100
