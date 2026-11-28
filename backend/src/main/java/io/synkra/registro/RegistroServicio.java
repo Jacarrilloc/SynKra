@@ -149,6 +149,12 @@ class RegistroServicio implements RegistroApi {
         return List.copyOf(salida);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<DespliegueRegistrado> ultimoListo(String pais) {
+        throw new UnsupportedOperationException("pendiente");
+    }
+
     private static DespliegueRegistrado con(DespliegueRegistrado f, List<PluginDesplegado> plugins,
             ContextoFallo contexto) {
         return new DespliegueRegistrado(f.id(), f.pais(), f.tipo(), f.origenId(), f.core(), f.versionCore(),

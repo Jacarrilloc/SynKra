@@ -31,4 +31,12 @@ public interface RegistroApi {
      * @throws IllegalArgumentException si el país no son dos letras minúsculas (nulo incluido)
      */
     List<DespliegueRegistrado> historial(String pais);
+
+    /**
+     * R-R6: el último despliegue {@code listo} del país (por el orden de R-R5), igual que {@link #obtener} (sin
+     * contexto). Un {@code aplicando} o un {@code fallido} más reciente no cuenta. No mira {@code synkra.paises}.
+     *
+     * @throws IllegalArgumentException si el país no son dos letras minúsculas (nulo incluido)
+     */
+    Optional<DespliegueRegistrado> ultimoListo(String pais);
 }
