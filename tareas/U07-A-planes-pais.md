@@ -3,7 +3,7 @@
 **Unidad:** U07: `Despliegue y reversión`
 **Tareas del plan que agrupa:** U07-T01 y U07-T02
 **Historias que implementa:** H-11 (base), H-13
-**Depende de:** U03 y U05 (terminadas). Sale de `b91f7d1` (punta VERDE de U05-T10). Corre **en paralelo con U06-A**: no puede usar nada de `registro` (ni `registro.api` ni las tablas `reg_*`, que en esta rama no existen).
+**Depende de:** U03 y U05 (terminadas). Sale de `97f9f80` (punta VERDE de U05-T10). Corre **en paralelo con U06-A**: no puede usar nada de `registro` (ni `registro.api` ni las tablas `reg_*`, que en esta rama no existen).
 
 ---
 
@@ -184,8 +184,8 @@
 
 - [ ] **CA-6**: el diff queda acotado
   ```bash
-  git rev-parse --short HEAD; git diff --stat b91f7d1...HEAD
-  git diff b91f7d1...HEAD -- backend/src/main/resources/application.properties aidlc-docs/construction/plans/U07-despliegue-code-generation-plan.md
+  git rev-parse --short HEAD; git diff --stat 97f9f80...HEAD
+  git diff 97f9f80...HEAD -- backend/src/main/resources/application.properties aidlc-docs/construction/plans/U07-despliegue-code-generation-plan.md
   ```
   Esperado: solo estas rutas. Se anota el sha.
   - `backend/src/main/resources/db/migration/V4__despliegue.sql`

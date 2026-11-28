@@ -942,3 +942,9 @@ Se despacha el codificador de la ronda 2.
 **Propuesta del orquestador:** (1) recortar según R9: se cortan U11 y U10 (Should) y la demo se hace con `curl` si U09 no llega; (2) tres tareas en paralelo; (3) agrupar dos o tres tareas pequeñas del plan en un solo despacho; (4) tope de dos rondas cuando solo quedan AMARILLOS (sin bajar el estándar de ROJO y NARANJA); (5) revisor sonnet solo en tareas de documentación. U08 necesita `kind`, que no hay en esta máquina: sus tareas se dejan escritas para el equipo.
 
 **Input del usuario (00:19:53Z):** "hazlo, acaba lo que haces y hagamoslo de esa forma"
+
+## 2026-11-28T00:25:37Z: Julian pide que el orquestador fusione los PRs
+
+**Input del usuario:** "fusionalas tu"
+
+**Acción del orquestador (00:27Z):** fusión en orden con merge commit, cambiando antes la base de cada PR apilado a `main`. Pila de U05: #85, #87, #90, #92. Pila de U02: #84, #86, #88, #89, #91, #93, #94. Los 11 quedaron fusionados (`mergeable_state: clean` en todos).

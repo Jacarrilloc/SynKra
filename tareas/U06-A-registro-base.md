@@ -3,7 +3,7 @@
 **Unidad:** U06: `Registro y vista general`
 **Tareas del plan que agrupa:** U06-T01, U06-T02 y U06-T03
 **Historias que implementa:** H-18 (base), H-16 (contribuye)
-**Depende de:** U03 y U05 (terminadas). Sale de `b91f7d1` (punta VERDE de U05-T10). Corre en paralelo con U07-A: no usa nada de `despliegue`.
+**Depende de:** U03 y U05 (terminadas). Sale de `97f9f80` (punta VERDE de U05-T10). Corre en paralelo con U07-A: no usa nada de `despliegue`.
 
 ---
 
@@ -208,7 +208,7 @@
 
 - [ ] **CA-6**: el diff queda acotado
   ```bash
-  git rev-parse --short HEAD; git diff --stat b91f7d1...HEAD
+  git rev-parse --short HEAD; git diff --stat 97f9f80...HEAD
   ```
   Esperado: solo estas rutas. Se anota el sha.
   - `backend/src/main/resources/db/migration/V3__registro.sql`
