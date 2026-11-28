@@ -1,20 +1,20 @@
-fecha=2026-11-28T07:22:21Z
-sha-codigo=ee83866 (HEAD=ee83866)
+fecha=2026-11-28T07:40:48Z
+sha-codigo=f49d08d (HEAD=f49d08d)
 uname -m=x86_64
 RepoDigests=mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
 
 $ rm -rf front.Tests/TestResults; scripts/dotnet-docker.sh test front.Tests --logger "trx;LogFileName=todo.trx" --results-directory front.Tests/TestResults
-Passed!  - Failed:     0, Passed:    77, Skipped:     0, Total:    77, Duration: 766 ms - Synkra.Front.Tests.dll (net10.0)
+Passed!  - Failed:     0, Passed:    82, Skipped:     0, Total:    82, Duration: 1 s - Synkra.Front.Tests.dll (net10.0)
 salida=0
 
 $ python3 -I bitacoras/U09-A-evidencia/trx.py front.Tests/TestResults/todo.trx | head -1
-total=77 executed=77 passed=77 failed=0 notExecuted=0
+total=82 executed=82 passed=82 failed=0 notExecuted=0
 
 $ grep -rnE '\[(Fact|Theory)\([^)]*Skip|\[Theory' front.Tests --include='*.cs'; echo saltos=$?
 saltos=1
 
 $ grep -rniE "semver|compatib" front/ --include='*.cs' --include='*.razor'; echo grep-plan=$?
-front/Components/Pages/SubirPlugin.razor:41:        <p>Core requerido: <span data-campo="core-requerido">@_subido.CoreCompatible</span></p>
+front/Components/Pages/SubirPlugin.razor:48:        <p>Core requerido: <span data-campo="core-requerido">@_subido.CoreCompatible</span></p>
 front/Components/Pages/Desplegar.razor:95:                    <span data-campo="core-requerido">core @p.CoreCompatible</span>
 front/Components/Pages/Desplegar.razor:131:                            <td data-campo="aceptado">@(pl.Compatible ? "Sí" : "No")</td>
 front/Api/ModelosDespliegue.cs:13:    bool Compatible,

@@ -35,3 +35,12 @@ mut motivo-oculto $P/SubirPlugin.razor 's#@if (_error.Detalles.Count > 0)#@if (_
 mut arranque front/Program.cs 's#c.BaseAddress = urlApi#c.BaseAddress = new Uri("http://127.0.0.1:18741/")#' ConUrlValidaArrancaYSirveLaVistaGeneral
 # Variante: Program.cs ignora ConfiguracionApi.UrlBase (no valida la URL).
 mut arranque-sin-validar front/Program.cs 's#var urlApi = ConfiguracionApi.UrlBase(builder.Configuration);#var urlApi = new Uri("http://127.0.0.1:9/");#' ConUrlMalaNoArranca
+# Ronda 2: las mutaciones del revisor (F-01, F-02, F-03, F-07).
+mut x-confirmar-sin-usuario-desplegar $P/Desplegar.razor 's#Api.ConfirmarAsync(_plan.Id, _usuario)#Api.ConfirmarAsync(_plan.Id, null)#' ConfirmarLlamaALaConfirmacionDelPlanYEnlazaAlDetalle
+mut x-confirmar-sin-usuario-reversion $P/Reversion.razor 's#Api.ConfirmarAsync(_plan.Id, _usuario)#Api.ConfirmarAsync(_plan.Id, null)#' LaVueltaSoloSeConfirmaDespuesDeConfirmar
+mut x-pais-no-descarta $P/Desplegar.razor '/private void CambiaPais/,/^    }/ s#_plan = null;#_ = _plan;#' CambiarElPaisDescartaElPlan
+mut x-filtro-no-desmarca $P/Desplegar.razor 's#^\( *\)_marcados.RemoveWhere.*#\1_ = _marcados;#' UnFiltroQueOcultaUnPluginMarcadoLoDesmarcaYVuelveAVerificar
+mut x-filtro-sin-igual $P/Desplegar.razor 's#? await Api.PluginsConEtiquetaAsync(_core, _filtro, "")#? await Api.PluginsAsync(_core)#' UnFiltroSinIgualMandaLaClaveConValorVacio
+mut x-cancelar-onclick $P/Reversion.razor 's#<a data-accion="cancelar" href="despliegues/@Id">#<a data-accion="cancelar" href="despliegues/@Id" @onclick="PrepararAsync">#' CancelarNoLlamaANada
+mut x-preparar-sin-clave $P/Desplegar.razor 's#if (clave == Clave())#if (true)#' UnPlanQueLlegaTrasCambiarLaSeleccionNoSeMuestra
+mut x-ioexception-sin-captura $P/SubirPlugin.razor 's#catch (IOException e)#catch (InvalidCastException e)#' ArchivoPorEncimaDelTopeMuestraUnErrorYNoLlamaALaApi

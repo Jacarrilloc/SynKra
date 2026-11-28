@@ -1,13 +1,14 @@
-fecha=2026-11-28T07:22:11Z
-sha-codigo=ee83866 (HEAD=ee83866)
+fecha=2026-11-28T07:40:38Z
+sha-codigo=f49d08d (HEAD=f49d08d)
 uname -m=x86_64
 RepoDigests=mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
 
 $ scripts/dotnet-docker.sh test front.Tests --filter CatalogoTest --logger "trx;LogFileName=catalogo.trx" --results-directory front.Tests/TestResults
-Passed!  - Failed:     0, Passed:     6, Skipped:     0, Total:     6, Duration: 406 ms - Synkra.Front.Tests.dll (net10.0)
+Passed!  - Failed:     0, Passed:     7, Skipped:     0, Total:     7, Duration: 395 ms - Synkra.Front.Tests.dll (net10.0)
 catalogo=0
 $ python3 -I bitacoras/U09-A-evidencia/trx.py front.Tests/TestResults/catalogo.trx
-total=6 executed=6 passed=6 failed=0 notExecuted=0
+total=7 executed=7 passed=7 failed=0 notExecuted=0
+ArchivoPorEncimaDelTopeMuestraUnErrorYNoLlamaALaApi
 ConflictoMuestraElCodigoDeLaApi
 DescriptorInvalidoMuestraElMotivo
 EtiquetasSeMandanTalCual
@@ -16,7 +17,7 @@ SinEtiquetasNoSeMandaLaParte
 SubirMandaElJarYMuestraElPlugin
 
 $ scripts/dotnet-docker.sh test front.Tests --filter DetalleTest --logger "trx;LogFileName=detalle.trx" --results-directory front.Tests/TestResults
-Passed!  - Failed:     0, Passed:     7, Skipped:     0, Total:     7, Duration: 439 ms - Synkra.Front.Tests.dll (net10.0)
+Passed!  - Failed:     0, Passed:     7, Skipped:     0, Total:     7, Duration: 420 ms - Synkra.Front.Tests.dll (net10.0)
 detalle=0
 $ python3 -I bitacoras/U09-A-evidencia/trx.py front.Tests/TestResults/detalle.trx
 total=7 executed=7 passed=7 failed=0 notExecuted=0
@@ -29,7 +30,7 @@ OrigenNoListoMuestraElErrorDeLaApi
 PrepararLaVueltaCreaElPlanDeReversion
 
 $ scripts/dotnet-docker.sh test front.Tests --filter ArranqueTest --logger "trx;LogFileName=arranque.trx" --results-directory front.Tests/TestResults
-Passed!  - Failed:     0, Passed:     2, Skipped:     0, Total:     2, Duration: 585 ms - Synkra.Front.Tests.dll (net10.0)
+Passed!  - Failed:     0, Passed:     2, Skipped:     0, Total:     2, Duration: 583 ms - Synkra.Front.Tests.dll (net10.0)
 arranque=0
 $ python3 -I bitacoras/U09-A-evidencia/trx.py front.Tests/TestResults/arranque.trx
 total=2 executed=2 passed=2 failed=0 notExecuted=0

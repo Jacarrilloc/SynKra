@@ -1,10 +1,10 @@
-fecha=2026-11-28T07:22:04Z
-sha-codigo=ee83866 (HEAD=ee83866)
+fecha=2026-11-28T07:40:31Z
+sha-codigo=f49d08d (HEAD=f49d08d)
 uname -m=x86_64
 RepoDigests=mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d
 
 $ scripts/dotnet-docker.sh test front.Tests --filter ApiSynkraEscriturasTest --logger "trx;LogFileName=escrituras.trx" --results-directory front.Tests/TestResults
-Passed!  - Failed:     0, Passed:    16, Skipped:     0, Total:    16, Duration: 105 ms - Synkra.Front.Tests.dll (net10.0)
+Passed!  - Failed:     0, Passed:    16, Skipped:     0, Total:    16, Duration: 103 ms - Synkra.Front.Tests.dll (net10.0)
 salida=0
 
 $ python3 -I bitacoras/U09-A-evidencia/trx.py front.Tests/TestResults/escrituras.trx
