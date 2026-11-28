@@ -1112,3 +1112,9 @@ Se despacha el codificador de la ronda 2.
 **Input del usuario (06:31:21Z):** "Si descarga" (imagen base de ASP.NET para U09-D). **Acción:** `docker pull mcr.microsoft.com/dotnet/aspnet:10.0.15` (la versión de runtime que trae el SDK 10.0.404).
 
 **Input del usuario (06:52:49Z):** "Si autorizo" (descarga de `Microsoft.AspNetCore.App.Internal.Assets` 10.0.15 de nuget.org dentro del `docker build` del front, U09-D).
+
+## 2026-11-28T06:58:50Z: autorización de David para seguir mientras duerme
+
+**Input del usuario:** "ya me voy  a dormir, toma las acciones recomendadas, si llegas a necesitar algo, claro siempre y cuando todo sea en un limite razonable y se mantenga dentro de los lineamientos de proyectoy el contexto que tienes"
+
+**Acción del orquestador:** se sigue con las acciones recomendadas dentro de los lineamientos (AUTONOMIA-01, solo `kind-synkra`, sin `sudo`, sin descargas nuevas no declaradas, fusiones por tandas de lo VERDE). Lo que pida a una persona (el recorrido de U09-E en el navegador, con `/etc/hosts`) se deja preparado y se le pide al despertar. Una tarea que llegue a la ronda 4 se para y se anota para David.
