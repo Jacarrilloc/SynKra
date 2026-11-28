@@ -1,0 +1,4 @@
+gradle=1
+dosPlanesQueSoloDifierenEnUnPluginDanAnotacionesDistintas() | java.lang.AssertionError:  Expecting actual not to be null
+elMismoPlanConLosPluginsEnOtroOrdenDaLaMismaAnotacion() | java.lang.AssertionError:  Expecting actual not to be null
+laPlantillaDelPodLlevaElSha256DeLaConfiguracionDelConfigMap() | org.opentest4j.AssertionFailedError:  expected: "cdcd487f62cd4f25c9ca95b63fbd1f715f8583c4be513d9c88e9d9c2e2e6239f"  but was: null
