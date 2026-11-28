@@ -1,5 +1,5 @@
-fecha: 2026-11-28T00:01:01-05:00
-sha: 9281e0c
+fecha: 2026-11-28T00:02:44-05:00
+sha: 0fd4b82
 imagen: mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d arm64
 
 === mutación: ruta
@@ -53,7 +53,7 @@ $ sed -i '/UnmappedMemberHandling/d' front/Api/ApiSynkra.cs
 12d11
 <         UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
 salida=1
-Failed!  - Failed:     1, Passed:    22, Skipped:     0, Total:    23, Duration: 249 ms - Synkra.Front.Tests.dll (net10.0)
+Failed!  - Failed:     1, Passed:    22, Skipped:     0, Total:    23, Duration: 246 ms - Synkra.Front.Tests.dll (net10.0)
 total=23 executed=23 passed=22 failed=1 notExecuted=0
 FALLA CampoDesconocidoEnLaRespuestaDaRespuestaInvalida
 ok: cae CampoDesconocidoEnLaRespuestaDaRespuestaInvalida
@@ -81,7 +81,7 @@ $ sed -i 's|Uri.EscapeDataString(pais)|pais|' front/Api/ApiSynkra.cs
 ---
 >         => LeerAsync<IReadOnlyList<ResumenDespliegue>>($"api/paises/{pais}/despliegues", ct);
 salida=1
-Failed!  - Failed:     1, Passed:    22, Skipped:     0, Total:    23, Duration: 250 ms - Synkra.Front.Tests.dll (net10.0)
+Failed!  - Failed:     1, Passed:    22, Skipped:     0, Total:    23, Duration: 249 ms - Synkra.Front.Tests.dll (net10.0)
 total=23 executed=23 passed=22 failed=1 notExecuted=0
 FALLA HistorialEscapaElPais
 ok: cae HistorialEscapaElPais
@@ -93,7 +93,7 @@ $ sed -i 's|UriKind.Absolute|UriKind.RelativeOrAbsolute|' front/Api/Configuracio
 ---
 >             || !Uri.TryCreate(texto.Trim(), UriKind.RelativeOrAbsolute, out var url)
 salida=1
-Failed!  - Failed:     1, Passed:    22, Skipped:     0, Total:    23, Duration: 241 ms - Synkra.Front.Tests.dll (net10.0)
+Failed!  - Failed:     1, Passed:    22, Skipped:     0, Total:    23, Duration: 249 ms - Synkra.Front.Tests.dll (net10.0)
 total=23 executed=23 passed=22 failed=1 notExecuted=0
 FALLA ConfiguracionConUrlRelativaNoArranca
 ok: cae ConfiguracionConUrlRelativaNoArranca
@@ -105,7 +105,7 @@ $ sed -i 's|null => "No se sabe"|null => "No"|' front/Components/Pages/VistaGene
 ---
 >         null => "No",
 salida=1
-Failed!  - Failed:     1, Passed:    22, Skipped:     0, Total:    23, Duration: 247 ms - Synkra.Front.Tests.dll (net10.0)
+Failed!  - Failed:     1, Passed:    22, Skipped:     0, Total:    23, Duration: 249 ms - Synkra.Front.Tests.dll (net10.0)
 total=23 executed=23 passed=22 failed=1 notExecuted=0
 FALLA PaisSinLecturaMuestraNoDisponibleYNoSeSabe
 ok: cae PaisSinLecturaMuestraNoDisponibleYNoSeSabe

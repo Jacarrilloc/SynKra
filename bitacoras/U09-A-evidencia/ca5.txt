@@ -1,5 +1,5 @@
-fecha: 2026-11-28T00:00:58-05:00
-sha: 9281e0c
+fecha: 2026-11-28T00:02:42-05:00
+sha: 0fd4b82
 imagen: mcr.microsoft.com/dotnet/sdk@sha256:8c6edfb26c85153f236d26efebd9ad349aec403583f343f201ee67838b23658d arm64
 
 + rm -rf front.Tests/TestResults
@@ -12,7 +12,7 @@ Test run for /src/front.Tests/bin/Debug/net10.0/Synkra.Front.Tests.dll (.NETCore
 A total of 1 test files matched the specified pattern.
 Results File: /src/front.Tests/TestResults/todo.trx
 
-Passed!  - Failed:     0, Passed:    23, Skipped:     0, Total:    23, Duration: 244 ms - Synkra.Front.Tests.dll (net10.0)
+Passed!  - Failed:     0, Passed:    23, Skipped:     0, Total:    23, Duration: 241 ms - Synkra.Front.Tests.dll (net10.0)
 + echo salida=0
 salida=0
 + python3 -I bitacoras/U09-A-evidencia/trx.py front.Tests/TestResults/todo.trx
