@@ -1010,3 +1010,9 @@ Se despacha el codificador de la ronda 2.
 ## 2026-11-28T02:43Z: fusión de #104 (U07-D)
 
 **Acción del orquestador:** bajo la autorización de David de las 01:25:21Z, fusión de #104 (U07-D, confirmar) en `39a242c`, `MERGEABLE`/`CLEAN`. Con `main` en `39a242c`, `./gradlew test --rerun check` pasó (`salida=0`; 852 pruebas, 0 saltos, 0 fallos, 0 errores).
+
+## 2026-11-28T03:07:48Z: David pide correr más tareas en paralelo
+
+**Input del usuario:** "Que tal la opcin de ejecutar 3 en parlelo, por ejmplo que mas ls que estas corrienod ejecutar U07-F y U07-G"
+
+**Acción del orquestador:** U07-F sale de la punta de U07-E en ronda 1 (`2d9d21f`), de forma especulativa, mientras corre el revisor de U07-E; si U07-E cambia en una ronda 2, U07-F se rebasa. U07-G no se arranca todavía: su resumen y sus fronteras necesitan el código de U07-F.
