@@ -1054,3 +1054,7 @@ Se despacha el codificador de la ronda 2.
 **Input del usuario:** "ya ejecute el comando y salio esto ... fs.inotify.max_user_instances = 512 fs.inotify.max_user_watches = 524288"
 
 **Acción del orquestador:** se redespacha al codificador de U08-A para crear `kind-synkra` y correr los criterios que necesitan clúster.
+
+## 2026-11-28T06:10Z: enmienda del CA-2 de U09-A
+
+**Acción del orquestador:** el arbitraje de F-03 (ronda 1 de U09-A) pidió quitar el comentario de `Program.cs` que solo existía para un `grep`, y con eso el CA-2 escrito ya no podía cumplirse (F-06, ROJO de la ronda 2). Cambiar el criterio es del orquestador: el CA-2 comprueba ahora la clave en `appsettings.json` y `ConfiguracionApi.cs`, y el **uso** en `Program.cs` (`ConfiguracionApi.UrlBase` y `AddHttpClient`). Nuevo hash de la tarea: `d5a5ff409c3f520da348c01bc08f238cfe4bbb8c`. Se repite el revisor (ronda 3) sobre el mismo código.

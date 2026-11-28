@@ -186,13 +186,14 @@ Todos se corren desde la raíz del repositorio. En las líneas `Passed!` / `Fail
   grep -nE 'UnmappedMemberHandling\.Disallow|RespectNullableAnnotations = true|RespectRequiredConstructorParameters = true|SnakeCaseLower' front/Api/ApiSynkra.cs
   grep -rn 'JsonPropertyName' front/; echo "renombres=$?"
   grep -rnE 'Http(Method\.)?(Post|Put|Delete|Patch)|PostAsync|PutAsync|DeleteAsync|PatchAsync|X-Synkra-Usuario' front/ --include='*.cs' --include='*.razor'; echo "escrituras=$?"
-  grep -n 'Synkra:ApiUrl\|ApiUrl' front/appsettings.json front/Program.cs front/Api/ConfiguracionApi.cs
+  grep -n 'Synkra:ApiUrl\|ApiUrl' front/appsettings.json front/Api/ConfiguracionApi.cs
+  grep -n 'ConfiguracionApi.UrlBase\|AddHttpClient' front/Program.cs
   ```
   Esperado:
   - la línea de VSTest `Passed!  - Failed:     0, Passed:    16, Skipped:     0, Total:    16` (o con más pruebas, siempre `Failed: 0` y `Skipped: 0`), sin `No test matches`, y `salida=0`.
   - `trx.py`: `total=16 executed=16 passed=16 failed=0 notExecuted=0` (o más, con `passed` = `total`), ninguna línea `FALLA` y los 16 nombres de la decisión 11.
   - Los nombres de campo de los fixtures son **exactamente** los de la decisión 5 para cada archivo (el revisor los coteja con `git show 8306ee7:backend/src/main/java/io/synkra/registro/RutasRegistro.java`, `RutasVistaGeneral.java`, `registro/api/PluginCorriendo.java`, `registro/api/PluginDesplegado.java`, `plataforma/ErrorApi.java` y `plataforma/DetalleError.java`): `ultimoDespliegueId`, `versionCore`, `origenId`, `creadoPor`, `confirmadoPor`, `confirmadoEn`, `terminadoEn`, `logCore`, `logInit`, `codigo`, `mensaje`, `detalles`, `campo`, `motivo`…, más las claves de `etiquetas` (`core`, `pais`, `version`) y del `veredicto` (`valido`, `motivos`) de la decisión 10; ningún nombre en snake_case.
-  - Las cuatro opciones de la decisión 6, `renombres=1`, `escrituras=1`, y la clave `Synkra:ApiUrl` en los tres archivos.
+  - Las cuatro opciones de la decisión 6, `renombres=1`, `escrituras=1`, la clave `Synkra:ApiUrl` en `appsettings.json` y en `ConfiguracionApi.cs`, y `Program.cs` usa `ConfiguracionApi.UrlBase` y `AddHttpClient` (enmienda del orquestador del 2026-11-28, ronda 2: se comprueba el uso, no el texto de la clave; ver `aidlc-docs/audit.md`).
 
 - [ ] **CA-3**: U09-T02. «Vista general» con bUnit y dos países simulados
   ```bash
