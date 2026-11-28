@@ -1110,3 +1110,5 @@ Se despacha el codificador de la ronda 2.
 **Acción del orquestador:** el tope sube de 3 a **4 agentes en paralelo**. U08 sigue con prioridad y el clúster `kind-synkra` es de U08 hasta cerrarla; U09-B, U09-C y la parte de U09-D que no usa el clúster (imagen y manifiesto validado sin aplicar) corren a la par; el criterio de U09-D en `kind` se corre al cerrar U08. Redactor de U09-B a U09-E en vuelo.
 
 **Input del usuario (06:31:21Z):** "Si descarga" (imagen base de ASP.NET para U09-D). **Acción:** `docker pull mcr.microsoft.com/dotnet/aspnet:10.0.15` (la versión de runtime que trae el SDK 10.0.404).
+
+**Input del usuario (06:52:49Z):** "Si autorizo" (descarga de `Microsoft.AspNetCore.App.Internal.Assets` 10.0.15 de nuget.org dentro del `docker build` del front, U09-D).
