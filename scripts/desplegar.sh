@@ -53,11 +53,11 @@ for D in $DEPLOYMENTS; do
     [ "$rc" -eq 0 ] || { echo "FALLA desplegar: curl al registro salió con $rc" >&2; exit 1; }
     printf '%s\n' "$cab" | tr -d '\r' | awk -F': ' 'tolower($1)=="docker-content-digest"{print $2}'
   }
-  corre() { # el pod vivo del Deployment (sin deletionTimestamp: durante un rolling update el viejo sigue ahi un momento)
+  corre() { # el pod vivo del Deployment: sin deletionTimestamp (durante un rolling update el viejo sigue ahi un momento) y en fase Running (un pod Failed/Evicted conserva su imageID)
     k -n synkra get pods -l "app.kubernetes.io/name=$D" -o json | DEPLOY="$D" python3 -I -c "import os,sys,json
 d=os.environ['DEPLOY']
 for p in json.load(sys.stdin)['items']:
-    if p['metadata'].get('deletionTimestamp'): continue
+    if p['metadata'].get('deletionTimestamp') or p['status'].get('phase') != 'Running': continue
     for c in p['status'].get('containerStatuses') or []:
         if c['name']==d: print(c['imageID'].split('@')[-1])
 " | head -1
